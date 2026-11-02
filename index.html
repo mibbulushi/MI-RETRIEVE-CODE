@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MI-RETRIEVE-CODE</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #172554;
+    }
+    header {
+      background: #123b70;
+      color: white;
+      text-align: center;
+      padding: 28px 15px;
+    }
+    header h1 { margin: 0 0 10px; }
+    main {
+      max-width: 650px;
+      margin: 30px auto;
+      padding: 15px;
+    }
+    .panel {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px #00000012;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+    input, textarea { border: 1px solid #cbd5e1; }
+    textarea { min-height: 150px; resize: vertical; }
+    button {
+      background: #1456a0;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover { background: #0d3d75; }
+    .result {
+      background: #ecfdf5;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+    }
+    footer { text-align: center; padding: 20px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MI-RETRIEVE-CODE</h1>
+    <p>Save Information. Generate a Code. Share Knowledge.</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Save Information</h2>
+      <input id="title" placeholder="Enter collection title">
+      <textarea id="content" placeholder="Paste your information here"></textarea>
+      <button onclick="saveInfo()">Save & Generate Code</button>
+      <div id="saveResult"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Retrieve Information</h2>
+      <input id="code" placeholder="Enter your Retrieve Code">
+      <button onclick="retrieveInfo()">Retrieve Collection</button>
+      <div id="retrieveResult"></div>
+    </section>
+  </main>
+
+  <footer>MI-RETRIEVE-CODE | Version 1.0</footer>
+
+  <script>
+    function saveInfo() {
+      const title = document.getElementById("title").value.trim();
+      const content = document.getElementById("content").value.trim();
+      if (!title || !content) {
+        alert("Please enter a title and information.");
+        return;
+      }
+
+      const code = "MI-" + crypto.randomUUID().slice(0, 8).toUpperCase();
+      const item = { title, content, code, date: new Date().toISOString() };
+
+      try {
+        localStorage.setItem("mi-" + code, JSON.stringify(item));
+        document.getElementById("saveResult").innerHTML =
+          '<div class="result"><p>Your code: <strong>' +
+          code + '</strong></p><p>This first prototype saves information only in this browser.</p></div>';
+      } catch (error) {
+        alert("Unable to save in this browser.");
+      }
+    }
+
+    function retrieveInfo() {
+      const code = document.getElementById("code").value.trim().toUpperCase();
+      const saved = localStorage.getItem("mi-" + code);
+      const output = document.getElementById("retrieveResult");
+
+      if (!saved) {
+        output.textContent = "Collection not found in this browser.";
+        return;
+      }
+
+      const item = JSON.parse(saved);
+      output.textContent = item.title + "\n\n" + item.content;
+    }
+  </script>
+</body>
+</html>
