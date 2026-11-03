@@ -6,17 +6,17 @@
 
 Build one easy-to-use platform with an integrated MI Assistant. The long-term plan is a complete AI ecosystem with user and administrator controls.
 
-## Separate integration tool: MI CONNECT
+## Separate personal memory tool: MI MEMORY
 
-**MI CONNECT** is a separate tool in its own `mi-connect/` folder. It is designed to connect compatible AI platforms to MI-RETRIEVE-AI through secure, permission-based integrations.
+**MI MEMORY** is a separate personal memory and integration tool in its own `mi-memory/` folder. Its full name is **Universal Personal AI Memory System**.
 
 - Main project: stores and manages the user's projects and memory.
-- MI CONNECT: provides the integration layer for compatible AI clients, including MCP-based connections.
-- Both remain part of the same ecosystem, but MI CONNECT is designed so it can later be deployed or maintained independently.
+- MI MEMORY: preserves and retrieves user-authorized memory and provides an integration layer for compatible AI clients, including MCP-based connections.
+- Both remain part of the same ecosystem, but MI MEMORY is designed so it can later be deployed or maintained independently.
 
-Read the [MI CONNECT specification](mi-connect/README.md).
+Read the [MI MEMORY specification](mi-memory/README.md).
 
-**Status:** MI CONNECT currently has its initial specification only. It is not yet a running server and is not connected to ChatGPT or any other AI platform.
+**Status:** MI MEMORY currently has its initial specification only. It is not yet a running server and is not connected to ChatGPT or any other AI platform.
 
 ## Current prototype
 
@@ -54,7 +54,7 @@ These are planned command names. A command is not considered active until its fe
 3. Add accounts, ownership, permissions, and access controls.
 4. Add sharing options, expiry settings, and access revocation.
 5. Build the MI Assistant command interface.
-6. Implement MI CONNECT as a secure MCP server and connect it to the MI account and project API.
+6. Implement MI MEMORY as a secure MCP server and connect it to the MI account and project API.
 7. Add AI-powered tools only when an appropriate service and safe configuration are available.
 8. Test the platform, privacy controls, backups, and accessibility.
 
