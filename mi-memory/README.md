@@ -74,3 +74,16 @@ MI MEMORY is intended to support other AI clients that implement MCP as well; ea
 ## Important limitation
 
 No MI code can automatically read private memories, hidden chats, or account data from ChatGPT or another provider. Cross-platform transfer requires the owner's authorized export, upload, or an officially supported integration/API.
+
+## Chosen account model: MI ACCOUNT LINK
+
+The product decision is to use **one MI MEMORY owner account/workspace** with **two or more separately authorized personal AI identities** linked to it. For the owner's two ChatGPT identities:
+
+- Both identities point to the same MI MEMORY workspace; the owner does not need to maintain duplicate memory accounts.
+- Both can access the same projects and memory collections that the owner has approved for shared access.
+- Collections and items remain private by default unless the owner explicitly shares them.
+- Each identity has its own connection record, permissions, access history, and independent disconnect/revocation control.
+- The owner can change sharing permissions later; one identity cannot silently expand the other's access.
+- Provider-side private chats and hidden memories are not automatically available. Import or access requires an owner-authorized export or a supported provider integration.
+
+The feature name shown in the product is **MI ACCOUNT LINK**. It is a linking feature inside MI MEMORY, not a separate memory database.
