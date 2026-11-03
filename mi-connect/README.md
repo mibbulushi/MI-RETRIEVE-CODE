@@ -4,7 +4,7 @@ MI CONNECT is a separate integration tool for the MI-RETRIEVE-CODE ecosystem. It
 
 ## Current implementation
 
-<badge>Prototype — local stdio only</badge>
+**Prototype — local stdio only**
 
 The first MCP server scaffold is now in `src/index.js`.
 
