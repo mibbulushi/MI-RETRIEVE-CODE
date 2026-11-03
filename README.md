@@ -65,6 +65,7 @@ MI-RETRIEVE-CODE is intended to become a user-controlled, portable memory hub fo
 ### What this feature should do
 
 - Store project notes, decisions, requirements, files, summaries, and progress in one owner-controlled workspace.
+- Support securely linking two or more of the owner's own AI accounts, with separate authorization, account-level controls, and selective sharing between linked accounts.
 - Create a portable project memory/context package that an AI assistant can read when the owner explicitly provides it or authorizes a supported connection.
 - Support importing conversation exports or user-selected content from AI services that provide an export or supported integration.
 - Let the owner select which projects or memory sections to share with an AI, for how long, and with which permissions.
@@ -78,6 +79,7 @@ MI-RETRIEVE-CODE is intended to become a user-controlled, portable memory hub fo
 - An MI code should identify a memory item or workspace; it must not act as the only password or security factor. Require account authentication and explicit permission before revealing private data.
 - Private memory should be encrypted in transit and at rest, with owner-controlled access, selective sharing, access logs, backups, and a way to revoke future access.
 - The assistant should receive only the minimum context needed for the task, not the owner's entire private archive by default.
+- Linking multiple accounts must not merge all private chats automatically; each account must be authorized separately and shared data must be selected by the owner.
 
 ## Important access limitation
 
