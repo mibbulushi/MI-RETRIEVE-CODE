@@ -45,6 +45,27 @@ These are planned command names. A command is not considered active until its fe
 6. Add AI-powered tools only when an appropriate service and safe configuration are available.
 7. Test the platform, privacy controls, backups, and accessibility.
 
+## Universal AI Memory (core planned feature)
+
+MI-RETRIEVE-CODE is intended to become a user-controlled, portable memory hub for work done across supported AI services and accounts. The goal is to let the owner retrieve an authorized project context with an MI code and continue work in a new ChatGPT account or another supported AI assistant.
+
+### What this feature should do
+
+- Store project notes, decisions, requirements, files, summaries, and progress in one owner-controlled workspace.
+- Create a portable project memory/context package that an AI assistant can read when the owner explicitly provides it or authorizes a supported connection.
+- Support importing conversation exports or user-selected content from AI services that provide an export or supported integration.
+- Let the owner select which projects or memory sections to share with an AI, for how long, and with which permissions.
+- Keep project history and versions so the assistant can understand what was decided and what remains to be done.
+- Support revoking future access and recording when access was granted or used.
+
+### Important technical and privacy limits
+
+- An MI code alone cannot make ChatGPT, OpenAI, or another AI provider access private account memories, hidden chats, or data stored inside a different provider. Each provider controls its own account data and permissions.
+- Cross-platform memory transfer must use user-authorized exports, uploads, or officially supported integrations/APIs. The system must never claim it can read every AI account automatically.
+- An MI code should identify a memory item or workspace; it must not act as the only password or security factor. Require account authentication and explicit permission before revealing private data.
+- Private memory should be encrypted in transit and at rest, with owner-controlled access, selective sharing, access logs, backups, and a way to revoke future access.
+- The assistant should receive only the minimum context needed for the task, not the owner's entire private archive by default.
+
 ## Important access limitation
 
 Revoking access can prevent future access through this platform, but cannot guarantee deletion of copies that someone has already downloaded, copied, or captured.
