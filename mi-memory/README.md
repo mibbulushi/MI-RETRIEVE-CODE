@@ -48,12 +48,14 @@ This feature depends on secure account authentication and supported provider exp
 
 ## Current status
 
-This directory is the initial specification for MI MEMORY. It is not yet a live MCP server and cannot currently connect to ChatGPT or retrieve private projects.
+This folder documents the MI MEMORY product. Its MCP integration component is maintained in the sibling `mi-connect/` folder.
+
+A local stdio MCP prototype now exists there. It can report non-sensitive server status, but project retrieval is deliberately disabled. There is no connection to the MI account API or private project data, no authentication or permission flow yet, no public deployment, and no ChatGPT connection.
 
 ## Build sequence
 
 1. Define the MI account and project API in the main MI service.
-2. Implement the MCP server and its tool definitions.
+2. Complete and test the local MCP server prototype in `../mi-connect/`.
 3. Add secure sign-in, permission scopes, and access revocation.
 4. Connect the MCP server to the MI project database.
 5. Deploy the server to a stable public HTTPS endpoint.
