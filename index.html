@@ -1,122 +1,72 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MI-RETRIEVE-CODE</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #172554;
-    }
-    header {
-      background: #123b70;
-      color: white;
-      text-align: center;
-      padding: 28px 15px;
-    }
-    header h1 { margin: 0 0 10px; }
-    main {
-      max-width: 650px;
-      margin: 30px auto;
-      padding: 15px;
-    }
-    .panel {
-      background: white;
-      padding: 22px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 12px #00000012;
-    }
-    input, textarea, button {
-      width: 100%;
-      padding: 13px;
-      margin-top: 10px;
-      border-radius: 7px;
-      font-size: 16px;
-    }
-    input, textarea { border: 1px solid #cbd5e1; }
-    textarea { min-height: 150px; resize: vertical; }
-    button {
-      background: #1456a0;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover { background: #0d3d75; }
-    .result {
-      background: #ecfdf5;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-wrap: anywhere;
-    }
-    footer { text-align: center; padding: 20px; color: #64748b; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI-RETRIEVE-CODE</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 20px; }
+.container { max-width: 650px; margin: auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 3px 15px #0001; }
+h1 { text-align: center; color: #164e9b; }
+p { text-align: center; color: #555; }
+input, textarea { width: 100%; box-sizing: border-box; padding: 13px; margin: 9px 0; border: 1px solid #ccc; border-radius: 7px; font-size: 16px; }
+textarea { min-height: 150px; }
+button { padding: 12px 18px; margin: 5px 0; border: none; border-radius: 7px; background: #164e9b; color: white; font-size: 15px; cursor: pointer; }
+button:hover { background: #0c3470; }
+.result { background: #eaf2ff; padding: 15px; margin-top: 15px; border-radius: 8px; overflow-wrap: anywhere; white-space: pre-wrap; }
+</style>
 </head>
 <body>
-  <header>
-    <h1>MI-RETRIEVE-CODE</h1>
-    <p>Save Information. Generate a Code. Share Knowledge.</p>
-  </header>
-
-  <main>
-    <section class="panel">
-      <h2>Save Information</h2>
-      <input id="title" placeholder="Enter collection title">
-      <textarea id="content" placeholder="Paste your information here"></textarea>
-      <button onclick="saveInfo()">Save & Generate Code</button>
-      <div id="saveResult"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Retrieve Information</h2>
-      <input id="code" placeholder="Enter your Retrieve Code">
-      <button onclick="retrieveInfo()">Retrieve Collection</button>
-      <div id="retrieveResult"></div>
-    </section>
-  </main>
-
-  <footer>MI-RETRIEVE-CODE | Version 1.0</footer>
-
-  <script>
-    function saveInfo() {
-      const title = document.getElementById("title").value.trim();
-      const content = document.getElementById("content").value.trim();
-      if (!title || !content) {
-        alert("Please enter a title and information.");
-        return;
-      }
-
-      const code = "MI-" + crypto.randomUUID().slice(0, 8).toUpperCase();
-      const item = { title, content, code, date: new Date().toISOString() };
-
-      try {
-        localStorage.setItem("mi-" + code, JSON.stringify(item));
-        document.getElementById("saveResult").innerHTML =
-          '<div class="result"><p>Your code: <strong>' +
-          code + '</strong></p><p>This first prototype saves information only in this browser.</p></div>';
-      } catch (error) {
-        alert("Unable to save in this browser.");
-      }
-    }
-
-    function retrieveInfo() {
-      const code = document.getElementById("code").value.trim().toUpperCase();
-      const saved = localStorage.getItem("mi-" + code);
-      const output = document.getElementById("retrieveResult");
-
-      if (!saved) {
-        output.textContent = "Collection not found in this browser.";
-        return;
-      }
-
-      const item = JSON.parse(saved);
-      output.textContent = item.title + "\n\n" + item.content;
-    }
-  </script>
+<div class="container">
+<h1>MI-RETRIEVE-CODE</h1>
+<p>Your Information. Your Unique Code. Your Control.</p>
+<h3>Save Information</h3>
+<input id="title" placeholder="Enter Title">
+<textarea id="content" placeholder="Write your information here..."></textarea>
+<button onclick="saveData()">Save &amp; Generate Code</button>
+<div class="result" id="saveResult">Your generated code will appear here.</div>
+<hr>
+<h3>Retrieve Information</h3>
+<input id="retrieveCode" placeholder="Enter Your Retrieve Code">
+<button onclick="retrieveData()">Retrieve Information</button>
+<div class="result" id="retrieveResult">Your saved information will appear here.</div>
+</div>
+<script>
+function saveData() {
+  const title = document.getElementById("title").value.trim();
+  const content = document.getElementById("content").value.trim();
+  if (!title || !content) { alert("Please enter title and information."); return; }
+  const code = "MI-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+  const data = { title, content, created: new Date().toISOString() };
+  try {
+    localStorage.setItem(code, JSON.stringify(data));
+    const result = document.getElementById("saveResult");
+    result.replaceChildren();
+    const label = document.createElement("strong");
+    label.textContent = "Your Retrieve Code: " + code;
+    const copy = document.createElement("button");
+    copy.textContent = "Copy Code";
+    copy.onclick = () => copyCode(code);
+    result.append(label, document.createElement("br"), copy);
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+  } catch (error) { alert("Unable to save in this browser."); }
+}
+function retrieveData() {
+  const code = document.getElementById("retrieveCode").value.trim();
+  const saved = localStorage.getItem(code);
+  const result = document.getElementById("retrieveResult");
+  result.replaceChildren();
+  if (!saved) { result.textContent = "No information found for this code in this browser."; return; }
+  try {
+    const data = JSON.parse(saved);
+    result.textContent = "Title: " + data.title + "\n\nInformation: " + data.content;
+  } catch (error) { result.textContent = "The saved information could not be read."; }
+}
+async function copyCode(code) {
+  try { await navigator.clipboard.writeText(code); alert("Code copied successfully!"); }
+  catch (error) { alert("Please copy this code manually: " + code); }
+}
+</script>
 </body>
 </html>
