@@ -90,3 +90,7 @@ Revoking access can prevent future access through this platform, but cannot guar
 - Prefer free tools and services while the project is being developed.
 - Never publish API keys, passwords, or private credentials in website code or this repository.
 - Explain clearly when a feature is a prototype, planned, or fully working.
+
+### Chosen account model: MI ACCOUNT LINK
+
+The owner will use one MI MEMORY workspace and link both of their own ChatGPT identities to it through separate authorization flows. Both linked identities can access the same owner-approved projects and memory collections. Private collections remain private unless the owner explicitly shares them. Each linked identity can be disconnected or have its access revoked independently. Linking does not grant automatic access to private ChatGPT chats or hidden account memories; supported exports or integrations and explicit permissions are required.
