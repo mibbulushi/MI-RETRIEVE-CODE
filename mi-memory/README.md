@@ -21,6 +21,20 @@ MI MEMORY helps the owner preserve, organize, search, and reuse their informatio
 - Respect project-level sharing permissions and revocation.
 - Keep an access log so users can review connections and actions.
 
+## Multi-account support (planned)
+
+MI MEMORY should let one owner securely connect two or more of their own AI accounts (for example, two ChatGPT accounts) to the same MI MEMORY workspace.
+
+- Provide a separate, explicit sign-in/authorization flow for each account; never ask users to share account passwords.
+- Let the owner name each connected account and view, disconnect, or revoke it independently.
+- Allow the owner to choose which projects or memory collections are shared with each account.
+- Support optional sharing of selected information between the owner's linked accounts, with clear confirmation before data is copied or updated.
+- Keep account-specific data private by default; linking accounts must not automatically merge all chats or memories.
+- Record which connected account accessed or changed each item, with timestamps and an audit history.
+- Prevent one linked account from granting access to unrelated users or accounts without the owner's approval.
+
+This feature depends on secure account authentication and supported provider exports or integrations. Linking two accounts does not give MI MEMORY automatic access to private chats or hidden memories in either provider.
+
 ## Security requirements
 
 - An MI reference code is an identifier, not a password or proof of ownership.
