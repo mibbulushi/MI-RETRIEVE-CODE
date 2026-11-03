@@ -1,53 +1,81 @@
 # MI CONNECT
 
-MI CONNECT is a separate, installable integration tool for the MI-RETRIEVE-AI ecosystem.
+MI CONNECT is a separate integration tool for the MI-RETRIEVE-CODE ecosystem. It is kept in its own folder so it can later be extracted or deployed independently.
 
-It is maintained in its own folder so it can later be extracted into a separate repository or deployed as an independent service, while remaining connected to the main MI-RETRIEVE-CODE project.
+## Current implementation
 
-## Purpose
+<badge>Prototype — local stdio only</badge>
 
-MI CONNECT lets compatible AI platforms request information from a user's MI workspace, only after the user has authenticated and granted permission.
+The first MCP server scaffold is now in `src/index.js`.
 
-## Planned capabilities
+It exposes two tools:
 
-- Connect compatible AI clients through the Model Context Protocol (MCP).
-- Verify the user's identity through a secure sign-in flow.
-- Retrieve a project by MI reference code after authorization.
-- Search the user's permitted projects.
-- Save or update information only after explicit user approval.
-- Respect project-level sharing permissions and revocation.
-- Keep an access log so users can review connections and actions.
+- `mi_server_status` — returns non-sensitive prototype status only.
+- `mi_retrieve_project` — accepts an MI reference code but deliberately returns an error. It does not call an API or return project data.
 
-## Security requirements
+The server uses the official MCP TypeScript SDK v2 server package and Zod input validation. It uses the standard input/output (stdio) transport, so a compatible local AI client must launch the process. There is no public web address or remote endpoint.
 
-- An MI reference code is an identifier, not a password or proof of ownership.
-- Require account authentication and authorization before returning private data.
-- Never expose private projects to another user merely because they know a code, email address, or display name.
-- Use HTTPS for deployed endpoints and OAuth 2.1 or another supported secure authorization flow.
-- Store credentials and signing secrets outside source control in environment variables or a secret manager.
-- Request the minimum permissions needed. Separate read access from write access.
-- Let users disconnect an AI client and revoke its access.
-- Explain that revoking access cannot erase copies already downloaded or captured outside MI.
+## Run locally
 
-## Current status
+Requirements:
 
-This directory is the initial specification for the separate MI CONNECT tool. It is not yet a live MCP server and cannot currently connect to ChatGPT or retrieve private projects.
+- Node.js 20 or later (use a currently supported, security-updated release).
+- npm.
 
-## Build sequence
+From this folder:
 
-1. Define the MI account and project API in the main MI service.
-2. Implement the MCP server and its tool definitions.
-3. Add secure sign-in, permission scopes, and access revocation.
-4. Connect the MCP server to the MI project database.
-5. Deploy the server to a stable public HTTPS endpoint.
-6. Test with a compatible AI client and verify that private data is never returned without authorization.
+```bash
+npm install
+npm start
+```
 
-## OpenAI integration
+To inspect the available tools locally:
 
-OpenAI's Apps SDK uses MCP for ChatGPT app integrations. Availability of custom MCP connections and write actions depends on the ChatGPT plan and workspace controls. See the official documentation:
+```bash
+npx @modelcontextprotocol/inspector node src/index.js
+```
 
-- https://developers.openai.com/apps-sdk/
-- https://developers.openai.com/plugins/build/app-quickstart
-- https://help.openai.com/en/articles/12584461-developer-mode-and-full-mcp-connectors-in-chatgpt
+The server writes its startup message to stderr so it does not interfere with MCP messages on stdout.
 
-MI CONNECT is intended to support other AI clients that implement MCP as well; each client has its own connection and permission requirements.
+## What is not connected yet
+
+- No MI account or project API exists in this server integration.
+- No database, cloud storage, or cross-device retrieval is connected.
+- User sign-in, OAuth, permission scopes, access logs, and revocation are not implemented.
+- Project retrieval, search, saving, and updating are not active.
+- No HTTP/HTTPS endpoint is configured or deployed.
+- It is not connected to ChatGPT or another AI platform yet.
+
+Do not treat the presence of an MCP tool name as proof that the feature is operational. The retrieval tool is intentionally fail-closed until the security and API work is complete.
+
+## Security rules
+
+- An MI reference code is an identifier only. It is not a password, access token, or proof of ownership.
+- Never return private data until the user has authenticated and explicitly granted the required permission.
+- Check project-level permissions and whether access has been revoked on every private-data request.
+- Keep read and write permissions separate; require explicit approval for write actions.
+- Keep credentials outside source control, using environment variables or a secret manager when authentication is implemented.
+- Use HTTPS and a supported authorization flow before offering remote access.
+- Request only the minimum data and permission needed for a task.
+- Revoking future access cannot erase copies already downloaded or captured elsewhere.
+
+The current retrieval placeholder returns no private data, even if a caller supplies a reference code.
+
+## Next build steps
+
+1. Define the main MI account and project API contract (including owner IDs, project IDs, and permission checks).
+2. Select and implement the account authentication and authorization flow.
+3. Connect the retrieval tool to the API with read-only scopes first.
+4. Add audit logging, client disconnection, and access revocation.
+5. Add write tools only after explicit approval and separate write scopes are enforced.
+6. Add a remote Streamable HTTP transport only after HTTPS, origin protections, and authorization are ready.
+7. Test with the MCP Inspector and a compatible client before considering deployment.
+
+## Official development references
+
+- MCP TypeScript SDK v2 — first server: https://ts.sdk.modelcontextprotocol.io/v2/get-started/first-server
+- MCP TypeScript SDK v2 — server documentation: https://ts.sdk.modelcontextprotocol.io/v2/
+- OpenAI Apps SDK: https://developers.openai.com/apps-sdk/
+- ChatGPT MCP connection availability and controls: https://help.openai.com/en/articles/12584461-developer-mode-and-full-mcp-connectors-in-chatgpt
+
+MI CONNECT is intended to support other compatible MCP clients too. Each client has its own installation, connection, and permission requirements.
