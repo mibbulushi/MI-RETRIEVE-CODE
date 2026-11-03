@@ -1,6 +1,6 @@
 # MI CONNECT
 
-MI CONNECT is a separate integration tool for the MI-RETRIEVE-CODE ecosystem. It is kept in its own folder so it can later be extracted or deployed independently.
+MI CONNECT is the MCP integration component for **MI MEMORY**, the separate personal memory product in this ecosystem. The product name remains MI MEMORY; this folder contains the connector/server code and can later be extracted or deployed independently.
 
 ## Current implementation
 
@@ -78,4 +78,4 @@ The current retrieval placeholder returns no private data, even if a caller supp
 - OpenAI Apps SDK: https://developers.openai.com/apps-sdk/
 - ChatGPT MCP connection availability and controls: https://help.openai.com/en/articles/12584461-developer-mode-and-full-mcp-connectors-in-chatgpt
 
-MI CONNECT is intended to support other compatible MCP clients too. Each client has its own installation, connection, and permission requirements.
+MI CONNECT is intended to support other compatible MCP clients too. Each client has its own installation, connection, and permission requirements. MI MEMORY remains the name of the personal memory product.
