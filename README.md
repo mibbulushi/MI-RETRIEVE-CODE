@@ -14,9 +14,9 @@ Build one easy-to-use platform with an integrated MI Assistant. The long-term pl
 - MI MEMORY: preserves and retrieves user-authorized memory and provides an integration layer for compatible AI clients, including MCP-based connections.
 - Both remain part of the same ecosystem, but MI MEMORY is designed so it can later be deployed or maintained independently.
 
-Read the [MI MEMORY specification](mi-memory/README.md).
+Read the [MI MEMORY specification](mi-memory/README.md) and [MI CONNECT MCP component notes](mi-connect/README.md).
 
-**Status:** MI MEMORY currently has its initial specification only. It is not yet a running server and is not connected to ChatGPT or any other AI platform.
+**Status:** A local stdio MCP prototype for MI MEMORY's integration layer is available in `mi-connect/`. It exposes a non-sensitive status tool and a retrieval placeholder that intentionally returns no private data. The MI account API, authentication, explicit permissions, remote deployment, and AI-client connection are not implemented. It is not connected to ChatGPT or any other AI platform.
 
 ## Current prototype
 
@@ -54,7 +54,7 @@ These are planned command names. A command is not considered active until its fe
 3. Add accounts, ownership, permissions, and access controls.
 4. Add sharing options, expiry settings, and access revocation.
 5. Build the MI Assistant command interface.
-6. Implement MI MEMORY as a secure MCP server and connect it to the MI account and project API.
+6. Complete the MI CONNECT MCP component for MI MEMORY and connect it to the MI account and project API.
 7. Add AI-powered tools only when an appropriate service and safe configuration are available.
 8. Test the platform, privacy controls, backups, and accessibility.
 
