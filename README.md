@@ -16,7 +16,7 @@ Build one easy-to-use platform with an integrated MI Assistant. The long-term pl
 
 Read the [MI MEMORY specification](mi-memory/README.md) and [MI CONNECT MCP component notes](mi-connect/README.md).
 
-**Status:** A local stdio MCP prototype for MI MEMORY's integration layer is available in `mi-connect/`. It exposes a non-sensitive status tool and a retrieval placeholder that intentionally returns no private data. The MI account API, authentication, explicit permissions, remote deployment, and AI-client connection are not implemented. It is not connected to ChatGPT or any other AI platform.
+**Status:** A local stdio MCP prototype for MI MEMORY's integration layer is available in `mi-connect/`. It exposes a non-sensitive status tool and a retrieval placeholder that intentionally returns no private data. A standalone fail-closed read-policy helper and 11 Node tests now cover the future MI ACCOUNT LINK permission checks, but the helper is not wired to authentication or retrieval. The MI account API, production authentication, server-side audit logs, remote deployment, and AI-client connection are not implemented. It is not connected to ChatGPT or any other AI platform.
 
 ## Current prototype
 
