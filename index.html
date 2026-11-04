@@ -1,72 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MI-RETRIEVE-CODE</title>
-<style>
-body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 20px; }
-.container { max-width: 650px; margin: auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 3px 15px #0001; }
-h1 { text-align: center; color: #164e9b; }
-p { text-align: center; color: #555; }
-input, textarea { width: 100%; box-sizing: border-box; padding: 13px; margin: 9px 0; border: 1px solid #ccc; border-radius: 7px; font-size: 16px; }
-textarea { min-height: 150px; }
-button { padding: 12px 18px; margin: 5px 0; border: none; border-radius: 7px; background: #164e9b; color: white; font-size: 15px; cursor: pointer; }
-button:hover { background: #0c3470; }
-.result { background: #eaf2ff; padding: 15px; margin-top: 15px; border-radius: 8px; overflow-wrap: anywhere; white-space: pre-wrap; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MI-RETRIEVE-CODE — save your information and retrieve it with a unique code.">
+  <title>MI-RETRIEVE-CODE</title>
+  <style>
+    :root { color-scheme: light; --blue:#174ea6; --blue-dark:#103a7a; --ink:#172033; --muted:#64748b; --line:#dbe3ef; --bg:#f3f6fb; --white:#fff; --green:#087443; --red:#b42318; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:28px 16px; background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    .container { max-width:760px; margin:0 auto; }
+    header { text-align:center; margin:12px 0 24px; }
+    h1 { margin:0; color:var(--blue); font-size:clamp(1.8rem,5vw,2.5rem); letter-spacing:-.04em; }
+    .tagline { color:var(--muted); margin:8px 0 0; }
+    .card { background:var(--white); border:1px solid var(--line); border-radius:16px; padding:22px; margin:16px 0; box-shadow:0 8px 24px rgba(15,35,70,.05); }
+    h2 { margin:0 0 14px; font-size:1.2rem; }
+    label { display:block; margin:12px 0 6px; font-weight:600; font-size:.93rem; }
+    input, textarea { width:100%; padding:12px 13px; border:1px solid #cbd5e1; border-radius:9px; font:inherit; background:white; color:var(--ink); }
+    input:focus, textarea:focus { outline:3px solid rgba(23,78,166,.14); border-color:var(--blue); }
+    textarea { min-height:140px; resize:vertical; }
+    button { border:0; border-radius:9px; padding:11px 16px; margin:12px 8px 0 0; background:var(--blue); color:white; font:inherit; font-weight:650; cursor:pointer; }
+    button:hover { background:var(--blue-dark); }
+    button:disabled { opacity:.6; cursor:wait; }
+    button.secondary { background:#e8eef8; color:#173b72; }
+    button.secondary:hover { background:#dce7f6; }
+    .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .row button { margin-right:0; }
+    .status, .result, .notice { padding:12px 14px; border-radius:10px; margin-top:14px; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .status { background:#eef4ff; color:#24436e; }
+    .status.success { background:#eaf7ef; color:var(--green); }
+    .status.error { background:#fff0ef; color:var(--red); }
+    .result { background:#f1f5fb; border:1px solid var(--line); min-height:48px; }
+    .notice { background:#fff8e6; color:#76520b; font-size:.9rem; line-height:1.5; }
+    .small { color:var(--muted); font-size:.88rem; line-height:1.5; }
+    .hidden { display:none !important; }
+    .account-line { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; align-items:center; }
+    .code { font-weight:750; letter-spacing:.04em; color:var(--blue-dark); }
+    footer { text-align:center; color:var(--muted); font-size:.82rem; padding:14px 0 24px; }
+  </style>
 </head>
 <body>
-<div class="container">
-<h1>MI-RETRIEVE-CODE</h1>
-<p>Your Information. Your Unique Code. Your Control.</p>
-<h3>Save Information</h3>
-<input id="title" placeholder="Enter Title">
-<textarea id="content" placeholder="Write your information here..."></textarea>
-<button onclick="saveData()">Save &amp; Generate Code</button>
-<div class="result" id="saveResult">Your generated code will appear here.</div>
-<hr>
-<h3>Retrieve Information</h3>
-<input id="retrieveCode" placeholder="Enter Your Retrieve Code">
-<button onclick="retrieveData()">Retrieve Information</button>
-<div class="result" id="retrieveResult">Your saved information will appear here.</div>
-</div>
-<script>
-function saveData() {
-  const title = document.getElementById("title").value.trim();
-  const content = document.getElementById("content").value.trim();
-  if (!title || !content) { alert("Please enter title and information."); return; }
-  const code = "MI-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-  const data = { title, content, created: new Date().toISOString() };
-  try {
-    localStorage.setItem(code, JSON.stringify(data));
-    const result = document.getElementById("saveResult");
-    result.replaceChildren();
-    const label = document.createElement("strong");
-    label.textContent = "Your Retrieve Code: " + code;
-    const copy = document.createElement("button");
-    copy.textContent = "Copy Code";
-    copy.onclick = () => copyCode(code);
-    result.append(label, document.createElement("br"), copy);
-    document.getElementById("title").value = "";
-    document.getElementById("content").value = "";
-  } catch (error) { alert("Unable to save in this browser."); }
-}
-function retrieveData() {
-  const code = document.getElementById("retrieveCode").value.trim();
-  const saved = localStorage.getItem(code);
-  const result = document.getElementById("retrieveResult");
-  result.replaceChildren();
-  if (!saved) { result.textContent = "No information found for this code in this browser."; return; }
-  try {
-    const data = JSON.parse(saved);
-    result.textContent = "Title: " + data.title + "\n\nInformation: " + data.content;
-  } catch (error) { result.textContent = "The saved information could not be read."; }
-}
-async function copyCode(code) {
-  try { await navigator.clipboard.writeText(code); alert("Code copied successfully!"); }
-  catch (error) { alert("Please copy this code manually: " + code); }
-}
-</script>
+  <main class="container">
+    <header>
+      <h1>MI-RETRIEVE-CODE</h1>
+      <p class="tagline">Your Information. Your Unique Code. Your Control.</p>
+    </header>
+
+    <section class="card">
+      <h2>Your account</h2>
+      <div id="signedOut">
+        <p class="small">Create an account or sign in. Your saved information is private to your account in this first version.</p>
+        <label for="email">Email address</label>
+        <input id="email" type="email" autocomplete="email" placeholder="Enter your email address">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password">
+        <div class="row">
+          <button id="signInBtn" type="button">Sign in</button>
+          <button id="signUpBtn" class="secondary" type="button">Create account</button>
+        </div>
+      </div>
+      <div id="signedIn" class="hidden">
+        <div class="account-line">
+          <span id="accountEmail" class="small"></span>
+          <button id="signOutBtn" class="secondary" type="button">Sign out</button>
+        </div>
+      </div>
+      <div id="authStatus" class="status" role="status" aria-live="polite">Connect to your account to begin.</div>
+    </section>
+
+    <section id="appArea" class="hidden">
+      <section class="card">
+        <h2>Save information</h2>
+        <label for="title">Title</label>
+        <input id="title" maxlength="200" placeholder="Give your information a title">
+        <label for="content">Information</label>
+        <textarea id="content" placeholder="Write or paste your information here..."></textarea>
+        <button id="saveBtn" type="button">Save &amp; generate code</button>
+        <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
+      </section>
+
+      <section class="card">
+        <h2>Retrieve your information</h2>
+        <label for="retrieveCode">Retrieve Code</label>
+        <input id="retrieveCode" autocomplete="off" placeholder="Enter your Retrieve Code">
+        <button id="retrieveBtn" type="button">Retrieve information</button>
+        <div id="retrieveResult" class="result" role="status" aria-live="polite">Your retrieved information will appear here.</div>
+      </section>
+    </section>
+
+    <div class="notice">
+      <strong>Privacy in this first version:</strong> You must sign in with the same account that saved the information to retrieve it. Sharing with other accounts will be added after its access rules are built and tested. Never put a Supabase secret key in this website.
+    </div>
+    <footer>MI-RETRIEVE-CODE · Early development version</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // A Supabase publishable key is designed for browser use.
+    // Database access is still controlled by Row Level Security policies.
+    const SUPABASE_URL = "https://yvcmcnioswsohnpsiscs.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_XuX2UbWn7e4XRfz9RhNtCA_G1ZGTWlj";
+
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const $ = (id) => document.getElementById(id);
+
+    function showStatus(id, message, kind = "") {
+      const el = $(id);
+      el.textContent = message;
+      el.className = "status" + (kind ? " " + kind : "");
+    }
+
+    function friendlyError(error) {
+      return error && error.message ? error.message : "Something went wrong. Please try again.";
+    }
+
+    async function refreshSession() {
+      const { data: { session }, error } = await client.auth.getSession();
+      if (error) showStatus("authStatus", friendlyError(error), "error");
+      renderSession(session);
+    }
+
+    function renderSession(session) {
+      const signedIn = Boolean(session && session.user);
+      $("signedOut").classList.toggle("hidden", signedIn);
+      $("signedIn").classList.toggle("hidden", !signedIn);
+      $("appArea").classList.toggle("hidden", !signedIn);
+      $("accountEmail").textContent = signedIn ? "Signed in as " + (session.user.email || "your account") : "";
+      if (signedIn) showStatus("authStatus", "You are signed in. Your saved content is private to this account.", "success");
+    }
+
+    $("signUpBtn").addEventListener("click", async () => {
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      if (!email || password.length < 8) {
+        showStatus("authStatus", "Enter a valid email address and a password with at least 8 characters.", "error");
+        return;
+      }
+      $("signUpBtn").disabled = true;
+      const { data, error } = await client.auth.signUp({ email, password });
+      $("signUpBtn").disabled = false;
+      if (error) return showStatus("authStatus", friendlyError(error), "error");
+      if (data.session) {
+        renderSession(data.session);
+      } else {
+        showStatus("authStatus", "Account request received. Check your email for the confirmation link, then return here and sign in.", "success");
+      }
+    });
+
+    $("signInBtn").addEventListener("click", async () => {
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      if (!email || !password) return showStatus("authStatus", "Enter your email address and password.", "error");
+      $("signInBtn").disabled = true;
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      $("signInBtn").disabled = false;
+      if (error) return showStatus("authStatus", friendlyError(error), "error");
+      renderSession(data.session);
+    });
+
+    $("signOutBtn").addEventListener("click", async () => {
+      const { error } = await client.auth.signOut();
+      if (error) return showStatus("authStatus", friendlyError(error), "error");
+      renderSession(null);
+      showStatus("authStatus", "You have signed out.", "success");
+    });
+
+    $("saveBtn").addEventListener("click", async () => {
+      const title = $("title").value.trim();
+      const content = $("content").value.trim();
+      if (!title || !content) return $("saveResult").textContent = "Please enter both a title and information.";
+      $("saveBtn").disabled = true;
+      $("saveResult").textContent = "Saving your information...";
+      const { data: { user }, error: userError } = await client.auth.getUser();
+      if (userError || !user) {
+        $("saveBtn").disabled = false;
+        return $("saveResult").textContent = "Your session has expired. Please sign in again.";
+      }
+
+      const { data: saved, error: saveError } = await client
+        .from("mi_saved_content")
+        .insert({ user_id: user.id, title, content })
+        .select("id")
+        .single();
+
+      if (saveError) {
+        $("saveBtn").disabled = false;
+        return $("saveResult").textContent = "Could not save: " + friendlyError(saveError);
+      }
+
+      const { data: codeRow, error: codeError } = await client
+        .from("mi_retrieve_codes")
+        .insert({ content_id: saved.id })
+        .select("code")
+        .single();
+
+      $("saveBtn").disabled = false;
+      if (codeError) {
+        $("saveResult").textContent = "Your content was saved, but code creation failed: " + friendlyError(codeError) + ". Please contact support before retrying.";
+        return;
+      }
+
+      $("saveResult").replaceChildren();
+      const message = document.createElement("div");
+      message.textContent = "Your Retrieve Code:";
+      const code = document.createElement("div");
+      code.className = "code";
+      code.textContent = codeRow.code;
+      const copy = document.createElement("button");
+      copy.type = "button";
+      copy.textContent = "Copy code";
+      copy.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(codeRow.code);
+          copy.textContent = "Copied";
+        } catch {
+          copy.textContent = "Select and copy the code above";
+        }
+      });
+      $("saveResult").append(message, code, copy);
+      $("title").value = "";
+      $("content").value = "";
+    });
+
+    $("retrieveBtn").addEventListener("click", async () => {
+      const code = $("retrieveCode").value.trim().toUpperCase();
+      if (!code) return $("retrieveResult").textContent = "Enter a Retrieve Code first.";
+      $("retrieveBtn").disabled = true;
+      $("retrieveResult").textContent = "Searching your saved information...";
+      const { data: codeRow, error: codeError } = await client
+        .from("mi_retrieve_codes")
+        .select("content_id")
+        .eq("code", code)
+        .maybeSingle();
+
+      if (codeError || !codeRow) {
+        $("retrieveBtn").disabled = false;
+        $("retrieveResult").textContent = codeError ? "Could not retrieve: " + friendlyError(codeError) : "No information found for this code in your account.";
+        return;
+      }
+
+      const { data, error } = await client
+        .from("mi_saved_content")
+        .select("title, content, created_at")
+        .eq("id", codeRow.content_id)
+        .maybeSingle();
+      $("retrieveBtn").disabled = false;
+      if (error || !data) {
+        $("retrieveResult").textContent = error ? "Could not retrieve: " + friendlyError(error) : "This information is not available to your account.";
+        return;
+      }
+      $("retrieveResult").textContent = "Title: " + data.title + "\n\nInformation:\n" + data.content + "\n\nSaved: " + new Date(data.created_at).toLocaleString();
+    });
+
+    client.auth.onAuthStateChange((_event, session) => renderSession(session));
+    refreshSession();
+  </script>
 </body>
 </html>
