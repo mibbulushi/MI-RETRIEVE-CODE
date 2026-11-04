@@ -50,16 +50,16 @@ This feature depends on secure account authentication and supported provider exp
 
 This folder documents the MI MEMORY product. Its MCP integration component is maintained in the sibling `mi-connect/` folder.
 
-A local stdio MCP prototype now exists there. It can report non-sensitive server status, but project retrieval is deliberately disabled. There is no connection to the MI account API or private project data, no authentication or permission flow yet, no public deployment, and no ChatGPT connection.
+A local stdio MCP prototype now exists there. It can report non-sensitive server status, but project retrieval is deliberately disabled. A standalone fail-closed read-policy helper and 11 automated tests have been added for the future MI ACCOUNT LINK authorization checks; the helper is not wired to real authentication, API records, retrieval, or audit logging. There is no connection to private project data, no production authentication or permission flow, no public deployment, and no ChatGPT connection.
 
 ## Build sequence
 
-1. Define the MI account and project API in the main MI service.
-2. Complete and test the local MCP server prototype in `../mi-connect/`.
-3. Add secure sign-in, permission scopes, and access revocation.
-4. Connect the MCP server to the MI project database.
-5. Deploy the server to a stable public HTTPS endpoint.
-6. Test with a compatible AI client and verify that private data is never returned without authorization.
+1. Define the MI account/project API and server-side records for linked accounts, project-specific grants, and audit events.
+2. Implement secure sign-in for each linked AI account without collecting provider passwords.
+3. Wire and enforce the read-policy helper using verified identity claims and trusted API records.
+4. Add server-side audit logging and independent account/grant revocation.
+5. Connect retrieval to the MI project database with read-only permissions first.
+6. Test with the MCP Inspector and a compatible client; only then consider deployment.
 
 ## OpenAI integration
 
