@@ -15,6 +15,31 @@ create table if not exists public.mi_saved_images (
 create index if not exists mi_saved_images_content_id_idx
   on public.mi_saved_images(content_id);
 
+alter table public.mi_saved_images enable row level security;
+revoke all on table public.mi_saved_images from anon, authenticated;
+grant select, insert, delete on table public.mi_saved_images to authenticated;
+
+drop policy if exists "Owners can view their project images" on public.mi_saved_images;
+create policy "Owners can view their project images"
+  on public.mi_saved_images for select to authenticated
+  using (owner_id = auth.uid());
+
+drop policy if exists "Owners can add images to their content" on public.mi_saved_images;
+create policy "Owners can add images to their content"
+  on public.mi_saved_images for insert to authenticated
+  with check (
+    owner_id = auth.uid()
+    and exists (
+      select 1 from public.mi_saved_content c
+      where c.id = mi_saved_images.content_id and c.user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "Owners can delete their project images" on public.mi_saved_images;
+create policy "Owners can delete their project images"
+  on public.mi_saved_images for delete to authenticated
+  using (owner_id = auth.uid());
+
 create table if not exists public.mi_saved_files (
   id uuid primary key default gen_random_uuid(),
   content_id uuid not null references public.mi_saved_content(id) on delete cascade,
