@@ -51,6 +51,8 @@
       <p class="small">Students can enter a share code here. An account is not required for information that its owner has chosen to share.</p>
       <label for="studentShareCode">Student Share Code</label>
       <input id="studentShareCode" autocomplete="off" placeholder="Example: MI-7K4P-9W2D">
+      <label for="studentSharePassword">Project password (if required)</label>
+      <input id="studentSharePassword" type="password" autocomplete="off" placeholder="Enter project password">
       <button id="studentRetrieveBtn" type="button">Retrieve shared information</button>
       <div id="studentRetrieveResult" class="result" role="status" aria-live="polite">Shared information will appear here.</div>
     </section>
@@ -96,8 +98,24 @@
         <label for="projectFiles">Attach project files (images, PDF, Word, Excel, PowerPoint, ZIP, code, audio, video, etc.)</label>
         <input id="projectFiles" type="file" multiple>
         <p class="small">Up to 20 files per project; maximum 25 MB per file. Files are private until you create/share a project code.</p>
+        <label for="sharePassword">Optional student Share Code password</label>
+        <input id="sharePassword" type="password" autocomplete="new-password" placeholder="Leave blank for no password (minimum 8 characters if set)">
+        <p class="small">This password is separate from your account password.</p>
         <button id="saveBtn" type="button">Save complete project &amp; generate codes</button>
         <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
+      </section>
+
+      <section class="card">
+        <h2>Manage an existing Share Code password</h2>
+        <label for="manageShareCode">Your Student Share Code</label>
+        <input id="manageShareCode" autocomplete="off" placeholder="Enter your Share Code">
+        <label for="manageSharePassword">New project password</label>
+        <input id="manageSharePassword" type="password" autocomplete="new-password" placeholder="At least 8 characters">
+        <div class="row">
+          <button id="setSharePasswordBtn" type="button">Set / change password</button>
+          <button id="removeSharePasswordBtn" class="secondary" type="button">Remove password</button>
+        </div>
+        <div id="manageSharePasswordResult" class="result" role="status" aria-live="polite">Only the owner of a Share Code can change its password.</div>
       </section>
 
       <section class="card">
@@ -203,6 +221,10 @@
         ? "MI SMART PROJECT STRUCTURE\n" + structure + (writtenContent ? "\n\nPROJECT INFORMATION\n" + writtenContent : "")
         : writtenContent;
       const files = Array.from($("projectFiles").files || []);
+      const chosenSharePassword = $("sharePassword").value;
+      if (chosenSharePassword && chosenSharePassword.length < 8) {
+        return $("saveResult").textContent = "Project password must contain at least 8 characters, or leave it blank.";
+      }
       if (!title || (!content && files.length === 0)) return $("saveResult").textContent = "Enter a title and either information, a project structure, or at least one file.";
       if (files.length > 20) return $("saveResult").textContent = "Please attach no more than 20 files to one project.";
       const tooLarge = files.find(file => file.size > 25 * 1024 * 1024);
@@ -305,6 +327,18 @@
         }
       }
 
+      if (shareCreated && shareRow && chosenSharePassword) {
+        const { error: passwordError } = await client.rpc("mi_set_share_password", {
+          p_code: shareRow.share_code,
+          p_password: chosenSharePassword
+        });
+        if (passwordError) {
+          await client.from("mi_shared_access").update({ is_active: false }).eq("share_code", shareRow.share_code);
+          shareCreated = false;
+          shareError = passwordError;
+        }
+      }
+
       const shareHeading = document.createElement("h3");
       shareHeading.textContent = "Student Share Code:";
       $("saveResult").append(shareHeading);
@@ -349,55 +383,48 @@
       $("content").value = "";
       $("projectStructure").value = "";
       $("projectFiles").value = "";
+      $("sharePassword").value = "";
     });
 
 
     $("studentRetrieveBtn").addEventListener("click", async () => {
       const code = $("studentShareCode").value.trim().toUpperCase();
+      const password = $("studentSharePassword").value;
       if (!code) return $("studentRetrieveResult").textContent = "Enter a student share code first.";
       $("studentRetrieveBtn").disabled = true;
-      $("studentRetrieveResult").textContent = "Loading shared information...";
-      const { data, error } = await client.rpc("mi_get_shared_content", { p_code: code });
+      $("studentRetrieveResult").textContent = "Checking Share Code and password...";
+      const { data, error } = await client.functions.invoke("share-access", {
+        body: { code, password: password || null }
+      });
       $("studentRetrieveBtn").disabled = false;
-      if (error) {
-        $("studentRetrieveResult").textContent = "Could not retrieve shared information: " + friendlyError(error) + ". The owner may need to apply the sharing SQL setup in Supabase.";
-        return;
-      }
-      const item = Array.isArray(data) ? data[0] : data;
-      if (!item) {
-        $("studentRetrieveResult").textContent = "No active shared information was found for this code.";
+      if (error || !data || data.error) {
+        $("studentRetrieveResult").textContent = data?.error || "Share code or password is incorrect, or access is unavailable.";
         return;
       }
       const output = $("studentRetrieveResult");
       output.replaceChildren();
       const heading = document.createElement("h3");
-      heading.textContent = item.title;
+      heading.textContent = data.title || "Shared project";
       const body = document.createElement("p");
       body.style.whiteSpace = "pre-wrap";
-      body.textContent = item.content || "(No written text in this project.)";
+      body.textContent = data.content || "(No written text in this project.)";
       output.append(heading, body);
-      const attachments = [
-        ...(Array.isArray(item.images) ? item.images.map(file => ({ ...file, bucket: "mi-project-images" })) : []),
-        ...(Array.isArray(item.files) ? item.files.map(file => ({ ...file, bucket: "mi-project-files" })) : [])
-      ];
+      const attachments = Array.isArray(data.attachments) ? data.attachments : [];
       if (attachments.length) {
         const filesHeading = document.createElement("h4");
         filesHeading.textContent = "Project attachments (" + attachments.length + ")";
         output.append(filesHeading);
         for (const file of attachments) {
-          const { data: signed, error: signedError } = await client.storage
-            .from(file.bucket)
-            .createSignedUrl(file.path, 3600);
           const line = document.createElement("p");
-          if (signedError || !signed?.signedUrl) {
-            line.textContent = file.file_name + " — preview link unavailable";
-          } else {
+          if (file.url) {
             const link = document.createElement("a");
-            link.href = signed.signedUrl;
+            link.href = file.url;
             link.target = "_blank";
             link.rel = "noopener noreferrer";
             link.textContent = "Open / download: " + file.file_name;
             line.append(link);
+          } else {
+            line.textContent = file.file_name + " — preview link unavailable";
           }
           output.append(line);
         }
@@ -408,8 +435,45 @@
       }
       const note = document.createElement("p");
       note.className = "small";
-      note.textContent = "Shared in read-only mode. File links remain valid for one hour after retrieval.";
+      note.textContent = data.note || "Shared in read-only mode.";
       output.append(note);
+    });
+
+    $("setSharePasswordBtn").addEventListener("click", async () => {
+      const code = $("manageShareCode").value.trim().toUpperCase();
+      const password = $("manageSharePassword").value;
+      if (!code || password.length < 8) {
+        $("manageSharePasswordResult").textContent = "Enter your Share Code and a password with at least 8 characters.";
+        return;
+      }
+      $("setSharePasswordBtn").disabled = true;
+      const { data, error } = await client.rpc("mi_set_share_password", {
+        p_code: code,
+        p_password: password
+      });
+      $("setSharePasswordBtn").disabled = false;
+      $("manageSharePasswordResult").textContent = error
+        ? "Could not update password: " + friendlyError(error)
+        : (data ? "Project password set/changed successfully." : "Share Code not found or you are not its owner.");
+      if (!error && data) $("manageSharePassword").value = "";
+    });
+
+    $("removeSharePasswordBtn").addEventListener("click", async () => {
+      const code = $("manageShareCode").value.trim().toUpperCase();
+      if (!code) {
+        $("manageSharePasswordResult").textContent = "Enter your Share Code first.";
+        return;
+      }
+      $("removeSharePasswordBtn").disabled = true;
+      const { data, error } = await client.rpc("mi_set_share_password", {
+        p_code: code,
+        p_password: null
+      });
+      $("removeSharePasswordBtn").disabled = false;
+      $("manageSharePasswordResult").textContent = error
+        ? "Could not remove password: " + friendlyError(error)
+        : (data ? "Project password removed." : "Share Code not found or you are not its owner.");
+      $("manageSharePassword").value = "";
     });
 
     $("retrieveBtn").addEventListener("click", async () => {
