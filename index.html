@@ -49,7 +49,7 @@
     <section class="card">
       <h2>Your account</h2>
       <div id="signedOut">
-        <p class="small">Create an account or sign in. Your saved information is private to your account in this first version.</p>
+        <p class="small">Create an account or sign in to save and manage your information. You can create a separate student share code for content you choose to share.</p>
         <label for="email">Email address</label>
         <input id="email" type="email" autocomplete="email" placeholder="Enter your email address">
         <label for="password">Password</label>
@@ -108,6 +108,15 @@
       const el = $(id);
       el.textContent = message;
       el.className = "status" + (kind ? " " + kind : "");
+    }
+
+
+    const SHARE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    function makeStudentShareCode() {
+      const bytes = new Uint8Array(8);
+      crypto.getRandomValues(bytes);
+      const chars = Array.from(bytes, (b) => SHARE_ALPHABET[b % SHARE_ALPHABET.length]).join("");
+      return "MI-" + chars.slice(0, 4) + "-" + chars.slice(4);
     }
 
     function friendlyError(error) {
@@ -201,25 +210,95 @@
       }
 
       $("saveResult").replaceChildren();
-      const message = document.createElement("div");
-      message.textContent = "Your Retrieve Code:";
-      const code = document.createElement("div");
-      code.className = "code";
-      code.textContent = codeRow.code;
-      const copy = document.createElement("button");
-      copy.type = "button";
-      copy.textContent = "Copy code";
-      copy.addEventListener("click", async () => {
+      const privateLabel = document.createElement("div");
+      privateLabel.textContent = "Private account Retrieve Code:";
+      const privateCode = document.createElement("div");
+      privateCode.className = "code";
+      privateCode.textContent = codeRow.code;
+      const privateCopy = document.createElement("button");
+      privateCopy.type = "button";
+      privateCopy.className = "secondary";
+      privateCopy.textContent = "Copy private code";
+      privateCopy.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(codeRow.code);
-          copy.textContent = "Copied";
+          privateCopy.textContent = "Copied";
         } catch {
-          copy.textContent = "Select and copy the code above";
+          privateCopy.textContent = "Select and copy the code above";
         }
       });
-      $("saveResult").append(message, code, copy);
+      $("saveResult").append(privateLabel, privateCode, privateCopy);
+
+      let shareCreated = false;
+      let shareRow = null;
+      let shareError = null;
+      for (let attempt = 0; attempt < 4 && !shareCreated; attempt++) {
+        const proposedCode = makeStudentShareCode();
+        const result = await client
+          .from("mi_shared_access")
+          .insert({ content_id: saved.id, owner_id: user.id, share_code: proposedCode })
+          .select("share_code")
+          .single();
+        if (!result.error) {
+          shareRow = result.data;
+          shareCreated = true;
+        } else {
+          shareError = result.error;
+          if (!/duplicate|unique/i.test(result.error.message || "")) break;
+        }
+      }
+
+      const shareHeading = document.createElement("h3");
+      shareHeading.textContent = "Student Share Code:";
+      $("saveResult").append(shareHeading);
+      if (shareCreated && shareRow) {
+        const shareCodeEl = document.createElement("div");
+        shareCodeEl.className = "code";
+        shareCodeEl.textContent = shareRow.share_code;
+        const shareCopy = document.createElement("button");
+        shareCopy.type = "button";
+        shareCopy.textContent = "Copy student share code";
+        shareCopy.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(shareRow.share_code);
+            shareCopy.textContent = "Copied";
+          } catch {
+            shareCopy.textContent = "Select and copy the code above";
+          }
+        });
+        const shareNote = document.createElement("p");
+        shareNote.className = "small";
+        shareNote.textContent = "Send this short code to your students. Anyone with this code can view this shared information.";
+        $("saveResult").append(shareCodeEl, shareCopy, shareNote);
+      } else {
+        const shareNote = document.createElement("p");
+        shareNote.className = "notice";
+        shareNote.textContent = "Your information was saved, but student sharing is not enabled yet. Apply the SQL setup file named supabase-sharing-setup.sql in your Supabase SQL Editor, then save new information again. Details: " + friendlyError(shareError);
+        $("saveResult").append(shareNote);
+      }
+
       $("title").value = "";
       $("content").value = "";
+    });
+
+
+    $("studentRetrieveBtn").addEventListener("click", async () => {
+      const code = $("studentShareCode").value.trim().toUpperCase();
+      if (!code) return $("studentRetrieveResult").textContent = "Enter a student share code first.";
+      $("studentRetrieveBtn").disabled = true;
+      $("studentRetrieveResult").textContent = "Loading shared information...";
+      const { data, error } = await client.rpc("mi_get_shared_content", { p_code: code });
+      $("studentRetrieveBtn").disabled = false;
+      if (error) {
+        $("studentRetrieveResult").textContent = "Could not retrieve shared information: " + friendlyError(error) + ". The owner may need to apply the sharing SQL setup in Supabase.";
+        return;
+      }
+      const item = Array.isArray(data) ? data[0] : data;
+      if (!item) {
+        $("studentRetrieveResult").textContent = "No active shared information was found for this code.";
+        return;
+      }
+      $("studentRetrieveResult").textContent = "Title: " + item.title + "\n\nInformation:\n" + item.content + "\n\nShared content is displayed in read-only mode.";
     });
 
     $("retrieveBtn").addEventListener("click", async () => {
