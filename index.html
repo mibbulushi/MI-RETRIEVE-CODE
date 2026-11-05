@@ -51,6 +51,8 @@
       <p class="small">Students can enter a share code here. An account is not required for information that its owner has chosen to share.</p>
       <label for="studentShareCode">Student Share Code</label>
       <input id="studentShareCode" autocomplete="off" placeholder="Example: MI-7K4P-9W2D">
+      <label for="studentSharePassword">Project password (only if the owner set one)</label>
+      <input id="studentSharePassword" type="password" autocomplete="off" placeholder="Enter project password">
       <button id="studentRetrieveBtn" type="button">Retrieve shared information</button>
       <div id="studentRetrieveResult" class="result" role="status" aria-live="polite">Shared information will appear here.</div>
     </section>
@@ -93,6 +95,9 @@
 2(b). Database
 3. Files and media"></textarea>
         <p class="small">Use exam-style numbering: 1, 1(a), 1(b), 2, 2(a). This outline is saved with the project and shared with its Share Code.</p>
+        <label for="newSharePassword">Optional student Share Code password</label>
+        <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password">
+        <p class="small">If you set a password, use at least 8 characters. Share it separately from the Share Code.</p>
         <label for="projectFiles">Attach project files (images, PDF, Word, Excel, PowerPoint, ZIP, code, audio, video, etc.)</label>
         <input id="projectFiles" type="file" multiple>
         <p class="small">Up to 20 files per project; maximum 25 MB per file. Files are private until you create/share a project code.</p>
@@ -309,6 +314,28 @@
       shareHeading.textContent = "Student Share Code:";
       $("saveResult").append(shareHeading);
       if (shareCreated && shareRow) {
+        const requestedSharePassword = $("newSharePassword").value;
+        let passwordApplied = !requestedSharePassword;
+        if (requestedSharePassword) {
+          if (requestedSharePassword.length < 8) {
+            const passwordWarning = document.createElement("p");
+            passwordWarning.className = "notice";
+            passwordWarning.textContent = "Your project was saved and a Share Code was created, but the password was not set because it must contain at least 8 characters. Do not share this code as password-protected.";
+            $("saveResult").append(passwordWarning);
+          } else {
+            const { data: passwordResult, error: passwordError } = await client.rpc("mi_set_share_password", {
+              p_code: shareRow.share_code,
+              p_password: requestedSharePassword
+            });
+            passwordApplied = !passwordError && passwordResult === true;
+            if (!passwordApplied) {
+              const passwordWarning = document.createElement("p");
+              passwordWarning.className = "notice";
+              passwordWarning.textContent = "The Share Code was created, but its password could not be applied. Do not share this code as password-protected yet. The database password migration may not have been applied.";
+              $("saveResult").append(passwordWarning);
+            }
+          }
+        }
         const shareCodeEl = document.createElement("div");
         shareCodeEl.className = "code";
         shareCodeEl.textContent = shareRow.share_code;
@@ -325,7 +352,9 @@
         });
         const shareNote = document.createElement("p");
         shareNote.className = "small";
-        shareNote.textContent = "Send this short code to your students. Anyone with this code can view this shared information.";
+        shareNote.textContent = requestedSharePassword && passwordApplied
+          ? "Send the Share Code and its password separately to the intended recipients."
+          : "Send this short code to your students. Anyone with this code can view this shared information.";
         $("saveResult").append(shareCodeEl, shareCopy, shareNote);
       } else {
         const shareNote = document.createElement("p");
@@ -349,6 +378,7 @@
       $("content").value = "";
       $("projectStructure").value = "";
       $("projectFiles").value = "";
+      $("newSharePassword").value = "";
     });
 
 
@@ -357,13 +387,29 @@
       if (!code) return $("studentRetrieveResult").textContent = "Enter a student share code first.";
       $("studentRetrieveBtn").disabled = true;
       $("studentRetrieveResult").textContent = "Loading shared information...";
-      const { data, error } = await client.rpc("mi_get_shared_content", { p_code: code });
-      $("studentRetrieveBtn").disabled = false;
-      if (error) {
-        $("studentRetrieveResult").textContent = "Could not retrieve shared information: " + friendlyError(error) + ". The owner may need to apply the sharing SQL setup in Supabase.";
+      const sharePassword = $("studentSharePassword").value;
+      let response;
+      try {
+        response = await fetch(SUPABASE_URL + "/functions/v1/share-access", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_PUBLISHABLE_KEY
+          },
+          body: JSON.stringify({ code, password: sharePassword || null })
+        });
+      } catch (networkError) {
+        $("studentRetrieveBtn").disabled = false;
+        $("studentRetrieveResult").textContent = "Could not connect. Please check your internet connection and try again.";
         return;
       }
-      const item = Array.isArray(data) ? data[0] : data;
+      const data = await response.json().catch(() => ({}));
+      $("studentRetrieveBtn").disabled = false;
+      if (!response.ok) {
+        $("studentRetrieveResult").textContent = data.error || "Could not retrieve shared information.";
+        return;
+      }
+      const item = data;
       if (!item) {
         $("studentRetrieveResult").textContent = "No active shared information was found for this code.";
         return;
@@ -376,24 +422,18 @@
       body.style.whiteSpace = "pre-wrap";
       body.textContent = item.content || "(No written text in this project.)";
       output.append(heading, body);
-      const attachments = [
-        ...(Array.isArray(item.images) ? item.images.map(file => ({ ...file, bucket: "mi-project-images" })) : []),
-        ...(Array.isArray(item.files) ? item.files.map(file => ({ ...file, bucket: "mi-project-files" })) : [])
-      ];
+      const attachments = Array.isArray(item.attachments) ? item.attachments : [];
       if (attachments.length) {
         const filesHeading = document.createElement("h4");
         filesHeading.textContent = "Project attachments (" + attachments.length + ")";
         output.append(filesHeading);
         for (const file of attachments) {
-          const { data: signed, error: signedError } = await client.storage
-            .from(file.bucket)
-            .createSignedUrl(file.path, 3600);
           const line = document.createElement("p");
-          if (signedError || !signed?.signedUrl) {
+          if (!file.url) {
             line.textContent = file.file_name + " — preview link unavailable";
           } else {
             const link = document.createElement("a");
-            link.href = signed.signedUrl;
+            link.href = file.url;
             link.target = "_blank";
             link.rel = "noopener noreferrer";
             link.textContent = "Open / download: " + file.file_name;
@@ -408,7 +448,7 @@
       }
       const note = document.createElement("p");
       note.className = "small";
-      note.textContent = "Shared in read-only mode. File links remain valid for one hour after retrieval.";
+      note.textContent = item.note || "Shared in read-only mode. File links remain valid for one hour after retrieval.";
       output.append(note);
     });
 
