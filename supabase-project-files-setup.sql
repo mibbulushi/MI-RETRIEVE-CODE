@@ -1,5 +1,20 @@
 -- MI-RETRIEVE-CODE: general project file attachments
--- Run once in Supabase SQL Editor after the existing sharing setup.
+-- Self-contained migration; safe to run again.
+
+-- Compatibility table: older deployments may not have run the image migration.
+create table if not exists public.mi_saved_images (
+  id uuid primary key default gen_random_uuid(),
+  content_id uuid not null references public.mi_saved_content(id) on delete cascade,
+  owner_id uuid not null references auth.users(id) on delete cascade,
+  storage_path text not null unique,
+  file_name text not null,
+  mime_type text not null,
+  size_bytes bigint not null check (size_bytes > 0),
+  created_at timestamptz not null default now()
+);
+create index if not exists mi_saved_images_content_id_idx
+  on public.mi_saved_images(content_id);
+
 create table if not exists public.mi_saved_files (
   id uuid primary key default gen_random_uuid(),
   content_id uuid not null references public.mi_saved_content(id) on delete cascade,
