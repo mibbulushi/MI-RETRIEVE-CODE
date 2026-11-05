@@ -1,6 +1,6 @@
 # Deploy MI Project Password Protection
 
-The source code is committed, but password protection is not active until the database migration and Edge Function are deployed.
+The database migration and Edge Function source are committed, but password protection is not active yet. The website interface update is intentionally pending so the existing Share Code retrieval does not break before the backend is deployed.
 
 ## Important order
 
@@ -27,7 +27,11 @@ Do not share or paste the Supabase service-role key into GitHub, the website, or
 
 The migration adds a bcrypt password hash, an owner-only password-setting RPC, a server-only verification RPC with per-IP attempt limiting, removes the old public content RPC, and removes direct public attachment-read policies.
 
-## Website behavior after deployment
+## Website integration (pending)
+
+After the Edge Function and database migration are deployed and verified, the website interface must be updated to show the optional owner password controls and the recipient password field. That frontend update has not yet been applied to the live website.
+
+## Intended website behavior after full integration
 
 - New projects may have an optional Share Code password.
 - Recipients enter the Share Code and, when needed, the project password.
