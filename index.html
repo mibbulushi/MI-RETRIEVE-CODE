@@ -46,6 +46,15 @@
       <p class="tagline">Your Information. Your Unique Code. Your Control.</p>
     </header>
 
+    <section class="card" id="studentRetrieveArea">
+      <h2>Retrieve shared information</h2>
+      <p class="small">Students can enter a share code here. An account is not required for information that its owner has chosen to share.</p>
+      <label for="studentShareCode">Student Share Code</label>
+      <input id="studentShareCode" autocomplete="off" placeholder="Example: MI-7K4P-9W2D">
+      <button id="studentRetrieveBtn" type="button">Retrieve shared information</button>
+      <div id="studentRetrieveResult" class="result" role="status" aria-live="polite">Shared information will appear here.</div>
+    </section>
+
     <section class="card">
       <h2>Your account</h2>
       <div id="signedOut">
@@ -89,7 +98,7 @@
     </section>
 
     <div class="notice">
-      <strong>Privacy in this first version:</strong> You must sign in with the same account that saved the information to retrieve it. Sharing with other accounts will be added after its access rules are built and tested. Never put a Supabase secret key in this website.
+      <strong>Sharing and privacy:</strong> Your saved information remains private unless you create a student share code for it. Anyone who has that share code can view the shared information, so only share codes for content you intend to distribute. Never put a Supabase secret key in this website.
     </div>
     <footer>MI-RETRIEVE-CODE · Early development version</footer>
   </main>
