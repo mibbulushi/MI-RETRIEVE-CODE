@@ -84,7 +84,10 @@
         <input id="title" maxlength="200" placeholder="Give your information a title">
         <label for="content">Information</label>
         <textarea id="content" placeholder="Write or paste your information here..."></textarea>
-        <button id="saveBtn" type="button">Save &amp; generate code</button>
+        <label for="projectFiles">Attach project files (images, PDF, Word, Excel, PowerPoint, ZIP, code, audio, video, etc.)</label>
+        <input id="projectFiles" type="file" multiple>
+        <p class="small">Up to 20 files per project; maximum 25 MB per file. Files are private until you create/share a project code.</p>
+        <button id="saveBtn" type="button">Save complete project &amp; generate codes</button>
         <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
       </section>
 
@@ -186,9 +189,13 @@
     $("saveBtn").addEventListener("click", async () => {
       const title = $("title").value.trim();
       const content = $("content").value.trim();
-      if (!title || !content) return $("saveResult").textContent = "Please enter both a title and information.";
+      const files = Array.from($("projectFiles").files || []);
+      if (!title || (!content && files.length === 0)) return $("saveResult").textContent = "Enter a title and either information or at least one file.";
+      if (files.length > 20) return $("saveResult").textContent = "Please attach no more than 20 files to one project.";
+      const tooLarge = files.find(file => file.size > 25 * 1024 * 1024);
+      if (tooLarge) return $("saveResult").textContent = "File exceeds the 25 MB limit: " + tooLarge.name;
       $("saveBtn").disabled = true;
-      $("saveResult").textContent = "Saving your information...";
+      $("saveResult").textContent = "Saving project and uploading attached files...";
       const { data: { user }, error: userError } = await client.auth.getUser();
       if (userError || !user) {
         $("saveBtn").disabled = false;
@@ -204,6 +211,34 @@
       if (saveError) {
         $("saveBtn").disabled = false;
         return $("saveResult").textContent = "Could not save: " + friendlyError(saveError);
+      }
+
+      const uploadedFiles = [];
+      const uploadErrors = [];
+      for (const file of files) {
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120) || "file";
+        const storagePath = user.id + "/" + saved.id + "/" + crypto.randomUUID() + "-" + safeName;
+        const { error: uploadError } = await client.storage
+          .from("mi-project-files")
+          .upload(storagePath, file, { upsert: false, contentType: file.type || "application/octet-stream" });
+        if (uploadError) {
+          uploadErrors.push(file.name + ": " + friendlyError(uploadError));
+          continue;
+        }
+        const { error: metaError } = await client.from("mi_saved_files").insert({
+          content_id: saved.id,
+          owner_id: user.id,
+          storage_path: storagePath,
+          file_name: file.name,
+          mime_type: file.type || "application/octet-stream",
+          size_bytes: file.size
+        });
+        if (metaError) {
+          await client.storage.from("mi-project-files").remove([storagePath]);
+          uploadErrors.push(file.name + ": metadata save failed - " + friendlyError(metaError));
+          continue;
+        }
+        uploadedFiles.push(file.name);
       }
 
       const { data: codeRow, error: codeError } = await client
@@ -286,8 +321,20 @@
         $("saveResult").append(shareNote);
       }
 
+      if (uploadErrors.length) {
+        const warning = document.createElement("p");
+        warning.className = "notice";
+        warning.textContent = "Some files were not saved:\n" + uploadErrors.join("\n");
+        $("saveResult").append(warning);
+      } else if (uploadedFiles.length) {
+        const fileNote = document.createElement("p");
+        fileNote.className = "small";
+        fileNote.textContent = uploadedFiles.length + " attached file(s) saved successfully and will be included in this Share Code.";
+        $("saveResult").append(fileNote);
+      }
       $("title").value = "";
       $("content").value = "";
+      $("projectFiles").value = "";
     });
 
 
@@ -307,7 +354,48 @@
         $("studentRetrieveResult").textContent = "No active shared information was found for this code.";
         return;
       }
-      $("studentRetrieveResult").textContent = "Title: " + item.title + "\n\nInformation:\n" + item.content + "\n\nShared content is displayed in read-only mode.";
+      const output = $("studentRetrieveResult");
+      output.replaceChildren();
+      const heading = document.createElement("h3");
+      heading.textContent = item.title;
+      const body = document.createElement("p");
+      body.style.whiteSpace = "pre-wrap";
+      body.textContent = item.content || "(No written text in this project.)";
+      output.append(heading, body);
+      const attachments = [
+        ...(Array.isArray(item.images) ? item.images.map(file => ({ ...file, bucket: "mi-project-images" })) : []),
+        ...(Array.isArray(item.files) ? item.files.map(file => ({ ...file, bucket: "mi-project-files" })) : [])
+      ];
+      if (attachments.length) {
+        const filesHeading = document.createElement("h4");
+        filesHeading.textContent = "Project attachments (" + attachments.length + ")";
+        output.append(filesHeading);
+        for (const file of attachments) {
+          const { data: signed, error: signedError } = await client.storage
+            .from(file.bucket)
+            .createSignedUrl(file.path, 3600);
+          const line = document.createElement("p");
+          if (signedError || !signed?.signedUrl) {
+            line.textContent = file.file_name + " — preview link unavailable";
+          } else {
+            const link = document.createElement("a");
+            link.href = signed.signedUrl;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "Open / download: " + file.file_name;
+            line.append(link);
+          }
+          output.append(line);
+        }
+      } else {
+        const none = document.createElement("p");
+        none.textContent = "No attached files.";
+        output.append(none);
+      }
+      const note = document.createElement("p");
+      note.className = "small";
+      note.textContent = "Shared in read-only mode. File links remain valid for one hour after retrieval.";
+      output.append(note);
     });
 
     $("retrieveBtn").addEventListener("click", async () => {
@@ -337,7 +425,41 @@
         $("retrieveResult").textContent = error ? "Could not retrieve: " + friendlyError(error) : "This information is not available to your account.";
         return;
       }
-      $("retrieveResult").textContent = "Title: " + data.title + "\n\nInformation:\n" + data.content + "\n\nSaved: " + new Date(data.created_at).toLocaleString();
+      const output = $("retrieveResult");
+      output.replaceChildren();
+      const heading = document.createElement("h3");
+      heading.textContent = data.title;
+      const body = document.createElement("p");
+      body.style.whiteSpace = "pre-wrap";
+      body.textContent = data.content || "(No written text.)";
+      const savedAt = document.createElement("p");
+      savedAt.className = "small";
+      savedAt.textContent = "Saved: " + new Date(data.created_at).toLocaleString();
+      output.append(heading, body, savedAt);
+      const { data: files } = await client.from("mi_saved_files")
+        .select("storage_path,file_name")
+        .eq("content_id", codeRow.content_id);
+      if (files?.length) {
+        const fileHeading = document.createElement("h4");
+        fileHeading.textContent = "Project files";
+        output.append(fileHeading);
+        for (const file of files) {
+          const { data: signed } = await client.storage.from("mi-project-files")
+            .createSignedUrl(file.storage_path, 3600);
+          const line = document.createElement("p");
+          if (signed?.signedUrl) {
+            const link = document.createElement("a");
+            link.href = signed.signedUrl;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "Open / download: " + file.file_name;
+            line.append(link);
+          } else {
+            line.textContent = file.file_name + " — link unavailable";
+          }
+          output.append(line);
+        }
+      }
     });
 
     client.auth.onAuthStateChange((_event, session) => renderSession(session));
