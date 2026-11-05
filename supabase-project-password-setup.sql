@@ -157,5 +157,4 @@ drop policy if exists "Shared viewers can read shared project images" on storage
 drop policy if exists "Shared viewers can read shared project files" on storage.objects;
 
 -- Public execution of the old attachment-check helpers is no longer needed.
-revoke all on function public.mi_can_view_shared_image(text) from public, anon, authenticated;
 revoke all on function public.mi_can_view_shared_file(text) from public, anon, authenticated;
