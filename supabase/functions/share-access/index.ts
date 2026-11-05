@@ -1,7 +1,6 @@
 // MI-RETRIEVE-CODE public share access endpoint.
-// Deploy as Supabase Edge Function: share-access
-// Required Supabase secrets: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
-// Never expose the service-role key in the browser.
+// Uses Supabase's current named secret key, with legacy fallback during migration.
+// Never expose a secret API key in browser code or GitHub.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -18,6 +17,23 @@ function response(body: unknown, status = 200) {
   });
 }
 
+function getServerSecretKey(): string | null {
+  const namedKeys = Deno.env.get("SUPABASE_SECRET_KEYS");
+
+  if (namedKeys) {
+    try {
+      const parsed = JSON.parse(namedKeys);
+      if (typeof parsed.default === "string" && parsed.default.length > 0) {
+        return parsed.default;
+      }
+    } catch {
+      // Fall through to the legacy key during migration.
+    }
+  }
+
+  return Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || null;
+}
+
 async function hashIp(ip: string, secret: string) {
   const bytes = new TextEncoder().encode(ip + ":" + secret);
   const digest = await crypto.subtle.digest("SHA-256", bytes);
@@ -29,7 +45,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return response({ error: "Request not available." }, 405);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceKey = getServerSecretKey();
   if (!supabaseUrl || !serviceKey) return response({ error: "Service temporarily unavailable." }, 503);
 
   let body: { code?: string; password?: string };
@@ -50,8 +66,17 @@ Deno.serve(async (req) => {
   const ip = connecting || forwarded || "unknown";
   const ipHash = await hashIp(ip, serviceKey);
 
+  // New sb_secret_* keys must be sent as apikey, not as a Bearer JWT.
+  // Remove the SDK's default Authorization header; the API key remains in apikey.
+  const fetchWithoutBearer: typeof fetch = (input, init) => {
+    const headers = new Headers(init?.headers);
+    headers.delete("Authorization");
+    return fetch(input, { ...init, headers });
+  };
+
   const admin = createClient(supabaseUrl, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: { fetch: fetchWithoutBearer },
   });
 
   const { data, error } = await admin.rpc("mi_get_shared_content_secure", {
