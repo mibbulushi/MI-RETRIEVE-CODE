@@ -84,6 +84,15 @@
         <input id="title" maxlength="200" placeholder="Give your information a title">
         <label for="content">Information</label>
         <textarea id="content" placeholder="Write or paste your information here..."></textarea>
+        <label for="projectStructure">MI Smart Project Structure (optional)</label>
+        <textarea id="projectStructure" maxlength="12000" placeholder="1. Introduction
+1(a). Project information
+1(b). Project purpose
+2. Development
+2(a). Website
+2(b). Database
+3. Files and media"></textarea>
+        <p class="small">Use exam-style numbering: 1, 1(a), 1(b), 2, 2(a). This outline is saved with the project and shared with its Share Code.</p>
         <label for="projectFiles">Attach project files (images, PDF, Word, Excel, PowerPoint, ZIP, code, audio, video, etc.)</label>
         <input id="projectFiles" type="file" multiple>
         <p class="small">Up to 20 files per project; maximum 25 MB per file. Files are private until you create/share a project code.</p>
@@ -188,9 +197,13 @@
 
     $("saveBtn").addEventListener("click", async () => {
       const title = $("title").value.trim();
-      const content = $("content").value.trim();
+      const writtenContent = $("content").value.trim();
+      const structure = $("projectStructure").value.trim();
+      const content = structure
+        ? "MI SMART PROJECT STRUCTURE\n" + structure + (writtenContent ? "\n\nPROJECT INFORMATION\n" + writtenContent : "")
+        : writtenContent;
       const files = Array.from($("projectFiles").files || []);
-      if (!title || (!content && files.length === 0)) return $("saveResult").textContent = "Enter a title and either information or at least one file.";
+      if (!title || (!content && files.length === 0)) return $("saveResult").textContent = "Enter a title and either information, a project structure, or at least one file.";
       if (files.length > 20) return $("saveResult").textContent = "Please attach no more than 20 files to one project.";
       const tooLarge = files.find(file => file.size > 25 * 1024 * 1024);
       if (tooLarge) return $("saveResult").textContent = "File exceeds the 25 MB limit: " + tooLarge.name;
@@ -334,6 +347,7 @@
       }
       $("title").value = "";
       $("content").value = "";
+      $("projectStructure").value = "";
       $("projectFiles").value = "";
     });
 
