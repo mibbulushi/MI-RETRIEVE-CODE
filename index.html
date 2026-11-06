@@ -857,8 +857,26 @@ footer{color:#7187a3}
           return;
         }
 
+        const { error: emailError } = await client.functions.invoke(
+          "send-feedback-email",
+          {
+            body: {
+              feedback_type: type,
+              message: message
+            }
+          }
+        );
+
         $("feedbackMessage").value = "";
-        $("feedbackResult").textContent = "Thank you. Your feedback has been submitted successfully.";
+
+        if (emailError) {
+          console.error("Feedback email notification failed:", emailError);
+          $("feedbackResult").textContent =
+            "Feedback submitted, but email notification could not be sent.";
+        } else {
+          $("feedbackResult").textContent =
+            "Thank you. Your feedback has been submitted successfully.";
+        }
       } catch (error) {
         $("feedbackResult").textContent = "Could not submit feedback. Please check your connection and try again.";
       } finally {
