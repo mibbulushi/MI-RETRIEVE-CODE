@@ -832,21 +832,38 @@ footer{color:#7187a3}
         $("feedbackResult").textContent = "Please write your feedback before submitting.";
         return;
       }
-      $("sendFeedbackBtn").disabled = true;
-      $("feedbackResult").textContent = "Submitting your feedback...";
-      const { data: userData } = await client.auth.getUser();
-      const { error } = await client.from("mi_feedback").insert({
-        user_id: userData?.user?.id,
-        feedback_type: type,
-        message
-      });
-      $("sendFeedbackBtn").disabled = false;
-      if (error) {
-        $("feedbackResult").textContent = "Feedback could not be submitted yet: " + friendlyError(error) + ". The feedback database table may need to be created.";
+      if (message.length > 5000) {
+        $("feedbackResult").textContent = "Feedback must be 5,000 characters or fewer.";
         return;
       }
-      $("feedbackMessage").value = "";
-      $("feedbackResult").textContent = "Thank you. Your feedback has been submitted successfully.";
+
+      $("sendFeedbackBtn").disabled = true;
+      $("feedbackResult").textContent = "Submitting your feedback...";
+      try {
+        const { data: userData, error: userError } = await client.auth.getUser();
+        const user = userData?.user;
+        if (userError || !user) {
+          $("feedbackResult").textContent = "Please sign in to submit feedback.";
+          return;
+        }
+
+        const { error } = await client.from("mi_feedback").insert({
+          user_id: user.id,
+          feedback_type: type,
+          message
+        });
+        if (error) {
+          $("feedbackResult").textContent = "Feedback was not submitted: " + friendlyError(error);
+          return;
+        }
+
+        $("feedbackMessage").value = "";
+        $("feedbackResult").textContent = "Thank you. Your feedback has been submitted successfully.";
+      } catch (error) {
+        $("feedbackResult").textContent = "Could not submit feedback. Please check your connection and try again.";
+      } finally {
+        $("sendFeedbackBtn").disabled = false;
+      }
     });
 
     // Switch visible panels in place instead of scrolling to page anchors.
