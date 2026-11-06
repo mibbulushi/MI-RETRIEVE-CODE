@@ -417,7 +417,7 @@
 
       const { data: shares, error } = await client
         .from("mi_shared_access")
-        .select("id,share_code,content_id,is_active,expires_at,created_at")
+        .select("id,share_code,content_id,owner_id,is_active,expires_at,created_at")
         .eq("owner_id", user.id)
         .order("created_at", { ascending: false });
 
