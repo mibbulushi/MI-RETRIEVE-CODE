@@ -33,6 +33,15 @@ button.secondary{background:#eaf0f7;color:#294766;box-shadow:none}button.seconda
 a:not(.side-nav a){color:var(--blue-dark);font-weight:600;text-decoration:none;text-underline-offset:3px}a:not(.side-nav a):hover{color:#174b8b;text-decoration:underline}a:focus-visible{outline:3px solid rgba(57,118,197,.25);outline-offset:3px;border-radius:4px}
 footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px}
 @media(max-width:760px){body{padding:0 14px 22px}.sidebar{position:relative;inset:auto;width:auto;margin:0 -14px 22px;padding:15px 14px 12px;gap:12px;box-shadow:0 5px 18px rgba(20,36,58,.12)}.brand{padding:2px 6px 10px}.brand strong{font-size:.98rem}.brand span,.sidebar-note,.nav-label{display:none}.side-nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px}.side-nav a{flex:0 0 auto;padding:9px 11px;font-size:.82rem}.nav-icon{display:none}.container{max-width:100%}header{margin-top:0}.card{padding:19px;border-radius:14px}}
+
+.side-nav a{position:relative;border:1px solid rgba(255,255,255,.12);background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(0,0,0,.12));box-shadow:5px 5px 10px rgba(0,0,0,.22),-3px -3px 8px rgba(255,255,255,.045),inset 1px 1px 1px rgba(255,255,255,.12);text-shadow:0 1px 1px rgba(0,0,0,.24)}
+.side-nav a:hover{transform:translateY(-2px);box-shadow:7px 8px 13px rgba(0,0,0,.25),-2px -2px 7px rgba(255,255,255,.06),inset 1px 1px 1px rgba(255,255,255,.14)}
+.side-nav a.active{background:linear-gradient(145deg,#4c8cdb,#2c65ad);border-color:rgba(255,255,255,.28);box-shadow:inset 2px 2px 4px rgba(255,255,255,.2),inset -3px -3px 6px rgba(0,0,0,.18),0 7px 14px rgba(0,0,0,.25)}
+button{background:linear-gradient(145deg,#4a87d1,#2e67b1);box-shadow:5px 5px 10px rgba(39,75,120,.18),-3px -3px 8px rgba(255,255,255,.85),inset 1px 1px 1px rgba(255,255,255,.3)}
+button:hover{box-shadow:7px 8px 13px rgba(39,75,120,.2),-2px -2px 7px rgba(255,255,255,.9),inset 1px 1px 2px rgba(255,255,255,.28)}
+button.secondary{background:linear-gradient(145deg,#f7faff,#dfe8f3);box-shadow:4px 4px 8px rgba(42,64,91,.10),-3px -3px 7px #fff,inset 1px 1px 1px #fff}
+.card{box-shadow:9px 10px 24px rgba(31,52,78,.08),-5px -5px 16px rgba(255,255,255,.8);border-color:#e5ebf3}
+.page-hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -41,13 +50,13 @@ footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px
     <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
     <div class="nav-label">Workspace</div>
     <nav class="side-nav">
-      <a class="active" href="#top"><span class="nav-icon">⌂</span>Dashboard</a>
-      <a href="#saveArea"><span class="nav-icon">＋</span>New Project</a>
-      <a href="#manageSharesCard"><span class="nav-icon">▤</span>My Projects</a>
-      <a href="#privateRetrieveArea"><span class="nav-icon">⌕</span>Retrieve</a>
-      <a href="#manageSharesCard"><span class="nav-icon">↗</span>Shared Projects</a>
-      <a href="#studentRetrieveArea"><span class="nav-icon">▣</span>Student Access</a>
-      <a href="#accountArea"><span class="nav-icon">○</span>Account</a>
+      <a class="active" href="#" data-page="dashboard"><span class="nav-icon">⌂</span>Dashboard</a>
+      <a href="#" data-page="new-project"><span class="nav-icon">＋</span>New Project</a>
+      <a href="#" data-page="my-projects"><span class="nav-icon">▤</span>My Projects</a>
+      <a href="#" data-page="retrieve"><span class="nav-icon">⌕</span>Retrieve</a>
+      <a href="#" data-page="shared-projects"><span class="nav-icon">↗</span>Shared Projects</a>
+      <a href="#" data-page="student-access"><span class="nav-icon">▣</span>Student Access</a>
+      <a href="#" data-page="account"><span class="nav-icon">○</span>Account</a>
     </nav>
     <div class="sidebar-note">Keep your saved information organized. Share only the projects you choose.</div>
   </aside>
@@ -57,7 +66,17 @@ footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px
       <p class="tagline">Your Information. Your Unique Code. Your Control.</p>
     </header>
 
-    <section class="card" id="studentRetrieveArea">
+    <section class="card page-panel" id="dashboardArea" data-panel="dashboard">
+      <h2>Dashboard</h2>
+      <p class="small">Welcome to your MI workspace. Choose an option from the left menu. The selected section opens here without moving the page up or down.</p>
+      <div class="row">
+        <button type="button" class="secondary" data-open-page="new-project">＋ New Project</button>
+        <button type="button" class="secondary" data-open-page="my-projects">▤ My Projects</button>
+        <button type="button" class="secondary" data-open-page="student-access">▣ Student Access</button>
+      </div>
+    </section>
+
+    <section class="card page-panel page-hidden" id="studentRetrieveArea" data-panel="student-access">
       <h2>Retrieve shared information</h2>
       <p class="small">Students can enter a share code here. An account is not required for information that its owner has chosen to share.</p>
       <label for="studentShareCode">Student Share Code</label>
@@ -68,7 +87,7 @@ footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px
       <div id="studentRetrieveResult" class="result" role="status" aria-live="polite">Shared information will appear here.</div>
     </section>
 
-    <section class="card" id="accountArea">\n      <h2>Your account</h2>
+    <section class="card page-panel page-hidden" id="accountArea" data-panel="account">\n      <h2>Your account</h2>
       <div id="signedOut">
         <p class="small">Create an account or sign in to save and manage your information. You can create a separate student share code for content you choose to share.</p>
         <label for="email">Email address</label>
@@ -90,7 +109,7 @@ footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px
     </section>
 
     <section id="appArea" class="hidden">
-      <section class="card" id="saveArea">\n        <h2>Save information</h2>
+      <section class="card page-panel page-hidden" id="saveArea" data-panel="new-project">\n        <h2>Save information</h2>
         <label for="title">Title</label>
         <input id="title" maxlength="200" placeholder="Give your information a title">
         <label for="content">Information</label>
@@ -114,7 +133,7 @@ footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px
         <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
       </section>
 
-      <section class="card" id="manageSharesCard">
+      <section class="card page-panel page-hidden" id="manageSharesCard" data-panel="my-projects shared-projects">
         <h2>Manage my shared projects</h2>
         <p class="small">Choose one of your existing Share Codes to set, change, or remove its project password, or temporarily turn sharing off. This area is available only after you sign in.</p>
         <button id="loadSharesBtn" class="secondary" type="button">Load my Share Codes</button>
@@ -132,7 +151,7 @@ footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px
         <div id="manageSharesStatus" class="result" role="status" aria-live="polite">Load your Share Codes to manage them.</div>
       </section>
 
-      <section class="card" id="privateRetrieveArea">\n        <h2>Retrieve your information</h2>
+      <section class="card page-panel page-hidden" id="privateRetrieveArea" data-panel="retrieve">\n        <h2>Retrieve your information</h2>
         <label for="retrieveCode">Retrieve Code</label>
         <input id="retrieveCode" autocomplete="off" placeholder="Enter your Retrieve Code">
         <button id="retrieveBtn" type="button">Retrieve information</button>
@@ -696,6 +715,31 @@ footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px
         }
       }
     });
+
+
+    // Switch visible panels in place instead of scrolling to page anchors.
+    function openPage(page) {
+      document.querySelectorAll("[data-panel]").forEach(panel => {
+        const names = panel.dataset.panel.split(" ");
+        panel.classList.toggle("page-hidden", !names.includes(page));
+      });
+      document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
+        const active = link.dataset.page === page;
+        link.classList.toggle("active", active);
+        if (active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    }
+    document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        openPage(link.dataset.page);
+      });
+    });
+    document.querySelectorAll("[data-open-page]").forEach(button => {
+      button.addEventListener("click", () => openPage(button.dataset.openPage));
+    });
+    openPage("dashboard");
 
     client.auth.onAuthStateChange((_event, session) => renderSession(session));
     refreshSession();
