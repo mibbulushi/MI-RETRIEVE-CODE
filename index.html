@@ -143,6 +143,7 @@ footer{color:#7187a3}
       <a href="#" data-page="shared-projects"><span class="nav-icon">↗</span>Shared Projects</a>
       <a href="#" data-page="student-access"><span class="nav-icon">▣</span>Student Access</a>
       <a href="#" data-page="account"><span class="nav-icon">○</span>Account</a>
+      <a href="#" data-page="feedback"><span class="nav-icon">✉</span>Feedback</a>
     </nav>
     <div class="sidebar-note">Keep your saved information organized. Share only the projects you choose.</div>
   </aside>
@@ -246,6 +247,24 @@ footer{color:#7187a3}
         <button id="retrieveBtn" type="button">Retrieve information</button>
         <div id="retrieveResult" class="result" role="status" aria-live="polite">Your retrieved information will appear here.</div>
       </section>
+
+
+      <section class="card page-panel page-hidden" id="feedbackArea" data-panel="feedback">
+        <h2>Send Feedback</h2>
+        <p class="small">Share your suggestions, report a problem, or tell us how MI-RETRIEVE-CODE can be improved.</p>
+        <label for="feedbackType">Feedback type</label>
+        <select id="feedbackType">
+          <option value="Suggestion">Suggestion</option>
+          <option value="Problem / Bug">Problem / Bug</option>
+          <option value="Question">Question</option>
+          <option value="Other">Other</option>
+        </select>
+        <label for="feedbackMessage">Your feedback</label>
+        <textarea id="feedbackMessage" maxlength="5000" placeholder="Write your feedback here..." required></textarea>
+        <button id="sendFeedbackBtn" type="button">Submit Feedback</button>
+        <div id="feedbackResult" class="result" role="status" aria-live="polite">Your feedback will be submitted to MI-RETRIEVE-CODE.</div>
+      </section>
+
     </section>
 
     <div class="notice">
@@ -805,6 +824,30 @@ footer{color:#7187a3}
       }
     });
 
+
+    $("sendFeedbackBtn").addEventListener("click", async () => {
+      const message = $("feedbackMessage").value.trim();
+      const type = $("feedbackType").value;
+      if (!message) {
+        $("feedbackResult").textContent = "Please write your feedback before submitting.";
+        return;
+      }
+      $("sendFeedbackBtn").disabled = true;
+      $("feedbackResult").textContent = "Submitting your feedback...";
+      const { data: userData } = await client.auth.getUser();
+      const { error } = await client.from("mi_feedback").insert({
+        user_id: userData?.user?.id,
+        feedback_type: type,
+        message
+      });
+      $("sendFeedbackBtn").disabled = false;
+      if (error) {
+        $("feedbackResult").textContent = "Feedback could not be submitted yet: " + friendlyError(error) + ". The feedback database table may need to be created.";
+        return;
+      }
+      $("feedbackMessage").value = "";
+      $("feedbackResult").textContent = "Thank you. Your feedback has been submitted successfully.";
+    });
 
     // Switch visible panels in place instead of scrolling to page anchors.
     function openPage(page) {
