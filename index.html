@@ -105,6 +105,24 @@
         <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
       </section>
 
+      <section class="card" id="manageSharesCard">
+        <h2>Manage my shared projects</h2>
+        <p class="small">Choose one of your existing Share Codes to set, change, or remove its project password, or temporarily turn sharing off. This area is available only after you sign in.</p>
+        <button id="loadSharesBtn" class="secondary" type="button">Load my Share Codes</button>
+        <label for="managedShareSelect">My shared projects</label>
+        <select id="managedShareSelect" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;background:white;color:var(--ink)">
+          <option value="">Load your Share Codes first</option>
+        </select>
+        <label for="managedSharePassword">Project access password</label>
+        <input id="managedSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Enter a new password (at least 8 characters)">
+        <div class="row">
+          <button id="saveManagedPasswordBtn" type="button">Set / change password</button>
+          <button id="removeManagedPasswordBtn" class="secondary" type="button">Remove password</button>
+          <button id="toggleManagedShareBtn" class="secondary" type="button">Turn sharing off</button>
+        </div>
+        <div id="manageSharesStatus" class="result" role="status" aria-live="polite">Load your Share Codes to manage them.</div>
+      </section>
+
       <section class="card">
         <h2>Retrieve your information</h2>
         <label for="retrieveCode">Retrieve Code</label>
@@ -381,6 +399,161 @@
       $("newSharePassword").value = "";
     });
 
+
+    // Owner controls for existing Share Codes. Password changes use the signed-in
+    // browser session so auth.uid() is available inside mi_set_share_password.
+    let managedShares = [];
+
+    async function loadManagedShares() {
+      const button = $("loadSharesBtn");
+      button.disabled = true;
+      $("manageSharesStatus").textContent = "Loading your Share Codes...";
+      const { data: { user }, error: userError } = await client.auth.getUser();
+      if (userError || !user) {
+        button.disabled = false;
+        $("manageSharesStatus").textContent = "Please sign in again to manage your Share Codes.";
+        return;
+      }
+
+      const { data: shares, error } = await client
+        .from("mi_shared_access")
+        .select("id,share_code,content_id,is_active,expires_at,created_at")
+        .eq("owner_id", user.id)
+        .order("created_at", { ascending: false });
+
+      button.disabled = false;
+      if (error) {
+        $("manageSharesStatus").textContent = "Could not load Share Codes: " + friendlyError(error);
+        return;
+      }
+
+      managedShares = shares || [];
+      const select = $("managedShareSelect");
+      select.replaceChildren();
+      if (!managedShares.length) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "No Share Codes found";
+        select.append(option);
+        $("manageSharesStatus").textContent = "You do not have any Share Codes yet. Save a project and create a Share Code first.";
+        return;
+      }
+
+      const contentIds = [...new Set(managedShares.map(row => row.content_id))];
+      const { data: projects, error: projectsError } = await client
+        .from("mi_saved_content")
+        .select("id,title")
+        .in("id", contentIds);
+      const titles = new Map((projects || []).map(project => [project.id, project.title]));
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Select a project";
+      select.append(placeholder);
+
+      for (const share of managedShares) {
+        const option = document.createElement("option");
+        option.value = share.id;
+        const title = titles.get(share.content_id) || "Saved project";
+        option.textContent = title + " — " + share.share_code + (share.is_active ? "" : " (sharing off)");
+        select.append(option);
+      }
+
+      if (projectsError) {
+        $("manageSharesStatus").textContent = "Share Codes loaded. Some project titles could not be displayed.";
+      } else {
+        $("manageSharesStatus").textContent = managedShares.length + " Share Code(s) loaded. Select one to manage it.";
+      }
+      updateManagedShareButton();
+    }
+
+    function getSelectedManagedShare() {
+      return managedShares.find(row => row.id === $("managedShareSelect").value) || null;
+    }
+
+    function updateManagedShareButton() {
+      const share = getSelectedManagedShare();
+      $("toggleManagedShareBtn").textContent = share && share.is_active ? "Turn sharing off" : "Turn sharing on";
+      $("toggleManagedShareBtn").disabled = !share;
+      $("saveManagedPasswordBtn").disabled = !share;
+      $("removeManagedPasswordBtn").disabled = !share;
+    }
+
+    $("loadSharesBtn").addEventListener("click", loadManagedShares);
+    $("managedShareSelect").addEventListener("change", updateManagedShareButton);
+
+    $("saveManagedPasswordBtn").addEventListener("click", async () => {
+      const share = getSelectedManagedShare();
+      const password = $("managedSharePassword").value;
+      if (!share) {
+        $("manageSharesStatus").textContent = "Select one of your Share Codes first.";
+        return;
+      }
+      if (password.length < 8) {
+        $("manageSharesStatus").textContent = "Enter a project password containing at least 8 characters.";
+        return;
+      }
+      $("saveManagedPasswordBtn").disabled = true;
+      const { data, error } = await client.rpc("mi_set_share_password", {
+        p_code: share.share_code,
+        p_password: password
+      });
+      $("saveManagedPasswordBtn").disabled = false;
+      if (error || data !== true) {
+        $("manageSharesStatus").textContent = "Password could not be saved: " + (error ? friendlyError(error) : "Share Code was not updated.");
+        return;
+      }
+      $("managedSharePassword").value = "";
+      $("manageSharesStatus").textContent = "Project password saved. Send the Share Code and password separately to the intended recipient.";
+    });
+
+    $("removeManagedPasswordBtn").addEventListener("click", async () => {
+      const share = getSelectedManagedShare();
+      if (!share) {
+        $("manageSharesStatus").textContent = "Select one of your Share Codes first.";
+        return;
+      }
+      $("removeManagedPasswordBtn").disabled = true;
+      const { data, error } = await client.rpc("mi_set_share_password", {
+        p_code: share.share_code,
+        p_password: null
+      });
+      $("removeManagedPasswordBtn").disabled = false;
+      if (error || data !== true) {
+        $("manageSharesStatus").textContent = "Password could not be removed: " + (error ? friendlyError(error) : "Share Code was not updated.");
+        return;
+      }
+      $("manageSharesStatus").textContent = "Password removed. Anyone with this active Share Code can now view the shared project.";
+    });
+
+    $("toggleManagedShareBtn").addEventListener("click", async () => {
+      const share = getSelectedManagedShare();
+      if (!share) {
+        $("manageSharesStatus").textContent = "Select one of your Share Codes first.";
+        return;
+      }
+      const nextActive = !share.is_active;
+      $("toggleManagedShareBtn").disabled = true;
+      const { error } = await client
+        .from("mi_shared_access")
+        .update({ is_active: nextActive })
+        .eq("id", share.id)
+        .eq("owner_id", share.owner_id);
+      if (error) {
+        $("manageSharesStatus").textContent = "Sharing status could not be changed: " + friendlyError(error);
+        updateManagedShareButton();
+        return;
+      }
+      share.is_active = nextActive;
+      const selectedOption = $("managedShareSelect").selectedOptions[0];
+      if (selectedOption) {
+        const titlePart = selectedOption.textContent.replace(/ \(sharing off\)$/, "");
+        selectedOption.textContent = titlePart + (nextActive ? "" : " (sharing off)");
+      }
+      $("manageSharesStatus").textContent = nextActive
+        ? "Sharing is on again. The Share Code can be used by people who have the required password."
+        : "Sharing is now off. The Share Code will no longer open this project.";
+      updateManagedShareButton();
+    });
 
     $("studentRetrieveBtn").addEventListener("click", async () => {
       const code = $("studentShareCode").value.trim().toUpperCase();
