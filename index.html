@@ -859,6 +859,68 @@ a:not(.side-nav a){color:#145eaa!important}
   h2{font-size:1.22rem!important}
 }
 
+
+/* Final Feedback alignment: use the same full-height chat workspace as Student Access */
+body.feedback-chat-mode #feedbackArea:not(.page-hidden){
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  min-height:0!important;height:auto!important;margin:0!important;
+  padding:18px 20px 14px!important;overflow:hidden!important;
+}
+body.feedback-chat-mode .feedback-chat-heading{flex:0 0 auto!important}
+body.feedback-chat-mode .feedback-chat-messages{
+  display:flex!important;flex:1 1 0!important;flex-direction:column!important;
+  min-height:0!important;height:auto!important;overflow-y:auto!important;
+  margin-top:14px!important;padding:18px!important;
+}
+body.feedback-chat-mode .feedback-chat-composer{
+  display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
+  gap:10px!important;margin-top:13px!important;padding:12px!important;
+  position:relative!important;bottom:auto!important;
+  border:1px solid rgba(123,157,201,.34)!important;border-radius:17px!important;
+  background:rgba(255,255,255,.94)!important;
+  box-shadow:0 7px 22px rgba(25,68,124,.08)!important;
+}
+body.feedback-chat-mode .feedback-chat-composer #feedbackMessage{
+  display:block!important;width:100%!important;min-width:0!important;
+  min-height:120px!important;height:140px!important;max-height:220px!important;
+  margin:0!important;padding:15px 18px!important;resize:vertical!important;
+  font-size:1rem!important;line-height:1.6!important;
+}
+body.feedback-chat-mode .feedback-chat-actions{
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;gap:10px!important;width:100%!important;
+}
+body.feedback-chat-mode .feedback-chat-actions select,
+body.feedback-chat-mode .feedback-chat-actions button{
+  width:100%!important;min-width:0!important;height:50px!important;
+  min-height:50px!important;margin:0!important;border-radius:12px!important;
+}
+body.feedback-chat-mode .feedback-chat-actions button{padding:0 22px!important}
+body.feedback-chat-mode .feedback-chat-messages .student-chat-welcome{
+  align-self:flex-start!important;max-width:min(720px,90%)!important;
+}
+@media(max-width:760px){
+  body.feedback-chat-mode #feedbackArea:not(.page-hidden){padding:12px!important}
+  body.feedback-chat-mode .feedback-chat-messages{
+    min-height:0!important;padding:12px!important;margin-top:9px!important;
+  }
+  body.feedback-chat-mode .feedback-chat-composer{
+    gap:8px!important;padding:9px!important;margin-top:9px!important;
+  }
+  body.feedback-chat-mode .feedback-chat-composer #feedbackMessage{
+    min-height:100px!important;height:115px!important;max-height:170px!important;
+    padding:12px!important;font-size:.92rem!important;
+  }
+  body.feedback-chat-mode .feedback-chat-actions{
+    grid-template-columns:minmax(0,1fr) minmax(130px,.9fr)!important;gap:7px!important;
+  }
+  body.feedback-chat-mode .feedback-chat-actions select,
+  body.feedback-chat-mode .feedback-chat-actions button{
+    height:44px!important;min-height:44px!important;padding:6px 8px!important;
+    font-size:.82rem!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1698,7 +1760,7 @@ a:not(.side-nav a){color:#145eaa!important}
 
     // Switch visible panels in place instead of scrolling to page anchors.
     function openPage(page) {
-      document.body.classList.toggle("student-chat-mode", page === "student-access");
+      document.body.classList.toggle("student-chat-mode", page === "student-access" || page === "feedback");
       document.body.classList.toggle("feedback-chat-mode", page === "feedback");
       document.body.classList.toggle("project-workspace-mode",
         ["new-project","my-projects","retrieve","shared-projects","received-projects","student-access","feedback"].includes(page));
