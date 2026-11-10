@@ -1389,7 +1389,13 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
 }
 
 
-/* Final override: make only the Title and Share Code password boxes compact */
+/* Final override: force Title and Share Code password inputs to match the slim Retrieve Code field */
+#saveArea .project-title-password-row.project-save-all-in-one-row .project-title-password-field input#title,
+#saveArea .project-title-password-row.project-save-all-in-one-row .project-title-password-field input#newSharePassword{
+  height:30px!important;min-height:30px!important;max-height:30px!important;
+  padding:4px 8px!important;line-height:20px!important;box-sizing:border-box!important;
+}
+/* Previous compact-field rules follow */
 #saveArea .project-title-password-row.project-save-all-in-one-row{
   grid-template-columns:120px 150px minmax(190px,1fr) 245px!important;
 }
@@ -1512,11 +1518,11 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
         <div class="project-title-password-row project-save-all-in-one-row">
           <div class="project-title-password-field">
             <label for="title">Title</label>
-            <input id="title" maxlength="200" placeholder="Give your information a title">
+            <input id="title" maxlength="200" placeholder="Give your information a title" style="height:30px!important;min-height:30px!important;padding:4px 8px!important;box-sizing:border-box!important;">
           </div>
           <div class="project-title-password-field">
             <label for="newSharePassword">Optional student Share Code password</label>
-            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password">
+            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password" style="height:30px!important;min-height:30px!important;padding:4px 8px!important;box-sizing:border-box!important;">
           </div>
           <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
           <button id="saveBtn" type="button">Save complete project &amp; generate codes</button>
