@@ -501,6 +501,36 @@ body.student-chat-mode #studentRetrieveArea .student-chat-messages{
   body.project-workspace-mode .container{padding-top:0!important}
 }
 
+
+/* Student Access: share code, project password and Send stay on one line */
+body.student-chat-mode #studentRetrieveArea .student-chat-code-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) 120px!important;
+  flex-direction:initial!important;
+  align-items:stretch!important;
+  gap:12px!important;
+}
+body.student-chat-mode #studentRetrieveArea .student-chat-code-row input{
+  display:block!important;width:100%!important;min-width:0!important;
+  min-height:64px!important;padding:14px 16px!important;font-size:.98rem!important;
+}
+body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
+  display:block!important;width:100%!important;min-width:0!important;
+  min-height:64px!important;padding:0 14px!important;
+}
+@media(max-width:760px){
+  body.student-chat-mode #studentRetrieveArea .student-chat-code-row{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) 88px!important;
+    gap:7px!important;
+  }
+  body.student-chat-mode #studentRetrieveArea .student-chat-code-row input{
+    min-height:56px!important;padding:10px 8px!important;font-size:.82rem!important;
+  }
+  body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
+    min-height:56px!important;padding:0 8px!important;font-size:.84rem!important;
+  }
+}
+
 </style>
 </head>
 <body>
