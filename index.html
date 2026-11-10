@@ -705,6 +705,54 @@ body.student-chat-mode #studentRetrieveArea .student-chat-messages{
   .container{min-height:calc(100vh - 10px)!important}
   body.student-chat-mode .container{min-height:calc(100vh - 10px)!important}
 }
+
+
+/* Feedback action and status share one row and use the same soft embossed field style */
+#feedbackArea .feedback-submit-row{
+  display:grid!important;
+  grid-template-columns:minmax(150px,220px) minmax(0,1fr)!important;
+  align-items:stretch!important;
+  gap:12px!important;
+  width:100%!important;
+  margin-top:12px!important;
+}
+#feedbackArea .feedback-submit-row #sendFeedbackBtn,
+#feedbackArea .feedback-submit-row #feedbackResult{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:66px!important;
+  height:auto!important;
+  margin:0!important;
+  padding:16px 18px!important;
+  border:1px solid rgba(93,139,197,.48)!important;
+  border-radius:15px!important;
+  background:linear-gradient(145deg,#fff 0%,#f3f8ff 100%)!important;
+  box-shadow:inset 3px 3px 7px rgba(35,75,125,.09),inset -2px -2px 5px rgba(255,255,255,.95),0 5px 13px rgba(38,86,145,.07)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  line-height:1.45!important;
+}
+#feedbackArea .feedback-submit-row #feedbackResult{
+  color:var(--muted)!important;
+  font-size:.96rem!important;
+  overflow-wrap:anywhere!important;
+}
+@media(max-width:760px){
+  #feedbackArea .feedback-submit-row{
+    grid-template-columns:minmax(112px, .8fr) minmax(0,1.4fr)!important;
+    gap:7px!important;
+  }
+  #feedbackArea .feedback-submit-row #sendFeedbackBtn,
+  #feedbackArea .feedback-submit-row #feedbackResult{
+    min-height:58px!important;
+    padding:10px 8px!important;
+    font-size:.82rem!important;
+    border-radius:12px!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -858,8 +906,10 @@ body.student-chat-mode #studentRetrieveArea .student-chat-messages{
         </select>
         <label for="feedbackMessage">Your feedback</label>
         <textarea id="feedbackMessage" maxlength="5000" placeholder="Write your feedback here..." required></textarea>
-        <button id="sendFeedbackBtn" type="button">Submit Feedback</button>
-        <div id="feedbackResult" class="result" role="status" aria-live="polite">Your feedback will be submitted to MI-RETRIEVE-CODE.</div>
+        <div class="feedback-submit-row">
+          <button id="sendFeedbackBtn" type="button">Submit Feedback</button>
+          <div id="feedbackResult" class="result" role="status" aria-live="polite">Your feedback will be submitted to MI-RETRIEVE-CODE.</div>
+        </div>
       </section>
 
     </section>
