@@ -1388,6 +1388,43 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
   }
 }
 
+
+/* Final override: make only the Title and Share Code password boxes compact */
+#saveArea .project-title-password-row.project-save-all-in-one-row{
+  grid-template-columns:120px 150px minmax(190px,1fr) 245px!important;
+}
+#saveArea .project-title-password-field input#title,
+#saveArea .project-title-password-field input#newSharePassword{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  height:28px!important;
+  min-height:28px!important;
+  padding:3px 7px!important;
+  font-size:.76rem!important;
+  line-height:1.1!important;
+  border-width:1px!important;
+  border-radius:6px!important;
+  box-shadow:none!important;
+}
+@media(max-width:900px){
+  #saveArea .project-title-password-row.project-save-all-in-one-row{
+    grid-template-columns:minmax(0,120px) minmax(0,150px)!important;
+    justify-content:start!important;
+    align-items:end!important;
+  }
+}
+@media(max-width:560px){
+  #saveArea .project-title-password-row.project-save-all-in-one-row{
+    grid-template-columns:1fr!important;
+  }
+  #saveArea .project-title-password-field input#title,
+  #saveArea .project-title-password-field input#newSharePassword{
+    width:100%!important;max-width:100%!important;
+  }
+}
+
 </style>
 </head>
 <body>
