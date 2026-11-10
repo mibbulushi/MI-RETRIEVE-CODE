@@ -32,6 +32,30 @@ button.secondary{background:#eaf0f7;color:#294766;box-shadow:none}button.seconda
 .small{color:var(--muted);font-size:.88rem;line-height:1.6}.hidden{display:none!important}.account-line{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center}.code{font-weight:800;letter-spacing:.055em;color:var(--blue-dark);font-size:1.04rem}
 a:not(.side-nav a){color:var(--blue-dark);font-weight:600;text-decoration:none;text-underline-offset:3px}a:not(.side-nav a):hover{color:#174b8b;text-decoration:underline}a:focus-visible{outline:3px solid rgba(57,118,197,.25);outline-offset:3px;border-radius:4px}
 footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px}
+
+/* Larger ChatGPT-style Student Access workspace */
+body.student-chat-mode #studentRetrieveArea:not(.page-hidden){min-height:0}
+body.student-chat-mode .student-chat-messages{
+  flex:1 1 0;min-height:min(60vh,680px);padding:22px;
+}
+body.student-chat-mode .student-chat-code-row input{
+  min-height:58px;padding:16px 18px;font-size:1.02rem;border-radius:14px;
+}
+body.student-chat-mode .student-chat-code-row button{
+  min-height:58px;padding:0 24px;border-radius:14px;font-size:1rem;
+}
+.notice{
+  white-space:nowrap;overflow-x:auto;overflow-y:hidden;
+  padding:10px 14px;font-size:.78rem;line-height:1.35;
+  scrollbar-width:thin;
+}
+@media(max-width:760px){
+  body.student-chat-mode .student-chat-messages{min-height:42vh;padding:15px}
+  body.student-chat-mode .student-chat-code-row input{min-height:52px;padding:12px 10px;font-size:.9rem}
+  body.student-chat-mode .student-chat-code-row button{min-height:52px;padding:0 14px}
+  .notice{font-size:.72rem}
+}
+
 @media(max-width:760px){body{padding:0 14px 22px}.sidebar{position:relative;inset:auto;width:auto;margin:0 -14px 22px;padding:15px 14px 12px;gap:12px;box-shadow:0 5px 18px rgba(20,36,58,.12)}.brand{padding:2px 6px 10px}.brand strong{font-size:.98rem}.brand span,.sidebar-note,.nav-label{display:none}.side-nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px}.side-nav a{flex:0 0 auto;padding:9px 11px;font-size:.82rem}.nav-icon{display:none}.container{max-width:100%}header{margin-top:0}.card{padding:19px;border-radius:14px}}
 
 .side-nav a{position:relative;border:1px solid rgba(255,255,255,.12);background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(0,0,0,.12));box-shadow:5px 5px 10px rgba(0,0,0,.22),-3px -3px 8px rgba(255,255,255,.045),inset 1px 1px 1px rgba(255,255,255,.12);text-shadow:0 1px 1px rgba(0,0,0,.24)}
