@@ -1177,6 +1177,62 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
   }
 }
 
+
+
+/* Refined, spacious writing areas for Project Content and Project Plan */
+#saveArea #content,
+#saveArea #projectStructure{
+  display:block!important;
+  width:100%!important;
+  min-height:340px!important;
+  height:340px!important;
+  max-height:none!important;
+  box-sizing:border-box!important;
+  padding:22px 24px!important;
+  margin:10px 0 22px!important;
+  border:1.5px solid #cbd8e8!important;
+  border-radius:16px!important;
+  background:linear-gradient(180deg,#ffffff 0%,#f7faff 100%)!important;
+  color:#172b45!important;
+  font-size:1.04rem!important;
+  line-height:1.8!important;
+  box-shadow:0 4px 16px rgba(35,75,125,.07)!important;
+  resize:vertical!important;
+  outline:none!important;
+  transition:border-color .18s ease,box-shadow .18s ease!important;
+}
+#saveArea #content:focus,
+#saveArea #projectStructure:focus{
+  border-color:#4b83c5!important;
+  box-shadow:0 0 0 4px rgba(75,131,197,.14),0 6px 20px rgba(35,75,125,.09)!important;
+  background:#fff!important;
+}
+#saveArea #content::placeholder,
+#saveArea #projectStructure::placeholder{
+  color:#8495aa!important;
+  opacity:1!important;
+}
+#saveArea label[for="content"],
+#saveArea label[for="projectStructure"]{
+  display:block!important;
+  margin:18px 0 8px!important;
+  color:#203b5c!important;
+  font-size:1.08rem!important;
+  font-weight:700!important;
+}
+#saveArea #projectStructure{
+  background:linear-gradient(180deg,#fbfdff 0%,#f1f6fd 100%)!important;
+}
+@media(max-width:760px){
+  #saveArea #content,
+  #saveArea #projectStructure{
+    min-height:280px!important;
+    height:280px!important;
+    padding:17px!important;
+    font-size:1rem!important;
+  }
+}
+
 </style>
 </head>
 <body>
