@@ -950,6 +950,46 @@ body.feedback-chat-mode .feedback-chat-messages .student-chat-welcome{
 }
 
 
+
+/* Received Projects: three controls/titles in one top row, project text box below */
+#receivedProjectsArea:not(.page-hidden){
+  display:flex!important;flex-direction:column!important;gap:12px!important;min-height:0!important;
+}
+#receivedProjectsArea .received-projects-toolbar{
+  display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;
+  align-items:center!important;gap:10px!important;min-width:0!important;
+  margin:0!important;padding:0!important;border:0!important;background:transparent!important;
+}
+#receivedProjectsArea #loadReceivedProjectsBtn{
+  flex:0 0 auto!important;white-space:nowrap!important;margin:0!important;
+}
+#receivedProjectsArea .received-projects-list{
+  display:flex!important;flex:0 1 auto!important;flex-wrap:nowrap!important;
+  align-items:center!important;gap:8px!important;min-width:0!important;
+  overflow-x:auto!important;overflow-y:hidden!important;padding:0!important;
+  border:0!important;background:transparent!important;
+}
+#receivedProjectsArea .received-project-name{
+  flex:0 0 auto!important;width:auto!important;min-width:130px!important;
+  min-height:46px!important;margin:0!important;white-space:nowrap!important;
+}
+#receivedProjectsArea .received-project-heading{
+  flex:0 1 auto!important;min-width:120px!important;margin:0!important;
+  white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+}
+#receivedProjectsArea .received-project-details{
+  flex:1 1 auto!important;min-height:220px!important;overflow-y:auto!important;
+  padding:18px!important;border:1px solid rgba(132,169,215,.32)!important;
+  border-radius:14px!important;background:rgba(241,247,255,.72)!important;
+}
+#receivedProjectsArea .received-project-card{margin:0!important}
+@media(max-width:760px){
+  #receivedProjectsArea .received-projects-toolbar{gap:6px!important}
+  #receivedProjectsArea #loadReceivedProjectsBtn{padding:9px 10px!important;font-size:.76rem!important}
+  #receivedProjectsArea .received-project-name{min-width:110px!important;padding:9px 10px!important;font-size:.8rem!important}
+  #receivedProjectsArea .received-project-heading{min-width:90px!important;font-size:.9rem!important}
+}
+
 /* Received Projects uses the same fixed workspace and independent scroll as Student Access */
 body.student-chat-mode #receivedProjectsArea:not(.page-hidden){
   display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
@@ -1236,16 +1276,15 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
       </section>
 
       <section class="card page-panel page-hidden" id="receivedProjectsArea" data-panel="received-projects">
-        <h2>Received Projects</h2>
-        <p class="small">Select a project name from the list to open its details. The original creator keeps ownership.</p>
-        <button id="loadReceivedProjectsBtn" class="secondary" type="button">Refresh Received Projects</button>
-        <div id="receivedProjectsResult" class="received-projects-layout" role="status" aria-live="polite">
+        <div id="receivedProjectsResult" class="received-projects-toolbar" role="status" aria-live="polite">
+          <button id="loadReceivedProjectsBtn" class="secondary" type="button">Refresh Received Projects</button>
           <div id="receivedProjectsList" class="received-projects-list">
             <p class="small">Your received project names will appear here.</p>
           </div>
-          <div id="receivedProjectDetails" class="received-project-details">
-            <p class="small">Select a project name to view its contents.</p>
-          </div>
+          <h3 id="receivedProjectHeading" class="received-project-heading">mera dost 102</h3>
+        </div>
+        <div id="receivedProjectDetails" class="received-project-details">
+          <p class="small">Select a project name to view its contents.</p>
         </div>
       </section>
 
@@ -1715,19 +1754,12 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
     function renderReceivedProject(output, item) {
       const card = document.createElement("article");
       card.className = "received-project-card";
-      const titleBar = document.createElement("div");
-      titleBar.className = "received-project-titlebar";
-      const heading = document.createElement("h3");
-      heading.textContent = item.title || "Shared project";
+      const heading = $("receivedProjectHeading");
+      if (heading) heading.textContent = item.title || "Shared project";
+
       const codeLine = document.createElement("p");
       codeLine.className = "small";
       codeLine.textContent = "Share Code: " + (item.share_code || "Just received");
-      titleBar.append(heading, codeLine);
-      const refreshButton = $("loadReceivedProjectsBtn");
-      if (refreshButton) {
-        refreshButton.classList.add("received-project-refresh-inline");
-        titleBar.append(refreshButton);
-      }
 
       const contentArea = document.createElement("div");
       contentArea.className = "received-project-content";
@@ -1744,7 +1776,6 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
         structure.textContent = item.project_structure;
         contentArea.append(structureHeading, structure);
       }
-
       const attachments = Array.isArray(item.attachments) ? item.attachments : [];
       const filesHeading = document.createElement("h4");
       filesHeading.textContent = "Project attachments (" + attachments.length + ")";
@@ -1769,8 +1800,8 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
       note.className = "small";
       note.textContent = item.note || "Read-only shared project. The original creator keeps ownership.";
       contentArea.append(note);
-      card.append(titleBar, contentArea);
-      output.append(card);
+      card.append(codeLine, contentArea);
+      output.replaceChildren(card);
     }
 
     async function callShareAccess(payload) {
