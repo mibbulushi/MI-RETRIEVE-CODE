@@ -1515,6 +1515,37 @@ body.sidebar-collapsed .side-nav .nav-icon{display:inline-block!important;width:
 body.sidebar-collapsed .sidebar-toggle{left:80px!important}
 @media(max-width:760px){.sidebar-toggle{top:10px!important;left:auto!important;right:12px!important}body.sidebar-collapsed{padding-left:8px!important}body.sidebar-collapsed .sidebar{width:70px!important;margin-left:0!important}body.sidebar-collapsed .sidebar-toggle{right:12px!important;left:auto!important}}
 
+
+/* Final fix: restore a normal-width Title input in the heading row */
+#saveArea .project-heading-title-row{
+  grid-template-columns:max-content minmax(280px,320px) minmax(220px,1fr)!important;
+  align-items:center!important;
+}
+#saveArea .project-heading-title-row .project-title-in-heading{
+  width:100%!important;
+  min-width:280px!important;
+}
+#saveArea .project-heading-title-row input#title{
+  display:block!important;
+  width:100%!important;
+  min-width:280px!important;
+  max-width:320px!important;
+  height:30px!important;
+  min-height:30px!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:760px){
+  #saveArea .project-heading-title-row{
+    grid-template-columns:1fr!important;
+  }
+  #saveArea .project-heading-title-row .project-title-in-heading,
+  #saveArea .project-heading-title-row input#title{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+}
+
 </style>
 </head>
 <body>
