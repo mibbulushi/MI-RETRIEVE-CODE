@@ -921,6 +921,34 @@ body.feedback-chat-mode .feedback-chat-messages .student-chat-welcome{
   }
 }
 
+
+/* Received Projects: project-name list with a separate selected-project view */
+#receivedProjectsArea .received-projects-layout{
+  display:grid!important;grid-template-columns:minmax(210px,.34fr) minmax(0,1fr)!important;
+  gap:14px!important;align-items:start!important;margin-top:14px!important;
+}
+#receivedProjectsArea .received-projects-list,
+#receivedProjectsArea .received-project-details{
+  min-width:0!important;padding:14px!important;border:1px solid rgba(132,169,215,.32)!important;
+  border-radius:14px!important;background:rgba(241,247,255,.72)!important;
+}
+#receivedProjectsArea .received-project-list-title{margin:0 0 9px!important}
+#receivedProjectsArea .received-project-name{
+  display:block!important;width:100%!important;min-height:48px!important;height:auto!important;
+  margin:0 0 8px!important;padding:11px 14px!important;text-align:left!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+  border:1px solid rgba(93,139,197,.32)!important;border-radius:10px!important;
+  background:#fff!important;color:#174b86!important;box-shadow:0 3px 9px rgba(25,68,124,.05)!important;
+}
+#receivedProjectsArea .received-project-name.active{
+  background:linear-gradient(145deg,#e4f0ff,#f7fbff)!important;
+  border-color:#4b86c7!important;color:#103b70!important;
+}
+#receivedProjectsArea .received-project-details article{margin:0!important}
+@media(max-width:760px){
+  #receivedProjectsArea .received-projects-layout{grid-template-columns:1fr!important}
+}
+
 </style>
 </head>
 <body>
@@ -1048,9 +1076,16 @@ body.feedback-chat-mode .feedback-chat-messages .student-chat-welcome{
 
       <section class="card page-panel page-hidden" id="receivedProjectsArea" data-panel="received-projects">
         <h2>Received Projects</h2>
-        <p class="small">Projects you have accepted from other MI users appear here. The original creator keeps ownership. Projects disappear from this list if their creator turns sharing off.</p>
-        <button id="loadReceivedProjectsBtn" class="secondary" type="button">Load my Received Projects</button>
-        <div id="receivedProjectsResult" class="result" role="status" aria-live="polite">Your received projects will appear here.</div>
+        <p class="small">Select a project name from the list to open its details. The original creator keeps ownership.</p>
+        <button id="loadReceivedProjectsBtn" class="secondary" type="button">Refresh Received Projects</button>
+        <div id="receivedProjectsResult" class="received-projects-layout" role="status" aria-live="polite">
+          <div id="receivedProjectsList" class="received-projects-list">
+            <p class="small">Your received project names will appear here.</p>
+          </div>
+          <div id="receivedProjectDetails" class="received-project-details">
+            <p class="small">Select a project name to view its contents.</p>
+          </div>
+        </div>
       </section>
 
       <section class="card page-panel page-hidden" id="privateRetrieveArea" data-panel="retrieve">
@@ -1616,19 +1651,36 @@ body.feedback-chat-mode .feedback-chat-messages .student-chat-welcome{
 
     $("loadReceivedProjectsBtn").addEventListener("click", async () => {
       const button = $("loadReceivedProjectsBtn");
-      const output = $("receivedProjectsResult");
+      const list = $("receivedProjectsList");
+      const details = $("receivedProjectDetails");
       button.disabled = true;
-      output.textContent = "Loading your Received Projects...";
+      list.textContent = "Loading your Received Projects...";
+      details.replaceChildren();
       try {
         const data = await callShareAccess({ action: "list" });
-        output.replaceChildren();
+        list.replaceChildren();
         if (!Array.isArray(data.projects) || !data.projects.length) {
-          output.textContent = "No active Received Projects yet. Enter a creator's Share Code in Student Access to receive a project.";
+          list.textContent = "No received projects yet. Use Student Access to receive a project.";
+          details.textContent = "Received project details will appear here.";
           return;
         }
-        for (const item of data.projects) renderReceivedProject(output, item);
+        data.projects.forEach((item, index) => {
+          const entry = document.createElement("button");
+          entry.type = "button";
+          entry.className = "received-project-name";
+          entry.textContent = item.title || ("Shared Project " + (index + 1));
+          entry.addEventListener("click", () => {
+            list.querySelectorAll(".received-project-name").forEach(b => b.classList.toggle("active", b === entry));
+            details.replaceChildren();
+            renderReceivedProject(details, item);
+          });
+          list.append(entry);
+        });
+        const first = list.querySelector(".received-project-name");
+        if (first) first.click();
       } catch (error) {
-        output.textContent = error.message || "Could not load your Received Projects.";
+        list.textContent = error.message || "Could not load your Received Projects.";
+        details.replaceChildren();
       } finally {
         button.disabled = false;
       }
