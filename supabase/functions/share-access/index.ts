@@ -127,21 +127,11 @@ Deno.serve(async (req) => {
     if (error) return response({ error: "Could not load your received projects." }, 500);
     if (!rows?.length) return response({ projects: [] });
 
-    const codes = [...new Set(rows.map((row: any) => row.share_code))];
-    const { data: activeShares, error: shareError } = await admin
-      .from("mi_shared_access")
-      .select("share_code,is_active,expires_at")
-      .in("share_code", codes);
-
-    if (shareError) return response({ error: "Could not verify project sharing status." }, 500);
-    const now = Date.now();
-    const activeCodes = new Set((activeShares || [])
-      .filter((share: any) => share.is_active && (!share.expires_at || new Date(share.expires_at).getTime() > now))
-      .map((share: any) => share.share_code));
-
+    // Show every project already accepted into this recipient's account.
+    // Later changes to the creator's sharing status must not hide or remove
+    // projects that were successfully received earlier.
     const projects = [];
     for (const row of rows) {
-      if (!activeCodes.has(row.share_code)) continue;
       projects.push({
         id: row.id,
         share_code: row.share_code,
