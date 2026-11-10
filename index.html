@@ -1084,6 +1084,32 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
   }
 }
 
+
+/* Project title, share code and refresh control share one horizontal row */
+#receivedProjectsArea .received-project-titlebar{
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  flex-wrap:wrap!important;gap:8px 16px!important;
+}
+#receivedProjectsArea .received-project-titlebar h3,
+#receivedProjectsArea .received-project-titlebar p{
+  display:inline-flex!important;align-items:center!important;
+  margin:0!important;white-space:nowrap!important;
+}
+#receivedProjectsArea .received-project-titlebar h3{margin-right:4px!important}
+#receivedProjectsArea .received-project-titlebar .received-project-refresh-inline{
+  display:inline-flex!important;align-items:center!important;
+  width:auto!important;min-height:40px!important;height:40px!important;
+  margin-left:auto!important;padding:7px 14px!important;
+  flex:0 0 auto!important;white-space:nowrap!important;
+}
+@media(max-width:760px){
+  #receivedProjectsArea .received-project-titlebar{gap:7px 10px!important}
+  #receivedProjectsArea .received-project-titlebar h3{white-space:normal!important}
+  #receivedProjectsArea .received-project-titlebar .received-project-refresh-inline{
+    margin-left:0!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1697,6 +1723,11 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
       codeLine.className = "small";
       codeLine.textContent = "Share Code: " + (item.share_code || "Just received");
       titleBar.append(heading, codeLine);
+      const refreshButton = $("loadReceivedProjectsBtn");
+      if (refreshButton) {
+        refreshButton.classList.add("received-project-refresh-inline");
+        titleBar.append(refreshButton);
+      }
 
       const contentArea = document.createElement("div");
       contentArea.className = "received-project-content";
