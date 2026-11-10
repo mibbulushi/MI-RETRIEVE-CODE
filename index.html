@@ -979,6 +979,30 @@ body.student-chat-mode #receivedProjectsArea .received-project-details{
   }
 }
 
+
+/* Keep the selected Received Project name fixed; scroll only its content */
+#receivedProjectsArea .received-project-details{overflow:hidden!important}
+#receivedProjectsArea .received-project-card{
+  display:flex!important;flex-direction:column!important;
+  height:100%!important;min-height:0!important;max-height:100%!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+  border:0!important;background:transparent!important;
+}
+#receivedProjectsArea .received-project-titlebar{
+  position:sticky!important;top:0!important;z-index:5!important;
+  flex:0 0 auto!important;padding:14px 16px 10px!important;
+  margin:0!important;background:#f1f7ff!important;
+  border-bottom:1px solid rgba(132,169,215,.38)!important;
+}
+#receivedProjectsArea .received-project-titlebar h3{margin:0 0 5px!important}
+#receivedProjectsArea .received-project-titlebar p{margin:0!important}
+#receivedProjectsArea .received-project-content{
+  flex:1 1 auto!important;min-height:0!important;
+  overflow-y:auto!important;overflow-x:hidden!important;
+  overscroll-behavior:contain!important;scrollbar-gutter:stable!important;
+  padding:16px!important;
+}
+
 </style>
 </head>
 <body>
@@ -1583,19 +1607,22 @@ body.student-chat-mode #receivedProjectsArea .received-project-details{
 
     function renderReceivedProject(output, item) {
       const card = document.createElement("article");
-      card.style.padding = "14px";
-      card.style.margin = "12px 0";
-      card.style.border = "1px solid var(--line)";
-      card.style.borderRadius = "12px";
+      card.className = "received-project-card";
+      const titleBar = document.createElement("div");
+      titleBar.className = "received-project-titlebar";
       const heading = document.createElement("h3");
       heading.textContent = item.title || "Shared project";
       const codeLine = document.createElement("p");
       codeLine.className = "small";
       codeLine.textContent = "Share Code: " + (item.share_code || "Just received");
+      titleBar.append(heading, codeLine);
+
+      const contentArea = document.createElement("div");
+      contentArea.className = "received-project-content";
       const body = document.createElement("p");
       body.style.whiteSpace = "pre-wrap";
       body.textContent = item.content || "(No written text in this project.)";
-      card.append(heading, codeLine, body);
+      contentArea.append(body);
 
       if (item.project_structure) {
         const structureHeading = document.createElement("h4");
@@ -1603,13 +1630,13 @@ body.student-chat-mode #receivedProjectsArea .received-project-details{
         const structure = document.createElement("p");
         structure.style.whiteSpace = "pre-wrap";
         structure.textContent = item.project_structure;
-        card.append(structureHeading, structure);
+        contentArea.append(structureHeading, structure);
       }
 
       const attachments = Array.isArray(item.attachments) ? item.attachments : [];
       const filesHeading = document.createElement("h4");
       filesHeading.textContent = "Project attachments (" + attachments.length + ")";
-      card.append(filesHeading);
+      contentArea.append(filesHeading);
       for (const file of attachments) {
         const line = document.createElement("p");
         const link = document.createElement("a");
@@ -1618,18 +1645,19 @@ body.student-chat-mode #receivedProjectsArea .received-project-details{
         link.rel = "noopener noreferrer";
         link.textContent = "Open / download: " + file.file_name;
         line.append(link);
-        card.append(line);
+        contentArea.append(line);
       }
       if (!attachments.length) {
         const none = document.createElement("p");
         none.className = "small";
         none.textContent = "No attached files.";
-        card.append(none);
+        contentArea.append(none);
       }
       const note = document.createElement("p");
       note.className = "small";
       note.textContent = item.note || "Read-only shared project. The original creator keeps ownership.";
-      card.append(note);
+      contentArea.append(note);
+      card.append(titleBar, contentArea);
       output.append(card);
     }
 
