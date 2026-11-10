@@ -180,7 +180,7 @@ footer{color:#7187a3}
 
 /* Save project controls: password, file attachment and save action share one row */
 .project-save-row{
-  display:grid;grid-template-columns:minmax(220px,1fr) minmax(260px,1.25fr) minmax(220px,auto);
+  display:grid;grid-template-columns:minmax(220px,1fr) minmax(260px,1fr);
   gap:12px;align-items:end;margin-top:14px;
 }
 .project-save-field{min-width:0}
@@ -1434,10 +1434,6 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
             <label for="title">Title</label>
             <input id="title" maxlength="200" placeholder="Give your information a title">
           </div>
-          <div class="project-title-password-field">
-            <label for="newSharePassword">Optional student Share Code password</label>
-            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password">
-          </div>
         </div>
         <label for="content">Project Content</label>
         <textarea id="content" placeholder="Write or paste your information here..."></textarea>
@@ -1456,7 +1452,8 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
             <input id="projectFiles" type="file" multiple>
           </div>
           <div class="project-save-field project-save-action">
-            <span class="project-save-label" aria-hidden="true">Save project</span>
+            <label for="newSharePassword">Optional student Share Code password</label>
+            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password">
             <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
             <button id="saveBtn" type="button">Save complete project &amp; generate codes</button>
           </div>
