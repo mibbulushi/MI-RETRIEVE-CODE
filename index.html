@@ -1843,6 +1843,8 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
         output.append(success);
         renderReceivedProject(output, { ...data.project, share_code: code });
         $("studentSharePassword").value = "";
+        // Update the Received Projects list immediately after a successful receive.
+        await loadReceivedProjects(false);
       } catch (error) {
         $("studentRetrieveResult").textContent = error.message || "Could not receive this project.";
       } finally {
@@ -1850,13 +1852,16 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
       }
     });
 
-    $("loadReceivedProjectsBtn").addEventListener("click", async () => {
+    async function loadReceivedProjects(showLoading = true) {
       const button = $("loadReceivedProjectsBtn");
       const list = $("receivedProjectsList");
       const details = $("receivedProjectDetails");
-      button.disabled = true;
-      list.textContent = "Loading your Received Projects...";
-      details.replaceChildren();
+      const selectedCode = list.querySelector(".received-project-name.active")?.dataset.shareCode || "";
+      if (showLoading) {
+        button.disabled = true;
+        list.textContent = "Loading your Received Projects...";
+        details.replaceChildren();
+      }
       try {
         const data = await callShareAccess({ action: "list" });
         list.replaceChildren();
@@ -1865,10 +1870,12 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
           details.textContent = "Received project details will appear here.";
           return;
         }
+        let selectedEntry = null;
         data.projects.forEach((item, index) => {
           const entry = document.createElement("button");
           entry.type = "button";
           entry.className = "received-project-name";
+          entry.dataset.shareCode = item.share_code || "";
           entry.textContent = item.title || ("Shared Project " + (index + 1));
           entry.addEventListener("click", () => {
             list.querySelectorAll(".received-project-name").forEach(b => b.classList.toggle("active", b === entry));
@@ -1876,16 +1883,20 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
             renderReceivedProject(details, item);
           });
           list.append(entry);
+          if (item.share_code === selectedCode) selectedEntry = entry;
         });
-        const first = list.querySelector(".received-project-name");
-        if (first) first.click();
+        (selectedEntry || list.querySelector(".received-project-name"))?.click();
       } catch (error) {
-        list.textContent = error.message || "Could not load your Received Projects.";
-        details.replaceChildren();
+        if (showLoading) {
+          list.textContent = error.message || "Could not load your Received Projects.";
+          details.replaceChildren();
+        }
       } finally {
         button.disabled = false;
       }
-    });
+    }
+
+    $("loadReceivedProjectsBtn").addEventListener("click", () => loadReceivedProjects(true));
 
     $("retrieveBtn").addEventListener("click", async () => {
       const code = $("retrieveCode").value.trim().toUpperCase();
