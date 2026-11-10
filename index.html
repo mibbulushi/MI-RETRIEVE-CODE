@@ -337,6 +337,118 @@ body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
   }
 }
 
+
+/* MI full-width workspace: compact title, wider content, larger writing areas on EVERY page */
+body{
+  padding:16px 12px 16px 264px!important;
+}
+.container{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+.container>header{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  flex-wrap:wrap!important;
+  gap:8px 18px!important;
+  padding:12px 18px!important;
+  margin:0 0 12px!important;
+}
+.container>header h1{
+  flex:0 1 auto!important;
+  font-size:clamp(1.25rem,2.2vw,1.75rem)!important;
+  line-height:1.15!important;
+  white-space:nowrap;
+}
+.container>header .tagline{
+  flex:1 1 260px!important;
+  margin:0!important;
+  font-size:.84rem!important;
+  line-height:1.35!important;
+  text-align:right!important;
+}
+.container>.page-panel:not(.page-hidden),
+#appArea>.page-panel:not(.page-hidden){
+  width:100%!important;
+  max-width:none!important;
+  margin:8px 0!important;
+  padding:18px!important;
+}
+body input:not([type="file"]),
+body textarea,
+body select{
+  width:100%!important;
+  max-width:none!important;
+  min-height:60px!important;
+  padding:16px 18px!important;
+  font-size:1.02rem!important;
+}
+body textarea{
+  min-height:320px!important;
+  height:320px;
+  line-height:1.7!important;
+  resize:vertical!important;
+}
+body input[type="file"]{max-width:100%}
+body .row{width:100%}
+body .row input{flex:1 1 100%;min-width:0}
+body.student-chat-mode #studentRetrieveArea:not(.page-hidden){
+  width:100%!important;
+  padding:16px!important;
+}
+body.student-chat-mode #studentRetrieveArea .student-chat-code-row{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:10px!important;
+}
+body.student-chat-mode #studentRetrieveArea .student-chat-code-row input{
+  width:100%!important;
+  min-height:64px!important;
+  font-size:1.05rem!important;
+  padding:17px 18px!important;
+}
+body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
+  width:100%!important;
+  min-height:58px!important;
+}
+@media(max-width:760px){
+  body{padding:0 8px 10px!important}
+  body .sidebar{margin:0 -8px 8px!important}
+  body .container{width:100%!important;max-width:none!important}
+  .container>header{
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    gap:4px!important;
+    padding:10px 12px!important;
+  }
+  .container>header h1{
+    white-space:normal!important;
+    font-size:1.25rem!important;
+  }
+  .container>header .tagline{
+    flex:0 1 auto!important;
+    text-align:left!important;
+    font-size:.76rem!important;
+  }
+  .container>.page-panel:not(.page-hidden),
+  #appArea>.page-panel:not(.page-hidden){
+    padding:13px!important;
+    margin:6px 0!important;
+  }
+  body input:not([type="file"]),
+  body textarea,
+  body select{
+    min-height:56px!important;
+    padding:14px!important;
+    font-size:1rem!important;
+  }
+  body textarea{min-height:260px!important;height:260px}
+}
+
 </style>
 </head>
 <body>
