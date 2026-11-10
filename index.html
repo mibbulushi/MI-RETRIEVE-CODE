@@ -141,7 +141,8 @@ footer{color:#7187a3}
       <a href="#" data-page="my-projects"><span class="nav-icon">▤</span>My Projects</a>
       <a href="#" data-page="retrieve"><span class="nav-icon">⌕</span>Retrieve</a>
       <a href="#" data-page="shared-projects"><span class="nav-icon">↗</span>Shared Projects</a>
-      <a href="#" data-page="student-access"><span class="nav-icon">▣</span>Student Access</a>
+      <a href="#" data-page="received-projects"><span class="nav-icon">▣</span>Received Projects</a>
+      <a href="#" data-page="student-access"><span class="nav-icon">⇩</span>Student Access</a>
       <a href="#" data-page="account"><span class="nav-icon">○</span>Account</a>
       <a href="#" data-page="feedback"><span class="nav-icon">✉</span>Feedback</a>
     </nav>
@@ -165,12 +166,12 @@ footer{color:#7187a3}
 
     <section class="card page-panel page-hidden" id="studentRetrieveArea" data-panel="student-access">
       <h2>Retrieve shared information</h2>
-      <p class="small">Students can enter a share code here. An account is not required for information that its owner has chosen to share.</p>
+      <p class="small">Sign in to your own MI account, then enter a creator's Share Code. The shared project will be saved in your Received Projects. The original owner keeps ownership.</p>
       <label for="studentShareCode">Student Share Code</label>
       <input id="studentShareCode" autocomplete="off" placeholder="Example: MI-7K4P-9W2D">
       <label for="studentSharePassword">Project password (only if the owner set one)</label>
       <input id="studentSharePassword" type="password" autocomplete="off" placeholder="Enter project password">
-      <button id="studentRetrieveBtn" type="button">Retrieve shared information</button>
+      <button id="studentRetrieveBtn" type="button">Receive project in my account</button>
       <div id="studentRetrieveResult" class="result" role="status" aria-live="polite">Shared information will appear here.</div>
     </section>
 
@@ -238,6 +239,13 @@ footer{color:#7187a3}
           <button id="toggleManagedShareBtn" class="secondary" type="button">Turn sharing off</button>
         </div>
         <div id="manageSharesStatus" class="result" role="status" aria-live="polite">Load your Share Codes to manage them.</div>
+      </section>
+
+      <section class="card page-panel page-hidden" id="receivedProjectsArea" data-panel="received-projects">
+        <h2>Received Projects</h2>
+        <p class="small">Projects you have accepted from other MI users appear here. The original creator keeps ownership. Projects disappear from this list if their creator turns sharing off.</p>
+        <button id="loadReceivedProjectsBtn" class="secondary" type="button">Load my Received Projects</button>
+        <div id="receivedProjectsResult" class="result" role="status" aria-live="polite">Your received projects will appear here.</div>
       </section>
 
       <section class="card page-panel page-hidden" id="privateRetrieveArea" data-panel="retrieve">
@@ -690,74 +698,122 @@ footer{color:#7187a3}
       updateManagedShareButton();
     });
 
-    $("studentRetrieveBtn").addEventListener("click", async () => {
-      const code = $("studentShareCode").value.trim().toUpperCase();
-      if (!code) return $("studentRetrieveResult").textContent = "Enter a student share code first.";
-      $("studentRetrieveBtn").disabled = true;
-      $("studentRetrieveResult").textContent = "Loading shared information...";
-      const sharePassword = $("studentSharePassword").value;
-      let response;
-      try {
-        response = await fetch(SUPABASE_URL + "/functions/v1/share-access", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "apikey": SUPABASE_PUBLISHABLE_KEY
-          },
-          body: JSON.stringify({ code, password: sharePassword || null })
-        });
-      } catch (networkError) {
-        $("studentRetrieveBtn").disabled = false;
-        $("studentRetrieveResult").textContent = "Could not connect. Please check your internet connection and try again.";
-        return;
-      }
-      const data = await response.json().catch(() => ({}));
-      $("studentRetrieveBtn").disabled = false;
-      if (!response.ok) {
-        $("studentRetrieveResult").textContent = data.error || "Could not retrieve shared information.";
-        return;
-      }
-      const item = data;
-      if (!item) {
-        $("studentRetrieveResult").textContent = "No active shared information was found for this code.";
-        return;
-      }
-      const output = $("studentRetrieveResult");
-      output.replaceChildren();
+    function renderReceivedProject(output, item) {
+      const card = document.createElement("article");
+      card.style.padding = "14px";
+      card.style.margin = "12px 0";
+      card.style.border = "1px solid var(--line)";
+      card.style.borderRadius = "12px";
       const heading = document.createElement("h3");
-      heading.textContent = item.title;
+      heading.textContent = item.title || "Shared project";
+      const codeLine = document.createElement("p");
+      codeLine.className = "small";
+      codeLine.textContent = "Share Code: " + (item.share_code || "Just received");
       const body = document.createElement("p");
       body.style.whiteSpace = "pre-wrap";
       body.textContent = item.content || "(No written text in this project.)";
-      output.append(heading, body);
+      card.append(heading, codeLine, body);
+
+      if (item.project_structure) {
+        const structureHeading = document.createElement("h4");
+        structureHeading.textContent = "MI Smart Project Structure";
+        const structure = document.createElement("p");
+        structure.style.whiteSpace = "pre-wrap";
+        structure.textContent = item.project_structure;
+        card.append(structureHeading, structure);
+      }
+
       const attachments = Array.isArray(item.attachments) ? item.attachments : [];
-      if (attachments.length) {
-        const filesHeading = document.createElement("h4");
-        filesHeading.textContent = "Project attachments (" + attachments.length + ")";
-        output.append(filesHeading);
-        for (const file of attachments) {
-          const line = document.createElement("p");
-          if (!file.url) {
-            line.textContent = file.file_name + " — preview link unavailable";
-          } else {
-            const link = document.createElement("a");
-            link.href = file.url;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-            link.textContent = "Open / download: " + file.file_name;
-            line.append(link);
-          }
-          output.append(line);
-        }
-      } else {
+      const filesHeading = document.createElement("h4");
+      filesHeading.textContent = "Project attachments (" + attachments.length + ")";
+      card.append(filesHeading);
+      for (const file of attachments) {
+        const line = document.createElement("p");
+        const link = document.createElement("a");
+        link.href = file.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Open / download: " + file.file_name;
+        line.append(link);
+        card.append(line);
+      }
+      if (!attachments.length) {
         const none = document.createElement("p");
+        none.className = "small";
         none.textContent = "No attached files.";
-        output.append(none);
+        card.append(none);
       }
       const note = document.createElement("p");
       note.className = "small";
-      note.textContent = item.note || "Shared in read-only mode. File links remain valid for one hour after retrieval.";
-      output.append(note);
+      note.textContent = item.note || "Read-only shared project. The original creator keeps ownership.";
+      card.append(note);
+      output.append(card);
+    }
+
+    async function callShareAccess(payload) {
+      const { data: { session } } = await client.auth.getSession();
+      if (!session) throw new Error("Please sign in to your MI account before using a Share Code.");
+      const response = await fetch(SUPABASE_URL + "/functions/v1/share-access", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_PUBLISHABLE_KEY,
+          "Authorization": "Bearer " + session.access_token
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "Could not access shared projects.");
+      return data;
+    }
+
+    $("studentRetrieveBtn").addEventListener("click", async () => {
+      const code = $("studentShareCode").value.trim().toUpperCase();
+      if (!code) {
+        $("studentRetrieveResult").textContent = "Enter a Student Share Code first.";
+        return;
+      }
+      $("studentRetrieveBtn").disabled = true;
+      $("studentRetrieveResult").textContent = "Checking the code and saving the project to your account...";
+      try {
+        const data = await callShareAccess({
+          action: "accept",
+          code,
+          password: $("studentSharePassword").value || null
+        });
+        const output = $("studentRetrieveResult");
+        output.replaceChildren();
+        const success = document.createElement("p");
+        success.className = "status success";
+        success.textContent = data.message || "Project received and saved to your account.";
+        output.append(success);
+        renderReceivedProject(output, { ...data.project, share_code: code });
+        $("studentSharePassword").value = "";
+      } catch (error) {
+        $("studentRetrieveResult").textContent = error.message || "Could not receive this project.";
+      } finally {
+        $("studentRetrieveBtn").disabled = false;
+      }
+    });
+
+    $("loadReceivedProjectsBtn").addEventListener("click", async () => {
+      const button = $("loadReceivedProjectsBtn");
+      const output = $("receivedProjectsResult");
+      button.disabled = true;
+      output.textContent = "Loading your Received Projects...";
+      try {
+        const data = await callShareAccess({ action: "list" });
+        output.replaceChildren();
+        if (!Array.isArray(data.projects) || !data.projects.length) {
+          output.textContent = "No active Received Projects yet. Enter a creator's Share Code in Student Access to receive a project.";
+          return;
+        }
+        for (const item of data.projects) renderReceivedProject(output, item);
+      } catch (error) {
+        output.textContent = error.message || "Could not load your Received Projects.";
+      } finally {
+        button.disabled = false;
+      }
     });
 
     $("retrieveBtn").addEventListener("click", async () => {
