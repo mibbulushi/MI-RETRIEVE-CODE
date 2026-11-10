@@ -299,6 +299,43 @@ body.student-chat-mode #appArea:not(.hidden){display:contents}
   #appArea>.page-panel:not(.page-hidden){min-height:0}
 }
 
+
+
+/* Keep both Student Access inputs visible above the bottom edge */
+body.student-chat-mode #studentRetrieveArea:not(.page-hidden){
+  display:flex!important;flex-direction:column!important;min-height:0!important;
+  overflow:hidden!important;
+}
+body.student-chat-mode #studentRetrieveResult.student-chat-messages{
+  flex:1 1 0!important;min-height:0!important;height:auto!important;
+  overflow-y:auto!important;
+}
+body.student-chat-mode #studentRetrieveArea .student-chat-composer{
+  display:flex!important;flex:0 0 auto!important;visibility:visible!important;
+  position:relative!important;z-index:5!important;margin-top:10px!important;
+}
+body.student-chat-mode #studentRetrieveArea .student-chat-code-row{
+  display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto!important;
+  visibility:visible!important;
+}
+body.student-chat-mode #studentRetrieveArea #studentShareCode,
+body.student-chat-mode #studentRetrieveArea #studentSharePassword{
+  display:block!important;visibility:visible!important;min-width:0!important;
+  width:100%!important;min-height:58px!important;opacity:1!important;
+}
+body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
+  display:block!important;visibility:visible!important;
+}
+@media(max-width:760px){
+  body.student-chat-mode #studentRetrieveArea .student-chat-code-row{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto!important;
+  }
+  body.student-chat-mode #studentRetrieveArea #studentShareCode,
+  body.student-chat-mode #studentRetrieveArea #studentSharePassword{
+    min-height:52px!important;padding:10px 8px!important;font-size:.82rem!important;
+  }
+}
+
 </style>
 </head>
 <body>
