@@ -630,6 +630,33 @@ body:not(.student-chat-mode) .container>footer{
   .container>.notice{margin-top:32px!important}
 }
 
+
+/* Keep privacy notice and version label together at the bottom, with only a tiny gap */
+body:not(.student-chat-mode) .container{
+  min-height:calc(100vh - 32px)!important;display:flex!important;flex-direction:column!important;
+}
+.container>.workspace-bottom{
+  flex:0 0 auto!important;width:100%!important;margin-top:auto!important;
+  display:flex!important;flex-direction:column!important;gap:1px!important;
+}
+.container>.workspace-bottom>.notice{
+  margin:0!important;padding:12px 16px!important;
+}
+.container>.workspace-bottom>footer{
+  margin:0!important;padding:3px 8px 6px!important;text-align:center!important;
+}
+body.student-chat-mode .container>.workspace-bottom{
+  flex:0 0 auto!important;display:flex!important;flex-direction:column!important;gap:1px!important;
+}
+body.student-chat-mode .container>.workspace-bottom>.notice,
+body.student-chat-mode .container>.workspace-bottom>footer{
+  margin:0!important;
+}
+@media(max-width:760px){
+  .container>.workspace-bottom>.notice{padding:10px 12px!important}
+  .container>.workspace-bottom>footer{padding:3px 6px 5px!important}
+}
+
 </style>
 </head>
 <body>
@@ -789,10 +816,12 @@ body:not(.student-chat-mode) .container>footer{
 
     </section>
 
-    <div class="notice">
-      <strong>Sharing and privacy:</strong> Your saved information remains private unless you create a student share code for it. Anyone who has that share code can view the shared information, so only share codes for content you intend to distribute. Never put a Supabase secret key in this website.
+    <div class="workspace-bottom">
+      <div class="notice">
+        <strong>Sharing and privacy:</strong> Your saved information remains private unless you create a student share code for it. Anyone who has that share code can view the shared information, so only share codes for content you intend to distribute. Never put a Supabase secret key in this website.
+      </div>
+      <footer>MI-RETRIEVE-CODE · Early development version</footer>
     </div>
-    <footer>MI-RETRIEVE-CODE · Early development version</footer>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
