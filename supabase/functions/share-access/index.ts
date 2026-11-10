@@ -91,9 +91,17 @@ Deno.serve(async (req) => {
 
   let body: { action?: string; code?: string; password?: string };
   try {
-    body = await req.json();
-  } catch {
-    return response({ error: "Request not available." }, 400);
+    const rawBody = await req.text();
+    if (!rawBody.trim()) {
+      return response({ error: "The request body was empty. Please refresh the page and try again." }, 400);
+    }
+    body = JSON.parse(rawBody);
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return response({ error: "The request body format was invalid. Please refresh the page and try again." }, 400);
+    }
+  } catch (error) {
+    console.error("share-access: invalid JSON request body", error instanceof Error ? error.name : "parse error");
+    return response({ error: "The request body could not be read as JSON. Please refresh the page and try again." }, 400);
   }
 
   const action = body.action === "list" ? "list" : "accept";
