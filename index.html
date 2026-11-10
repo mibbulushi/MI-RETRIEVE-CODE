@@ -1233,6 +1233,45 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
   }
 }
 
+
+
+/* Title and optional student password share one slim top row */
+#saveArea .project-title-password-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:14px!important;
+  align-items:end!important;
+  width:100%!important;
+  margin:10px 0 18px!important;
+}
+#saveArea .project-title-password-field{min-width:0!important}
+#saveArea .project-title-password-field label{
+  display:block!important;
+  margin:0 0 7px!important;
+  min-height:0!important;
+  font-size:1rem!important;
+  font-weight:700!important;
+}
+#saveArea .project-title-password-field input{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:48px!important;
+  height:48px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:10px 14px!important;
+  border:1px solid #cbd8e8!important;
+  border-radius:12px!important;
+  font-size:.96rem!important;
+}
+@media(max-width:650px){
+  #saveArea .project-title-password-row{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1317,8 +1356,16 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
     <section id="appArea" class="hidden">
       <section class="card page-panel page-hidden" id="saveArea" data-panel="new-project">
         <h2>Save information</h2>
-        <label for="title">Title</label>
-        <input id="title" maxlength="200" placeholder="Give your information a title">
+        <div class="project-title-password-row">
+          <div class="project-title-password-field">
+            <label for="title">Title</label>
+            <input id="title" maxlength="200" placeholder="Give your information a title">
+          </div>
+          <div class="project-title-password-field">
+            <label for="newSharePassword">Optional student Share Code password</label>
+            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password">
+          </div>
+        </div>
         <label for="content">Project Content</label>
         <textarea id="content" placeholder="Write or paste your information here..."></textarea>
         <label for="projectStructure">Project Plan (Optional)</label>
@@ -1331,10 +1378,6 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
 3. Files and media"></textarea>
         <p class="small">Use exam-style numbering: 1, 1(a), 1(b), 2, 2(a). This outline is saved with the project and shared with its Share Code.</p>
         <div class="project-save-row">
-          <div class="project-save-field">
-            <label for="newSharePassword">Optional student Share Code password</label>
-            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password">
-          </div>
           <div class="project-save-field">
             <label for="projectFiles">Attach project files (images, PDF, Word, Excel, PowerPoint, ZIP, code, audio, video, etc.)</label>
             <input id="projectFiles" type="file" multiple>
