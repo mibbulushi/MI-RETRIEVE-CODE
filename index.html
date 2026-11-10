@@ -33,6 +33,30 @@ button.secondary{background:#eaf0f7;color:#294766;box-shadow:none}button.seconda
 a:not(.side-nav a){color:var(--blue-dark);font-weight:600;text-decoration:none;text-underline-offset:3px}a:not(.side-nav a):hover{color:#174b8b;text-decoration:underline}a:focus-visible{outline:3px solid rgba(57,118,197,.25);outline-offset:3px;border-radius:4px}
 footer{text-align:left;color:var(--muted);font-size:.82rem;padding:18px 2px 28px}
 
+/* Consistent larger fields across the entire MI-RETRIEVE-CODE website */
+body input:not([type="file"]),
+body textarea,
+body select{
+  min-height:56px;
+  padding:15px 17px;
+  font-size:1rem;
+  border-radius:12px;
+}
+body textarea{
+  min-height:220px;
+  line-height:1.65;
+}
+@media(max-width:760px){
+  body input:not([type="file"]),
+  body textarea,
+  body select{
+    min-height:52px;
+    padding:13px 14px;
+    font-size:1rem;
+  }
+  body textarea{min-height:190px}
+}
+
 /* Larger ChatGPT-style Student Access workspace */
 body.student-chat-mode #studentRetrieveArea:not(.page-hidden){min-height:0}
 body.student-chat-mode .student-chat-messages{
