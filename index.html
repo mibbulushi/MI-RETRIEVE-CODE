@@ -707,6 +707,53 @@ body.student-chat-mode #studentRetrieveArea .student-chat-messages{
 }
 
 
+/* Feedback page: same ChatGPT-style workspace as Student Access */
+body.feedback-chat-mode .container{height:100%;min-height:calc(100vh - 32px)}
+body.feedback-chat-mode #feedbackArea:not(.page-hidden){
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  min-height:0!important;overflow:hidden!important;margin-top:0!important;
+}
+.feedback-chat-heading{flex:0 0 auto}
+.feedback-chat-messages{
+  flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;
+  overscroll-behavior:contain;scrollbar-gutter:stable;
+}
+.feedback-chat-composer{
+  flex:0 0 auto!important;display:flex!important;flex-direction:column!important;
+  gap:9px!important;margin-top:10px!important;padding:10px!important;
+  position:sticky;bottom:0;z-index:5;
+}
+.feedback-chat-composer #feedbackMessage{
+  width:100%!important;min-height:125px!important;height:150px!important;
+  max-height:220px!important;resize:vertical!important;margin:0!important;
+}
+.feedback-chat-actions{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 190px!important;
+  gap:10px!important;align-items:center!important;
+}
+.feedback-chat-actions select,.feedback-chat-actions button{
+  width:100%!important;min-width:0!important;height:46px!important;
+  min-height:46px!important;margin:0!important;
+}
+.feedback-chat-actions select{padding:8px 12px!important}
+.feedback-chat-actions button{padding:8px 14px!important}
+.feedback-chat-messages>.status{align-self:flex-start;max-width:95%;margin:0}
+@media(max-width:760px){
+  body.feedback-chat-mode .container{height:auto;min-height:calc(100vh - 10px)!important}
+  body.feedback-chat-mode #feedbackArea:not(.page-hidden){padding:12px!important}
+  .feedback-chat-heading p{font-size:.78rem}
+  .feedback-chat-messages{padding:12px!important}
+  .feedback-chat-composer{gap:7px!important;padding:8px!important}
+  .feedback-chat-composer #feedbackMessage{
+    min-height:105px!important;height:120px!important;max-height:180px!important;
+    padding:12px!important;font-size:.94rem!important;
+  }
+  .feedback-chat-actions{grid-template-columns:minmax(0,1fr) 150px!important;gap:7px!important}
+  .feedback-chat-actions select,.feedback-chat-actions button{
+    height:42px!important;min-height:42px!important;padding:6px 8px!important;font-size:.82rem!important;
+  }
+}
+
 /* Feedback action and status share one row and use the same soft embossed field style */
 #feedbackArea .feedback-submit-row{
   display:grid!important;
@@ -894,21 +941,30 @@ body.student-chat-mode #studentRetrieveArea .student-chat-messages{
       </section>
 
 
-      <section class="card page-panel page-hidden" id="feedbackArea" data-panel="feedback">
-        <h2>Send Feedback</h2>
-        <p class="small">Share your suggestions, report a problem, or tell us how MI-RETRIEVE-CODE can be improved.</p>
-        <label for="feedbackType">Feedback type</label>
-        <select id="feedbackType">
-          <option value="Suggestion">Suggestion</option>
-          <option value="Problem / Bug">Problem / Bug</option>
-          <option value="Question">Question</option>
-          <option value="Other">Other</option>
-        </select>
-        <label for="feedbackMessage">Your feedback</label>
-        <textarea id="feedbackMessage" maxlength="5000" placeholder="Write your feedback here..." required></textarea>
-        <div class="feedback-submit-row">
-          <button id="sendFeedbackBtn" type="button">Submit Feedback</button>
-          <div id="feedbackResult" class="result" role="status" aria-live="polite">Your feedback will be submitted to MI-RETRIEVE-CODE.</div>
+      <section class="card page-panel page-hidden feedback-chat-card" id="feedbackArea" data-panel="feedback">
+        <div class="student-chat-heading feedback-chat-heading">
+          <h2>Send Feedback</h2>
+          <p class="small">Share a suggestion, report a problem, or tell us how MI-RETRIEVE-CODE can be improved.</p>
+        </div>
+        <div id="feedbackResult" class="student-chat-messages feedback-chat-messages" role="status" aria-live="polite">
+          <div class="student-chat-welcome">
+            <strong>MI Feedback Assistant</strong>
+            <p>Welcome. Write your feedback below. You can send a suggestion, report a problem, or ask a question.</p>
+          </div>
+        </div>
+        <div class="student-chat-composer feedback-chat-composer">
+          <label class="student-sr-only" for="feedbackMessage">Your feedback</label>
+          <textarea id="feedbackMessage" maxlength="5000" placeholder="Write your feedback here..." required></textarea>
+          <div class="feedback-chat-actions">
+            <label class="student-sr-only" for="feedbackType">Feedback type</label>
+            <select id="feedbackType">
+              <option value="Suggestion">Suggestion</option>
+              <option value="Problem / Bug">Problem / Bug</option>
+              <option value="Question">Question</option>
+              <option value="Other">Other</option>
+            </select>
+            <button id="sendFeedbackBtn" type="button">Submit Feedback</button>
+          </div>
         </div>
       </section>
 
@@ -1584,8 +1640,9 @@ body.student-chat-mode #studentRetrieveArea .student-chat-messages{
     // Switch visible panels in place instead of scrolling to page anchors.
     function openPage(page) {
       document.body.classList.toggle("student-chat-mode", page === "student-access");
+      document.body.classList.toggle("feedback-chat-mode", page === "feedback");
       document.body.classList.toggle("project-workspace-mode",
-        ["new-project","my-projects","retrieve","shared-projects","received-projects","student-access"].includes(page));
+        ["new-project","my-projects","retrieve","shared-projects","received-projects","student-access","feedback"].includes(page));
       document.querySelectorAll("[data-panel]").forEach(panel => {
         const names = panel.dataset.panel.split(" ");
         panel.classList.toggle("page-hidden", !names.includes(page));
