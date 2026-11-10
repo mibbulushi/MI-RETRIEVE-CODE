@@ -299,6 +299,15 @@ body.student-chat-mode #appArea:not(.hidden){display:contents}
           <p class="small">If the creator set a project password, enter it too. Your received project will appear in this conversation area.</p>
         </div>
       </div>
+      <div class="student-chat-composer">
+        <div class="student-chat-code-row">
+          <label class="student-sr-only" for="studentShareCode">Student Share Code</label>
+          <input id="studentShareCode" type="text" autocomplete="off" placeholder="Enter Student Share Code…">
+          <label class="student-sr-only" for="studentSharePassword">Optional project password</label>
+          <input id="studentSharePassword" type="password" autocomplete="off" placeholder="Project password (if required)">
+          <button id="studentRetrieveBtn" type="button" aria-label="Receive project">Send</button>
+        </div>
+      </div>
     </section>
 
     <section class="card page-panel page-hidden" id="accountArea" data-panel="account">
@@ -400,16 +409,6 @@ body.student-chat-mode #appArea:not(.hidden){display:contents}
       </section>
 
     </section>
-
-    <div class="student-chat-composer student-global-code-composer">
-      <div class="student-chat-code-row">
-        <label class="student-sr-only" for="studentShareCode">Student Share Code</label>
-        <input id="studentShareCode" type="text" autocomplete="off" placeholder="Enter Student Share Code…">
-        <label class="student-sr-only" for="studentSharePassword">Optional project password</label>
-        <input id="studentSharePassword" type="password" autocomplete="off" placeholder="Project password (if required)">
-        <button id="studentRetrieveBtn" type="button" aria-label="Receive project">Send</button>
-      </div>
-    </div>
 
     <div class="notice">
       <strong>Sharing and privacy:</strong> Your saved information remains private unless you create a student share code for it. Anyone who has that share code can view the shared information, so only share codes for content you intend to distribute. Never put a Supabase secret key in this website.
