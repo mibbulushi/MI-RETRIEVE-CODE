@@ -449,6 +449,58 @@ body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
   body textarea{min-height:260px!important;height:260px}
 }
 
+
+/* MI workspace: hide the large identity banner while working inside project pages */
+body.project-workspace-mode .container>header{display:none!important}
+body.project-workspace-mode .container{padding-top:0!important}
+body.project-workspace-mode .container>.page-panel:not(.page-hidden),
+body.project-workspace-mode #appArea>.page-panel:not(.page-hidden){
+  margin-top:0!important;
+}
+/* Refined embossed typography and generous writing canvas throughout */
+body,button,input,textarea,select{
+  font-family:"Segoe UI",Inter,system-ui,sans-serif!important;
+  letter-spacing:.005em;
+}
+h1,h2,h3,h4,.brand strong{
+  text-shadow:0 1px 0 rgba(255,255,255,.9),0 2px 3px rgba(23,65,119,.16),0 5px 12px rgba(35,92,157,.10);
+  letter-spacing:-.025em;
+}
+body input:not([type="file"]),body textarea,body select{
+  display:block!important;width:100%!important;max-width:100%!important;
+  min-height:66px!important;padding:18px 20px!important;
+  font-size:1.06rem!important;line-height:1.55!important;
+  border:1px solid rgba(93,139,197,.48)!important;border-radius:15px!important;
+  background:linear-gradient(145deg,#fff 0%,#f3f8ff 100%)!important;
+  box-shadow:inset 3px 3px 7px rgba(35,75,125,.09),inset -2px -2px 5px rgba(255,255,255,.95),0 5px 13px rgba(38,86,145,.07)!important;
+}
+body textarea{
+  min-height:380px!important;height:380px!important;
+  line-height:1.75!important;resize:vertical!important;
+}
+body input:focus,body textarea:focus,body select:focus{
+  outline:none!important;border-color:#3989e8!important;
+  box-shadow:inset 2px 2px 5px rgba(35,75,125,.06),0 0 0 4px rgba(57,137,232,.16),0 8px 20px rgba(38,110,190,.12)!important;
+}
+body .card{
+  border:1px solid rgba(255,255,255,.96)!important;
+  box-shadow:8px 9px 20px rgba(27,67,119,.10),-4px -4px 13px rgba(255,255,255,.9),inset 0 1px 0 #fff!important;
+}
+body button{
+  font-weight:700!important;letter-spacing:.015em!important;
+  text-shadow:0 1px 1px rgba(0,35,85,.2),0 0 8px rgba(255,255,255,.12)!important;
+}
+body.student-chat-mode #studentRetrieveArea .student-chat-messages{
+  min-height:360px!important;
+}
+@media(max-width:760px){
+  body input:not([type="file"]),body textarea,body select{
+    min-height:60px!important;padding:15px!important;font-size:1rem!important;
+  }
+  body textarea{min-height:300px!important;height:300px!important}
+  body.project-workspace-mode .container{padding-top:0!important}
+}
+
 </style>
 </head>
 <body>
@@ -1276,6 +1328,8 @@ body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
     // Switch visible panels in place instead of scrolling to page anchors.
     function openPage(page) {
       document.body.classList.toggle("student-chat-mode", page === "student-access");
+      document.body.classList.toggle("project-workspace-mode",
+        ["new-project","my-projects","retrieve","shared-projects","received-projects","student-access"].includes(page));
       document.querySelectorAll("[data-panel]").forEach(panel => {
         const names = panel.dataset.panel.split(" ");
         panel.classList.toggle("page-hidden", !names.includes(page));
