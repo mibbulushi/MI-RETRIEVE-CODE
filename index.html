@@ -1043,6 +1043,47 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
   }
 }
 
+
+/* Received project name sits above the details box, not beside it */
+body.student-chat-mode #receivedProjectsArea .received-projects-layout{
+  display:flex!important;flex-direction:column!important;
+  gap:10px!important;min-height:0!important;height:100%!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-projects-list{
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  flex:0 0 auto!important;width:100%!important;height:auto!important;
+  min-height:0!important;max-height:76px!important;overflow-x:auto!important;
+  overflow-y:hidden!important;padding:8px 10px!important;
+  white-space:nowrap!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-project-name{
+  position:static!important;display:inline-flex!important;align-items:center!important;
+  flex:0 0 auto!important;width:auto!important;min-width:180px!important;
+  min-height:48px!important;margin:0 8px 0 0!important;padding:11px 16px!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-project-details{
+  display:flex!important;flex:1 1 0!important;flex-direction:column!important;
+  width:100%!important;min-width:0!important;min-height:0!important;
+  height:auto!important;max-height:none!important;overflow:hidden!important;
+  padding:0!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-project-card{
+  flex:1 1 0!important;width:100%!important;min-height:0!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-project-content{
+  flex:1 1 0!important;width:100%!important;min-height:0!important;
+  padding:22px!important;font-size:1.04rem!important;line-height:1.75!important;
+  overflow-y:auto!important;
+}
+@media(max-width:760px){
+  body.student-chat-mode #receivedProjectsArea .received-projects-list{
+    max-height:70px!important;min-height:0!important;
+  }
+  body.student-chat-mode #receivedProjectsArea .received-project-name{
+    min-width:155px!important;min-height:44px!important;
+  }
+}
+
 </style>
 </head>
 <body>
