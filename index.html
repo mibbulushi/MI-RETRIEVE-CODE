@@ -1501,9 +1501,24 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
   #saveArea .project-title-password-row.project-save-all-in-one-row{grid-template-columns:1fr!important}
 }
 
+
+/* Sidebar collapse / expand control */
+.sidebar-toggle{position:fixed!important;top:12px!important;left:260px!important;z-index:50!important;width:36px!important;height:36px!important;min-height:36px!important;padding:0!important;border-radius:9px!important;font-size:18px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+body.sidebar-collapsed{padding-left:84px!important}
+body.sidebar-collapsed .sidebar{width:70px!important;padding:24px 9px!important;gap:18px!important}
+body.sidebar-collapsed .brand{padding:4px 0 14px!important;text-align:center!important}
+body.sidebar-collapsed .brand strong{font-size:0!important}
+body.sidebar-collapsed .brand strong:after{content:"MI";font-size:1rem!important}
+body.sidebar-collapsed .brand span,body.sidebar-collapsed .nav-label,body.sidebar-collapsed .sidebar-note{display:none!important}
+body.sidebar-collapsed .side-nav a{justify-content:center!important;padding:12px 5px!important;font-size:0!important;gap:0!important}
+body.sidebar-collapsed .side-nav .nav-icon{display:inline-block!important;width:auto!important;font-size:1.05rem!important}
+body.sidebar-collapsed .sidebar-toggle{left:80px!important}
+@media(max-width:760px){.sidebar-toggle{top:10px!important;left:auto!important;right:12px!important}body.sidebar-collapsed{padding-left:8px!important}body.sidebar-collapsed .sidebar{width:70px!important;margin-left:0!important}body.sidebar-collapsed .sidebar-toggle{right:12px!important;left:auto!important}}
+
 </style>
 </head>
 <body>
+  <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">☰</button>
   <div id="top"></div>
   <aside class="sidebar" aria-label="Main navigation">
     <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
@@ -2419,6 +2434,15 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
 
     client.auth.onAuthStateChange((_event, session) => renderSession(session));
     refreshSession();
-  </script>
+  
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    if (sidebarToggle) sidebarToggle.addEventListener("click", () => {
+      const collapsed = document.body.classList.toggle("sidebar-collapsed");
+      sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+      sidebarToggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+      sidebarToggle.title = collapsed ? "Expand sidebar" : "Collapse sidebar";
+      sidebarToggle.textContent = collapsed ? "☰" : "✕";
+    });
+</script>
 </body>
 </html>
