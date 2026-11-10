@@ -1003,6 +1003,46 @@ body.student-chat-mode #receivedProjectsArea .received-project-details{
   padding:16px!important;
 }
 
+
+/* Received project selector stays at the top; give the project reading panel more room */
+body.student-chat-mode #receivedProjectsArea .received-projects-layout{
+  grid-template-columns:minmax(185px,.24fr) minmax(0,1fr)!important;
+  column-gap:12px!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-projects-list{
+  display:flex!important;flex-direction:column!important;
+  align-items:stretch!important;overflow-y:auto!important;
+  padding:10px!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-project-name{
+  position:sticky!important;top:0!important;z-index:6!important;
+  flex:0 0 auto!important;width:100%!important;
+  min-height:56px!important;padding:14px 15px!important;
+  margin:0 0 8px!important;font-size:1rem!important;
+  background:#fff!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-project-name.active{
+  background:#e4f0ff!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-project-details{
+  padding:0!important;min-width:0!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-project-content{
+  width:100%!important;min-height:0!important;
+  padding:22px!important;font-size:1.04rem!important;line-height:1.75!important;
+}
+@media(max-width:760px){
+  body.student-chat-mode #receivedProjectsArea .received-projects-layout{
+    grid-template-columns:1fr!important;grid-template-rows:minmax(75px,auto) minmax(0,1fr)!important;
+  }
+  body.student-chat-mode #receivedProjectsArea .received-projects-list{
+    max-height:22vh!important;min-height:75px!important;
+  }
+  body.student-chat-mode #receivedProjectsArea .received-project-name{
+    position:sticky!important;top:0!important;
+  }
+}
+
 </style>
 </head>
 <body>
