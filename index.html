@@ -605,6 +605,31 @@ body:not(.student-chat-mode) .container>footer{
   padding-bottom:8px!important;
 }
 
+
+/* Give writing areas much more visible space; keep privacy notice and footer below */
+body textarea{
+  min-height:520px!important;
+  height:clamp(520px,62vh,780px)!important;
+  max-height:none!important;
+}
+.container>.notice{
+  margin-top:48px!important;
+  padding-top:14px!important;
+  padding-bottom:14px!important;
+}
+body:not(.student-chat-mode) .container>footer{
+  margin-top:32px!important;
+  padding-top:64px!important;
+  padding-bottom:10px!important;
+}
+@media(max-width:760px){
+  body textarea{
+    min-height:420px!important;
+    height:clamp(420px,58vh,650px)!important;
+  }
+  .container>.notice{margin-top:32px!important}
+}
+
 </style>
 </head>
 <body>
