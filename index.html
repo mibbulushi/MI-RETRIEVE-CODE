@@ -592,6 +592,19 @@ body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
 }
 .container>.notice{margin-bottom:0!important}
 
+
+/* Push the development-version footer farther down to the bottom edge */
+body:not(.student-chat-mode) .container{
+  min-height:calc(100vh - 32px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+body:not(.student-chat-mode) .container>footer{
+  margin-top:auto!important;
+  padding-top:72px!important;
+  padding-bottom:8px!important;
+}
+
 </style>
 </head>
 <body>
