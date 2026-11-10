@@ -1238,37 +1238,47 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
 /* Title and optional student password share one slim top row */
 #saveArea .project-title-password-row{
   display:grid!important;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
-  gap:14px!important;
-  align-items:end!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.25fr)!important;
+  gap:16px!important;
+  align-items:center!important;
   width:100%!important;
   margin:10px 0 18px!important;
 }
-#saveArea .project-title-password-field{min-width:0!important}
+#saveArea .project-title-password-field{
+  display:grid!important;
+  grid-template-columns:minmax(82px,.38fr) minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:9px!important;
+  min-width:0!important;
+}
 #saveArea .project-title-password-field label{
   display:block!important;
-  margin:0 0 7px!important;
+  margin:0!important;
   min-height:0!important;
-  font-size:1rem!important;
+  font-size:.9rem!important;
+  line-height:1.25!important;
   font-weight:700!important;
 }
 #saveArea .project-title-password-field input{
   display:block!important;
   width:100%!important;
   min-width:0!important;
-  min-height:48px!important;
-  height:48px!important;
+  min-height:38px!important;
+  height:38px!important;
   box-sizing:border-box!important;
   margin:0!important;
-  padding:10px 14px!important;
+  padding:7px 11px!important;
   border:1px solid #cbd8e8!important;
-  border-radius:12px!important;
-  font-size:.96rem!important;
+  border-radius:9px!important;
+  font-size:.9rem!important;
 }
-@media(max-width:650px){
+@media(max-width:900px){
   #saveArea .project-title-password-row{
     grid-template-columns:1fr!important;
     gap:10px!important;
+  }
+  #saveArea .project-title-password-field{
+    grid-template-columns:minmax(150px,.35fr) minmax(0,1fr)!important;
   }
 }
 
