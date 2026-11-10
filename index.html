@@ -949,6 +949,36 @@ body.feedback-chat-mode .feedback-chat-messages .student-chat-welcome{
   #receivedProjectsArea .received-projects-layout{grid-template-columns:1fr!important}
 }
 
+
+/* Received Projects uses the same fixed workspace and independent scroll as Student Access */
+body.student-chat-mode #receivedProjectsArea:not(.page-hidden){
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+  min-height:0!important;height:100%!important;overflow:hidden!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-projects-layout{
+  display:grid!important;grid-template-columns:minmax(220px,.34fr) minmax(0,1fr)!important;
+  flex:1 1 0!important;min-height:0!important;height:100%!important;
+  overflow:hidden!important;align-items:stretch!important;
+}
+body.student-chat-mode #receivedProjectsArea .received-projects-list,
+body.student-chat-mode #receivedProjectsArea .received-project-details{
+  min-height:0!important;height:100%!important;max-height:100%!important;
+  overflow-y:auto!important;overflow-x:hidden!important;
+  overscroll-behavior:contain!important;scrollbar-gutter:stable!important;
+}
+@media(max-width:760px){
+  body.student-chat-mode #receivedProjectsArea .received-projects-layout{
+    grid-template-columns:1fr!important;grid-template-rows:minmax(125px,.34fr) minmax(0,1fr)!important;
+    gap:9px!important;
+  }
+  body.student-chat-mode #receivedProjectsArea .received-projects-list{
+    min-height:125px!important;max-height:30vh!important;
+  }
+  body.student-chat-mode #receivedProjectsArea .received-project-details{
+    min-height:0!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1812,7 +1842,7 @@ body.feedback-chat-mode .feedback-chat-messages .student-chat-welcome{
 
     // Switch visible panels in place instead of scrolling to page anchors.
     function openPage(page) {
-      document.body.classList.toggle("student-chat-mode", page === "student-access" || page === "feedback");
+      document.body.classList.toggle("student-chat-mode", ["student-access","feedback","received-projects"].includes(page));
       document.body.classList.toggle("feedback-chat-mode", page === "feedback");
       document.body.classList.toggle("project-workspace-mode",
         ["new-project","my-projects","retrieve","shared-projects","received-projects","student-access","feedback"].includes(page));
