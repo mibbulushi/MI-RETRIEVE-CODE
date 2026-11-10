@@ -148,7 +148,7 @@ body.student-chat-mode #studentRetrieveArea:not(.page-hidden){
 .student-chat-heading h2{margin-bottom:5px}
 .student-chat-heading p{margin:0}
 .student-chat-messages{
-  flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  flex:1 1 0;min-height:min(52vh,520px);overflow-y:auto;overscroll-behavior:contain;
   display:flex;flex-direction:column;gap:14px;margin-top:14px;padding:18px;
   border:1px solid rgba(132,169,215,.32);border-radius:16px;
   background:rgba(241,247,255,.78);line-height:1.65;
@@ -166,12 +166,8 @@ body.student-chat-mode #studentRetrieveArea:not(.page-hidden){
   border:1px solid rgba(123,157,201,.34);border-radius:17px;
   background:rgba(255,255,255,.94);box-shadow:0 7px 22px rgba(25,68,124,.08);
 }
-.student-chat-composer textarea{
-  width:100%;min-height:112px;max-height:220px;resize:vertical;
-  margin:0;padding:15px 17px;border-radius:14px;font-size:1rem;line-height:1.55;
-}
 .student-chat-code-row{
-  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:center;
 }
 .student-chat-code-row input{min-width:0;margin:0}
 .student-chat-code-row button{margin:0;min-width:100px}
@@ -206,9 +202,9 @@ body.student-chat-mode #studentRetrieveArea:not(.page-hidden){
   .student-chat-heading p{font-size:.78rem}
   .student-chat-messages{padding:12px;margin-top:9px}
   .student-chat-composer{gap:8px;padding:9px;margin-top:9px}
-  .student-chat-composer textarea{min-height:100px}
-  .student-chat-code-row{grid-template-columns:1fr}
-  .student-chat-code-row button{width:100%}
+  .student-chat-messages{min-height:35vh;flex:1 1 0}
+  .student-chat-code-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
+  .student-chat-code-row button{width:auto}
 }
 
 
@@ -304,9 +300,9 @@ body.student-chat-mode #appArea:not(.hidden){display:contents}
         </div>
       </div>
       <div class="student-chat-composer">
-        <label class="student-sr-only" for="studentShareCode">Student Share Code</label>
-        <textarea id="studentShareCode" rows="3" autocomplete="off" placeholder="Enter Student Share Code…"></textarea>
         <div class="student-chat-code-row">
+          <label class="student-sr-only" for="studentShareCode">Student Share Code</label>
+          <input id="studentShareCode" type="text" autocomplete="off" placeholder="Enter Student Share Code…">
           <label class="student-sr-only" for="studentSharePassword">Optional project password</label>
           <input id="studentSharePassword" type="password" autocomplete="off" placeholder="Project password (if required)">
           <button id="studentRetrieveBtn" type="button" aria-label="Receive project">Send</button>
