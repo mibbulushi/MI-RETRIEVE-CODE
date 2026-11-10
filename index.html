@@ -218,16 +218,14 @@ body:not(.student-chat-mode) .container{
   flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
   scrollbar-gutter:stable;
 }
-#appArea:not(.hidden){
-  display:flex;flex:1 1 auto;flex-direction:column;min-height:0;overflow:hidden;
-}
+#appArea:not(.hidden){display:contents}
 #appArea>.page-panel:not(.page-hidden){
   flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
   scrollbar-gutter:stable;
 }
 body.student-chat-mode .container{height:100%;min-height:0}
 body.student-chat-mode .container>.page-panel:not(.page-hidden){flex:1 1 auto;min-height:0}
-body.student-chat-mode #appArea:not(.hidden){flex:1 1 auto;min-height:0}
+body.student-chat-mode #appArea:not(.hidden){display:contents}
 @media(max-width:760px){
   body{
     display:flex;flex-direction:column;
