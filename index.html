@@ -1294,6 +1294,38 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
   }
 }
 
+
+/* Keep each label beside its compact input, with both fields on one row */
+#saveArea .project-title-password-row{
+  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+  align-items:center!important;gap:22px!important;
+}
+#saveArea .project-title-password-field{
+  display:flex!important;flex:0 1 auto!important;flex-direction:row!important;
+  align-items:center!important;gap:8px!important;min-width:0!important;
+}
+#saveArea .project-title-password-field label{
+  flex:0 0 auto!important;white-space:nowrap!important;
+}
+#saveArea .project-title-password-field input{
+  flex:0 0 155px!important;width:155px!important;max-width:155px!important;
+}
+#saveArea .project-title-password-field:nth-child(2) input{
+  flex-basis:175px!important;width:175px!important;max-width:175px!important;
+}
+@media(max-width:760px){
+  #saveArea .project-title-password-row{
+    flex-direction:column!important;align-items:stretch!important;gap:10px!important;
+  }
+  #saveArea .project-title-password-field{
+    display:grid!important;grid-template-columns:minmax(0,auto) minmax(0,1fr)!important;
+  }
+  #saveArea .project-title-password-field input,
+  #saveArea .project-title-password-field:nth-child(2) input{
+    width:100%!important;max-width:none!important;flex:1 1 auto!important;
+  }
+}
+
 </style>
 </head>
 <body>
