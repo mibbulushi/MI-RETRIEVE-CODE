@@ -188,6 +188,10 @@ footer{color:#7187a3}
 .project-save-field input{width:100%;min-width:0;margin:0;min-height:64px;height:64px}
 .project-save-field input[type="file"]{padding:10px 12px;font-size:.88rem;min-height:64px;height:64px}
 .project-save-action button{width:100%;min-height:64px;height:64px;margin:0;padding:10px 14px}
+.project-save-action #saveResult{
+  min-height:0;margin:0 0 6px;padding:7px 10px;
+  font-size:.82rem;line-height:1.3;border-radius:9px;
+}
 .project-save-label{display:block;min-height:2.8em;margin-bottom:7px;font-weight:650;font-size:.91rem;color:transparent;user-select:none}
 .project-save-notes{display:grid;grid-template-columns:1fr 1.25fr;gap:12px;margin-top:4px}
 .project-save-notes p{margin:7px 0 0}
@@ -1453,6 +1457,7 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
           </div>
           <div class="project-save-field project-save-action">
             <span class="project-save-label" aria-hidden="true">Save project</span>
+            <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
             <button id="saveBtn" type="button">Save complete project &amp; generate codes</button>
           </div>
         </div>
@@ -1460,7 +1465,6 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
           <p class="small">If you set a password, use at least 8 characters. Share it separately from the Share Code.</p>
           <p class="small">Up to 20 files per project; maximum 25 MB per file. Files are private until you create/share a project code.</p>
         </div>
-        <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
       </section>
 
       <section class="card page-panel page-hidden" id="manageSharesCard" data-panel="my-projects shared-projects">
