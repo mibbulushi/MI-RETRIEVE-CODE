@@ -1431,6 +1431,52 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
   }
 }
 
+
+/* Align the three save-row boxes on one horizontal line */
+#saveArea .project-title-password-row.project-save-all-in-one-row{
+  display:grid!important;
+  grid-template-columns:120px 150px minmax(260px,1fr) 195px!important;
+  align-items:start!important;
+  column-gap:10px!important;
+}
+#saveArea .project-save-all-in-one-row .project-title-password-field{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:5px!important;
+}
+#saveArea .project-save-all-in-one-row .project-title-password-field label{
+  min-height:2.1em!important;
+}
+#saveArea .project-save-all-in-one-row .project-title-password-field input#title,
+#saveArea .project-save-all-in-one-row .project-title-password-field input#newSharePassword{
+  height:30px!important;min-height:30px!important;max-height:30px!important;
+}
+#saveArea .project-save-all-in-one-row #saveResult{
+  align-self:start!important;
+  height:30px!important;min-height:30px!important;
+  margin:calc(2.1em * 1.2 + 5px) 0 0!important;
+  padding:5px 8px!important;
+  box-sizing:border-box!important;
+  white-space:nowrap!important;overflow:hidden!important;
+}
+#saveArea .project-save-all-in-one-row #saveBtn{
+  align-self:start!important;
+  height:30px!important;min-height:30px!important;
+  margin:calc(2.1em * 1.2 + 5px) 0 0!important;
+  padding:4px 8px!important;
+}
+@media(max-width:760px){
+  #saveArea .project-title-password-row.project-save-all-in-one-row{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    align-items:start!important;
+  }
+  #saveArea .project-save-all-in-one-row #saveResult,
+  #saveArea .project-save-all-in-one-row #saveBtn{
+    margin-top:0!important;
+  }
+}
+
 </style>
 </head>
 <body>
