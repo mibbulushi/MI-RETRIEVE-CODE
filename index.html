@@ -552,6 +552,34 @@ body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
   }
 }
 
+
+/* Make the complete Student Access entry strip slim, not just the text fields */
+body.student-chat-mode #studentRetrieveArea .student-chat-composer{
+  padding:5px 8px!important;margin-top:7px!important;gap:4px!important;
+  border-radius:10px!important;
+}
+body.student-chat-mode #studentRetrieveArea .student-chat-code-row{
+  min-height:0!important;gap:7px!important;align-items:center!important;
+}
+body.student-chat-mode #studentRetrieveArea #studentShareCode,
+body.student-chat-mode #studentRetrieveArea #studentSharePassword,
+body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
+  height:34px!important;min-height:34px!important;max-height:34px!important;
+  padding:4px 10px!important;line-height:1.1!important;font-size:.82rem!important;
+  border-radius:8px!important;
+}
+@media(max-width:760px){
+  body.student-chat-mode #studentRetrieveArea .student-chat-composer{
+    padding:4px 5px!important;margin-top:5px!important;
+  }
+  body.student-chat-mode #studentRetrieveArea #studentShareCode,
+  body.student-chat-mode #studentRetrieveArea #studentSharePassword,
+  body.student-chat-mode #studentRetrieveArea #studentRetrieveBtn{
+    height:32px!important;min-height:32px!important;max-height:32px!important;
+    padding:3px 6px!important;font-size:.72rem!important;
+  }
+}
+
 </style>
 </head>
 <body>
