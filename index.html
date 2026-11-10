@@ -128,6 +128,80 @@ footer{color:#7187a3}
   .card,button,.side-nav a{transition:transform .22s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease}
 }
 
+
+/* Student Access: ChatGPT-style fixed composer with its own scrollable conversation */
+body.student-chat-mode{
+  height:100vh;height:100dvh;overflow:hidden;
+  padding-top:18px;padding-bottom:18px;
+}
+body.student-chat-mode .container{
+  height:100%;min-height:0;display:flex;flex-direction:column;
+}
+body.student-chat-mode .container>header{
+  flex:0 0 auto;margin:0 0 14px;padding-top:15px;padding-bottom:15px;
+}
+body.student-chat-mode #studentRetrieveArea:not(.page-hidden){
+  display:flex;flex:1 1 auto;flex-direction:column;min-height:0;
+  margin:0;padding:18px 20px 14px;overflow:hidden;
+}
+.student-chat-heading{flex:0 0 auto}
+.student-chat-heading h2{margin-bottom:5px}
+.student-chat-heading p{margin:0}
+.student-chat-messages{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;gap:14px;margin-top:14px;padding:18px;
+  border:1px solid rgba(132,169,215,.32);border-radius:16px;
+  background:rgba(241,247,255,.78);line-height:1.65;
+  scrollbar-gutter:stable;
+}
+.student-chat-welcome{
+  align-self:flex-start;max-width:min(720px,90%);padding:15px 18px;
+  border:1px solid rgba(132,169,215,.28);border-radius:16px 16px 16px 5px;
+  background:#fff;box-shadow:0 5px 16px rgba(25,68,124,.06);
+}
+.student-chat-welcome p{margin:7px 0 0}
+.student-chat-composer{
+  flex:0 0 auto;display:grid;grid-template-columns:minmax(180px,1.1fr) minmax(180px,1fr) auto;
+  gap:10px;align-items:center;margin-top:13px;padding:10px;
+  border:1px solid rgba(123,157,201,.34);border-radius:17px;
+  background:rgba(255,255,255,.94);box-shadow:0 7px 22px rgba(25,68,124,.08);
+}
+.student-chat-composer input{min-width:0;margin:0}
+.student-chat-composer button{margin:0;min-width:92px}
+.student-sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+.student-chat-messages>.status{align-self:flex-start;max-width:90%;margin:0}
+.student-chat-messages article{
+  flex:0 0 auto;width:100%;margin:0!important;background:#fff;
+  box-shadow:0 5px 16px rgba(25,68,124,.05);
+}
+.student-chat-messages article p{overflow-wrap:anywhere}
+@media(max-width:760px){
+  body.student-chat-mode{
+    padding:0 10px 10px;height:100vh;height:100dvh;
+  }
+  body.student-chat-mode .sidebar{
+    margin:0 -10px 10px;padding:10px;gap:8px;flex:0 0 auto;
+  }
+  body.student-chat-mode .container{
+    height:calc(100% - 94px);min-height:0;
+  }
+  body.student-chat-mode .container>header{
+    margin:0 0 9px;padding:10px 13px;
+  }
+  body.student-chat-mode .container>header h1{font-size:1.35rem}
+  body.student-chat-mode .container>header .tagline{font-size:.78rem;margin-top:3px}
+  body.student-chat-mode #studentRetrieveArea:not(.page-hidden){
+    padding:12px;min-height:0;
+  }
+  .student-chat-heading p{font-size:.78rem}
+  .student-chat-messages{padding:12px;margin-top:9px}
+  .student-chat-composer{grid-template-columns:1fr;gap:8px;padding:9px;margin-top:9px}
+  .student-chat-composer button{width:100%}
+}
+
 </style>
 </head>
 <body>
@@ -164,15 +238,25 @@ footer{color:#7187a3}
       </div>
     </section>
 
-    <section class="card page-panel page-hidden" id="studentRetrieveArea" data-panel="student-access">
-      <h2>Retrieve shared information</h2>
-      <p class="small">Sign in to your own MI account, then enter a creator's Share Code. The shared project will be saved in your Received Projects. The original owner keeps ownership.</p>
-      <label for="studentShareCode">Student Share Code</label>
-      <input id="studentShareCode" autocomplete="off" placeholder="Example: MI-7K4P-9W2D">
-      <label for="studentSharePassword">Project password (only if the owner set one)</label>
-      <input id="studentSharePassword" type="password" autocomplete="off" placeholder="Enter project password">
-      <button id="studentRetrieveBtn" type="button">Receive project in my account</button>
-      <div id="studentRetrieveResult" class="result" role="status" aria-live="polite">Shared information will appear here.</div>
+    <section class="card page-panel page-hidden student-chat-card" id="studentRetrieveArea" data-panel="student-access">
+      <div class="student-chat-heading">
+        <h2>Student Access</h2>
+        <p class="small">Enter a creator's Share Code below. The received project will be saved to your MI account; the original creator keeps ownership.</p>
+      </div>
+      <div id="studentRetrieveResult" class="student-chat-messages" role="status" aria-live="polite">
+        <div class="student-chat-welcome">
+          <strong>MI Student Assistant</strong>
+          <p>Welcome. Enter your Student Share Code in the box below to receive a shared project.</p>
+          <p class="small">If the creator set a project password, enter it too. Your received project will appear in this conversation area.</p>
+        </div>
+      </div>
+      <div class="student-chat-composer">
+        <label class="student-sr-only" for="studentShareCode">Student Share Code</label>
+        <input id="studentShareCode" autocomplete="off" placeholder="Enter Student Share Code…">
+        <label class="student-sr-only" for="studentSharePassword">Optional project password</label>
+        <input id="studentSharePassword" type="password" autocomplete="off" placeholder="Project password (if required)">
+        <button id="studentRetrieveBtn" type="button" aria-label="Receive project">Send</button>
+      </div>
     </section>
 
     <section class="card page-panel page-hidden" id="accountArea" data-panel="account">
@@ -942,6 +1026,7 @@ footer{color:#7187a3}
 
     // Switch visible panels in place instead of scrolling to page anchors.
     function openPage(page) {
+      document.body.classList.toggle("student-chat-mode", page === "student-access");
       document.querySelectorAll("[data-panel]").forEach(panel => {
         const names = panel.dataset.panel.split(" ");
         panel.classList.toggle("page-hidden", !names.includes(page));
