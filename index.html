@@ -657,6 +657,54 @@ body.student-chat-mode .container>.workspace-bottom>footer{
   .container>.workspace-bottom>footer{padding:3px 6px 5px!important}
 }
 
+
+
+/* Final layout correction: keep the privacy notice and version label together at the true bottom.
+   Let the open workspace take the available height above them. */
+.container{
+  min-height:calc(100vh - 32px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+}
+#appArea:not(.hidden){display:contents!important}
+.container>.page-panel:not(.page-hidden),
+#appArea>.page-panel:not(.page-hidden){
+  flex:1 1 auto!important;
+  min-height:0!important;
+}
+.container>.workspace-bottom{
+  display:flex!important;
+  flex:0 0 auto!important;
+  flex-direction:column!important;
+  gap:1px!important;
+  width:100%!important;
+  margin-top:auto!important;
+  padding:0!important;
+}
+.container>.workspace-bottom>.notice{
+  flex:0 0 auto!important;
+  margin:0!important;
+}
+.container>.workspace-bottom>footer{
+  flex:0 0 auto!important;
+  margin:0!important;
+  padding:2px 8px 4px!important;
+  line-height:1.2!important;
+}
+body.student-chat-mode .container{min-height:calc(100vh - 32px)!important}
+body.student-chat-mode #studentRetrieveArea:not(.page-hidden){
+  display:flex!important;
+  flex-direction:column!important;
+}
+body.student-chat-mode #studentRetrieveArea .student-chat-messages{
+  flex:1 1 auto!important;
+  min-height:0!important;
+}
+@media(max-width:760px){
+  .container{min-height:calc(100vh - 10px)!important}
+  body.student-chat-mode .container{min-height:calc(100vh - 10px)!important}
+}
 </style>
 </head>
 <body>
