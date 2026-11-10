@@ -1313,9 +1313,23 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
 #saveArea .project-title-password-field:nth-child(2) input{
   flex-basis:175px!important;width:175px!important;max-width:175px!important;
 }
+#saveArea .project-title-password-row{
+  gap:14px!important;
+}
+#saveArea .project-title-password-field label{
+  font-size:.82rem!important;
+}
+#saveArea .project-title-password-field input{
+  flex:0 0 125px!important;width:125px!important;max-width:125px!important;
+  min-height:34px!important;height:34px!important;padding:5px 8px!important;
+  font-size:.82rem!important;
+}
+#saveArea .project-title-password-field:nth-child(2) input{
+  flex-basis:145px!important;width:145px!important;max-width:145px!important;
+}
 @media(max-width:760px){
   #saveArea .project-title-password-row{
-    flex-direction:column!important;align-items:stretch!important;gap:10px!important;
+    flex-direction:column!important;align-items:stretch!important;gap:9px!important;
   }
   #saveArea .project-title-password-field{
     display:grid!important;grid-template-columns:minmax(0,auto) minmax(0,1fr)!important;
@@ -1409,7 +1423,7 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
 
     <section id="appArea" class="hidden">
       <section class="card page-panel page-hidden" id="saveArea" data-panel="new-project">
-        <h2>Save information</h2>
+        <h2>Save New Project</h2>
         <div class="project-title-password-row">
           <div class="project-title-password-field">
             <label for="title">Title</label>
