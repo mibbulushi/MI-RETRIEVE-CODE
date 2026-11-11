@@ -2186,10 +2186,20 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-messages{
   overflow:visible!important;overflow-y:visible!important;white-space:normal!important;
   overflow-wrap:anywhere!important;
 }
-body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-messages .student-chat-welcome,
+/* Show the complete welcome sentence on a transparent, full-width status area */
+body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-messages{
+  background:transparent!important;border:0!important;box-shadow:none!important;
+}
+body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-messages .student-chat-welcome{
+  display:block!important;width:100%!important;max-width:100%!important;
+  box-sizing:border-box!important;padding:0!important;margin:0!important;
+  background:transparent!important;border:0!important;border-radius:0!important;
+  box-shadow:none!important;color:inherit!important;
+}
 body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-messages .student-chat-welcome p{
-  height:auto!important;max-height:none!important;overflow:visible!important;
-  white-space:normal!important;overflow-wrap:anywhere!important;
+  display:block!important;width:100%!important;height:auto!important;max-height:none!important;
+  margin:7px 0 0!important;overflow:visible!important;white-space:normal!important;
+  overflow-wrap:anywhere!important;
 }
 body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-composer{order:2!important}
 body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{order:1!important}
