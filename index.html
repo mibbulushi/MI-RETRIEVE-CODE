@@ -178,6 +178,15 @@ footer{color:#7187a3}
 
 
 
+
+/* Visible New Project work and save status */
+.mi-work-status{display:flex;align-items:center;gap:9px;margin:12px 0 4px;padding:10px 13px;border:1px solid #d5e4f5;border-radius:11px;background:#f3f8ff;color:#31577f;font-size:.88rem;font-weight:650;}
+.mi-work-dot{width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#6b91bc;box-shadow:0 0 0 3px rgba(107,145,188,.14)}
+.mi-work-status.is-working{background:#fff8e8;border-color:#f0dfb4;color:#76520b}.mi-work-status.is-working .mi-work-dot{background:#d99a20;animation:miStatusPulse 1s infinite alternate}
+.mi-work-status.is-saved{background:#edf9f1;border-color:#ccebd6;color:#176b40}.mi-work-status.is-saved .mi-work-dot{background:#20965b}
+.mi-work-status.is-error{background:#fff1f0;border-color:#f1d0cd;color:#a22b25}.mi-work-status.is-error .mi-work-dot{background:#c43e36}
+@keyframes miStatusPulse{to{opacity:.35;transform:scale(.78)}}
+
 /* Save project controls: password, file attachment and save action share one row */
 .project-save-row{
   display:grid;grid-template-columns:minmax(220px,1fr) minmax(260px,1fr);
@@ -2379,6 +2388,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
             </div>
           </div>
           <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" role="textbox" aria-label="Project document" aria-multiline="true"><p>Start writing your project here...</p></div>
+          <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
           <p class="small">Click where you want a picture, select Insert Picture, then continue writing below it. Text and pictures stay in document order.</p>
         </section>
         <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
@@ -2567,6 +2577,23 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
     }
 
     const miDocumentEditor = $("miDocumentEditor");
+    const miWorkStatus = $("miProjectWorkStatus");
+    const miWorkStatusText = $("miProjectWorkStatusText");
+    const setMiWorkStatus = (message, state = "working") => {
+      miWorkStatus.classList.remove("is-working", "is-saved", "is-error");
+      if (state === "saved") miWorkStatus.classList.add("is-saved");
+      else if (state === "error") miWorkStatus.classList.add("is-error");
+      else if (state === "working") miWorkStatus.classList.add("is-working");
+      miWorkStatusText.textContent = message;
+    };
+    miDocumentEditor.addEventListener("input", () => setMiWorkStatus("Unsaved changes — select Save complete project to store your work."));
+    const saveResultObserver = new MutationObserver(() => {
+      const message = $("saveResult").textContent || "";
+      if (/Saving project|Uploading pictures/i.test(message)) setMiWorkStatus("Saving — please wait while your project is stored.", "working");
+      else if (/Could not save|failed|could not be saved|exceeds the|session has expired|not saved/i.test(message)) setMiWorkStatus("Error — " + message.replace(/\s+/g, " ").slice(0, 220), "error");
+      else if (/Private account Retrieve Code/i.test(message)) setMiWorkStatus("Saved successfully — your project and Retrieve Code are ready.", "saved");
+    });
+    saveResultObserver.observe($("saveResult"), { childList: true, characterData: true, subtree: true });
     $("miInsertPictureBtn").addEventListener("click", () => $("miDocumentImageInput").click());
     $("miDocumentImageInput").addEventListener("change", async event => {
       const files = Array.from(event.target.files || []);
