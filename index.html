@@ -2136,11 +2136,14 @@ body.sidebar-collapsed .sidebar-toggle{z-index:110!important}
     margin:0!important;
   }
 }
+
+/* Consistent sidebar-panel toggle icon; never switch to an X */
+.sidebar-toggle-icon{display:block!important;width:21px!important;height:21px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;pointer-events:none!important}
 </style>
 </head>
 <body>
   <div id="top"></div>
-  <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">☰</button>
+  <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar"><svg class="sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M9 4.5v15"></path></svg></button>
   <aside class="sidebar" aria-label="Main navigation">
     <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
     <div class="sidebar-search-wrap" id="sidebarSearchWrap"><button class="sidebar-search-icon" id="sidebarSearchToggle" type="button" aria-label="Search menu" title="Search menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button><input id="sidebarSearch" type="search" placeholder="Search menu..." autocomplete="off" aria-label="Search menu"></div>
@@ -3071,7 +3074,7 @@ body.sidebar-collapsed .sidebar-toggle{z-index:110!important}
         sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
         sidebarToggle.setAttribute("aria-label", collapsed ? "Open sidebar" : "Close sidebar");
         sidebarToggle.title = collapsed ? "Open sidebar" : "Close sidebar";
-        sidebarToggle.textContent = collapsed ? "☰" : "✕";
+        sidebarToggle.innerHTML = '<svg class="sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M9 4.5v15"></path></svg>';
       }
     }
     if (sidebarToggle) sidebarToggle.addEventListener("click", () => {
