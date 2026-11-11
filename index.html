@@ -2263,15 +2263,16 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
  .mi-project-section-actions button{flex:1}
 }
 
-.mi-editor-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:10px;padding:12px;margin:10px 0;border:1px solid #b9cce4;border-radius:12px;background:#f2f7fd;width:100%;box-sizing:border-box;position:relative;z-index:1}
-.mi-tool-group{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px;background:#fff;border:1px solid #cbd9e9;border-radius:9px;min-width:0;box-sizing:border-box}
-.mi-tool-group-title{flex:0 0 100%;font-size:.75rem;font-weight:700;color:#435a75;letter-spacing:.035em;text-transform:uppercase}
-.mi-editor-toolbar button{margin:0;padding:8px 11px;min-height:40px;white-space:nowrap}
-.mi-tool-label{display:flex;align-items:center;gap:6px;margin:0;font-size:.84rem;font-weight:600;white-space:nowrap;color:#26364a}
-#miEditorToolbar .mi-tool-label select{display:inline-block;width:auto;min-width:82px;max-width:100%;min-height:40px;padding:7px 10px;font-size:.9rem;background:#fff;color:#172b45;border:1px solid #9fb2ca;border-radius:7px}
-#miEditorToolbar #miFontFamily{min-width:165px}
-#miEditorToolbar #miFontSize{min-width:78px}
-#miEditorToolbar .mi-tool-label input[type=color]{display:inline-block;width:46px;height:40px;min-height:40px;padding:3px;background:#fff;border:1px solid #9fb2ca;border-radius:7px}
+.mi-editor-toolbar{display:flex;flex-wrap:nowrap;align-items:center;gap:5px;padding:7px 8px;margin:10px 0;border:1px solid #b9cce4;border-radius:10px;background:#f2f7fd;width:100%;box-sizing:border-box;position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;white-space:nowrap}
+.mi-editor-toolbar .mi-tool-label{display:inline-flex;flex:0 0 auto;align-items:center;gap:4px;margin:0;font-size:11px;font-weight:650;white-space:nowrap;color:#26364a}
+#miEditorToolbar .mi-tool-label select{display:inline-block;width:auto;min-width:0;max-width:150px;height:30px;min-height:30px;padding:3px 6px;font-size:11px;background:#fff;color:#172b45;border:1px solid #9fb2ca;border-radius:6px;box-sizing:border-box}
+#miEditorToolbar #miFontFamily{width:116px;max-width:116px}
+#miEditorToolbar #miFontSize{width:48px;max-width:48px}
+#miEditorToolbar #miLineSpacing{width:53px;max-width:53px}
+#miEditorToolbar .mi-color-label input[type=color]{display:inline-block;flex:0 0 auto;width:29px;height:29px;min-height:29px;padding:2px;background:#fff;border:1px solid #9fb2ca;border-radius:6px;box-sizing:border-box}
+#miEditorToolbar button{display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;height:29px;min-height:29px;min-width:29px;padding:3px 6px;margin:0;font-size:12px;line-height:1;border-radius:6px;box-shadow:none;white-space:nowrap}
+#miEditorToolbar .mi-format-icon{width:29px;padding:3px;font-size:14px}
+#miEditorToolbar .mi-grammar-compact{padding:3px 8px;font-size:11px}
 .mi-grammar-notice{padding:9px 12px;margin:7px 0 10px;border-radius:9px;background:#fff8e8;border:1px solid #f0dfb4;color:#76520b;font-size:.85rem;line-height:1.5}
 @media(max-width:760px){.mi-editor-toolbar{grid-template-columns:minmax(0,1fr);gap:8px;padding:9px}.mi-tool-group{width:100%}.mi-tool-label{font-size:.8rem}#miEditorToolbar #miFontFamily{min-width:150px}.mi-editor-toolbar button{padding:7px 9px;font-size:.82rem}}
 /* Compact editor toolbar controls: override the site's large global form/button sizing. */
@@ -2412,32 +2413,20 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
             </div>
           </div>
           <div class="mi-editor-toolbar" id="miEditorToolbar" role="toolbar" aria-label="Document formatting">
-            <div class="mi-tool-group" aria-label="Font settings">
-              <span class="mi-tool-group-title">1. Font settings</span>
-              <label class="mi-tool-label">Font family <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
-              <label class="mi-tool-label">Font size <select id="miFontSize" aria-label="Font size"><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">32</option></select></label>
-              <label class="mi-tool-label">Text colour <input id="miFontColor" type="color" value="#26364a" aria-label="Text colour"></label>
-            </div>
-            <div class="mi-tool-group" aria-label="Text style and alignment">
-              <span class="mi-tool-group-title">2. Text style &amp; alignment</span>
-              <button type="button" class="secondary" data-mi-command="bold" title="Bold"><b>B</b></button>
-              <button type="button" class="secondary" data-mi-command="italic" title="Italic"><i>I</i></button>
-              <button type="button" class="secondary" data-mi-command="underline" title="Underline"><u>U</u></button>
-              <button type="button" class="secondary" data-mi-command="justifyLeft" title="Align left">Left</button>
-              <button type="button" class="secondary" data-mi-command="justifyCenter" title="Align centre">Centre</button>
-              <button type="button" class="secondary" data-mi-command="justifyRight" title="Align right">Right</button>
-              <button type="button" class="secondary" data-mi-command="justifyFull" title="Justify">Justify</button>
-            </div>
-            <div class="mi-tool-group" aria-label="Paragraph spacing">
-              <span class="mi-tool-group-title">3. Paragraph spacing</span>
-              <label class="mi-tool-label">Line spacing <select id="miLineSpacing" aria-label="Line spacing"><option value="1.2">1.2</option><option value="1.5" selected>1.5</option><option value="1.75">1.75</option><option value="2">2.0</option></select></label>
-              <button type="button" class="secondary" data-mi-command="indent">Indent</button>
-              <button type="button" class="secondary" data-mi-command="outdent">Outdent</button>
-            </div>
-            <div class="mi-tool-group mi-tool-group-grammar" aria-label="Grammar tools">
-              <span class="mi-tool-group-title">4. Grammar</span>
-              <button type="button" class="secondary" id="miGrammarCheckBtn">Optional Grammar Check</button>
-            </div>
+            <label class="mi-tool-label" title="Font family">Font <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
+            <label class="mi-tool-label" title="Font size">Size <select id="miFontSize" aria-label="Font size"><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">32</option></select></label>
+            <label class="mi-tool-label mi-color-label" title="Text colour">Colour <input id="miFontColor" type="color" value="#26364a" aria-label="Text colour"></label>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="bold" title="Bold" aria-label="Bold"><b>B</b></button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="italic" title="Italic" aria-label="Italic"><i>I</i></button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="underline" title="Underline" aria-label="Underline"><u>U</u></button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="justifyLeft" title="Align left" aria-label="Align left">≡</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="justifyCenter" title="Align centre" aria-label="Align centre">☷</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="justifyRight" title="Align right" aria-label="Align right">≣</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="justifyFull" title="Justify" aria-label="Justify">▤</button>
+            <label class="mi-tool-label" title="Line spacing">↕ <select id="miLineSpacing" aria-label="Line spacing"><option value="1.2">1.2</option><option value="1.5" selected>1.5</option><option value="1.75">1.75</option><option value="2">2.0</option></select></label>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="indent" title="Indent" aria-label="Indent">⇥</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="outdent" title="Outdent" aria-label="Outdent">⇤</button>
+            <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
           </div>
           <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
           <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"><p>Start writing your project here...</p></div>
