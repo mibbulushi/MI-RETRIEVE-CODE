@@ -2983,6 +2983,61 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         $("saveResult").append(shareNote);
       }
 
+      // Show successfully saved section pictures in the project save result.
+      if (uploadedImageRows.length) {
+        const pictureHeading = document.createElement("h3");
+        pictureHeading.textContent = "Pictures saved in this project:";
+        $("saveResult").append(pictureHeading);
+        const { data: savedPictureLinks, error: savedPictureLinksError } = await client.storage
+          .from("mi-project-images")
+          .createSignedUrls(uploadedImageRows.map(row => row.storage_path), 3600);
+        const pictureUrlByPath = new Map(
+          (savedPictureLinks || []).map(item => [item.path, item.signedUrl])
+        );
+        const pictureGrid = document.createElement("div");
+        pictureGrid.className = "mi-section-image-cards";
+        uploadedImageRows.forEach(row => {
+          const pictureCard = document.createElement("figure");
+          pictureCard.className = "mi-section-image-card";
+          pictureCard.style.margin = "0";
+          const pictureUrl = pictureUrlByPath.get(row.storage_path);
+          if (pictureUrl) {
+            const picture = document.createElement("img");
+            picture.src = pictureUrl;
+            picture.alt = row.caption || row.file_name;
+            picture.loading = "lazy";
+            pictureCard.append(picture);
+          } else {
+            const unavailable = document.createElement("p");
+            unavailable.className = "small";
+            unavailable.textContent = savedPictureLinksError
+              ? "Saved picture preview is temporarily unavailable."
+              : "Picture saved; preview link unavailable.";
+            pictureCard.append(unavailable);
+          }
+          const pictureDetails = document.createElement("div");
+          pictureDetails.className = "mi-section-image-details";
+          const pictureName = document.createElement("strong");
+          pictureName.className = "mi-image-file-name";
+          pictureName.textContent = row.file_name;
+          pictureDetails.append(pictureName);
+          if (row.section_title) {
+            const sectionName = document.createElement("span");
+            sectionName.className = "small";
+            sectionName.textContent = row.section_title;
+            pictureDetails.append(sectionName);
+          }
+          if (row.caption) {
+            const caption = document.createElement("span");
+            caption.textContent = row.caption;
+            pictureDetails.append(caption);
+          }
+          pictureCard.append(pictureDetails);
+          pictureGrid.append(pictureCard);
+        });
+        $("saveResult").append(pictureGrid);
+      }
+
       if (uploadErrors.length) {
         const warning = document.createElement("p");
         warning.className = "notice";
