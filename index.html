@@ -2610,7 +2610,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       imageInput.className = "mi-section-image-input";
       const imageHint = document.createElement("p");
       imageHint.className = "small";
-      imageHint.textContent = "Add up to 20 pictures across the project. Each picture can have its own caption and explanation (maximum 5 MB per picture).";
+      imageHint.textContent = "Add up to 100 pictures across the project. Each picture can have its own caption and explanation (maximum 25 MB per picture).";
       const imageCards = document.createElement("div");
       imageCards.className = "mi-section-image-cards";
       imageInput.addEventListener("change", () => {
@@ -2700,11 +2700,11 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       if (!title || (!content && files.length === 0 && sectionImages.length === 0)) { $("titleValidation").textContent = "Enter a title and either information, a project structure, or at least one file."; return; }
       $("titleValidation").textContent = "";
       if (files.length > 20) return $("saveResult").textContent = "Please attach no more than 20 files to one project.";
-      if (sectionImages.length > 20) return $("saveResult").textContent = "Please attach no more than 20 section pictures to one project.";
+      if (sectionImages.length > 100) return $("saveResult").textContent = "Please attach no more than 100 section pictures to one project.";
       const tooLarge = files.find(file => file.size > 25 * 1024 * 1024);
       if (tooLarge) return $("saveResult").textContent = "File exceeds the 25 MB limit: " + tooLarge.name;
-      const largeImage = sectionImages.find(image => image.file.size > 5 * 1024 * 1024);
-      if (largeImage) return $("saveResult").textContent = "Picture exceeds the 5 MB limit: " + largeImage.file.name;
+      const largeImage = sectionImages.find(image => image.file.size > 25 * 1024 * 1024);
+      if (largeImage) return $("saveResult").textContent = "Picture exceeds the 25 MB limit: " + largeImage.file.name;
       $("saveBtn").disabled = true;
       $("saveResult").textContent = "Saving project and uploading attached files...";
       const { data: { user }, error: userError } = await client.auth.getUser();
