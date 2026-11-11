@@ -2220,17 +2220,20 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 .mi-project-section-actions button{margin:0;padding:8px 11px;min-height:38px}
 .mi-project-section textarea{width:100%;min-height:150px;margin:0;resize:vertical}
 .mi-project-section .mi-section-hint{margin:8px 0 0}
-.mi-section-image-panel{margin-top:10px;padding:8px;border:1px dashed #b8cbe1;border-radius:10px;background:#f8fbff}
-.mi-section-image-panel label{display:block;margin-bottom:5px;font-weight:700}
-.mi-section-image-input{width:100%;margin:0 0 4px}
-.mi-section-image-cards{display:grid;grid-template-columns:1fr;gap:7px;margin-top:7px}
-.mi-section-image-card{display:grid;grid-template-columns:84px minmax(0,1fr);align-items:center;gap:9px;padding:7px;border:1px solid #d5e1ef;border-radius:9px;background:#fff}
-.mi-section-image-card img{width:84px;height:84px;object-fit:cover;border-radius:7px}
-.mi-section-image-details{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:6px;min-width:0}
-.mi-section-image-details input,.mi-section-image-details textarea{width:100%;min-width:0;margin:0}
-.mi-section-image-details textarea{min-height:54px!important;height:54px;resize:vertical}
-.mi-section-image-details button{margin:0;padding:6px 9px;min-height:34px}
-@media(max-width:650px){.mi-section-image-card{grid-template-columns:68px minmax(0,1fr);gap:7px;padding:6px}.mi-section-image-card img{width:68px;height:68px}.mi-section-image-details{grid-template-columns:1fr}.mi-section-image-details textarea{min-height:48px!important;height:48px}}
+.mi-section-image-panel{margin-top:14px;padding:14px;border:1px solid #cbd9e8;border-radius:12px;background:#f7faff}
+.mi-section-image-panel>label{display:block;margin:0 0 9px;font-weight:700;color:var(--navy)}
+.mi-section-image-input{display:block;width:100%;margin:0;padding:10px;border:1px solid #cbd9e8;border-radius:8px;background:#fff}
+.mi-section-image-panel>.small{margin:8px 0 0;line-height:1.5}
+.mi-section-image-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px}
+.mi-section-image-card{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:start;gap:12px;min-width:0;padding:12px;border:1px solid #d5e1ef;border-radius:11px;background:#fff;box-shadow:0 2px 8px rgba(20,36,58,.05)}
+.mi-section-image-card img{display:block;width:96px;height:96px;object-fit:cover;border:1px solid #e1e8f0;border-radius:8px;background:#f3f6fa}
+.mi-section-image-details{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;min-width:0}
+.mi-section-image-details input,.mi-section-image-details textarea{display:block;width:100%;min-width:0;margin:0;padding:9px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff}
+.mi-section-image-details input:focus,.mi-section-image-details textarea:focus{outline:2px solid rgba(57,118,197,.18);border-color:var(--blue)}
+.mi-section-image-details textarea{min-height:76px!important;height:76px;resize:vertical}
+.mi-section-image-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mi-section-image-actions button{margin:0;padding:8px 12px;min-height:36px;white-space:normal}
+@media(max-width:650px){.mi-section-image-cards{grid-template-columns:1fr}.mi-section-image-card{grid-template-columns:76px minmax(0,1fr);gap:9px;padding:9px}.mi-section-image-card img{width:76px;height:76px}.mi-section-image-details textarea{min-height:68px!important;height:68px}.mi-section-image-actions button{flex:1}}
 .mi-retrieved-image{max-width:560px;margin:12px 0;padding:10px;border:1px solid #d5e1ef;border-radius:10px;background:#fff}
 .mi-retrieved-image img{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:7px}
 .mi-retrieved-image h5{margin:0 0 8px}
@@ -2649,9 +2652,12 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           const remove = document.createElement("button");
           remove.type = "button";
           remove.className = "secondary";
-          remove.textContent = "Remove picture";
+          remove.textContent = "Remove Picture";
           remove.addEventListener("click", () => card.remove());
-          details.append(caption, explanation, addToProject, remove);
+          const imageActions = document.createElement("div");
+          imageActions.className = "mi-section-image-actions";
+          imageActions.append(addToProject, remove);
+          details.append(caption, explanation, imageActions);
           card.append(preview, details);
           imageCards.append(card);
         });
