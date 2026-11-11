@@ -2610,7 +2610,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       imageInput.className = "mi-section-image-input";
       const imageHint = document.createElement("p");
       imageHint.className = "small";
-      imageHint.textContent = "Add up to 100 pictures across the project. Each picture can have its own caption and explanation (maximum 25 MB per picture).";
+      imageHint.textContent = "Choose pictures, add each picture's caption and explanation, then select Add Picture to Project. Finally select Save New Project to store everything. Up to 100 pictures per project; maximum 25 MB each.";
       const imageCards = document.createElement("div");
       imageCards.className = "mi-section-image-cards";
       imageInput.addEventListener("change", () => {
@@ -2635,12 +2635,21 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           explanation.rows = 2;
           explanation.placeholder = "Explain this picture (optional)";
           explanation.className = "mi-section-image-description";
+          const addToProject = document.createElement("button");
+          addToProject.type = "button";
+          addToProject.className = "primary";
+          addToProject.textContent = "Add Picture to Project";
+          addToProject.addEventListener("click", () => {
+            card.dataset.addedToProject = "true";
+            addToProject.textContent = "Added to Project";
+            addToProject.disabled = true;
+          });
           const remove = document.createElement("button");
           remove.type = "button";
           remove.className = "secondary";
           remove.textContent = "Remove picture";
           remove.addEventListener("click", () => card.remove());
-          details.append(caption, explanation, remove);
+          details.append(caption, explanation, addToProject, remove);
           card.append(preview, details);
           imageCards.append(card);
         });
