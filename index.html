@@ -1927,15 +1927,36 @@ body.sidebar-collapsed .sidebar .sidebar-toggle{
   }
 }
 
+
+/* Keep the sidebar toggle outside the sliding panel so it never disappears */
+.sidebar-header-row{display:contents!important}
+.sidebar-toggle{
+  position:fixed!important;top:16px!important;left:214px!important;right:auto!important;
+  z-index:200!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;
+  margin:0!important;padding:0!important;border:1px solid rgba(220,235,255,.25)!important;
+  border-radius:9px!important;background:rgba(255,255,255,.13)!important;color:#fff!important;
+  box-shadow:none!important;font-size:17px!important;line-height:1!important;
+}
+.sidebar-toggle:hover{background:rgba(255,255,255,.23)!important;transform:none!important}
+body.sidebar-collapsed .sidebar-toggle{
+  top:14px!important;left:14px!important;right:auto!important;
+  background:linear-gradient(135deg,#55a4ff,#2678df 48%,#1559b7)!important;
+  border:1px solid rgba(255,255,255,.35)!important;
+  box-shadow:0 8px 18px rgba(27,103,197,.22)!important;
+}
+@media(max-width:760px){
+  .sidebar-toggle{top:12px!important;left:220px!important;right:auto!important;z-index:200!important}
+  body.sidebar-collapsed .sidebar-toggle{top:12px!important;left:12px!important;right:auto!important}
+}
+
 </style>
 </head>
 <body>
   <div id="top"></div>
+  <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">☰</button>
   <aside class="sidebar" aria-label="Main navigation">
-    <div class="sidebar-header-row">
-      <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
-      <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">☰</button>
-    </div>
+    <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
     <div class="sidebar-search-wrap" id="sidebarSearchWrap"><button class="sidebar-search-icon" id="sidebarSearchToggle" type="button" aria-label="Search menu" title="Search menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button><input id="sidebarSearch" type="search" placeholder="Search menu..." autocomplete="off" aria-label="Search menu"></div>
     <button class="sidebar-new-project" type="button" data-open-page="new-project">＋ <span>New Project</span></button>
     <div class="nav-label">Workspace</div>
