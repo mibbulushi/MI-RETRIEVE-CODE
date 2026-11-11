@@ -2204,6 +2204,32 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-messages 
 body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-composer{order:2!important}
 body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{order:1!important}
 
+
+/* MI Project Builder: flexible, numbered project sections */
+.mi-builder-panel{margin:22px 0;padding:20px;border:1px solid #c9d9ed;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf5ff)}
+.mi-builder-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.mi-builder-heading h3{margin:0 0 5px;color:#123866;font-size:1.15rem}
+.mi-builder-heading p{margin:0}
+.mi-builder-heading button{margin:0;white-space:nowrap}
+.mi-project-sections{display:grid;gap:14px;margin-top:16px}
+.mi-project-section{padding:16px;border:1px solid #d5e1ef;border-radius:13px;background:#fff;box-shadow:0 4px 13px rgba(35,75,125,.05)}
+.mi-project-section-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.mi-project-section-number{font-weight:800;color:#2678df;min-width:76px}
+.mi-project-section-top input{flex:1;min-width:120px;margin:0}
+.mi-project-section-actions{display:flex;gap:5px;flex-wrap:wrap}
+.mi-project-section-actions button{margin:0;padding:8px 11px;min-height:38px}
+.mi-project-section textarea{width:100%;min-height:150px;margin:0;resize:vertical}
+.mi-project-section .mi-section-hint{margin:8px 0 0}
+@media(max-width:650px){
+ .mi-builder-panel{padding:14px}
+ .mi-project-section{padding:12px}
+ .mi-project-section-top{align-items:flex-start;flex-wrap:wrap}
+ .mi-project-section-number{width:100%}
+ .mi-project-section-top input{flex-basis:100%}
+ .mi-project-section-actions{width:100%}
+ .mi-project-section-actions button{flex:1}
+}
+
 </style>
 </head>
 <body>
@@ -2312,7 +2338,18 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           </div>
         </div>
         <div id="titleValidation" class="title-validation" role="alert" aria-live="polite"></div>
-        <label for="content">Project Content</label>
+        <section class="mi-builder-panel" aria-labelledby="miBuilderHeading">
+          <div class="mi-builder-heading">
+            <div>
+              <h3 id="miBuilderHeading">MI Project Builder</h3>
+              <p class="small">Build your project chapter by chapter. Add as many text sections as your project needs.</p>
+            </div>
+            <button id="addProjectSectionBtn" class="secondary" type="button">+ Add section</button>
+          </div>
+          <div id="projectSections" class="mi-project-sections" aria-live="polite"></div>
+          <p class="small">Your sections will be saved in order and included when the project is retrieved or shared. You can attach multiple images and documents below.</p>
+        </section>
+        <label for="content">Project Content (General Introduction / Additional Information)</label>
         <textarea id="content" placeholder="Write or paste your information here..."></textarea>
         <label for="projectStructure">Project Plan (Optional)</label>
         <textarea id="projectStructure" maxlength="12000" placeholder="1. Introduction
@@ -2492,13 +2529,102 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       showStatus("authStatus", "You have signed out.", "success");
     });
 
+    // MI Project Builder: users can add, remove, and reorder project sections.
+    let projectSectionCounter = 0;
+    function renumberProjectSections() {
+      document.querySelectorAll("#projectSections .mi-project-section").forEach((section, index) => {
+        section.querySelector(".mi-project-section-number").textContent = "Section " + (index + 1);
+        section.querySelector(".mi-section-title").setAttribute("aria-label", "Section " + (index + 1) + " title");
+        section.querySelector(".mi-section-content").setAttribute("aria-label", "Section " + (index + 1) + " content");
+        section.querySelector('[data-section-action="up"]').disabled = index === 0;
+        section.querySelector('[data-section-action="down"]').disabled =
+          index === document.querySelectorAll("#projectSections .mi-project-section").length - 1;
+      });
+    }
+
+    function addProjectSection(title = "", body = "") {
+      projectSectionCounter += 1;
+      const section = document.createElement("article");
+      section.className = "mi-project-section";
+      const top = document.createElement("div");
+      top.className = "mi-project-section-top";
+      const number = document.createElement("span");
+      number.className = "mi-project-section-number";
+      const heading = document.createElement("input");
+      heading.className = "mi-section-title";
+      heading.type = "text";
+      heading.maxLength = 180;
+      heading.placeholder = "Enter section heading (e.g. Introduction, Method, Results)";
+      heading.value = title;
+      const actions = document.createElement("div");
+      actions.className = "mi-project-section-actions";
+      [["up","Move up"],["down","Move down"],["remove","Remove"]].forEach(([action,label]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "secondary";
+        button.dataset.sectionAction = action;
+        button.textContent = label;
+        button.addEventListener("click", () => {
+          if (action === "remove") {
+            if (document.querySelectorAll("#projectSections .mi-project-section").length <= 1) {
+              const titleInput = section.querySelector(".mi-section-title");
+              const contentInput = section.querySelector(".mi-section-content");
+              titleInput.value = "";
+              contentInput.value = "";
+            } else section.remove();
+          } else {
+            const parent = $("projectSections");
+            if (action === "up" && section.previousElementSibling) parent.insertBefore(section, section.previousElementSibling);
+            if (action === "down" && section.nextElementSibling) parent.insertBefore(section.nextElementSibling, section);
+          }
+          renumberProjectSections();
+        });
+        actions.append(button);
+      });
+      top.append(number, heading, actions);
+      const content = document.createElement("textarea");
+      content.className = "mi-section-content";
+      content.placeholder = "Write the details for this section. You can add another section whenever you need.";
+      content.value = body;
+      const hint = document.createElement("p");
+      hint.className = "small mi-section-hint";
+      hint.textContent = "Text for this section is saved in the project and follows this section's position.";
+      section.append(top, content, hint);
+      $("projectSections").append(section);
+      renumberProjectSections();
+      return section;
+    }
+
+    $("addProjectSectionBtn").addEventListener("click", () => {
+      const section = addProjectSection();
+      section.querySelector(".mi-section-title").focus();
+    });
+    addProjectSection("Introduction", "");
+
+    function collectProjectSections() {
+      return Array.from(document.querySelectorAll("#projectSections .mi-project-section"))
+        .map((section, index) => ({
+          title: section.querySelector(".mi-section-title").value.trim() || ("Section " + (index + 1)),
+          content: section.querySelector(".mi-section-content").value.trim()
+        }))
+        .filter(section => section.title || section.content);
+    }
+
     $("saveBtn").addEventListener("click", async () => {
       const title = $("title").value.trim();
       const writtenContent = $("content").value.trim();
       const structure = $("projectStructure").value.trim();
-      const content = structure
-        ? "MI SMART PROJECT STRUCTURE\n" + structure + (writtenContent ? "\n\nPROJECT INFORMATION\n" + writtenContent : "")
-        : writtenContent;
+      const sections = collectProjectSections();
+      const sectionContent = sections.length
+        ? "MI PROJECT SECTIONS\n" + sections.map((section, index) =>
+            (index + 1) + ". " + section.title + (section.content ? "\n" + section.content : "")
+          ).join("\n\n")
+        : "";
+      const projectParts = [];
+      if (structure) projectParts.push("MI SMART PROJECT STRUCTURE\n" + structure);
+      if (writtenContent) projectParts.push("PROJECT INFORMATION\n" + writtenContent);
+      if (sectionContent) projectParts.push(sectionContent);
+      const content = projectParts.join("\n\n");
       const files = Array.from($("projectFiles").files || []);
       if (!title || (!content && files.length === 0)) { $("titleValidation").textContent = "Enter a title and either information, a project structure, or at least one file."; return; }
       $("titleValidation").textContent = "";
