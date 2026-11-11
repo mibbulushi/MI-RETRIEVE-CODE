@@ -23,7 +23,7 @@ create index if not exists mi_saved_images_content_section_idx
   on public.mi_saved_images(content_id, section_index, sort_order);
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('mi-project-images', 'mi-project-images', false, 5242880,
+values ('mi-project-images', 'mi-project-images', false, 26214400,
         array['image/jpeg','image/png','image/webp','image/gif'])
 on conflict (id) do update
 set public = false,
