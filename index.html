@@ -2237,6 +2237,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 .mi-section-image-details textarea{min-height:48px!important;height:48px;resize:vertical}
 .mi-section-image-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .mi-section-image-actions button{margin:0;padding:8px 12px;min-height:36px;white-space:normal}
+.mi-added-picture-preview{grid-column:1/-1;display:grid;gap:8px;margin-top:10px;padding:12px;border:1px solid #9cc5f2;border-radius:12px;background:linear-gradient(145deg,#f2f8ff,#e5f1ff);color:#174b86}
+.mi-added-picture-preview img{width:100%;height:auto;max-height:300px;object-fit:contain;border:1px solid #c9dcef;border-radius:9px;background:#fff}
 @media(max-width:650px){.mi-section-image-cards{grid-template-columns:1fr}.mi-section-image-card{grid-template-columns:76px minmax(0,1fr);gap:9px;padding:9px}.mi-section-image-card img{width:76px;height:76px}.mi-section-image-details textarea{min-height:52px!important;height:52px}.mi-section-image-actions button{flex:1}}
 .mi-retrieved-image{max-width:560px;margin:12px 0;padding:10px;border:1px solid #d5e1ef;border-radius:10px;background:#fff}
 .mi-retrieved-image img{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:7px}
@@ -2701,6 +2703,19 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
             addToProject.textContent = "Added to Project ✓";
             addToProject.title = "This picture is included when you save the project.";
             addToProject.setAttribute("aria-pressed", "true");
+            let addedPreview = card.querySelector(".mi-added-picture-preview");
+            if (!addedPreview) {
+              addedPreview = document.createElement("div");
+              addedPreview.className = "mi-added-picture-preview";
+              const addedLabel = document.createElement("strong");
+              addedLabel.textContent = "Picture added to this project:";
+              const addedImage = document.createElement("img");
+              addedImage.src = previewUrl;
+              addedImage.alt = file.name;
+              addedImage.loading = "eager";
+              addedPreview.append(addedLabel, addedImage);
+              details.append(addedPreview);
+            }
           });
           const remove = document.createElement("button");
           remove.type = "button";
