@@ -2619,6 +2619,17 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
     }
 
     const miDocumentEditor = $("miDocumentEditor");
+    // Remove only the old built-in starter sentence if it remains in a cached/legacy editor.
+    (() => {
+      const visibleText = (miDocumentEditor.textContent || "").trim();
+      const literalMarkup = visibleText.match(/^<p>\\s*(Start writing your project[\\s\\S]*?here\\.\\.\\.)\\s*<\\/p>$/i);
+      const starterText = visibleText.replace(/\\s+/g, " ");
+      if (literalMarkup || /^Start writing your project[\\s\\S]*?here\\.\\.\\.$/i.test(starterText)) {
+        miDocumentEditor.replaceChildren();
+        const hiddenContent = $("content");
+        if (hiddenContent) hiddenContent.value = "";
+      }
+    })();
     const miWorkStatus = $("miProjectWorkStatus");
     const miWorkStatusText = $("miProjectWorkStatusText");
     const setMiWorkStatus = (message, state = "working") => {
