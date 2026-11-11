@@ -2222,7 +2222,11 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 .mi-project-section .mi-section-hint{margin:8px 0 0}
 .mi-section-image-panel{margin-top:14px;padding:14px;border:1px solid #cbd9e8;border-radius:12px;background:#f7faff}
 .mi-section-image-panel>label{display:block;margin:0 0 9px;font-weight:700;color:var(--navy)}
-.mi-section-image-input{display:block;width:100%;margin:0;padding:10px;border:1px solid #cbd9e8;border-radius:8px;background:#fff}
+.mi-section-image-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mi-image-dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:132px;padding:20px;border:2px dashed #8eb5e5;border-radius:13px;background:linear-gradient(145deg,#fff,#edf5ff);color:#244d7d;text-align:center;cursor:pointer;transition:border-color .18s,background .18s,box-shadow .18s}
+.mi-image-dropzone strong{font-size:1rem}.mi-image-dropzone span{font-size:.86rem;color:#607b9c}
+.mi-image-dropzone.drag-over{border-color:#1769ca;background:#e3f0ff;box-shadow:0 0 0 4px rgba(55,137,235,.12)}
+.mi-image-dropzone button{margin:0;padding:8px 14px}
 .mi-section-image-panel>.small{margin:8px 0 0;line-height:1.5}
 .mi-section-image-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px}
 .mi-section-image-card{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:start;gap:12px;min-width:0;padding:12px;border:1px solid #d5e1ef;border-radius:11px;background:#fff;box-shadow:0 2px 8px rgba(20,36,58,.05)}
@@ -2613,13 +2617,50 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       imageInput.accept = "image/jpeg,image/png,image/webp,image/gif";
       imageInput.multiple = true;
       imageInput.className = "mi-section-image-input";
+      const dropZone = document.createElement("div");
+      dropZone.className = "mi-image-dropzone";
+      dropZone.tabIndex = 0;
+      dropZone.setAttribute("role", "button");
+      dropZone.setAttribute("aria-label", "Drag and drop pictures here, or choose pictures");
+      const dropTitle = document.createElement("strong");
+      dropTitle.textContent = "Drag & Drop Pictures Here";
+      const dropText = document.createElement("span");
+      dropText.textContent = "Drop multiple JPG, PNG, WEBP or GIF pictures here";
+      const chooseButton = document.createElement("button");
+      chooseButton.type = "button";
+      chooseButton.className = "secondary";
+      chooseButton.textContent = "Choose Pictures";
+      chooseButton.addEventListener("click", event => {
+        event.stopPropagation();
+        imageInput.click();
+      });
+      dropZone.append(dropTitle, dropText, chooseButton);
+      dropZone.addEventListener("click", event => {
+        if (event.target !== chooseButton) imageInput.click();
+      });
+      dropZone.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          imageInput.click();
+        }
+      });
+      ["dragenter", "dragover"].forEach(eventName => dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        event.stopPropagation();
+        dropZone.classList.add("drag-over");
+      }));
+      ["dragleave", "drop"].forEach(eventName => dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        event.stopPropagation();
+        dropZone.classList.remove("drag-over");
+      }));
       const imageHint = document.createElement("p");
       imageHint.className = "small";
-      imageHint.textContent = "Choose pictures, add each picture's caption and explanation, then select Add Picture to Project. Finally select Save New Project to store everything. Up to 100 pictures per project; maximum 25 MB each. Note: Large pictures may take longer to upload, so use pictures of 1 MB or less for faster uploading.";
+      imageHint.textContent = "After adding pictures, enter an optional caption and explanation, then select Add Picture to Project. Finally select Save New Project. Up to 100 pictures per project; maximum 25 MB each. For faster uploads, aim for 1 MB or less per picture.";
       const imageCards = document.createElement("div");
       imageCards.className = "mi-section-image-cards";
-      imageInput.addEventListener("change", () => {
-        Array.from(imageInput.files || []).forEach(file => {
+      const addImageFiles = fileList => {
+        Array.from(fileList || []).forEach(file => {
           if (!file.type.startsWith("image/")) return;
           const card = document.createElement("div");
           card.className = "mi-section-image-card";
@@ -2661,9 +2702,18 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           card.append(preview, details);
           imageCards.append(card);
         });
+      };
+      imageInput.addEventListener("change", () => {
+        addImageFiles(imageInput.files);
         imageInput.value = "";
       });
-      imagePanel.append(imageLabel, imageInput, imageHint, imageCards);
+      dropZone.addEventListener("drop", event => {
+        const droppedFiles = Array.from(event.dataTransfer?.files || []);
+        const validImages = droppedFiles.filter(file => file.type.startsWith("image/"));
+        if (validImages.length) addImageFiles(validImages);
+        else dropText.textContent = "Please drop image files (JPG, PNG, WEBP or GIF).";
+      });
+      imagePanel.append(imageLabel, dropZone, imageInput, imageHint, imageCards);
       const hint = document.createElement("p");
       hint.className = "small mi-section-hint";
       hint.textContent = "Text and pictures for this section are saved together and follow this section's position.";
