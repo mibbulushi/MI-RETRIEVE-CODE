@@ -2614,7 +2614,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       // Check BOTH clipboard formats: some browsers put the image markup only in plain text.
       const markupCandidates = [htmlText, plainText];
       const pastedMarkup = markupCandidates.find(value =>
-        /<img\\b/i.test(value) && /data:image\\//i.test(value)
+        /<img\b/i.test(value) && /data:image\//i.test(value)
       );
 
       if (pastedMarkup) {
@@ -2633,7 +2633,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
             const tag = node.tagName.toLowerCase();
             if (tag === "img") {
               const src = node.getAttribute("src") || "";
-              if (/^data:image\\/(png|jpe?g|webp|gif);base64,/i.test(src)) {
+              if (/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(src)) {
                 const image = document.createElement("img");
                 image.src = src;
                 image.alt = node.getAttribute("alt") || "Project picture";
