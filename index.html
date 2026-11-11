@@ -1892,13 +1892,50 @@ body.sidebar-collapsed .sidebar-toggle{left:14px!important}
   padding:2px 5px!important;font-size:.82rem!important;
 }
 
+
+/* Sidebar header: place the collapse control beside the MI brand, like ChatGPT */
+.sidebar-header-row{
+  position:relative!important;display:flex!important;align-items:flex-start!important;
+  justify-content:space-between!important;gap:8px!important;flex:0 0 auto!important;
+  width:100%!important;min-width:0!important;
+}
+.sidebar-header-row .brand{
+  flex:1 1 auto!important;min-width:0!important;padding:4px 42px 14px 8px!important;
+  border-bottom:1px solid rgba(255,255,255,.13)!important;
+}
+.sidebar-header-row .brand strong{overflow-wrap:anywhere!important}
+.sidebar .sidebar-toggle{
+  position:absolute!important;top:0!important;right:0!important;left:auto!important;
+  z-index:125!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;
+  margin:0!important;padding:0!important;border:1px solid rgba(220,235,255,.22)!important;
+  border-radius:9px!important;background:rgba(255,255,255,.12)!important;color:#fff!important;
+  box-shadow:none!important;font-size:17px!important;line-height:1!important;
+}
+.sidebar .sidebar-toggle:hover{background:rgba(255,255,255,.22)!important;transform:none!important}
+body.sidebar-collapsed .sidebar .sidebar-toggle{
+  position:fixed!important;top:14px!important;left:14px!important;right:auto!important;
+  background:linear-gradient(135deg,#55a4ff,#2678df 48%,#1559b7)!important;
+  border:1px solid rgba(255,255,255,.35)!important;box-shadow:0 8px 18px rgba(27,103,197,.22)!important;
+}
+@media(max-width:760px){
+  .sidebar-header-row{align-items:flex-start!important}
+  .sidebar-header-row .brand{padding-right:42px!important}
+  .sidebar .sidebar-toggle{top:0!important;right:0!important;left:auto!important}
+  body.sidebar-collapsed .sidebar .sidebar-toggle{
+    position:fixed!important;top:12px!important;left:12px!important;right:auto!important;z-index:130!important;
+  }
+}
+
 </style>
 </head>
 <body>
-  <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">☰</button>
   <div id="top"></div>
   <aside class="sidebar" aria-label="Main navigation">
-    <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
+    <div class="sidebar-header-row">
+      <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
+      <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">☰</button>
+    </div>
     <div class="sidebar-search-wrap" id="sidebarSearchWrap"><button class="sidebar-search-icon" id="sidebarSearchToggle" type="button" aria-label="Search menu" title="Search menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button><input id="sidebarSearch" type="search" placeholder="Search menu..." autocomplete="off" aria-label="Search menu"></div>
     <button class="sidebar-new-project" type="button" data-open-page="new-project">＋ <span>New Project</span></button>
     <div class="nav-label">Workspace</div>
