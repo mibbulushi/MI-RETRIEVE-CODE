@@ -2381,6 +2381,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" role="textbox" aria-label="Project document" aria-multiline="true"><p>Start writing your project here...</p></div>
           <p class="small">Click where you want a picture, select Insert Picture, then continue writing below it. Text and pictures stay in document order.</p>
         </section>
+        <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
         <textarea id="content" hidden></textarea>
         <textarea id="projectStructure" hidden></textarea>
         <div class="project-save-row">
@@ -2809,7 +2810,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       const section = addProjectSection();
       section.querySelector(".mi-section-title").focus();
     });
-    addProjectSection("Introduction", "");
+    // Legacy section builder is retained hidden for compatibility; the document editor is used for new projects.
 
     function collectProjectSections() {
       return Array.from(document.querySelectorAll("#projectSections .mi-project-section"))
