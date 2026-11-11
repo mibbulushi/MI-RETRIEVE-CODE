@@ -2611,14 +2611,52 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       const items = Array.from(clipboard?.items || []);
       const imageItems = items.filter(item => item.type.startsWith("image/"));
 
-      // Convert pasted image HTML/base64 markup into real inline pictures,
-      // instead of showing the long data:image... code in the document.
-      const pastedMarkup = htmlText || plainText;
-      if (/<img\b/i.test(pastedMarkup) && /data:image\//i.test(pastedMarkup)) {
+      // Check BOTH clipboard formats: some browsers put the image markup only in plain text.
+      const markupCandidates = [htmlText, plainText];
+      const pastedMarkup = markupCandidates.find(value =>
+        /<img\\b/i.test(value) && /data:image\\//i.test(value)
+      );
+
+      if (pastedMarkup) {
         event.preventDefault();
         const parsed = new DOMParser().parseFromString(pastedMarkup, "text/html");
-        const pastedImages = Array.from(parsed.querySelectorAll("img"))
-          .filter(img => /^data:image\/(png|jpe?g|webp|gif);base64,/i.test(img.getAttribute("src") || ""));
+        const fragment = document.createDocumentFragment();
+
+        // Keep ordinary text and paragraphs, but turn Base64 image markup into real images.
+        const copySafeNodes = (source, target) => {
+          Array.from(source.childNodes).forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              target.append(document.createTextNode(node.nodeValue || ""));
+              return;
+            }
+            if (node.nodeType !== Node.ELEMENT_NODE) return;
+            const tag = node.tagName.toLowerCase();
+            if (tag === "img") {
+              const src = node.getAttribute("src") || "";
+              if (/^data:image\\/(png|jpe?g|webp|gif);base64,/i.test(src)) {
+                const image = document.createElement("img");
+                image.src = src;
+                image.alt = node.getAttribute("alt") || "Project picture";
+                image.dataset.miDocumentImage = "true";
+                target.append(image);
+              }
+              return;
+            }
+            if (tag === "br") {
+              target.append(document.createElement("br"));
+              return;
+            }
+            if (["p", "div", "section"].includes(tag)) {
+              const block = document.createElement("p");
+              copySafeNodes(node, block);
+              target.append(block);
+              return;
+            }
+            copySafeNodes(node, target);
+          });
+        };
+        copySafeNodes(parsed.body, fragment);
+
         const selection = window.getSelection();
         let range = selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)
           ? selection.getRangeAt(0) : null;
@@ -2628,26 +2666,15 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           range.collapse(false);
         }
         range.deleteContents();
-        pastedImages.forEach(sourceImage => {
-          const image = document.createElement("img");
-          image.src = sourceImage.getAttribute("src");
-          image.alt = sourceImage.getAttribute("alt") || "Project picture";
-          image.dataset.miDocumentImage = "true";
-          range.insertNode(image);
-          const spacer = document.createElement("p");
-          spacer.append(document.createElement("br"));
-          image.after(spacer);
-          range.setStartAfter(spacer);
-          range.collapse(true);
-        });
-        if (!pastedImages.length) {
-          $("saveResult").textContent = "Image code was not recognized. Please use Insert Picture to add the image.";
-        }
+        range.insertNode(fragment);
+        const spacer = document.createElement("p");
+        spacer.append(document.createElement("br"));
+        miDocumentEditor.append(spacer);
+        $("content").value = miDocumentEditor.innerHTML;
         if (selection) {
           selection.removeAllRanges();
-          selection.addRange(range);
+          selection.collapse(miDocumentEditor, miDocumentEditor.childNodes.length);
         }
-        $("content").value = miDocumentEditor.innerHTML;
         return;
       }
 
