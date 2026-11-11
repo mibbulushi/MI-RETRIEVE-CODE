@@ -2743,6 +2743,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
       const uploadedFiles = [];
       const uploadErrors = [];
+      const uploadedImageRows = [];
       let nextImageIndex = 0;
       let completedImageCount = 0;
       const uploadImageWorker = async () => {
@@ -2757,7 +2758,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           if (uploadError) {
             uploadErrors.push(file.name + ": " + friendlyError(uploadError));
           } else {
-            const { error: metaError } = await client.from("mi_saved_images").insert({
+            uploadedImageRows.push({
               content_id: saved.id,
               owner_id: user.id,
               storage_path: storagePath,
@@ -2770,12 +2771,6 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
               description: image.description,
               sort_order: image.sortOrder
             });
-            if (metaError) {
-              await client.storage.from("mi-project-images").remove([storagePath]);
-              uploadErrors.push(file.name + ": image details could not be saved - " + friendlyError(metaError));
-            } else {
-              uploadedFiles.push(file.name + " (section picture)");
-            }
           }
           completedImageCount++;
           $("saveResult").textContent = "Uploading pictures... " + completedImageCount + " of " + sectionImages.length + " completed.";
@@ -2783,6 +2778,19 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       };
       const imageWorkerCount = Math.min(3, sectionImages.length);
       await Promise.all(Array.from({ length: imageWorkerCount }, () => uploadImageWorker()));
+
+      // Save all picture details in one database request instead of one request per picture.
+      if (uploadedImageRows.length) {
+        const { error: imageMetaError } = await client.from("mi_saved_images").insert(uploadedImageRows);
+        if (imageMetaError) {
+          await client.storage.from("mi-project-images").remove(uploadedImageRows.map(row => row.storage_path));
+          uploadedImageRows.forEach(row => uploadErrors.push(
+            row.file_name + ": picture details could not be saved - " + friendlyError(imageMetaError)
+          ));
+        } else {
+          uploadedImageRows.forEach(row => uploadedFiles.push(row.file_name + " (section picture)"));
+        }
+      }
       for (const file of files) {
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120) || "file";
         const storagePath = user.id + "/" + saved.id + "/" + crypto.randomUUID() + "-" + safeName;
@@ -3313,9 +3321,16 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         const imageHeading = document.createElement("h4");
         imageHeading.textContent = "Section pictures";
         output.append(imageHeading);
+
+        // Request all temporary picture links together to avoid one network wait per picture.
+        const { data: signedImages, error: signedImagesError } = await client.storage
+          .from("mi-project-images")
+          .createSignedUrls(images.map(image => image.storage_path), 3600);
+        const signedUrlByPath = new Map(
+          (signedImages || []).map(item => [item.path, item.signedUrl])
+        );
+
         for (const image of images) {
-          const { data: signed } = await client.storage.from("mi-project-images")
-            .createSignedUrl(image.storage_path, 3600);
           const group = document.createElement("div");
           group.className = "mi-retrieved-image";
           if (image.section_title) {
@@ -3323,12 +3338,18 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
             sectionHeading.textContent = image.section_title;
             group.append(sectionHeading);
           }
-          if (signed?.signedUrl) {
+          const signedUrl = signedUrlByPath.get(image.storage_path);
+          if (signedUrl) {
             const picture = document.createElement("img");
-            picture.src = signed.signedUrl;
+            picture.src = signedUrl;
             picture.alt = image.caption || image.file_name;
             picture.loading = "lazy";
             group.append(picture);
+          } else if (signedImagesError) {
+            const unavailable = document.createElement("p");
+            unavailable.className = "small";
+            unavailable.textContent = "Picture link is temporarily unavailable.";
+            group.append(unavailable);
           }
           if (image.caption) {
             const caption = document.createElement("strong");
