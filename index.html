@@ -2230,7 +2230,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 .mi-section-image-panel>.small{margin:8px 0 0;line-height:1.5}
 .mi-section-image-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px}
 .mi-section-image-card{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:start;gap:12px;min-width:0;padding:12px;border:1px solid #d5e1ef;border-radius:11px;background:#fff;box-shadow:0 2px 8px rgba(20,36,58,.05)}
-.mi-section-image-card img{display:block;width:96px;height:96px;object-fit:cover;border:1px solid #e1e8f0;border-radius:8px;background:#f3f6fa}
+.mi-section-image-card img{display:block;width:96px;height:96px;object-fit:contain;border:1px solid #e1e8f0;border-radius:8px;background:#f3f6fa}.mi-image-file-name{display:block;max-width:100%;overflow-wrap:anywhere;color:#244d7d;font-size:.86rem}.mi-image-preview-error{display:flex;width:96px;height:96px;align-items:center;justify-content:center;padding:6px;border:1px solid #e1e8f0;border-radius:8px;background:#fff3f3;color:#a33;font-size:.75rem;text-align:center}
 .mi-section-image-details{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;min-width:0}
 .mi-section-image-details input,.mi-section-image-details textarea{display:block;width:100%;min-width:0;margin:0;padding:9px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff}
 .mi-section-image-details input:focus,.mi-section-image-details textarea:focus{outline:2px solid rgba(57,118,197,.18);border-color:var(--blue)}
@@ -2666,10 +2666,21 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           card.className = "mi-section-image-card";
           card._imageFile = file;
           const preview = document.createElement("img");
-          preview.src = URL.createObjectURL(file);
+          const previewUrl = URL.createObjectURL(file);
+          preview.src = previewUrl;
           preview.alt = file.name;
-          preview.onload = () => URL.revokeObjectURL(preview.src);
+          preview.title = file.name;
+          preview.onerror = () => {
+            preview.replaceWith(Object.assign(document.createElement("span"), {
+              className: "mi-image-preview-error",
+              textContent: "Preview unavailable"
+            }));
+          };
           const details = document.createElement("div");
+          const fileName = document.createElement("strong");
+          fileName.className = "mi-image-file-name";
+          fileName.textContent = file.name;
+          fileName.title = file.name;
           details.className = "mi-section-image-details";
           const caption = document.createElement("input");
           caption.type = "text";
@@ -2699,7 +2710,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           const imageActions = document.createElement("div");
           imageActions.className = "mi-section-image-actions";
           imageActions.append(addToProject, remove);
-          details.append(caption, explanation, imageActions);
+          details.append(fileName, caption, explanation, imageActions);
           card.append(preview, details);
           imageCards.append(card);
         });
