@@ -2086,7 +2086,29 @@ body.sidebar-collapsed .sidebar .side-nav a:hover{background:rgba(255,255,255,.1
   body.sidebar-collapsed .sidebar{width:82px!important;min-width:82px!important}
   body.sidebar-collapsed .sidebar-toggle{top:18px!important;left:54px!important;right:auto!important}
 }
-\n</style>
+\n
+
+/* Final spacing fix: keep the workspace clear of the collapsed sidebar and toggle */
+body.sidebar-collapsed{
+  padding-left:112px!important;
+  padding-right:18px!important;
+}
+body.sidebar-collapsed .container{
+  width:auto!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+@media(max-width:760px){
+  body.sidebar-collapsed{
+    padding:0 12px 10px 104px!important;
+  }
+  body.sidebar-collapsed .container{
+    width:100%!important;
+    max-width:none!important;
+  }
+}
+</style>
 </head>
 <body>
   <div id="top"></div>
