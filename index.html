@@ -2365,16 +2365,16 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           <p class="small">Share a suggestion, report a problem, or tell us how MI-RETRIEVE-CODE can be improved.</p>
         </div>
         <div class="student-chat-composer feedback-chat-composer">
+          <label class="student-sr-only" for="feedbackType">Feedback type</label>
+          <select id="feedbackType">
+            <option value="Suggestion">Suggestion</option>
+            <option value="Problem / Bug">Problem / Bug</option>
+            <option value="Question">Question</option>
+            <option value="Other">Other</option>
+          </select>
           <label class="student-sr-only" for="feedbackMessage">Your feedback</label>
           <textarea id="feedbackMessage" maxlength="5000" placeholder="Write your feedback here..." required></textarea>
           <div class="feedback-chat-actions">
-            <label class="student-sr-only" for="feedbackType">Feedback type</label>
-            <select id="feedbackType">
-              <option value="Suggestion">Suggestion</option>
-              <option value="Problem / Bug">Problem / Bug</option>
-              <option value="Question">Question</option>
-              <option value="Other">Other</option>
-            </select>
             <button id="sendFeedbackBtn" type="button">Submit Feedback</button>
           </div>
         </div>
