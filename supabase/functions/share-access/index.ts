@@ -55,6 +55,11 @@ async function presentProject(admin: ReturnType<typeof createClient>, item: Reco
       safeAttachments.push({
         file_name: String(file.file_name || "attachment"),
         mime_type: String(file.mime_type || "application/octet-stream"),
+        section_index: Number.isInteger(file.section_index) ? file.section_index : null,
+        section_title: String(file.section_title || ""),
+        caption: String(file.caption || ""),
+        description: String(file.description || ""),
+        sort_order: Number.isInteger(file.sort_order) ? file.sort_order : 0,
         url: signed.signedUrl,
       });
     }
