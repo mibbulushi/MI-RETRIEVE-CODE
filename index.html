@@ -2263,6 +2263,13 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
  .mi-project-section-actions button{flex:1}
 }
 
+.mi-editor-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:12px;margin:10px 0;border:1px solid #d7e4f4;border-radius:12px;background:#f5f9ff}
+.mi-editor-toolbar button{margin:0;padding:8px 11px;min-height:38px}
+.mi-tool-label{display:flex;align-items:center;gap:5px;margin:0;font-size:.82rem;white-space:nowrap}
+.mi-tool-label select{width:auto;min-width:68px;min-height:38px;padding:6px 8px;font-size:.85rem}
+.mi-tool-label input[type=color]{width:42px;height:38px;min-height:38px;padding:3px}
+.mi-grammar-notice{padding:9px 12px;margin:7px 0 10px;border-radius:9px;background:#fff8e8;border:1px solid #f0dfb4;color:#76520b;font-size:.85rem;line-height:1.5}
+@media(max-width:650px){.mi-editor-toolbar{gap:6px;padding:9px}.mi-tool-label{font-size:.76rem}.mi-editor-toolbar button{padding:7px 9px;font-size:.8rem}}
 .mi-document-editor{min-height:520px;padding:24px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#26364a;font:inherit;line-height:1.75;outline:none;overflow-wrap:anywhere}
 .mi-document-editor:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(57,118,197,.12)}
 .mi-document-editor p{margin:0 0 14px}.mi-document-editor img{display:block;width:auto;max-width:100%;height:auto;max-height:none;object-fit:contain;margin:14px 0;border:1px solid #e1e8f0;border-radius:8px;resize:both;overflow:auto;min-width:70px;min-height:50px;cursor:move;box-sizing:border-box}.mi-document-editor img.mi-image-selected{outline:2px solid #3478c8;outline-offset:3px}.mi-document-editor img.mi-image-dragging{opacity:.45}
@@ -2387,7 +2394,24 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
               <input id="miDocumentImageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden>
             </div>
           </div>
-          <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" role="textbox" aria-label="Project document" aria-multiline="true"><p>Start writing your project here...</p></div>
+          <div class="mi-editor-toolbar" id="miEditorToolbar" role="toolbar" aria-label="Document formatting">
+            <label class="mi-tool-label">Font <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
+            <label class="mi-tool-label">Size <select id="miFontSize" aria-label="Font size"><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">32</option></select></label>
+            <label class="mi-tool-label">Text colour <input id="miFontColor" type="color" value="#26364a" aria-label="Text colour"></label>
+            <button type="button" class="secondary" data-mi-command="bold" title="Bold"><b>B</b></button>
+            <button type="button" class="secondary" data-mi-command="italic" title="Italic"><i>I</i></button>
+            <button type="button" class="secondary" data-mi-command="underline" title="Underline"><u>U</u></button>
+            <button type="button" class="secondary" data-mi-command="justifyLeft" title="Align left">Left</button>
+            <button type="button" class="secondary" data-mi-command="justifyCenter" title="Align centre">Centre</button>
+            <button type="button" class="secondary" data-mi-command="justifyRight" title="Align right">Right</button>
+            <button type="button" class="secondary" data-mi-command="justifyFull" title="Justify">Justify</button>
+            <label class="mi-tool-label">Line spacing <select id="miLineSpacing" aria-label="Line spacing"><option value="1.2">1.2</option><option value="1.5" selected>1.5</option><option value="1.75">1.75</option><option value="2">2.0</option></select></label>
+            <button type="button" class="secondary" data-mi-command="indent">Indent</button>
+            <button type="button" class="secondary" data-mi-command="outdent">Outdent</button>
+            <button type="button" class="secondary" id="miGrammarCheckBtn">Optional Grammar Check</button>
+          </div>
+          <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
+          <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"><p>Start writing your project here...</p></div>
           <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
           <p class="small">Click where you want a picture, select Insert Picture, then continue writing below it. Text and pictures stay in document order.</p>
         </section>
@@ -2586,6 +2610,82 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       else if (state === "working") miWorkStatus.classList.add("is-working");
       miWorkStatusText.textContent = message;
     };
+    // Document formatting controls. Keep the selected text range while using the toolbar.
+    const miEditorToolbar = $("miEditorToolbar");
+    miEditorToolbar.addEventListener("mousedown", event => {
+      if (event.target.closest("button")) event.preventDefault();
+    });
+    miEditorToolbar.querySelectorAll("[data-mi-command]").forEach(button => {
+      button.addEventListener("click", () => {
+        miDocumentEditor.focus();
+        document.execCommand(button.dataset.miCommand, false, null);
+        $("content").value = miDocumentEditor.innerHTML;
+        setMiWorkStatus("Formatting changed — save your project to store it.");
+      });
+    });
+    $("miFontFamily").addEventListener("change", event => {
+      miDocumentEditor.focus();
+      document.execCommand("fontName", false, event.target.value);
+      $("content").value = miDocumentEditor.innerHTML;
+    });
+    $("miFontSize").addEventListener("change", event => {
+      miDocumentEditor.focus();
+      document.execCommand("fontSize", false, event.target.value);
+      $("content").value = miDocumentEditor.innerHTML;
+    });
+    $("miFontColor").addEventListener("input", event => {
+      miDocumentEditor.focus();
+      document.execCommand("foreColor", false, event.target.value);
+      $("content").value = miDocumentEditor.innerHTML;
+    });
+    $("miLineSpacing").addEventListener("change", event => {
+      miDocumentEditor.style.lineHeight = event.target.value;
+      miDocumentEditor.querySelectorAll("p,div,li").forEach(node => node.style.lineHeight = event.target.value);
+      $("content").value = miDocumentEditor.innerHTML;
+    });
+
+    // Optional local grammar suggestions: text stays private; nothing is sent to an outside service.
+    $("miGrammarCheckBtn").addEventListener("click", () => {
+      const notice = $("miGrammarNotice");
+      const walker = document.createTreeWalker(miDocumentEditor, NodeFilter.SHOW_TEXT);
+      const textNodes = [];
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+      const rules = [
+        { pattern: /\\bi\\b/g, replacement: "I", label: "Use capital I for the personal pronoun." },
+        { pattern: / {2,}/g, replacement: " ", label: "Remove repeated spaces." },
+        { pattern: /([.!?]\\s+)([a-z])/g, replacement: (match, gap, letter) => gap + letter.toUpperCase(), label: "Start a new sentence with a capital letter." },
+        { pattern: /\\bteh\\b/gi, replacement: "the", label: "Possible spelling correction: teh → the." },
+        { pattern: /\\bdont\\b/gi, replacement: "don't", label: "Possible spelling correction: dont → don't." },
+        { pattern: /\\bcant\\b/gi, replacement: "can't", label: "Possible spelling correction: cant → can't." }
+      ];
+      const proposed = [];
+      const replacements = [];
+      textNodes.forEach(node => {
+        let value = node.nodeValue || "";
+        rules.forEach(rule => {
+          const next = value.replace(rule.pattern, rule.replacement);
+          if (next !== value) {
+            proposed.push(rule.label);
+            value = next;
+          }
+        });
+        if (value !== node.nodeValue) replacements.push({ node, value });
+      });
+      const unique = [...new Set(proposed)];
+      if (!replacements.length) {
+        notice.textContent = "No basic grammar or spelling suggestions were found. Browser spellcheck is also available while you type.";
+        return;
+      }
+      notice.textContent = "Suggestions found: " + unique.join(" ");
+      if (window.confirm("Optional grammar check found " + replacements.length + " text part(s). Apply these suggested corrections? Your original text will only change if you choose OK.")) {
+        replacements.forEach(item => item.node.nodeValue = item.value);
+        $("content").value = miDocumentEditor.innerHTML;
+        notice.textContent = "Selected basic corrections applied. Please review the text; this check may not detect every grammar issue.";
+        setMiWorkStatus("Grammar suggestions applied — review and save your project.");
+      } else {
+        notice.textContent = "No changes made. Your original text is unchanged.";
+      }
+    });
     miDocumentEditor.addEventListener("input", () => setMiWorkStatus("Unsaved changes — select Save complete project to store your work."));
     const saveResultObserver = new MutationObserver(() => {
       const message = $("saveResult").textContent || "";
