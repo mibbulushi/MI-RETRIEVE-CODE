@@ -2614,11 +2614,11 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       // Convert pasted image HTML/base64 markup into real inline pictures,
       // instead of showing the long data:image... code in the document.
       const pastedMarkup = htmlText || plainText;
-      if (/<img\\b/i.test(pastedMarkup) && /data:image\\//i.test(pastedMarkup)) {
+      if (/<img\b/i.test(pastedMarkup) && /data:image\//i.test(pastedMarkup)) {
         event.preventDefault();
         const parsed = new DOMParser().parseFromString(pastedMarkup, "text/html");
         const pastedImages = Array.from(parsed.querySelectorAll("img"))
-          .filter(img => /^data:image\\/(png|jpe?g|webp|gif);base64,/i.test(img.getAttribute("src") || ""));
+          .filter(img => /^data:image\/(png|jpe?g|webp|gif);base64,/i.test(img.getAttribute("src") || ""));
         const selection = window.getSelection();
         let range = selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)
           ? selection.getRangeAt(0) : null;
