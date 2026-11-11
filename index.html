@@ -2108,6 +2108,34 @@ body.sidebar-collapsed .container{
     max-width:none!important;
   }
 }
+
+
+/* Strong separation: workspace must begin well to the right of the icon rail */
+body.sidebar-collapsed{
+  box-sizing:border-box!important;
+  padding-left:156px!important;
+  padding-right:22px!important;
+}
+body.sidebar-collapsed .container{
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  position:relative!important;
+  left:0!important;
+}
+body.sidebar-collapsed .sidebar{z-index:100!important}
+body.sidebar-collapsed .sidebar-toggle{z-index:110!important}
+@media(max-width:760px){
+  body.sidebar-collapsed{
+    padding:54px 12px 10px 112px!important;
+  }
+  body.sidebar-collapsed .container{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+  }
+}
 </style>
 </head>
 <body>
