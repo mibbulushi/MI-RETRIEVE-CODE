@@ -2642,12 +2642,11 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
     // Document formatting controls. Keep the selected text range while using the toolbar.
     const miEditorToolbar = $("miEditorToolbar");
     let miSavedEditorRange = null;
-    miEditorToolbar.addEventListener("pointerdown", event => {
+    miEditorToolbar.addEventListener("pointerdown", () => {
       const selection = window.getSelection();
       if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) {
         miSavedEditorRange = selection.getRangeAt(0).cloneRange();
       }
-      if (event.target.closest("button")) event.preventDefault();
     });
     function restoreMiEditorSelection() {
       miDocumentEditor.focus();
