@@ -2743,37 +2743,46 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
       const uploadedFiles = [];
       const uploadErrors = [];
-      for (const image of sectionImages) {
-        const file = image.file;
-        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120) || "image";
-        const storagePath = user.id + "/" + saved.id + "/" + crypto.randomUUID() + "-" + safeName;
-        const { error: uploadError } = await client.storage
-          .from("mi-project-images")
-          .upload(storagePath, file, { upsert: false, contentType: file.type });
-        if (uploadError) {
-          uploadErrors.push(file.name + ": " + friendlyError(uploadError));
-          continue;
+      let nextImageIndex = 0;
+      let completedImageCount = 0;
+      const uploadImageWorker = async () => {
+        while (nextImageIndex < sectionImages.length) {
+          const image = sectionImages[nextImageIndex++];
+          const file = image.file;
+          const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120) || "image";
+          const storagePath = user.id + "/" + saved.id + "/" + crypto.randomUUID() + "-" + safeName;
+          const { error: uploadError } = await client.storage
+            .from("mi-project-images")
+            .upload(storagePath, file, { upsert: false, contentType: file.type });
+          if (uploadError) {
+            uploadErrors.push(file.name + ": " + friendlyError(uploadError));
+          } else {
+            const { error: metaError } = await client.from("mi_saved_images").insert({
+              content_id: saved.id,
+              owner_id: user.id,
+              storage_path: storagePath,
+              file_name: file.name,
+              mime_type: file.type,
+              size_bytes: file.size,
+              section_index: image.sectionIndex,
+              section_title: image.sectionTitle,
+              caption: image.caption,
+              description: image.description,
+              sort_order: image.sortOrder
+            });
+            if (metaError) {
+              await client.storage.from("mi-project-images").remove([storagePath]);
+              uploadErrors.push(file.name + ": image details could not be saved - " + friendlyError(metaError));
+            } else {
+              uploadedFiles.push(file.name + " (section picture)");
+            }
+          }
+          completedImageCount++;
+          $("saveResult").textContent = "Uploading pictures... " + completedImageCount + " of " + sectionImages.length + " completed.";
         }
-        const { error: metaError } = await client.from("mi_saved_images").insert({
-          content_id: saved.id,
-          owner_id: user.id,
-          storage_path: storagePath,
-          file_name: file.name,
-          mime_type: file.type,
-          size_bytes: file.size,
-          section_index: image.sectionIndex,
-          section_title: image.sectionTitle,
-          caption: image.caption,
-          description: image.description,
-          sort_order: image.sortOrder
-        });
-        if (metaError) {
-          await client.storage.from("mi-project-images").remove([storagePath]);
-          uploadErrors.push(file.name + ": image details could not be saved - " + friendlyError(metaError));
-          continue;
-        }
-        uploadedFiles.push(file.name + " (section picture)");
-      }
+      };
+      const imageWorkerCount = Math.min(3, sectionImages.length);
+      await Promise.all(Array.from({ length: imageWorkerCount }, () => uploadImageWorker()));
       for (const file of files) {
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120) || "file";
         const storagePath = user.id + "/" + saved.id + "/" + crypto.randomUUID() + "-" + safeName;
