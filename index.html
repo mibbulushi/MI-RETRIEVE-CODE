@@ -2651,12 +2651,12 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       const textNodes = [];
       while (walker.nextNode()) textNodes.push(walker.currentNode);
       const rules = [
-        { pattern: /\\bi\\b/g, replacement: "I", label: "Use capital I for the personal pronoun." },
+        { pattern: /\bi\\b/g, replacement: "I", label: "Use capital I for the personal pronoun." },
         { pattern: / {2,}/g, replacement: " ", label: "Remove repeated spaces." },
-        { pattern: /([.!?]\\s+)([a-z])/g, replacement: (match, gap, letter) => gap + letter.toUpperCase(), label: "Start a new sentence with a capital letter." },
-        { pattern: /\\bteh\\b/gi, replacement: "the", label: "Possible spelling correction: teh → the." },
-        { pattern: /\\bdont\\b/gi, replacement: "don't", label: "Possible spelling correction: dont → don't." },
-        { pattern: /\\bcant\\b/gi, replacement: "can't", label: "Possible spelling correction: cant → can't." }
+        { pattern: /([.!?]\s+)([a-z])/g, replacement: (match, gap, letter) => gap + letter.toUpperCase(), label: "Start a new sentence with a capital letter." },
+        { pattern: /\bteh\\b/gi, replacement: "the", label: "Possible spelling correction: teh → the." },
+        { pattern: /\bdont\\b/gi, replacement: "don't", label: "Possible spelling correction: dont → don't." },
+        { pattern: /\bcant\\b/gi, replacement: "can't", label: "Possible spelling correction: cant → can't." }
       ];
       const proposed = [];
       const replacements = [];
