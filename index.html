@@ -1546,6 +1546,38 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
   }
 }
 
+
+/* Match Title input dimensions to the Share Code password input */
+#saveArea .project-heading-title-row{
+  grid-template-columns:max-content 150px minmax(220px,1fr)!important;
+}
+#saveArea .project-heading-title-row .project-title-in-heading{
+  width:150px!important;
+  min-width:150px!important;
+  max-width:150px!important;
+}
+#saveArea .project-heading-title-row input#title{
+  display:block!important;
+  width:150px!important;
+  min-width:150px!important;
+  max-width:150px!important;
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:760px){
+  #saveArea .project-heading-title-row{
+    grid-template-columns:1fr!important;
+  }
+  #saveArea .project-heading-title-row .project-title-in-heading,
+  #saveArea .project-heading-title-row input#title{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+}
+
 </style>
 </head>
 <body>
