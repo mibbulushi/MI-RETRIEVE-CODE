@@ -2642,12 +2642,6 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
     // Document formatting controls. Keep the selected text range while using the toolbar.
     const miEditorToolbar = $("miEditorToolbar");
     let miSavedEditorRange = null;
-    miEditorToolbar.addEventListener("pointerdown", () => {
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) {
-        miSavedEditorRange = selection.getRangeAt(0).cloneRange();
-      }
-    });
     function restoreMiEditorSelection() {
       miDocumentEditor.focus();
       if (miSavedEditorRange) {
@@ -2656,13 +2650,20 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         selection.addRange(miSavedEditorRange);
       }
     }
-    miEditorToolbar.querySelectorAll("[data-mi-command]").forEach(button => {
-      button.addEventListener("click", () => {
-        restoreMiEditorSelection();
-        document.execCommand(button.dataset.miCommand, false, null);
-        $("content").value = miDocumentEditor.innerHTML;
-        setMiWorkStatus("Formatting changed — save your project to store it.");
-      });
+    // Run formatting from pointerdown so toolbar actions work even if a later click
+    // is swallowed by browser focus/selection handling.
+    miEditorToolbar.addEventListener("pointerdown", event => {
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) {
+        miSavedEditorRange = selection.getRangeAt(0).cloneRange();
+      }
+      const button = event.target.closest("button[data-mi-command]");
+      if (!button) return;
+      event.preventDefault();
+      restoreMiEditorSelection();
+      document.execCommand(button.dataset.miCommand, false, null);
+      $("content").value = miDocumentEditor.innerHTML;
+      setMiWorkStatus("Formatting changed — save your project to store it.");
     });
     $("miFontFamily").addEventListener("change", event => {
       restoreMiEditorSelection();
