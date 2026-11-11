@@ -1756,6 +1756,64 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
   }
 }
 
+
+/* ChatGPT-inspired sidebar: search, quick new project, and fully hide/show */
+.sidebar{
+  width:260px!important;padding:18px 14px!important;gap:15px!important;
+  transition:transform .24s ease,width .24s ease!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+}
+.sidebar-search-wrap{
+  display:flex!important;align-items:center!important;gap:9px!important;
+  margin:0!important;padding:0 12px!important;height:42px!important;min-height:42px!important;
+  border:1px solid rgba(220,235,255,.2)!important;border-radius:10px!important;
+  background:rgba(255,255,255,.10)!important;color:#dceaff!important;
+}
+.sidebar-search-wrap>span{font-size:21px;line-height:1}
+.sidebar-search-wrap input{
+  min-width:0!important;width:100%!important;height:38px!important;min-height:38px!important;
+  margin:0!important;padding:5px 0!important;border:0!important;outline:0!important;
+  background:transparent!important;color:#fff!important;box-shadow:none!important;font-size:.88rem!important;
+}
+.sidebar-search-wrap input::placeholder{color:#c0d2e8}
+.sidebar-search-wrap:focus-within{border-color:#77b8ff!important;background:rgba(255,255,255,.15)!important}
+.sidebar-new-project{
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;
+  width:100%!important;height:42px!important;min-height:42px!important;margin:0!important;padding:0 12px!important;
+  border:1px solid rgba(220,235,255,.18)!important;border-radius:10px!important;
+  background:rgba(255,255,255,.12)!important;color:#fff!important;box-shadow:none!important;
+  text-align:left!important;font-size:.9rem!important;
+}
+.sidebar-new-project:hover{background:rgba(255,255,255,.2)!important;transform:none!important}
+.sidebar .nav-label{margin-top:5px}
+.sidebar .side-nav{gap:5px}
+.sidebar .side-nav a{min-height:40px;padding:9px 11px}
+.sidebar-toggle{
+  position:fixed!important;top:14px!important;left:270px!important;z-index:60!important;
+  width:38px!important;height:38px!important;min-height:38px!important;margin:0!important;padding:0!important;
+  border-radius:10px!important;font-size:18px!important;display:flex!important;
+  align-items:center!important;justify-content:center!important;
+}
+body.sidebar-collapsed{padding-left:28px!important}
+body.sidebar-collapsed .sidebar{
+  width:260px!important;transform:translateX(-105%)!important;pointer-events:none!important;
+}
+body.sidebar-collapsed .sidebar-toggle{left:14px!important}
+body.sidebar-collapsed .container{max-width:1280px!important}
+@media(max-width:760px){
+  body .sidebar{
+    position:fixed!important;inset:0 auto 0 0!important;width:min(290px,86vw)!important;
+    height:100dvh!important;margin:0!important;padding:18px 14px!important;
+    border-radius:0 16px 16px 0!important;z-index:55!important;
+    transform:translateX(0)!important;transition:transform .24s ease!important;
+  }
+  body.sidebar-collapsed .sidebar{transform:translateX(-105%)!important}
+  body.sidebar-collapsed{padding-left:14px!important}
+  body .sidebar-toggle{top:12px!important;left:auto!important;right:12px!important;z-index:70!important}
+  body.sidebar-collapsed .sidebar-toggle{left:12px!important;right:auto!important}
+  body .container{padding-top:52px!important}
+}
+
 </style>
 </head>
 <body>
@@ -1763,6 +1821,8 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
   <div id="top"></div>
   <aside class="sidebar" aria-label="Main navigation">
     <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
+    <label class="sidebar-search-wrap" for="sidebarSearch"><span aria-hidden="true">⌕</span><input id="sidebarSearch" type="search" placeholder="Search menu..." autocomplete="off"></label>
+    <button class="sidebar-new-project" type="button" data-open-page="new-project">＋ <span>New Project</span></button>
     <div class="nav-label">Workspace</div>
     <nav class="side-nav">
       <a class="active" href="#" data-page="dashboard"><span class="nav-icon">⌂</span>Dashboard</a>
@@ -2683,12 +2743,30 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
     refreshSession();
   
     const sidebarToggle = document.getElementById("sidebarToggle");
+    function setSidebarCollapsed(collapsed) {
+      document.body.classList.toggle("sidebar-collapsed", collapsed);
+      if (sidebarToggle) {
+        sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+        sidebarToggle.setAttribute("aria-label", collapsed ? "Open sidebar" : "Close sidebar");
+        sidebarToggle.title = collapsed ? "Open sidebar" : "Close sidebar";
+        sidebarToggle.textContent = collapsed ? "☰" : "✕";
+      }
+    }
     if (sidebarToggle) sidebarToggle.addEventListener("click", () => {
-      const collapsed = document.body.classList.toggle("sidebar-collapsed");
-      sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
-      sidebarToggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
-      sidebarToggle.title = collapsed ? "Expand sidebar" : "Collapse sidebar";
-      sidebarToggle.textContent = collapsed ? "☰" : "✕";
+      setSidebarCollapsed(!document.body.classList.contains("sidebar-collapsed"));
+    });
+
+    const sidebarSearch = document.getElementById("sidebarSearch");
+    if (sidebarSearch) sidebarSearch.addEventListener("input", () => {
+      const query = sidebarSearch.value.trim().toLocaleLowerCase();
+      document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
+        link.hidden = Boolean(query) && !link.textContent.toLocaleLowerCase().includes(query);
+      });
+    });
+    document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
+      link.addEventListener("click", () => {
+        if (window.matchMedia("(max-width: 760px)").matches) setSidebarCollapsed(true);
+      });
     });
 </script>
 </body>
