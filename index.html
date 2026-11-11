@@ -2139,26 +2139,46 @@ body.sidebar-collapsed .sidebar-toggle{z-index:110!important}
 
 /* Consistent sidebar-panel toggle icon; never switch to an X */
 .sidebar-toggle-icon{display:block!important;width:21px!important;height:21px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;pointer-events:none!important}
+
+/* Hover labels for every icon in the collapsed sidebar rail */
+body.sidebar-collapsed .sidebar [data-tooltip],
+body.sidebar-collapsed .sidebar-toggle[data-tooltip]{position:relative}
+body.sidebar-collapsed .sidebar [data-tooltip]::after,
+body.sidebar-collapsed .sidebar-toggle[data-tooltip]::after{
+  content:attr(data-tooltip)!important;position:absolute!important;left:calc(100% + 12px)!important;top:50%!important;
+  transform:translateY(-50%)!important;z-index:9999!important;display:block!important;width:max-content!important;
+  max-width:220px!important;padding:7px 11px!important;border-radius:7px!important;
+  background:#202b3a!important;color:#fff!important;border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 5px 16px rgba(0,0,0,.22)!important;font-size:12px!important;font-weight:500!important;
+  line-height:1.3!important;white-space:nowrap!important;opacity:0!important;visibility:hidden!important;
+  pointer-events:none!important;transition:opacity .12s ease!important;
+}
+body.sidebar-collapsed .sidebar [data-tooltip]:hover::after,
+body.sidebar-collapsed .sidebar-toggle[data-tooltip]:hover::after{
+  opacity:1!important;visibility:visible!important;
+}
+body.sidebar-collapsed .sidebar .side-nav a[data-tooltip]::after{left:calc(100% + 10px)!important}
+
 </style>
 </head>
 <body>
   <div id="top"></div>
-  <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar"><svg class="sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M9 4.5v15"></path></svg></button>
+  <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar" data-tooltip="Collapse sidebar"><svg class="sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M9 4.5v15"></path></svg></button>
   <aside class="sidebar" aria-label="Main navigation">
     <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
-    <div class="sidebar-search-wrap" id="sidebarSearchWrap"><button class="sidebar-search-icon" id="sidebarSearchToggle" type="button" aria-label="Search menu" title="Search menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button><input id="sidebarSearch" type="search" placeholder="Search menu..." autocomplete="off" aria-label="Search menu"></div>
-    <button class="sidebar-new-project" type="button" data-open-page="new-project">＋ <span>New Project</span></button>
+    <div class="sidebar-search-wrap" id="sidebarSearchWrap"><button class="sidebar-search-icon" id="sidebarSearchToggle" type="button" aria-label="Search menu" title="Search menu" data-tooltip="Search menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button><input id="sidebarSearch" type="search" placeholder="Search menu..." autocomplete="off" aria-label="Search menu"></div>
+    <button class="sidebar-new-project" type="button" data-open-page="new-project" title="New Project" data-tooltip="New Project">＋ <span>New Project</span></button>
     <div class="nav-label">Workspace</div>
     <nav class="side-nav">
-      <a class="active" href="#" data-page="dashboard"><span class="nav-icon">⌂</span>Dashboard</a>
-      <a href="#" data-page="new-project"><span class="nav-icon">＋</span>New Project</a>
-      <a href="#" data-page="my-projects"><span class="nav-icon">▤</span>My Projects</a>
-      <a href="#" data-page="retrieve"><span class="nav-icon">⌕</span>Retrieve</a>
-      <a href="#" data-page="shared-projects"><span class="nav-icon">↗</span>Shared Projects</a>
-      <a href="#" data-page="received-projects"><span class="nav-icon">▣</span>Received Projects</a>
-      <a href="#" data-page="student-access"><span class="nav-icon">⇩</span>Student Access</a>
-      <a href="#" data-page="account"><span class="nav-icon">○</span>Account</a>
-      <a href="#" data-page="feedback"><span class="nav-icon">✉</span>Feedback</a>
+      <a class="active" href="#" data-page="dashboard" title="Dashboard" data-tooltip="Dashboard"><span class="nav-icon">⌂</span>Dashboard</a>
+      <a href="#" data-page="new-project" title="New Project" data-tooltip="New Project"><span class="nav-icon">＋</span>New Project</a>
+      <a href="#" data-page="my-projects" title="My Projects" data-tooltip="My Projects"><span class="nav-icon">▤</span>My Projects</a>
+      <a href="#" data-page="retrieve" title="Retrieve" data-tooltip="Retrieve"><span class="nav-icon">⌕</span>Retrieve</a>
+      <a href="#" data-page="shared-projects" title="Shared Projects" data-tooltip="Shared Projects"><span class="nav-icon">↗</span>Shared Projects</a>
+      <a href="#" data-page="received-projects" title="Received Projects" data-tooltip="Received Projects"><span class="nav-icon">▣</span>Received Projects</a>
+      <a href="#" data-page="student-access" title="Student Access" data-tooltip="Student Access"><span class="nav-icon">⇩</span>Student Access</a>
+      <a href="#" data-page="account" title="Account" data-tooltip="Account"><span class="nav-icon">○</span>Account</a>
+      <a href="#" data-page="feedback" title="Feedback" data-tooltip="Feedback"><span class="nav-icon">✉</span>Feedback</a>
     </nav>
     <div class="sidebar-note">Keep your saved information organized. Share only the projects you choose.</div>
   </aside>
@@ -3074,6 +3094,7 @@ body.sidebar-collapsed .sidebar-toggle{z-index:110!important}
         sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
         sidebarToggle.setAttribute("aria-label", collapsed ? "Open sidebar" : "Close sidebar");
         sidebarToggle.title = collapsed ? "Open sidebar" : "Close sidebar";
+        sidebarToggle.setAttribute("data-tooltip", collapsed ? "Open sidebar" : "Close sidebar");
         sidebarToggle.innerHTML = '<svg class="sidebar-toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M9 4.5v15"></path></svg>';
       }
     }
