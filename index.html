@@ -1629,6 +1629,68 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
   #saveArea .project-three-box-row #saveResult{width:100%!important}
 }
 
+
+/* Four equally sized controls: Title, password, Retrieve Code, Save */
+#saveArea .project-four-item-row{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:end!important;
+  gap:12px!important;
+  width:100%!important;
+  margin:10px 0 0!important;
+}
+#saveArea .project-four-item-row .project-title-password-field,
+#saveArea .project-four-item-row .project-code-field,
+#saveArea .project-four-item-row .project-save-button-field{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  min-width:0!important;
+  width:100%!important;
+  gap:5px!important;
+}
+#saveArea .project-four-item-row label{
+  display:block!important;
+  min-height:2.1em!important;
+  margin:0!important;
+  font-size:.78rem!important;
+  line-height:1.2!important;
+}
+#saveArea .project-four-item-row input#title,
+#saveArea .project-four-item-row input#newSharePassword,
+#saveArea .project-four-item-row #saveResult,
+#saveArea .project-four-item-row #saveBtn{
+  display:flex!important;
+  align-items:center!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:38px!important;
+  min-height:38px!important;
+  max-height:38px!important;
+  margin:0!important;
+  padding:6px 9px!important;
+  box-sizing:border-box!important;
+  border-radius:7px!important;
+}
+#saveArea .project-four-item-row #saveResult{
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+#saveArea .project-four-item-row #saveBtn{
+  justify-content:center!important;
+  white-space:normal!important;
+  line-height:1.1!important;
+  font-size:.76rem!important;
+}
+@media(max-width:760px){
+  #saveArea .project-four-item-row{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #saveArea .project-four-item-row label{min-height:0!important}
+}
+@media(max-width:480px){
+  #saveArea .project-four-item-row{grid-template-columns:1fr!important}
+}
+
 </style>
 </head>
 <body>
@@ -1716,7 +1778,7 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
         <div class="project-heading-title-row">
           <h2>Save New Project</h2>
         </div>
-        <div class="project-title-password-row project-save-all-in-one-row project-three-box-row">
+        <div class="project-title-password-row project-save-all-in-one-row project-three-box-row project-four-item-row">
           <div class="project-title-password-field">
             <label for="title">Title</label>
             <input id="title" maxlength="200" placeholder="Give your information a title">
@@ -1725,12 +1787,16 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
             <label for="newSharePassword">Optional student Share Code password</label>
             <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password">
           </div>
-          <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
+          <div class="project-code-field">
+            <label>Your generated Retrieve Code</label>
+            <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
+          </div>
+          <div class="project-save-button-field">
+            <label>Save project</label>
+            <button id="saveBtn" type="button">Save complete project &amp; generate codes</button>
+          </div>
         </div>
         <div id="titleValidation" class="title-validation" role="alert" aria-live="polite"></div>
-        <div class="project-save-action-row">
-          <button id="saveBtn" type="button">Save complete project &amp; generate codes</button>
-        </div>
         <label for="content">Project Content</label>
         <textarea id="content" placeholder="Write or paste your information here..."></textarea>
         <label for="projectStructure">Project Plan (Optional)</label>
