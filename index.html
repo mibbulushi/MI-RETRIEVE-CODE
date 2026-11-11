@@ -1806,6 +1806,62 @@ body.sidebar-collapsed .container{max-width:1280px!important}
   body .container{max-width:100%!important;padding-top:52px!important}
 }
 
+
+
+/* Sidebar correction: keep the workspace visible and make search compact */
+.sidebar{
+  width:248px!important;
+  padding:16px 13px!important;
+  gap:11px!important;
+}
+.sidebar-search-wrap{
+  flex:0 0 32px!important;
+  height:32px!important;
+  min-height:32px!important;
+  width:calc(100% - 12px)!important;
+  margin:0 6px!important;
+  padding:0 9px!important;
+  border-radius:8px!important;
+}
+.sidebar-search-wrap>span{font-size:17px!important}
+.sidebar-search-wrap input{
+  height:28px!important;
+  min-height:28px!important;
+  padding:2px 0!important;
+  font-size:.82rem!important;
+}
+body{padding-left:264px!important;padding-right:24px!important}
+body.sidebar-collapsed{
+  padding-left:14px!important;
+  padding-right:14px!important;
+}
+body.sidebar-collapsed .container{
+  width:100%!important;
+  max-width:none!important;
+  margin:0 auto!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+body.sidebar-collapsed .sidebar{
+  transform:translateX(-110%)!important;
+  pointer-events:none!important;
+}
+.sidebar-toggle{left:254px!important}
+body.sidebar-collapsed .sidebar-toggle{left:14px!important}
+@media(max-width:760px){
+  body{padding:0 14px 10px!important}
+  body.sidebar-collapsed{padding:0 14px 10px!important}
+  body .container{
+    width:100%!important;
+    max-width:none!important;
+    padding-top:52px!important;
+    visibility:visible!important;
+    opacity:1!important;
+  }
+  body .sidebar{width:min(270px,84vw)!important}
+  .sidebar-search-wrap{width:100%!important;margin:0!important}
+}
+
 </style>
 </head>
 <body>
