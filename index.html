@@ -1578,6 +1578,57 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
   }
 }
 
+
+/* Three equal-size fields in one horizontal row */
+#saveArea .project-three-box-row{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:end!important;
+  gap:12px!important;
+  width:100%!important;
+  margin:10px 0 0!important;
+}
+#saveArea .project-three-box-row .project-title-password-field{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  width:100%!important;
+  gap:5px!important;
+}
+#saveArea .project-three-box-row .project-title-password-field label{
+  min-height:2.1em!important;
+  margin:0!important;
+}
+#saveArea .project-three-box-row input#title,
+#saveArea .project-three-box-row input#newSharePassword,
+#saveArea .project-three-box-row #saveResult{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:36px!important;
+  min-height:36px!important;
+  max-height:36px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+}
+#saveArea .project-three-box-row #saveResult{
+  display:flex!important;
+  align-items:center!important;
+  padding:6px 9px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+#saveArea .title-validation{margin:6px 0 0!important}
+#saveArea .project-save-action-row{margin-top:10px!important}
+@media(max-width:760px){
+  #saveArea .project-three-box-row{grid-template-columns:1fr!important}
+  #saveArea .project-three-box-row .project-title-password-field label{min-height:0!important}
+  #saveArea .project-three-box-row input#title,
+  #saveArea .project-three-box-row input#newSharePassword,
+  #saveArea .project-three-box-row #saveResult{width:100%!important}
+}
+
 </style>
 </head>
 <body>
@@ -1664,18 +1715,20 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
       <section class="card page-panel page-hidden" id="saveArea" data-panel="new-project">
         <div class="project-heading-title-row">
           <h2>Save New Project</h2>
-          <div class="project-title-password-field project-title-in-heading">
-            <label for="title">Title</label>
-            <input id="title" maxlength="200" placeholder="Give your information a title" style="height:30px!important;min-height:30px!important;padding:4px 8px!important;box-sizing:border-box!important;">
-          </div>
-          <div id="titleValidation" class="title-validation" role="alert" aria-live="polite"></div>
         </div>
-        <div class="project-title-password-row project-save-all-in-one-row">
+        <div class="project-title-password-row project-save-all-in-one-row project-three-box-row">
+          <div class="project-title-password-field">
+            <label for="title">Title</label>
+            <input id="title" maxlength="200" placeholder="Give your information a title">
+          </div>
           <div class="project-title-password-field">
             <label for="newSharePassword">Optional student Share Code password</label>
-            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password" style="height:30px!important;min-height:30px!important;padding:4px 8px!important;box-sizing:border-box!important;">
+            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Leave blank for no password">
           </div>
           <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
+        </div>
+        <div id="titleValidation" class="title-validation" role="alert" aria-live="polite"></div>
+        <div class="project-save-action-row">
           <button id="saveBtn" type="button">Save complete project &amp; generate codes</button>
         </div>
         <label for="content">Project Content</label>
