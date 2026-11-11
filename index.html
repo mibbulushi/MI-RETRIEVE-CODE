@@ -2638,11 +2638,10 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       const items = Array.from(clipboard?.items || []);
       const imageItems = items.filter(item => item.type.startsWith("image/"));
 
-      // Check BOTH clipboard formats: some browsers put the image markup only in plain text.
-      const markupCandidates = [htmlText, plainText];
-      const pastedMarkup = markupCandidates.find(value =>
-        /<img\b/i.test(value) && /data:image\//i.test(value)
-      );
+      // Accept HTML markup from either clipboard format, including plain-text HTML.
+      const plainLooksLikeHtml = /<\\s*(?:p|div|span|img|br|section|strong|b|em|i|ul|ol|li)\\b/i.test(plainText);
+      const htmlLooksLikeHtml = /<\\s*(?:p|div|span|img|br|section|strong|b|em|i|ul|ol|li)\\b/i.test(htmlText);
+      const pastedMarkup = plainLooksLikeHtml ? plainText : (htmlLooksLikeHtml ? htmlText : "");
 
       if (pastedMarkup) {
         event.preventDefault();
