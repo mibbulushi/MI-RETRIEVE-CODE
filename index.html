@@ -2639,8 +2639,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       const imageItems = items.filter(item => item.type.startsWith("image/"));
 
       // Accept HTML markup from either clipboard format, including plain-text HTML.
-      const plainLooksLikeHtml = /<\\s*(?:p|div|span|img|br|section|strong|b|em|i|ul|ol|li)\\b/i.test(plainText);
-      const htmlLooksLikeHtml = /<\\s*(?:p|div|span|img|br|section|strong|b|em|i|ul|ol|li)\\b/i.test(htmlText);
+      const plainLooksLikeHtml = /<\s*(?:p|div|span|img|br|section|strong|b|em|i|ul|ol|li)\b/i.test(plainText);
+      const htmlLooksLikeHtml = /<\s*(?:p|div|span|img|br|section|strong|b|em|i|ul|ol|li)\b/i.test(htmlText);
       const pastedMarkup = plainLooksLikeHtml ? plainText : (htmlLooksLikeHtml ? htmlText : "");
 
       if (pastedMarkup) {
