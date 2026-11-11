@@ -2254,6 +2254,11 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
  .mi-project-section-actions button{flex:1}
 }
 
+.mi-document-editor{min-height:520px;padding:24px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#26364a;font:inherit;line-height:1.75;outline:none;overflow-wrap:anywhere}
+.mi-document-editor:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(57,118,197,.12)}
+.mi-document-editor p{margin:0 0 14px}.mi-document-editor img{display:block;max-width:100%;max-height:620px;height:auto;object-fit:contain;margin:14px 0;border:1px solid #e1e8f0;border-radius:8px}
+.mi-document-tools{display:flex;align-items:center;gap:8px}.mi-document-tools button{margin:0}
+@media(max-width:650px){.mi-document-editor{min-height:420px;padding:14px}}
 </style>
 </head>
 <body>
@@ -2365,25 +2370,19 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         <section class="mi-builder-panel" aria-labelledby="miBuilderHeading">
           <div class="mi-builder-heading">
             <div>
-              <h3 id="miBuilderHeading">MI Project Builder</h3>
-              <p class="small">Build your project chapter by chapter. Add as many text sections as your project needs.</p>
+              <h3 id="miBuilderHeading">Project Document</h3>
+              <p class="small">Write your text and insert pictures anywhere in this document.</p>
             </div>
-            <button id="addProjectSectionBtn" class="secondary" type="button">+ Add section</button>
+            <div class="mi-document-tools">
+              <button id="miInsertPictureBtn" class="secondary" type="button">＋ Insert Picture</button>
+              <input id="miDocumentImageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden>
+            </div>
           </div>
-          <div id="projectSections" class="mi-project-sections" aria-live="polite"></div>
-          <p class="small">Your sections will be saved in order and included when the project is retrieved or shared. You can attach multiple images and documents below.</p>
+          <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" role="textbox" aria-label="Project document" aria-multiline="true"><p>Start writing your project here...</p></div>
+          <p class="small">Click where you want a picture, select Insert Picture, then continue writing below it. Text and pictures stay in document order.</p>
         </section>
-        <label for="content">Project Content (General Introduction / Additional Information)</label>
-        <textarea id="content" placeholder="Write or paste your information here..."></textarea>
-        <label for="projectStructure">Project Plan (Optional)</label>
-        <textarea id="projectStructure" maxlength="12000" placeholder="1. Introduction
-1(a). Project information
-1(b). Project purpose
-2. Development
-2(a). Website
-2(b). Database
-3. Files and media"></textarea>
-        <p class="small">Use exam-style numbering: 1, 1(a), 1(b), 2, 2(a). This outline is saved with the project and shared with its Share Code.</p>
+        <textarea id="content" hidden></textarea>
+        <textarea id="projectStructure" hidden></textarea>
         <div class="project-save-row">
           <div class="project-save-field">
             <label for="projectFiles">Attach project files (images, PDF, Word, Excel, PowerPoint, ZIP, code, audio, video, etc.)</label>
@@ -2565,6 +2564,62 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           index === document.querySelectorAll("#projectSections .mi-project-section").length - 1;
       });
     }
+
+    const miDocumentEditor = $("miDocumentEditor");
+    $("miInsertPictureBtn").addEventListener("click", () => $("miDocumentImageInput").click());
+    $("miDocumentImageInput").addEventListener("change", async event => {
+      const files = Array.from(event.target.files || []);
+      for (const file of files) {
+        if (!file.type.startsWith("image/")) continue;
+        if (file.size > 2 * 1024 * 1024) {
+          $("saveResult").textContent = "Please use pictures up to 2 MB for direct insertion into the document.";
+          continue;
+        }
+        const dataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        const image = document.createElement("img");
+        image.src = dataUrl;
+        image.alt = file.name;
+        image.dataset.miDocumentImage = "true";
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) {
+          const range = selection.getRangeAt(0);
+          range.deleteContents();
+          range.insertNode(image);
+          const spacer = document.createElement("p");
+          spacer.append(document.createElement("br"));
+          image.after(spacer);
+          range.setStart(spacer, 0);
+          range.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } else {
+          miDocumentEditor.append(image, document.createElement("p"));
+        }
+      }
+      event.target.value = "";
+    });
+    miDocumentEditor.addEventListener("paste", event => {
+      const text = event.clipboardData?.getData("text/plain");
+      if (text && !event.clipboardData?.items?.length) return;
+      const items = Array.from(event.clipboardData?.items || []);
+      const imageItems = items.filter(item => item.type.startsWith("image/"));
+      if (imageItems.length) {
+        event.preventDefault();
+        const files = imageItems.map(item => item.getAsFile()).filter(Boolean);
+        const transfer = new DataTransfer();
+        files.forEach(file => transfer.items.add(file));
+        $("miDocumentImageInput").files = transfer.files;
+        $("miDocumentImageInput").dispatchEvent(new Event("change"));
+      }
+    });
+    miDocumentEditor.addEventListener("input", () => {
+      $("content").value = miDocumentEditor.innerHTML;
+    });
 
     function addProjectSection(title = "", body = "") {
       projectSectionCounter += 1;
@@ -2772,7 +2827,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
     $("saveBtn").addEventListener("click", async () => {
       const title = $("title").value.trim();
-      const writtenContent = $("content").value.trim();
+      $("content").value = miDocumentEditor.innerHTML.trim();
+      const writtenContent = $("content").value;
       const structure = $("projectStructure").value.trim();
       const sections = collectProjectSections();
       const sectionContent = sections.length
@@ -3437,9 +3493,10 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       output.replaceChildren();
       const heading = document.createElement("h3");
       heading.textContent = data.title;
-      const body = document.createElement("p");
-      body.style.whiteSpace = "pre-wrap";
-      body.textContent = data.content || "(No written text.)";
+      const body = document.createElement("div");
+      body.className = "mi-document-editor";
+      body.style.minHeight = "0";
+      body.innerHTML = data.content || "(No written text.)";
       const savedAt = document.createElement("p");
       savedAt.className = "small";
       savedAt.textContent = "Saved: " + new Date(data.created_at).toLocaleString();
