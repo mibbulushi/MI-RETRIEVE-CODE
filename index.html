@@ -2178,6 +2178,16 @@ body.feedback-chat-mode .feedback-chat-composer #feedbackMessage{
   }
 }
 
+
+/* Place the MI Feedback Assistant welcome/status card below the feedback form */
+body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-messages{
+  order:3!important;flex:0 0 auto!important;min-height:58px!important;height:auto!important;
+  max-height:90px!important;margin-top:12px!important;padding:12px 16px!important;
+  overflow-y:auto!important;
+}
+body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-composer{order:2!important}
+body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{order:1!important}
+
 </style>
 </head>
 <body>
@@ -2354,12 +2364,6 @@ body.feedback-chat-mode .feedback-chat-composer #feedbackMessage{
           <h2>Send Feedback</h2>
           <p class="small">Share a suggestion, report a problem, or tell us how MI-RETRIEVE-CODE can be improved.</p>
         </div>
-        <div id="feedbackResult" class="student-chat-messages feedback-chat-messages" role="status" aria-live="polite">
-          <div class="student-chat-welcome">
-            <strong>MI Feedback Assistant</strong>
-            <p>Welcome. Write your feedback below. You can send a suggestion, report a problem, or ask a question.</p>
-          </div>
-        </div>
         <div class="student-chat-composer feedback-chat-composer">
           <label class="student-sr-only" for="feedbackMessage">Your feedback</label>
           <textarea id="feedbackMessage" maxlength="5000" placeholder="Write your feedback here..." required></textarea>
@@ -2372,6 +2376,12 @@ body.feedback-chat-mode .feedback-chat-composer #feedbackMessage{
               <option value="Other">Other</option>
             </select>
             <button id="sendFeedbackBtn" type="button">Submit Feedback</button>
+          </div>
+        </div>
+        <div id="feedbackResult" class="student-chat-messages feedback-chat-messages" role="status" aria-live="polite">
+          <div class="student-chat-welcome">
+            <strong>MI Feedback Assistant</strong>
+            <p>Welcome. Write your feedback below. You can send a suggestion, report a problem, or ask a question.</p>
           </div>
         </div>
       </section>
