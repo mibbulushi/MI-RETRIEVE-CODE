@@ -2220,6 +2220,19 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 .mi-project-section-actions button{margin:0;padding:8px 11px;min-height:38px}
 .mi-project-section textarea{width:100%;min-height:150px;margin:0;resize:vertical}
 .mi-project-section .mi-section-hint{margin:8px 0 0}
+.mi-section-image-panel{margin-top:14px;padding:12px;border:1px dashed #b8cbe1;border-radius:10px;background:#f8fbff}
+.mi-section-image-panel label{display:block;margin-bottom:7px;font-weight:700}
+.mi-section-image-input{width:100%;margin:0 0 6px}
+.mi-section-image-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:10px}
+.mi-section-image-card{display:grid;grid-template-columns:100px 1fr;gap:10px;padding:9px;border:1px solid #d5e1ef;border-radius:9px;background:#fff}
+.mi-section-image-card img{width:100px;height:100px;object-fit:cover;border-radius:7px}
+.mi-section-image-details{display:grid;gap:7px;min-width:0}
+.mi-section-image-details input,.mi-section-image-details textarea{width:100%;min-width:0;margin:0}
+.mi-section-image-details button{margin:0;padding:6px 9px}
+.mi-retrieved-image{max-width:560px;margin:12px 0;padding:10px;border:1px solid #d5e1ef;border-radius:10px;background:#fff}
+.mi-retrieved-image img{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:7px}
+.mi-retrieved-image h5{margin:0 0 8px}
+.mi-retrieved-image figcaption{margin-top:8px;font-weight:700}
 @media(max-width:650px){
  .mi-builder-panel{padding:14px}
  .mi-project-section{padding:12px}
@@ -2586,10 +2599,58 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       content.className = "mi-section-content";
       content.placeholder = "Write the details for this section. You can add another section whenever you need.";
       content.value = body;
+      const imagePanel = document.createElement("div");
+      imagePanel.className = "mi-section-image-panel";
+      const imageLabel = document.createElement("label");
+      imageLabel.textContent = "Section pictures (multiple images)";
+      const imageInput = document.createElement("input");
+      imageInput.type = "file";
+      imageInput.accept = "image/jpeg,image/png,image/webp,image/gif";
+      imageInput.multiple = true;
+      imageInput.className = "mi-section-image-input";
+      const imageHint = document.createElement("p");
+      imageHint.className = "small";
+      imageHint.textContent = "Add up to 20 pictures across the project. Each picture can have its own caption and explanation (maximum 5 MB per picture).";
+      const imageCards = document.createElement("div");
+      imageCards.className = "mi-section-image-cards";
+      imageInput.addEventListener("change", () => {
+        Array.from(imageInput.files || []).forEach(file => {
+          if (!file.type.startsWith("image/")) return;
+          const card = document.createElement("div");
+          card.className = "mi-section-image-card";
+          card._imageFile = file;
+          const preview = document.createElement("img");
+          preview.src = URL.createObjectURL(file);
+          preview.alt = file.name;
+          preview.onload = () => URL.revokeObjectURL(preview.src);
+          const details = document.createElement("div");
+          details.className = "mi-section-image-details";
+          const caption = document.createElement("input");
+          caption.type = "text";
+          caption.maxLength = 180;
+          caption.placeholder = "Picture caption (optional)";
+          caption.className = "mi-section-image-caption";
+          const explanation = document.createElement("textarea");
+          explanation.maxLength = 3000;
+          explanation.rows = 2;
+          explanation.placeholder = "Explain this picture (optional)";
+          explanation.className = "mi-section-image-description";
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "secondary";
+          remove.textContent = "Remove picture";
+          remove.addEventListener("click", () => card.remove());
+          details.append(caption, explanation, remove);
+          card.append(preview, details);
+          imageCards.append(card);
+        });
+        imageInput.value = "";
+      });
+      imagePanel.append(imageLabel, imageInput, imageHint, imageCards);
       const hint = document.createElement("p");
       hint.className = "small mi-section-hint";
-      hint.textContent = "Text for this section is saved in the project and follows this section's position.";
-      section.append(top, content, hint);
+      hint.textContent = "Text and pictures for this section are saved together and follow this section's position.";
+      section.append(top, content, imagePanel, hint);
       $("projectSections").append(section);
       renumberProjectSections();
       return section;
@@ -2605,7 +2666,12 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       return Array.from(document.querySelectorAll("#projectSections .mi-project-section"))
         .map((section, index) => ({
           title: section.querySelector(".mi-section-title").value.trim() || ("Section " + (index + 1)),
-          content: section.querySelector(".mi-section-content").value.trim()
+          content: section.querySelector(".mi-section-content").value.trim(),
+          images: Array.from(section.querySelectorAll(".mi-section-image-card")).map(card => ({
+            file: card._imageFile,
+            caption: card.querySelector(".mi-section-image-caption").value.trim(),
+            description: card.querySelector(".mi-section-image-description").value.trim()
+          })).filter(image => image.file)
         }))
         .filter(section => section.title || section.content);
     }
@@ -2626,11 +2692,19 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       if (sectionContent) projectParts.push(sectionContent);
       const content = projectParts.join("\n\n");
       const files = Array.from($("projectFiles").files || []);
-      if (!title || (!content && files.length === 0)) { $("titleValidation").textContent = "Enter a title and either information, a project structure, or at least one file."; return; }
+      const sectionImages = sections.flatMap((section, sectionIndex) =>
+        section.images.map((image, imageIndex) => ({
+          ...image, sectionIndex, sectionTitle: section.title, sortOrder: imageIndex + 1
+        }))
+      );
+      if (!title || (!content && files.length === 0 && sectionImages.length === 0)) { $("titleValidation").textContent = "Enter a title and either information, a project structure, or at least one file."; return; }
       $("titleValidation").textContent = "";
       if (files.length > 20) return $("saveResult").textContent = "Please attach no more than 20 files to one project.";
+      if (sectionImages.length > 20) return $("saveResult").textContent = "Please attach no more than 20 section pictures to one project.";
       const tooLarge = files.find(file => file.size > 25 * 1024 * 1024);
       if (tooLarge) return $("saveResult").textContent = "File exceeds the 25 MB limit: " + tooLarge.name;
+      const largeImage = sectionImages.find(image => image.file.size > 5 * 1024 * 1024);
+      if (largeImage) return $("saveResult").textContent = "Picture exceeds the 5 MB limit: " + largeImage.file.name;
       $("saveBtn").disabled = true;
       $("saveResult").textContent = "Saving project and uploading attached files...";
       const { data: { user }, error: userError } = await client.auth.getUser();
@@ -2652,6 +2726,37 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
       const uploadedFiles = [];
       const uploadErrors = [];
+      for (const image of sectionImages) {
+        const file = image.file;
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120) || "image";
+        const storagePath = user.id + "/" + saved.id + "/" + crypto.randomUUID() + "-" + safeName;
+        const { error: uploadError } = await client.storage
+          .from("mi-project-images")
+          .upload(storagePath, file, { upsert: false, contentType: file.type });
+        if (uploadError) {
+          uploadErrors.push(file.name + ": " + friendlyError(uploadError));
+          continue;
+        }
+        const { error: metaError } = await client.from("mi_saved_images").insert({
+          content_id: saved.id,
+          owner_id: user.id,
+          storage_path: storagePath,
+          file_name: file.name,
+          mime_type: file.type,
+          size_bytes: file.size,
+          section_index: image.sectionIndex,
+          section_title: image.sectionTitle,
+          caption: image.caption,
+          description: image.description,
+          sort_order: image.sortOrder
+        });
+        if (metaError) {
+          await client.storage.from("mi-project-images").remove([storagePath]);
+          uploadErrors.push(file.name + ": image details could not be saved - " + friendlyError(metaError));
+          continue;
+        }
+        uploadedFiles.push(file.name + " (section picture)");
+      }
       for (const file of files) {
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120) || "file";
         const storagePath = user.id + "/" + saved.id + "/" + crypto.randomUUID() + "-" + safeName;
@@ -2982,10 +3087,42 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         contentArea.append(structureHeading, structure);
       }
       const attachments = Array.isArray(item.attachments) ? item.attachments : [];
+      const imageAttachments = attachments.filter(file => String(file.mime_type || "").startsWith("image/"));
+      const documentAttachments = attachments.filter(file => !String(file.mime_type || "").startsWith("image/"));
+      if (imageAttachments.length) {
+        const imageHeading = document.createElement("h4");
+        imageHeading.textContent = "Project pictures (" + imageAttachments.length + ")";
+        contentArea.append(imageHeading);
+        for (const file of imageAttachments) {
+          const figure = document.createElement("figure");
+          figure.className = "mi-retrieved-image";
+          if (file.section_title) {
+            const sectionHeading = document.createElement("h5");
+            sectionHeading.textContent = file.section_title;
+            figure.append(sectionHeading);
+          }
+          const picture = document.createElement("img");
+          picture.src = file.url;
+          picture.alt = file.caption || file.file_name;
+          picture.loading = "lazy";
+          figure.append(picture);
+          if (file.caption) {
+            const caption = document.createElement("figcaption");
+            caption.textContent = file.caption;
+            figure.append(caption);
+          }
+          if (file.description) {
+            const explanation = document.createElement("p");
+            explanation.textContent = file.description;
+            figure.append(explanation);
+          }
+          contentArea.append(figure);
+        }
+      }
       const filesHeading = document.createElement("h4");
-      filesHeading.textContent = "Project attachments (" + attachments.length + ")";
+      filesHeading.textContent = "Project attachments (" + documentAttachments.length + ")";
       contentArea.append(filesHeading);
-      for (const file of attachments) {
+      for (const file of documentAttachments) {
         const line = document.createElement("p");
         const link = document.createElement("a");
         link.href = file.url;
@@ -3141,6 +3278,45 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       savedAt.className = "small";
       savedAt.textContent = "Saved: " + new Date(data.created_at).toLocaleString();
       output.append(heading, body, savedAt);
+      const { data: images } = await client.from("mi_saved_images")
+        .select("storage_path,file_name,mime_type,section_index,section_title,caption,description,sort_order")
+        .eq("content_id", codeRow.content_id)
+        .order("section_index", { ascending: true })
+        .order("sort_order", { ascending: true });
+      if (images?.length) {
+        const imageHeading = document.createElement("h4");
+        imageHeading.textContent = "Section pictures";
+        output.append(imageHeading);
+        for (const image of images) {
+          const { data: signed } = await client.storage.from("mi-project-images")
+            .createSignedUrl(image.storage_path, 3600);
+          const group = document.createElement("div");
+          group.className = "mi-retrieved-image";
+          if (image.section_title) {
+            const sectionHeading = document.createElement("h5");
+            sectionHeading.textContent = image.section_title;
+            group.append(sectionHeading);
+          }
+          if (signed?.signedUrl) {
+            const picture = document.createElement("img");
+            picture.src = signed.signedUrl;
+            picture.alt = image.caption || image.file_name;
+            picture.loading = "lazy";
+            group.append(picture);
+          }
+          if (image.caption) {
+            const caption = document.createElement("strong");
+            caption.textContent = image.caption;
+            group.append(caption);
+          }
+          if (image.description) {
+            const explanation = document.createElement("p");
+            explanation.textContent = image.description;
+            group.append(explanation);
+          }
+          output.append(group);
+        }
+      }
       const { data: files } = await client.from("mi_saved_files")
         .select("storage_path,file_name")
         .eq("content_id", codeRow.content_id);
