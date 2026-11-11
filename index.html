@@ -2687,8 +2687,9 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           addToProject.textContent = "Add Picture to Project";
           addToProject.addEventListener("click", () => {
             card.dataset.addedToProject = "true";
-            addToProject.textContent = "Added to Project";
-            addToProject.disabled = true;
+            addToProject.textContent = "Added to Project ✓";
+            addToProject.title = "This picture is included when you save the project.";
+            addToProject.setAttribute("aria-pressed", "true");
           });
           const remove = document.createElement("button");
           remove.type = "button";
