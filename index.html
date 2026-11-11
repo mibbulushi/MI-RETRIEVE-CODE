@@ -2605,10 +2605,52 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       event.target.value = "";
     });
     miDocumentEditor.addEventListener("paste", event => {
-      const text = event.clipboardData?.getData("text/plain");
-      if (text && !event.clipboardData?.items?.length) return;
-      const items = Array.from(event.clipboardData?.items || []);
+      const clipboard = event.clipboardData;
+      const plainText = clipboard?.getData("text/plain") || "";
+      const htmlText = clipboard?.getData("text/html") || "";
+      const items = Array.from(clipboard?.items || []);
       const imageItems = items.filter(item => item.type.startsWith("image/"));
+
+      // Convert pasted image HTML/base64 markup into real inline pictures,
+      // instead of showing the long data:image... code in the document.
+      const pastedMarkup = htmlText || plainText;
+      if (/<img\\b/i.test(pastedMarkup) && /data:image\\//i.test(pastedMarkup)) {
+        event.preventDefault();
+        const parsed = new DOMParser().parseFromString(pastedMarkup, "text/html");
+        const pastedImages = Array.from(parsed.querySelectorAll("img"))
+          .filter(img => /^data:image\\/(png|jpe?g|webp|gif);base64,/i.test(img.getAttribute("src") || ""));
+        const selection = window.getSelection();
+        let range = selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)
+          ? selection.getRangeAt(0) : null;
+        if (!range) {
+          range = document.createRange();
+          range.selectNodeContents(miDocumentEditor);
+          range.collapse(false);
+        }
+        range.deleteContents();
+        pastedImages.forEach(sourceImage => {
+          const image = document.createElement("img");
+          image.src = sourceImage.getAttribute("src");
+          image.alt = sourceImage.getAttribute("alt") || "Project picture";
+          image.dataset.miDocumentImage = "true";
+          range.insertNode(image);
+          const spacer = document.createElement("p");
+          spacer.append(document.createElement("br"));
+          image.after(spacer);
+          range.setStartAfter(spacer);
+          range.collapse(true);
+        });
+        if (!pastedImages.length) {
+          $("saveResult").textContent = "Image code was not recognized. Please use Insert Picture to add the image.";
+        }
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        $("content").value = miDocumentEditor.innerHTML;
+        return;
+      }
+
       if (imageItems.length) {
         event.preventDefault();
         const files = imageItems.map(item => item.getAsFile()).filter(Boolean);
