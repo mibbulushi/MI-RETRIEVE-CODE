@@ -2263,17 +2263,17 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
  .mi-project-section-actions button{flex:1}
 }
 
-.mi-editor-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:12px;margin:10px 0;border:1px solid #b9cce4;border-radius:12px;background:#f2f7fd;width:100%;box-sizing:border-box;position:relative;z-index:1}
+.mi-editor-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:10px;padding:12px;margin:10px 0;border:1px solid #b9cce4;border-radius:12px;background:#f2f7fd;width:100%;box-sizing:border-box;position:relative;z-index:1}
+.mi-tool-group{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px;background:#fff;border:1px solid #cbd9e9;border-radius:9px;min-width:0;box-sizing:border-box}
+.mi-tool-group-title{flex:0 0 100%;font-size:.75rem;font-weight:700;color:#435a75;letter-spacing:.035em;text-transform:uppercase}
 .mi-editor-toolbar button{margin:0;padding:8px 11px;min-height:40px;white-space:nowrap}
-.mi-tool-group{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 10px;background:#fff;border:1px solid #d5e0ee;border-radius:9px}
-.mi-tool-group-title{width:100%;font-size:.72rem;font-weight:700;color:#52647a;letter-spacing:.04em;text-transform:uppercase}
 .mi-tool-label{display:flex;align-items:center;gap:6px;margin:0;font-size:.84rem;font-weight:600;white-space:nowrap;color:#26364a}
 #miEditorToolbar .mi-tool-label select{display:inline-block;width:auto;min-width:82px;max-width:100%;min-height:40px;padding:7px 10px;font-size:.9rem;background:#fff;color:#172b45;border:1px solid #9fb2ca;border-radius:7px}
 #miEditorToolbar #miFontFamily{min-width:165px}
 #miEditorToolbar #miFontSize{min-width:78px}
 #miEditorToolbar .mi-tool-label input[type=color]{display:inline-block;width:46px;height:40px;min-height:40px;padding:3px;background:#fff;border:1px solid #9fb2ca;border-radius:7px}
 .mi-grammar-notice{padding:9px 12px;margin:7px 0 10px;border-radius:9px;background:#fff8e8;border:1px solid #f0dfb4;color:#76520b;font-size:.85rem;line-height:1.5}
-@media(max-width:650px){.mi-editor-toolbar{gap:7px;padding:9px}.mi-tool-group{width:100%;box-sizing:border-box}.mi-tool-label{font-size:.8rem}#miEditorToolbar #miFontFamily{min-width:150px}.mi-editor-toolbar button{padding:7px 9px;font-size:.82rem}}
+@media(max-width:760px){.mi-editor-toolbar{grid-template-columns:minmax(0,1fr);gap:8px;padding:9px}.mi-tool-group{width:100%}.mi-tool-label{font-size:.8rem}#miEditorToolbar #miFontFamily{min-width:150px}.mi-editor-toolbar button{padding:7px 9px;font-size:.82rem}}
 .mi-document-editor{min-height:520px;padding:24px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#26364a;font:inherit;line-height:1.75;outline:none;overflow-wrap:anywhere}
 .mi-document-editor:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(57,118,197,.12)}
 .mi-document-editor p{margin:0 0 14px}.mi-document-editor img{display:block;width:auto;max-width:100%;height:auto;max-height:none;object-fit:contain;margin:14px 0;border:1px solid #e1e8f0;border-radius:8px;resize:both;overflow:auto;min-width:70px;min-height:50px;cursor:move;box-sizing:border-box}.mi-document-editor img.mi-image-selected{outline:2px solid #3478c8;outline-offset:3px}.mi-document-editor img.mi-image-dragging{opacity:.45}
@@ -2400,22 +2400,31 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           </div>
           <div class="mi-editor-toolbar" id="miEditorToolbar" role="toolbar" aria-label="Document formatting">
             <div class="mi-tool-group" aria-label="Font settings">
-              <span class="mi-tool-group-title">Font settings</span>
+              <span class="mi-tool-group-title">1. Font settings</span>
               <label class="mi-tool-label">Font family <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
               <label class="mi-tool-label">Font size <select id="miFontSize" aria-label="Font size"><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">32</option></select></label>
               <label class="mi-tool-label">Text colour <input id="miFontColor" type="color" value="#26364a" aria-label="Text colour"></label>
             </div>
-            <button type="button" class="secondary" data-mi-command="bold" title="Bold"><b>B</b></button>
-            <button type="button" class="secondary" data-mi-command="italic" title="Italic"><i>I</i></button>
-            <button type="button" class="secondary" data-mi-command="underline" title="Underline"><u>U</u></button>
-            <button type="button" class="secondary" data-mi-command="justifyLeft" title="Align left">Left</button>
-            <button type="button" class="secondary" data-mi-command="justifyCenter" title="Align centre">Centre</button>
-            <button type="button" class="secondary" data-mi-command="justifyRight" title="Align right">Right</button>
-            <button type="button" class="secondary" data-mi-command="justifyFull" title="Justify">Justify</button>
-            <label class="mi-tool-label">Line spacing <select id="miLineSpacing" aria-label="Line spacing"><option value="1.2">1.2</option><option value="1.5" selected>1.5</option><option value="1.75">1.75</option><option value="2">2.0</option></select></label>
-            <button type="button" class="secondary" data-mi-command="indent">Indent</button>
-            <button type="button" class="secondary" data-mi-command="outdent">Outdent</button>
-            <button type="button" class="secondary" id="miGrammarCheckBtn">Optional Grammar Check</button>
+            <div class="mi-tool-group" aria-label="Text style and alignment">
+              <span class="mi-tool-group-title">2. Text style &amp; alignment</span>
+              <button type="button" class="secondary" data-mi-command="bold" title="Bold"><b>B</b></button>
+              <button type="button" class="secondary" data-mi-command="italic" title="Italic"><i>I</i></button>
+              <button type="button" class="secondary" data-mi-command="underline" title="Underline"><u>U</u></button>
+              <button type="button" class="secondary" data-mi-command="justifyLeft" title="Align left">Left</button>
+              <button type="button" class="secondary" data-mi-command="justifyCenter" title="Align centre">Centre</button>
+              <button type="button" class="secondary" data-mi-command="justifyRight" title="Align right">Right</button>
+              <button type="button" class="secondary" data-mi-command="justifyFull" title="Justify">Justify</button>
+            </div>
+            <div class="mi-tool-group" aria-label="Paragraph spacing">
+              <span class="mi-tool-group-title">3. Paragraph spacing</span>
+              <label class="mi-tool-label">Line spacing <select id="miLineSpacing" aria-label="Line spacing"><option value="1.2">1.2</option><option value="1.5" selected>1.5</option><option value="1.75">1.75</option><option value="2">2.0</option></select></label>
+              <button type="button" class="secondary" data-mi-command="indent">Indent</button>
+              <button type="button" class="secondary" data-mi-command="outdent">Outdent</button>
+            </div>
+            <div class="mi-tool-group mi-tool-group-grammar" aria-label="Grammar tools">
+              <span class="mi-tool-group-title">4. Grammar</span>
+              <button type="button" class="secondary" id="miGrammarCheckBtn">Optional Grammar Check</button>
+            </div>
           </div>
           <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
           <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"><p>Start writing your project here...</p></div>
