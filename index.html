@@ -1502,19 +1502,7 @@ body.student-chat-mode #receivedProjectsArea .received-project-content{
 }
 
 
-/* Sidebar collapse / expand control */
-.sidebar-toggle{position:fixed!important;top:12px!important;left:260px!important;z-index:50!important;width:36px!important;height:36px!important;min-height:36px!important;padding:0!important;border-radius:9px!important;font-size:18px!important;display:flex!important;align-items:center!important;justify-content:center!important}
-body.sidebar-collapsed{padding-left:84px!important}
-body.sidebar-collapsed .sidebar{width:70px!important;padding:24px 9px!important;gap:18px!important}
-body.sidebar-collapsed .brand{padding:4px 0 14px!important;text-align:center!important}
-body.sidebar-collapsed .brand strong{font-size:0!important}
-body.sidebar-collapsed .brand strong:after{content:"MI";font-size:1rem!important}
-body.sidebar-collapsed .brand span,body.sidebar-collapsed .nav-label,body.sidebar-collapsed .sidebar-note{display:none!important}
-body.sidebar-collapsed .side-nav a{justify-content:center!important;padding:12px 5px!important;font-size:0!important;gap:0!important}
-body.sidebar-collapsed .side-nav .nav-icon{display:inline-block!important;width:auto!important;font-size:1.05rem!important}
-body.sidebar-collapsed .sidebar-toggle{left:80px!important}
-@media(max-width:760px){.sidebar-toggle{top:10px!important;left:auto!important;right:12px!important}body.sidebar-collapsed{padding-left:8px!important}body.sidebar-collapsed .sidebar{width:70px!important;margin-left:0!important}body.sidebar-collapsed .sidebar-toggle{right:12px!important;left:auto!important}}
-
+/* Sidebar toggle styles are defined in the final ChatGPT-style block below. */
 
 /* Final fix: restore a normal-width Title input in the heading row */
 #saveArea .project-heading-title-row{
@@ -1757,61 +1745,65 @@ body.sidebar-collapsed .sidebar-toggle{left:80px!important}
 }
 
 
-/* ChatGPT-inspired sidebar: search, quick new project, and fully hide/show */
+/* Unified ChatGPT-style sidebar: one consistent desktop/mobile layout */
 .sidebar{
-  width:260px!important;padding:18px 14px!important;gap:15px!important;
-  transition:transform .24s ease,width .24s ease!important;
-  overflow-x:hidden!important;overflow-y:auto!important;
+  position:fixed!important;inset:0 auto 0 0!important;width:260px!important;height:100vh!important;
+  margin:0!important;padding:18px 14px!important;gap:14px!important;
+  display:flex!important;flex-direction:column!important;overflow-x:hidden!important;overflow-y:auto!important;
+  border-radius:0!important;z-index:100!important;transform:translateX(0)!important;
+  transition:transform .22s ease!important;
 }
+.sidebar .brand{flex:0 0 auto!important;padding:4px 8px 14px!important}
+.sidebar .brand strong{font-size:1rem!important}
+.sidebar .brand span{display:block!important;font-size:.76rem!important}
 .sidebar-search-wrap{
-  display:flex!important;align-items:center!important;gap:9px!important;
-  margin:0!important;padding:0 12px!important;height:42px!important;min-height:42px!important;
+  display:flex!important;flex:0 0 42px!important;align-items:center!important;gap:9px!important;
+  width:100%!important;height:42px!important;margin:0!important;padding:0 11px!important;
   border:1px solid rgba(220,235,255,.2)!important;border-radius:10px!important;
-  background:rgba(255,255,255,.10)!important;color:#dceaff!important;
+  background:rgba(255,255,255,.10)!important;color:#e5efff!important;
 }
 .sidebar-search-wrap>span{font-size:21px;line-height:1}
 .sidebar-search-wrap input{
-  min-width:0!important;width:100%!important;height:38px!important;min-height:38px!important;
+  display:block!important;min-width:0!important;width:100%!important;height:38px!important;min-height:38px!important;
   margin:0!important;padding:5px 0!important;border:0!important;outline:0!important;
   background:transparent!important;color:#fff!important;box-shadow:none!important;font-size:.88rem!important;
 }
 .sidebar-search-wrap input::placeholder{color:#c0d2e8}
-.sidebar-search-wrap:focus-within{border-color:#77b8ff!important;background:rgba(255,255,255,.15)!important}
+.sidebar-search-wrap:focus-within{border-color:#77b8ff!important}
 .sidebar-new-project{
-  display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;
+  display:flex!important;flex:0 0 42px!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;
   width:100%!important;height:42px!important;min-height:42px!important;margin:0!important;padding:0 12px!important;
   border:1px solid rgba(220,235,255,.18)!important;border-radius:10px!important;
-  background:rgba(255,255,255,.12)!important;color:#fff!important;box-shadow:none!important;
-  text-align:left!important;font-size:.9rem!important;
+  background:rgba(255,255,255,.12)!important;color:#fff!important;text-align:left!important;
+  box-shadow:none!important;font-size:.9rem!important;
 }
-.sidebar-new-project:hover{background:rgba(255,255,255,.2)!important;transform:none!important}
-.sidebar .nav-label{margin-top:5px}
-.sidebar .side-nav{gap:5px}
-.sidebar .side-nav a{min-height:40px;padding:9px 11px}
-.sidebar-toggle{
-  position:fixed!important;top:14px!important;left:270px!important;z-index:60!important;
-  width:38px!important;height:38px!important;min-height:38px!important;margin:0!important;padding:0!important;
-  border-radius:10px!important;font-size:18px!important;display:flex!important;
-  align-items:center!important;justify-content:center!important;
-}
+.sidebar .nav-label{display:block!important;flex:0 0 auto!important;margin:3px 0 0!important}
+.sidebar .side-nav{display:grid!important;flex:0 0 auto!important;gap:5px!important;overflow:visible!important;padding:0!important}
+.sidebar .side-nav a{display:flex!important;align-items:center!important;min-height:40px!important;padding:9px 11px!important;font-size:.9rem!important}
+.sidebar .side-nav a[hidden]{display:none!important}
+.sidebar .sidebar-note{display:block!important;margin-top:auto!important;padding-top:12px!important}
+body{padding-left:278px!important;transition:padding-left .22s ease!important}
 body.sidebar-collapsed{padding-left:28px!important}
-body.sidebar-collapsed .sidebar{
-  width:260px!important;transform:translateX(-105%)!important;pointer-events:none!important;
+body.sidebar-collapsed .sidebar{width:260px!important;transform:translateX(-105%)!important;pointer-events:none!important}
+.sidebar-toggle{
+  position:fixed!important;top:14px!important;left:266px!important;z-index:120!important;
+  width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;
+  margin:0!important;padding:0!important;border-radius:10px!important;font-size:18px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
 }
 body.sidebar-collapsed .sidebar-toggle{left:14px!important}
 body.sidebar-collapsed .container{max-width:1280px!important}
 @media(max-width:760px){
+  body{padding:0 14px 22px!important}
   body .sidebar{
-    position:fixed!important;inset:0 auto 0 0!important;width:min(290px,86vw)!important;
-    height:100dvh!important;margin:0!important;padding:18px 14px!important;
-    border-radius:0 16px 16px 0!important;z-index:55!important;
-    transform:translateX(0)!important;transition:transform .24s ease!important;
+    position:fixed!important;inset:0 auto 0 0!important;width:min(290px,86vw)!important;height:100dvh!important;
+    margin:0!important;padding:18px 14px!important;border-radius:0 16px 16px 0!important;
+    z-index:100!important;transform:translateX(0)!important;box-shadow:12px 0 35px rgba(0,0,0,.28)!important;
   }
   body.sidebar-collapsed .sidebar{transform:translateX(-105%)!important}
-  body.sidebar-collapsed{padding-left:14px!important}
-  body .sidebar-toggle{top:12px!important;left:auto!important;right:12px!important;z-index:70!important}
+  body .sidebar-toggle{top:12px!important;left:auto!important;right:12px!important;z-index:120!important}
   body.sidebar-collapsed .sidebar-toggle{left:12px!important;right:auto!important}
-  body .container{padding-top:52px!important}
+  body .container{max-width:100%!important;padding-top:52px!important}
 }
 
 </style>
@@ -2768,6 +2760,10 @@ body.sidebar-collapsed .container{max-width:1280px!important}
         if (window.matchMedia("(max-width: 760px)").matches) setSidebarCollapsed(true);
       });
     });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !document.body.classList.contains("sidebar-collapsed")) setSidebarCollapsed(true);
+    });
+    if (window.matchMedia("(max-width: 760px)").matches) setSidebarCollapsed(true);
 </script>
 </body>
 </html>
