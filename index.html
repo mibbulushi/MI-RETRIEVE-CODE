@@ -1862,6 +1862,36 @@ body.sidebar-collapsed .sidebar-toggle{left:14px!important}
   .sidebar-search-wrap{width:100%!important;margin:0!important}
 }
 
+
+
+/* Icon-only sidebar search; reveal the field only when requested */
+.sidebar-search-wrap{
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  flex:0 0 36px!important;width:36px!important;height:36px!important;min-height:36px!important;
+  margin:0 6px!important;padding:0!important;border:0!important;background:transparent!important;
+  border-radius:8px!important;overflow:hidden!important;
+}
+.sidebar-search-icon{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 36px!important;width:36px!important;height:36px!important;padding:8px!important;
+  border:0!important;border-radius:8px!important;background:rgba(255,255,255,.10)!important;
+  color:#e5efff!important;cursor:pointer!important;
+}
+.sidebar-search-icon svg{width:20px!important;height:20px!important;fill:none!important;stroke:currentColor!important;stroke-width:2!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.sidebar-search-wrap input{
+  display:none!important;width:0!important;min-width:0!important;height:32px!important;
+  padding:0!important;border:0!important;background:transparent!important;color:#fff!important;
+}
+.sidebar-search-wrap.search-open{
+  width:100%!important;flex:0 0 36px!important;padding:0 7px!important;
+  border:1px solid rgba(220,235,255,.2)!important;background:rgba(255,255,255,.10)!important;
+}
+.sidebar-search-wrap.search-open .sidebar-search-icon{background:transparent!important}
+.sidebar-search-wrap.search-open input{
+  display:block!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;
+  padding:2px 5px!important;font-size:.82rem!important;
+}
+
 </style>
 </head>
 <body>
@@ -1869,7 +1899,7 @@ body.sidebar-collapsed .sidebar-toggle{left:14px!important}
   <div id="top"></div>
   <aside class="sidebar" aria-label="Main navigation">
     <div class="brand"><strong>MI-RETRIEVE-CODE</strong><span>Your Information. Your Unique Code. Your Control.</span></div>
-    <label class="sidebar-search-wrap" for="sidebarSearch"><span aria-hidden="true">⌕</span><input id="sidebarSearch" type="search" placeholder="Search menu..." autocomplete="off"></label>
+    <div class="sidebar-search-wrap" id="sidebarSearchWrap"><button class="sidebar-search-icon" id="sidebarSearchToggle" type="button" aria-label="Search menu" title="Search menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button><input id="sidebarSearch" type="search" placeholder="Search menu..." autocomplete="off" aria-label="Search menu"></div>
     <button class="sidebar-new-project" type="button" data-open-page="new-project">＋ <span>New Project</span></button>
     <div class="nav-label">Workspace</div>
     <nav class="side-nav">
@@ -2805,6 +2835,13 @@ body.sidebar-collapsed .sidebar-toggle{left:14px!important}
     });
 
     const sidebarSearch = document.getElementById("sidebarSearch");
+    const sidebarSearchWrap = document.getElementById("sidebarSearchWrap");
+    const sidebarSearchToggle = document.getElementById("sidebarSearchToggle");
+    if (sidebarSearchToggle && sidebarSearchWrap) sidebarSearchToggle.addEventListener("click", () => {
+      sidebarSearchWrap.classList.toggle("search-open");
+      if (sidebarSearchWrap.classList.contains("search-open")) sidebarSearch.focus();
+      else { sidebarSearch.value = ""; sidebarSearch.dispatchEvent(new Event("input")); }
+    });
     if (sidebarSearch) sidebarSearch.addEventListener("input", () => {
       const query = sidebarSearch.value.trim().toLocaleLowerCase();
       document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
