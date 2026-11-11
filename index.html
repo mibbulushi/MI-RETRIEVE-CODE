@@ -2612,29 +2612,42 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
     };
     // Document formatting controls. Keep the selected text range while using the toolbar.
     const miEditorToolbar = $("miEditorToolbar");
-    miEditorToolbar.addEventListener("mousedown", event => {
+    let miSavedEditorRange = null;
+    miEditorToolbar.addEventListener("pointerdown", event => {
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) {
+        miSavedEditorRange = selection.getRangeAt(0).cloneRange();
+      }
       if (event.target.closest("button")) event.preventDefault();
     });
+    function restoreMiEditorSelection() {
+      miDocumentEditor.focus();
+      if (miSavedEditorRange) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(miSavedEditorRange);
+      }
+    }
     miEditorToolbar.querySelectorAll("[data-mi-command]").forEach(button => {
       button.addEventListener("click", () => {
-        miDocumentEditor.focus();
+        restoreMiEditorSelection();
         document.execCommand(button.dataset.miCommand, false, null);
         $("content").value = miDocumentEditor.innerHTML;
         setMiWorkStatus("Formatting changed — save your project to store it.");
       });
     });
     $("miFontFamily").addEventListener("change", event => {
-      miDocumentEditor.focus();
+      restoreMiEditorSelection();
       document.execCommand("fontName", false, event.target.value);
       $("content").value = miDocumentEditor.innerHTML;
     });
     $("miFontSize").addEventListener("change", event => {
-      miDocumentEditor.focus();
+      restoreMiEditorSelection();
       document.execCommand("fontSize", false, event.target.value);
       $("content").value = miDocumentEditor.innerHTML;
     });
     $("miFontColor").addEventListener("input", event => {
-      miDocumentEditor.focus();
+      restoreMiEditorSelection();
       document.execCommand("foreColor", false, event.target.value);
       $("content").value = miDocumentEditor.innerHTML;
     });
