@@ -2965,19 +2965,20 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 }
 
 
-/* Match password title and helper text to Project title label size */
-#saveArea .mi-save-details .mi-save-password .mi-password-label{
-  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
-  align-items:center!important;justify-content:flex-start!important;gap:5px!important;
-  width:100%!important;min-height:22px!important;height:auto!important;
-  white-space:nowrap!important;overflow:visible!important;font-size:.82rem!important;line-height:1.25!important;
-}
+/* Match password title, helper text and Project title label */
+#saveArea .mi-save-layout .mi-save-title label,
+#saveArea .mi-save-details .mi-save-password .mi-password-label,
 #saveArea .mi-save-details .mi-save-password .mi-password-title,
 #saveArea .mi-save-details .mi-save-password .mi-password-help{
-  flex:0 0 auto!important;font-size:.82rem!important;line-height:1.25!important;white-space:nowrap!important;
+  font-size:.9rem!important;line-height:1.35!important;
 }
-#saveArea .mi-save-details .mi-save-password .mi-password-title{font-weight:600!important}
-#saveArea .mi-save-details .mi-save-password .mi-password-help{display:inline!important;min-height:0!important;margin:0!important;padding:0!important;font-weight:400!important}
+#saveArea .mi-save-details .mi-save-password .mi-password-label{
+  display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;
+  align-items:baseline!important;justify-content:flex-start!important;column-gap:5px!important;row-gap:2px!important;
+  width:100%!important;min-height:22px!important;height:auto!important;white-space:normal!important;overflow:visible!important;
+}
+#saveArea .mi-save-details .mi-save-password .mi-password-title{flex:0 0 auto!important;font-weight:600!important}
+#saveArea .mi-save-details .mi-save-password .mi-password-help{flex:0 1 auto!important;display:inline!important;min-height:0!important;margin:0!important;padding:0!important;font-weight:400!important}
 #saveArea .mi-save-details .mi-save-password .mi-password-help:before{content:"— "}
 </style>
 </head>
