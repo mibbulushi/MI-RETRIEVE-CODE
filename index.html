@@ -3051,50 +3051,59 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 }
 
 
-/* Match the password input width to the full label/help text above it */
+/* Final fix: password input width exactly follows the full heading + help text */
 @media(min-width:651px){
   #saveArea .mi-save-details{
     grid-template-columns:minmax(0,1fr) max-content!important;
     column-gap:20px!important;
+    align-items:start!important;
   }
   #saveArea .mi-save-details .mi-save-password{
-    width:max-content!important;
-    max-width:100%!important;
-  }
-  #saveArea .mi-save-details .mi-save-password .mi-password-label{
     display:flex!important;
     flex-direction:column!important;
-    flex-wrap:nowrap!important;
     align-items:flex-start!important;
     width:max-content!important;
     max-width:100%!important;
-    white-space:normal!important;
+    min-width:0!important;
+  }
+  #saveArea .mi-save-details .mi-save-password .mi-password-label{
+    display:flex!important;
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    align-items:baseline!important;
+    gap:5px!important;
+    width:max-content!important;
+    max-width:none!important;
+    white-space:nowrap!important;
   }
   #saveArea .mi-save-details .mi-save-password .mi-password-title,
   #saveArea .mi-save-details .mi-save-password .mi-password-help{
-    display:block!important;
-    width:max-content!important;
-    max-width:100%!important;
+    display:inline!important;
+    flex:0 0 auto!important;
+    width:auto!important;
+    max-width:none!important;
     white-space:nowrap!important;
-    overflow-wrap:normal!important;
   }
   #saveArea .mi-save-details .mi-save-password #newSharePassword{
     display:block!important;
     width:100%!important;
-    max-width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    box-sizing:border-box!important;
   }
 }
 @media(max-width:650px){
+  #saveArea .mi-save-details{grid-template-columns:minmax(0,1fr)!important}
   #saveArea .mi-save-details .mi-save-password,
   #saveArea .mi-save-details .mi-save-password .mi-password-label,
   #saveArea .mi-save-details .mi-save-password #newSharePassword{
     width:100%!important;
     max-width:100%!important;
   }
-  #saveArea .mi-save-details .mi-save-password .mi-password-title,
-  #saveArea .mi-save-details .mi-save-password .mi-password-help{
+  #saveArea .mi-save-details .mi-save-password .mi-password-label{
+    display:flex!important;
+    flex-wrap:wrap!important;
     white-space:normal!important;
-    overflow-wrap:anywhere!important;
   }
 }
 
