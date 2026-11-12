@@ -2216,7 +2216,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
 /* MI Project Builder: flexible, numbered project sections */
 .mi-builder-panel{margin:22px 0;padding:20px;border:1px solid #c9d9ed;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf5ff)}
-.mi-word-selection-ui .mi-word-resize-handle{box-sizing:border-box!important;z-index:2!important}.mi-word-selection-ui .mi-word-layout-button:hover,.mi-word-selection-ui .mi-word-resize-handle:hover{background:#e8f2ff!important}.mi-word-selection-ui .mi-word-layout-button{cursor:pointer!important}.mi-word-selection-ui [data-direction]{touch-action:none!important}#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}#miDocumentEditor [data-mi-document-image="true"].mi-image-selected{outline:2px solid #3478c8!important;outline-offset:3px}#miDocumentEditor [data-mi-attached-file="true"].mi-file-selected{outline:2px solid #3478c8!important;outline-offset:3px}
+.mi-word-selection-ui [data-layout] svg{flex:0 0 38px}.mi-word-selection-ui [data-layout]:focus{outline:2px solid #75a9e3;outline-offset:1px}.mi-word-selection-ui .mi-word-resize-handle{box-sizing:border-box!important;z-index:2!important}.mi-word-selection-ui .mi-word-layout-button:hover,.mi-word-selection-ui .mi-word-resize-handle:hover{background:#e8f2ff!important}.mi-word-selection-ui .mi-word-layout-button{cursor:pointer!important}.mi-word-selection-ui [data-direction]{touch-action:none!important}#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}#miDocumentEditor [data-mi-document-image="true"].mi-image-selected{outline:2px solid #3478c8!important;outline-offset:3px}#miDocumentEditor [data-mi-attached-file="true"].mi-file-selected{outline:2px solid #3478c8!important;outline-offset:3px}
 .mi-builder-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
 .mi-builder-heading h3{margin:0 0 5px;color:#123866;font-size:1.15rem}
 .mi-builder-heading p{margin:0}
@@ -3870,19 +3870,29 @@ body button svg{stroke:currentColor!important;}
     miLayoutButton.style.cssText = "position:absolute;left:calc(100% + 8px);top:0;white-space:nowrap;padding:6px 9px;border:1px solid #b9cce2;border-radius:6px;background:#fff;color:#24466d;font-size:12px;pointer-events:auto;box-shadow:0 2px 7px #2343;";
     miSelectionUI.append(miLayoutButton);
     const miLayoutMenu = document.createElement("div");
-    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;min-width:170px;padding:6px;background:#fff;border:1px solid #c5d4e5;border-radius:8px;box-shadow:0 5px 18px #20354a33;pointer-events:auto;";
-    const miLayouts = [
-      ["inline","In Line with Text"],
-      ["square","Square"],
-      ["tight","Tight"],
-      ["top-bottom","Top and Bottom"],
-      ["behind","Behind Text"],
-      ["front","In Front of Text"]
-    ];
+    miLayoutMenu.setAttribute("aria-label","Picture layout options");
+    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:264px;padding:10px;background:#fff;border:1px solid #c5d4e5;border-radius:8px;box-shadow:0 5px 18px #20354a33;pointer-events:auto;";
+    const miLayouts = [["inline","In Line with Text"],["square","Square"],["tight","Tight"],["top-bottom","Top and Bottom"],["behind","Behind Text"],["front","In Front of Text"]];
+    function miLayoutIcon(kind){
+      const blue="#2878c8",gray="#6b7785";
+      const img='<rect x="3" y="5" width="15" height="13" rx="1.5" fill="#eaf3fc" stroke="'+blue+'" stroke-width="1.3"/><path d="M5 15l4-4 3 3 2-2 2 3" fill="none" stroke="'+blue+'" stroke-width="1.2"/>';
+      const lines='<path d="M22 6h9M22 10h9M22 14h9M22 18h9" stroke="'+gray+'" stroke-width="1.4" stroke-linecap="round"/>';
+      let extra="";
+      if(kind==="inline") extra='<path d="M3 22h28" stroke="'+gray+'" stroke-width="1.3"/>';
+      if(kind==="square") extra='<path d="M21 4v16M19 4h13M19 20h13" stroke="'+blue+'" stroke-width="1.2" fill="none"/>';
+      if(kind==="tight") extra='<path d="M20 4v16M18 4h14M18 20h14" stroke="'+blue+'" stroke-width="1.2" stroke-dasharray="2 1" fill="none"/>';
+      if(kind==="top-bottom") extra='<path d="M3 2h28M3 22h28" stroke="'+blue+'" stroke-width="1.4"/>';
+      if(kind==="behind") extra='<path d="M7 8l8-5 8 5-8 5z" fill="#b9d5f2" stroke="'+blue+'" stroke-width="1"/>';
+      if(kind==="front") extra='<path d="M10 3h15v13H10z" fill="#c9e0fa" stroke="'+blue+'" stroke-width="1.2"/>';
+      return '<svg viewBox="0 0 34 25" width="38" height="29" aria-hidden="true">'+lines+img+extra+'</svg>';
+    }
     miLayouts.forEach(([value,label]) => {
       const option=document.createElement("button");
-      option.type="button"; option.textContent=label;
-      option.style.cssText="display:block;width:100%;padding:7px 9px;margin:0;border:0;border-radius:5px;background:#fff;color:#263d56;text-align:left;font-size:12px;cursor:pointer;";
+      option.type="button"; option.dataset.layout=value;
+      option.innerHTML=miLayoutIcon(value)+'<span>'+label+'</span>';
+      option.style.cssText="display:flex;align-items:center;gap:8px;width:100%;min-height:43px;padding:5px 7px;margin:0;border:1px solid transparent;border-radius:5px;background:#fff;color:#263d56;text-align:left;font-size:12px;cursor:pointer;";
+      option.addEventListener("mouseenter",()=>option.style.background="#edf5ff");
+      option.addEventListener("mouseleave",()=>option.style.background="#fff");
       option.addEventListener("click",()=>applyMiPictureLayout(value));
       miLayoutMenu.append(option);
     });
@@ -3939,7 +3949,10 @@ body button svg{stroke:currentColor!important;}
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
       if(!target||!miDocumentEditor.contains(target))return;
       selectMiDocumentItem(target);
-      miMoveState={item:target,x:event.clientX,y:event.clientY,moved:false};
+      event.preventDefault();
+      target.draggable=false;
+      try{target.setPointerCapture(event.pointerId);}catch(_){ }
+      miMoveState={item:target,x:event.clientX,y:event.clientY,moved:false,pointerId:event.pointerId};
     });
     document.addEventListener("pointermove",event=>{
       if(miMoveState){
@@ -3952,11 +3965,22 @@ body button svg{stroke:currentColor!important;}
           const r=target.getBoundingClientRect();
           target.parentNode.insertBefore(st.item,event.clientY<r.top+r.height/2?target:target.nextSibling);
         }else{
-          const range=document.caretRangeFromPoint?.(event.clientX,event.clientY);
+          let range=document.caretRangeFromPoint?.(event.clientX,event.clientY);
+          if(!range&&document.caretPositionFromPoint){
+            const pos=document.caretPositionFromPoint(event.clientX,event.clientY);
+            if(pos){range=document.createRange();range.setStart(pos.offsetNode,pos.offset);range.collapse(true);}
+          }
           if(range&&miDocumentEditor.contains(range.startContainer)){
             const node=range.startContainer.nodeType===Node.ELEMENT_NODE?(range.startContainer.childNodes[range.startOffset]||range.startContainer.lastElementChild):range.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
             if(node&&node!==st.item&&miDocumentEditor.contains(node)){
               const r=node.getBoundingClientRect();node.parentNode.insertBefore(st.item,event.clientY<r.top+r.height/2?node:node.nextSibling);
+            }
+          }else{
+            const blocks=[...miDocumentEditor.children].filter(n=>n!==st.item);
+            if(blocks.length){
+              let nearest=blocks[0],best=Infinity;
+              blocks.forEach(n=>{const r=n.getBoundingClientRect();const d=Math.abs(event.clientY-(r.top+r.height/2));if(d<best){best=d;nearest=n;}});
+              const r=nearest.getBoundingClientRect();nearest.parentNode.insertBefore(st.item,event.clientY<r.top+r.height/2?nearest:nearest.nextSibling);
             }
           }
         }
