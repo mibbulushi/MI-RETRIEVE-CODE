@@ -3214,6 +3214,45 @@ button svg{
   stroke:currentColor!important;
 }
 
+
+/* Calm, refined button palette: muted slate-teal with clear readable text */
+body button,
+body button.secondary,
+body #saveArea .mi-save-actions #saveBtn{
+  color:#ffffff!important;
+  background:#526d78!important;
+  border:1px solid #435e69!important;
+  border-radius:9px!important;
+  box-shadow:0 2px 5px rgba(35,58,68,.13),inset 0 1px 0 rgba(255,255,255,.16)!important;
+  text-shadow:none!important;
+}
+body button:hover:not(:disabled),
+body button.secondary:hover:not(:disabled),
+body #saveArea .mi-save-actions #saveBtn:hover:not(:disabled){
+  color:#ffffff!important;
+  background:#435e69!important;
+  border-color:#384f59!important;
+  box-shadow:0 3px 7px rgba(35,58,68,.17)!important;
+}
+body button:active:not(:disabled),
+body button.secondary:active:not(:disabled),
+body #saveArea .mi-save-actions #saveBtn:active:not(:disabled){
+  color:#ffffff!important;
+  background:#384f59!important;
+  box-shadow:inset 0 2px 4px rgba(15,31,37,.18)!important;
+  transform:translateY(1px)!important;
+}
+body button:disabled,
+body button.secondary:disabled,
+body #saveArea .mi-save-actions #saveBtn:disabled{
+  color:#f5f7f8!important;
+  background:#a5b2b7!important;
+  border-color:#97a6ac!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+  transform:none!important;
+}
+
 </style>
 </head>
 <body>
