@@ -2665,6 +2665,19 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 #saveArea .mi-save-password .mi-password-label{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:baseline!important;column-gap:7px!important;row-gap:2px!important}
 #saveArea .mi-save-password .mi-password-help{display:inline!important;margin:0!important;padding:0!important;font-size:.72rem!important;font-weight:400!important;line-height:1.3!important;color:#627895!important}
 #saveArea .mi-save-password .mi-password-help:before{content:"— ";}
+
+/* Save-result layout: compact, stable boxes before and after saving */
+#saveArea .mi-save-actions{display:grid!important;grid-template-columns:minmax(0,1fr) 76px!important;align-items:start!important;gap:12px!important}
+#saveArea .mi-save-actions .mi-save-code{min-width:0!important;align-self:start!important}
+#saveArea .mi-save-actions #saveResult{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:10px!important;width:100%!important;min-width:0!important;min-height:42px!important;height:auto!important;max-height:none!important;box-sizing:border-box!important;margin:0!important;padding:9px!important;overflow:visible!important}
+#saveArea #saveResult .mi-generated-code-block{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;width:100%!important;max-width:560px!important;min-width:0!important;flex:0 0 auto!important;box-sizing:border-box!important;margin:0!important;padding:10px 12px!important;border:1px solid #dce5f0!important;border-radius:9px!important;background:#f8fbff!important}
+#saveArea #saveResult .mi-generated-code-label{display:block!important;width:100%!important;margin:0!important;padding:0!important;font-size:.84rem!important;line-height:1.3!important;font-weight:650!important}
+#saveArea #saveResult .mi-generated-code-value{display:inline-block!important;width:auto!important;max-width:100%!important;min-width:0!important;min-height:0!important;height:auto!important;box-sizing:border-box!important;margin:0!important;padding:7px 9px!important;font-size:.88rem!important;line-height:1.35!important;letter-spacing:.035em!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+#saveArea #saveResult .mi-generated-code-block button{display:inline-flex!important;align-self:flex-start!important;width:auto!important;max-width:100%!important;min-height:32px!important;height:auto!important;margin:0!important;padding:6px 10px!important;font-size:.76rem!important;line-height:1.2!important;white-space:normal!important}
+#saveArea #saveResult .mi-generated-code-note{margin:0!important;padding:0!important;font-size:.76rem!important;line-height:1.35!important}
+#saveArea #saveResult .mi-generated-code-block h3{font-size:.86rem!important;margin:0!important}
+@media(max-width:560px){#saveArea .mi-save-actions{grid-template-columns:minmax(0,1fr)!important}#saveArea .mi-save-actions .mi-save-submit{justify-self:start!important}}
+
 </style>
 </head>
 <body>
@@ -4401,45 +4414,3 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 </script>
 </body>
 </html>
-
-/* Keep generated Retrieve and Student Share codes compact after saving */
-#saveArea .mi-save-actions{grid-template-columns:minmax(0,1fr) 76px!important;align-items:start!important}
-#saveArea .mi-save-actions .mi-save-code{min-width:0!important;align-self:start!important}
-#saveArea .mi-save-actions #saveResult{
- display:flex!important;flex-direction:column!important;align-items:stretch!important;
- justify-content:flex-start!important;gap:10px!important;width:100%!important;
- min-width:0!important;height:auto!important;min-height:42px!important;
- max-height:none!important;box-sizing:border-box!important;overflow:visible!important;
-}
-#saveArea #saveResult .mi-generated-code-block{
- display:flex!important;flex-direction:column!important;align-items:flex-start!important;
- gap:6px!important;width:100%!important;max-width:560px!important;min-width:0!important;
- flex:0 0 auto!important;box-sizing:border-box!important;
- padding:10px 12px!important;margin:0!important;border:1px solid #dce5f0!important;
- border-radius:9px!important;background:#f8fbff!important;
-}
-#saveArea #saveResult .mi-generated-code-label{
- display:block!important;width:100%!important;margin:0!important;padding:0!important;
- font-size:.84rem!important;line-height:1.3!important;font-weight:650!important;
-}
-#saveArea #saveResult .mi-generated-code-value{
- display:block!important;width:auto!important;max-width:100%!important;min-width:0!important;
- min-height:0!important;height:auto!important;box-sizing:border-box!important;
- margin:0!important;padding:7px 9px!important;font-size:.88rem!important;
- line-height:1.35!important;letter-spacing:.035em!important;overflow-wrap:anywhere!important;
- word-break:break-word!important;
-}
-#saveArea #saveResult .mi-generated-code-block button{
- display:inline-flex!important;align-self:flex-start!important;width:auto!important;
- max-width:100%!important;min-height:32px!important;height:auto!important;
- margin:0!important;padding:6px 10px!important;font-size:.76rem!important;
- line-height:1.2!important;white-space:normal!important;
-}
-#saveArea #saveResult .mi-generated-code-note{
- margin:0!important;padding:0!important;font-size:.76rem!important;line-height:1.35!important;
-}
-#saveArea #saveResult .mi-generated-code-block h3{font-size:.86rem!important;margin:0!important}
-@media(max-width:560px){
- #saveArea .mi-save-actions{grid-template-columns:minmax(0,1fr)!important}
- #saveArea .mi-save-actions .mi-save-submit{justify-self:start!important}
-}
