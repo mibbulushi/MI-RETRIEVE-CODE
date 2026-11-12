@@ -2302,6 +2302,52 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 @media(max-width:650px){.mi-document-editor{min-height:420px;padding:14px}}
 
 .mi-password-help{margin:5px 0 0;font-size:.68rem;line-height:1.25;color:var(--muted)}
+
+/* Final Save New Project layout: remove page heading and align the four controls evenly. */
+#saveArea .project-title-password-row.project-save-all-in-one-row{
+  display:grid!important;
+  grid-template-columns:minmax(130px,.85fr) minmax(210px,1.35fr) minmax(190px,1.2fr) minmax(210px,1.2fr)!important;
+  gap:12px!important;
+  align-items:start!important;
+  margin:0 0 18px!important;
+}
+#saveArea .project-title-password-row.project-save-all-in-one-row>.project-title-password-field,
+#saveArea .project-title-password-row.project-save-all-in-one-row>.project-code-field,
+#saveArea .project-title-password-row.project-save-all-in-one-row>.project-save-button-field{
+  display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+  align-items:stretch!important;gap:6px!important;min-width:0!important;margin:0!important;
+}
+#saveArea .project-title-password-row.project-save-all-in-one-row>div>label{
+  display:flex!important;align-items:flex-end!important;min-height:34px!important;
+  margin:0!important;font-size:.8rem!important;line-height:1.2!important;
+}
+#saveArea .project-title-password-row.project-save-all-in-one-row input#title,
+#saveArea .project-title-password-row.project-save-all-in-one-row input#newSharePassword{
+  width:100%!important;max-width:none!important;min-width:0!important;
+  height:36px!important;min-height:36px!important;box-sizing:border-box!important;
+}
+#saveArea .project-title-password-row.project-save-all-in-one-row .mi-password-help{
+  margin:0!important;min-height:30px!important;font-size:.68rem!important;line-height:1.25!important;
+}
+#saveArea .project-title-password-row.project-save-all-in-one-row #saveResult{
+  width:100%!important;min-height:36px!important;height:auto!important;
+  margin:0!important;box-sizing:border-box!important;overflow-wrap:anywhere!important;
+}
+#saveArea .project-title-password-row.project-save-all-in-one-row #saveBtn{
+  width:100%!important;min-width:0!important;height:auto!important;min-height:36px!important;
+  margin:0!important;box-sizing:border-box!important;white-space:normal!important;
+}
+@media(max-width:1050px){
+  #saveArea .project-title-password-row.project-save-all-in-one-row{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:560px){
+  #saveArea .project-title-password-row.project-save-all-in-one-row{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2388,9 +2434,6 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
     <section id="appArea" class="hidden">
       <section class="card page-panel page-hidden" id="saveArea" data-panel="new-project">
-        <div class="project-heading-title-row">
-          <h2>Save New Project</h2>
-        </div>
         <div class="project-title-password-row project-save-all-in-one-row project-three-box-row project-four-item-row">
           <div class="project-title-password-field">
             <label for="title">Title</label>
