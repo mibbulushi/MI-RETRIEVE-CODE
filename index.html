@@ -2216,6 +2216,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
 /* MI Project Builder: flexible, numbered project sections */
 .mi-builder-panel{margin:22px 0;padding:20px;border:1px solid #c9d9ed;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf5ff)}
+#miDocumentEditor [data-mi-attached-file="true"]{cursor:grab!important;user-select:none}#miDocumentEditor [data-mi-attached-file="true"]:active{cursor:grabbing!important}#miDocumentEditor .mi-document-item-dragging{opacity:.45;outline:2px dashed #5b9bd5;outline-offset:3px}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}
 .mi-builder-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
 .mi-builder-heading h3{margin:0 0 5px;color:#123866;font-size:1.15rem}
 .mi-builder-heading p{margin:0}
@@ -3838,49 +3839,59 @@ body button svg{stroke:currentColor!important;}
         $("miDocumentImageInput").dispatchEvent(new Event("change"));
       }
     });
-    let miDraggingImage = null;
+    let miDraggingDocumentItem = null;
     miDocumentEditor.addEventListener("click", event => {
-      miDocumentEditor.querySelectorAll("img.mi-image-selected").forEach(img => img.classList.remove("mi-image-selected"));
-      if (event.target instanceof HTMLImageElement && event.target.dataset.miDocumentImage === "true") {
-        event.target.classList.add("mi-image-selected");
-      }
+      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(item => item.classList.remove("mi-image-selected","mi-file-selected"));
+      const target = event.target instanceof Element ? event.target.closest('[data-mi-document-image="true"],[data-mi-attached-file="true"]') : null;
+      if (target && miDocumentEditor.contains(target)) target.classList.add(target.dataset.miAttachedFile === "true" ? "mi-file-selected" : "mi-image-selected");
     });
     miDocumentEditor.addEventListener("dragstart", event => {
-      if (event.target instanceof HTMLImageElement && event.target.dataset.miDocumentImage === "true") {
-        miDraggingImage = event.target;
-        event.target.classList.add("mi-image-dragging");
-        event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("text/plain", "MI_DOCUMENT_IMAGE");
-      }
+      const target = event.target instanceof Element ? event.target.closest('[data-mi-document-image="true"],[data-mi-attached-file="true"]') : null;
+      if (!target || !miDocumentEditor.contains(target)) return;
+      miDraggingDocumentItem = target;
+      target.classList.add("mi-document-item-dragging");
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", target.dataset.miAttachedFile === "true" ? "MI_DOCUMENT_FILE" : "MI_DOCUMENT_IMAGE");
     });
     miDocumentEditor.addEventListener("dragover", event => {
-      if (miDraggingImage) {
+      if (miDraggingDocumentItem) {
         event.preventDefault();
         event.dataTransfer.dropEffect = "move";
       }
     });
     miDocumentEditor.addEventListener("drop", event => {
-      if (!miDraggingImage) return;
+      if (!miDraggingDocumentItem) return;
       event.preventDefault();
-      const caret = document.caretRangeFromPoint
-        ? document.caretRangeFromPoint(event.clientX, event.clientY)
-        : null;
-      if (caret && miDocumentEditor.contains(caret.startContainer)) {
-        caret.insertNode(miDraggingImage);
-        const spacer = document.createElement("p");
-        spacer.append(document.createElement("br"));
-        miDraggingImage.after(spacer);
+      const movingItem = miDraggingDocumentItem;
+      const target = document.elementFromPoint(event.clientX, event.clientY);
+      const targetItem = target instanceof Element ? target.closest('[data-mi-document-image="true"],[data-mi-attached-file="true"]') : null;
+      if (targetItem && targetItem !== movingItem && miDocumentEditor.contains(targetItem)) {
+        const rect = targetItem.getBoundingClientRect();
+        targetItem.parentNode.insertBefore(movingItem, event.clientY < rect.top + rect.height / 2 ? targetItem : targetItem.nextSibling);
       } else {
-        miDocumentEditor.append(miDraggingImage);
+        const caret = document.caretRangeFromPoint
+          ? document.caretRangeFromPoint(event.clientX, event.clientY)
+          : null;
+        if (caret && miDocumentEditor.contains(caret.startContainer)) {
+          const block = caret.startContainer.nodeType === Node.ELEMENT_NODE
+            ? caret.startContainer.childNodes[caret.startOffset] || null
+            : caret.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
+          if (block && block !== movingItem && miDocumentEditor.contains(block)) {
+            block.parentNode.insertBefore(movingItem, block);
+          } else {
+            caret.insertNode(movingItem);
+          }
+        } else {
+          miDocumentEditor.append(movingItem);
+        }
       }
-      miDraggingImage.classList.remove("mi-image-dragging");
-      miDraggingImage.classList.add("mi-image-selected");
-      miDraggingImage = null;
+      movingItem.classList.remove("mi-document-item-dragging");
+      miDraggingDocumentItem = null;
       $("content").value = miDocumentEditor.innerHTML;
     });
     miDocumentEditor.addEventListener("dragend", () => {
-      if (miDraggingImage) miDraggingImage.classList.remove("mi-image-dragging");
-      miDraggingImage = null;
+      if (miDraggingDocumentItem) miDraggingDocumentItem.classList.remove("mi-document-item-dragging");
+      miDraggingDocumentItem = null;
     });
     miDocumentEditor.addEventListener("input", () => {
       $("content").value = miDocumentEditor.innerHTML;
@@ -4119,7 +4130,9 @@ body button svg{stroke:currentColor!important;}
         const card = document.createElement("div");
         card.contentEditable = "false";
         card.dataset.miAttachedFile = "true";
-        card.style.cssText = "display:flex;align-items:center;gap:10px;max-width:100%;margin:12px 0;padding:12px 14px;border:1px solid #cbd8e8;border-radius:9px;background:#f4f8fd;color:#26364a;font:inherit;";
+        card.draggable = true;
+        card.title = "Drag this file card to move it anywhere in the document";
+        card.style.cssText = "display:flex;align-items:center;gap:10px;max-width:100%;margin:12px 0;padding:12px 14px;border:1px solid #cbd8e8;border-radius:9px;background:#f4f8fd;color:#26364a;font:inherit;cursor:grab;user-select:none;";
         const icon = document.createElement("span");
         icon.textContent = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf") ? "📄" : "📎";
         icon.style.cssText = "font-size:25px;flex:0 0 auto;";
