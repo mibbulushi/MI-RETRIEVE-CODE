@@ -3999,13 +3999,13 @@ img{max-width:100%}
     const miLayoutButton = document.createElement("button");
     miLayoutButton.type = "button";
     miLayoutButton.className = "mi-word-layout-button";
-    miLayoutButton.textContent = "Layout Options";
+    miLayoutButton.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="4" width="9" height="9" rx="1" fill="#e8f1fb" stroke="#315f91" stroke-width="1.4"/><path d="M15 5h6M15 9h6M3 16h18M3 20h18" stroke="#64748b" stroke-width="1.4" stroke-linecap="round"/></svg>';
     miLayoutButton.title = "Change how text flows around this picture";
     miLayoutButton.style.cssText = "position:absolute;left:calc(100% + 8px);top:0;white-space:nowrap;padding:6px 9px;border:1px solid #b9cce2;border-radius:6px;background:#fff;color:#24466d;font-size:12px;pointer-events:auto;box-shadow:0 2px 7px #2343;";
     miSelectionUI.append(miLayoutButton);
     const miLayoutMenu = document.createElement("div");
     miLayoutMenu.setAttribute("aria-label","Picture layout options");
-    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:264px;padding:10px;background:#fff;border:1px solid #c5d4e5;border-radius:8px;box-shadow:0 5px 18px #20354a33;pointer-events:auto;";
+    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:330px;padding:12px;background:#fff;border:1px solid #c7d2df;border-radius:8px;box-shadow:0 8px 24px #172b4430;pointer-events:auto;font-family:Arial,sans-serif;";
     const miLayouts = [["inline","In Line with Text"],["square","Square"],["tight","Tight"],["top-bottom","Top and Bottom"],["behind","Behind Text"],["front","In Front of Text"]];
     function miLayoutIcon(kind){
       const blue="#2878c8",gray="#6b7785";
@@ -4020,16 +4020,23 @@ img{max-width:100%}
       if(kind==="front") extra='<path d="M10 3h15v13H10z" fill="#c9e0fa" stroke="'+blue+'" stroke-width="1.2"/>';
       return '<svg viewBox="0 0 34 25" width="38" height="29" aria-hidden="true">'+lines+img+extra+'</svg>';
     }
+    const layoutHeading=document.createElement("div");
+    layoutHeading.textContent="With Text Wrapping";
+    layoutHeading.style.cssText="font-size:12px;font-weight:600;color:#536579;padding:1px 3px 10px;";
+    miLayoutMenu.append(layoutHeading);
+    const layoutGrid=document.createElement("div");
+    layoutGrid.style.cssText="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;";
     miLayouts.forEach(([value,label]) => {
       const option=document.createElement("button");
-      option.type="button"; option.dataset.layout=value;
-      option.innerHTML=miLayoutIcon(value)+'<span>'+label+'</span>';
-      option.style.cssText="display:flex;align-items:center;gap:8px;width:100%;min-height:43px;padding:5px 7px;margin:0;border:1px solid transparent;border-radius:5px;background:#fff;color:#263d56;text-align:left;font-size:12px;cursor:pointer;";
-      option.addEventListener("mouseenter",()=>option.style.background="#edf5ff");
-      option.addEventListener("mouseleave",()=>option.style.background="#fff");
+      option.type="button"; option.dataset.layout=value; option.title=label;
+      option.innerHTML='<span style="display:flex;align-items:center;justify-content:center;width:100%;height:43px;">'+miLayoutIcon(value)+'</span><span style="display:block;white-space:normal;line-height:1.25;">'+label+'</span>';
+      option.style.cssText="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:100%;min-height:76px;padding:6px 5px;margin:0;border:1px solid #d9e1ea;border-radius:5px;background:#fff;color:#263d56;text-align:center;font-size:11px;cursor:pointer;box-sizing:border-box;";
+      option.addEventListener("mouseenter",()=>{option.style.background="#eef5fc";option.style.borderColor="#7da7d2";});
+      option.addEventListener("mouseleave",()=>{option.style.background="#fff";option.style.borderColor="#d9e1ea";});
       option.addEventListener("click",()=>applyMiPictureLayout(value));
-      miLayoutMenu.append(option);
+      layoutGrid.append(option);
     });
+    miLayoutMenu.append(layoutGrid);
     miSelectionUI.append(miLayoutMenu);
     document.body.append(miSelectionUI);
     function syncMiDocumentHtml(){
