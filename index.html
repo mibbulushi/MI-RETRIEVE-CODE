@@ -2216,7 +2216,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
 /* MI Project Builder: flexible, numbered project sections */
 .mi-builder-panel{margin:22px 0;padding:20px;border:1px solid #c9d9ed;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf5ff)}
-#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}#miDocumentEditor [data-mi-document-image="true"].mi-image-selected{outline:2px solid #3478c8!important;outline-offset:3px}#miDocumentEditor [data-mi-attached-file="true"].mi-file-selected{outline:2px solid #3478c8!important;outline-offset:3px}
+.mi-word-selection-ui .mi-word-resize-handle{box-sizing:border-box!important;z-index:2!important}.mi-word-selection-ui .mi-word-layout-button:hover,.mi-word-selection-ui .mi-word-resize-handle:hover{background:#e8f2ff!important}.mi-word-selection-ui .mi-word-layout-button{cursor:pointer!important}.mi-word-selection-ui [data-direction]{touch-action:none!important}#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}#miDocumentEditor [data-mi-document-image="true"].mi-image-selected{outline:2px solid #3478c8!important;outline-offset:3px}#miDocumentEditor [data-mi-attached-file="true"].mi-file-selected{outline:2px solid #3478c8!important;outline-offset:3px}
 .mi-builder-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
 .mi-builder-heading h3{margin:0 0 5px;color:#123866;font-size:1.15rem}
 .mi-builder-heading p{margin:0}
@@ -3839,142 +3839,167 @@ body button svg{stroke:currentColor!important;}
         $("miDocumentImageInput").dispatchEvent(new Event("change"));
       }
     });
-    // Select, move, and resize inserted pictures and attached file cards.
-    // The resize grip lives outside the editable document so it is never saved as project content.
-    let miPointerMovingItem = null;
-    let miPointerMoved = false;
-    let miPointerStartX = 0;
-    let miPointerStartY = 0;
-    let miResizeItem = null;
-    let miResizeStartX = 0;
-    let miResizeStartY = 0;
-    let miResizeStartWidth = 0;
-    let miResizeStartHeight = 0;
+    // Microsoft Word-style selection, eight resize handles, and picture layout options.
+    let miSelectedDocumentItem = null;
+    let miMoveState = null;
+    let miResizeState = null;
     const miMovableSelector = '[data-mi-document-image="true"],[data-mi-attached-file="true"]';
-    const miResizeGrip = document.createElement("button");
-    miResizeGrip.type = "button";
-    miResizeGrip.className = "mi-document-resize-grip";
-    miResizeGrip.title = "Drag to make the selected picture or file card larger or smaller";
-    miResizeGrip.setAttribute("aria-label", "Resize selected picture or file card");
-    miResizeGrip.textContent = "↘";
-    miResizeGrip.style.cssText = "position:fixed;z-index:99999;display:none;width:25px;height:25px;min-width:25px;padding:0;margin:0;border:2px solid #fff;border-radius:6px;background:#246fbd;color:#fff;font-size:17px;line-height:20px;box-shadow:0 1px 6px #34567866;cursor:nwse-resize;touch-action:none;";
-    document.body.append(miResizeGrip);
-    function updateMiResizeGrip(item) {
-      if (!item || !miDocumentEditor.contains(item)) {
-        miResizeGrip.style.display = "none";
-        return;
-      }
-      const rect = item.getBoundingClientRect();
-      miResizeGrip.style.display = "block";
-      miResizeGrip.style.left = Math.max(0, Math.min(window.innerWidth - 27, rect.right - 12)) + "px";
-      miResizeGrip.style.top = Math.max(0, Math.min(window.innerHeight - 27, rect.bottom - 12)) + "px";
-    }
-    function selectMiDocumentItem(item) {
-      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(node => node.classList.remove("mi-image-selected","mi-file-selected"));
-      if (!item) {
-        updateMiResizeGrip(null);
-        return;
-      }
-      item.classList.add(item.dataset.miAttachedFile === "true" ? "mi-file-selected" : "mi-image-selected");
-      updateMiResizeGrip(item);
-    }
-    miDocumentEditor.addEventListener("click", event => {
-      const target = event.target instanceof Element ? event.target.closest(miMovableSelector) : null;
-      if (target && miDocumentEditor.contains(target)) selectMiDocumentItem(target);
+    const miSelectionUI = document.createElement("div");
+    miSelectionUI.className = "mi-word-selection-ui";
+    miSelectionUI.style.cssText = "position:fixed;z-index:100000;display:none;pointer-events:none;box-sizing:border-box;border:1px solid #2878cf;";
+    const miHandleNames = ["nw","n","ne","e","se","s","sw","w"];
+    const miHandles = {};
+    miHandleNames.forEach(name => {
+      const handle = document.createElement("button");
+      handle.type = "button";
+      handle.className = "mi-word-resize-handle mi-handle-" + name;
+      handle.dataset.direction = name;
+      handle.title = "Drag to resize";
+      handle.setAttribute("aria-label","Resize " + name);
+      handle.style.cssText = "position:absolute;width:9px;height:9px;min-width:9px;padding:0;margin:0;border:1px solid #1764ad;border-radius:1px;background:#fff;box-shadow:0 0 1px #123;pointer-events:auto;touch-action:none;";
+      miSelectionUI.append(handle);
+      miHandles[name] = handle;
     });
-    miDocumentEditor.addEventListener("pointerdown", event => {
-      if (event.button !== 0 || event.target === miResizeGrip) return;
-      const target = event.target instanceof Element ? event.target.closest(miMovableSelector) : null;
-      if (!target || !miDocumentEditor.contains(target)) return;
+    const miLayoutButton = document.createElement("button");
+    miLayoutButton.type = "button";
+    miLayoutButton.className = "mi-word-layout-button";
+    miLayoutButton.textContent = "Layout Options";
+    miLayoutButton.title = "Change how text flows around this picture";
+    miLayoutButton.style.cssText = "position:absolute;left:calc(100% + 8px);top:0;white-space:nowrap;padding:6px 9px;border:1px solid #b9cce2;border-radius:6px;background:#fff;color:#24466d;font-size:12px;pointer-events:auto;box-shadow:0 2px 7px #2343;";
+    miSelectionUI.append(miLayoutButton);
+    const miLayoutMenu = document.createElement("div");
+    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;min-width:170px;padding:6px;background:#fff;border:1px solid #c5d4e5;border-radius:8px;box-shadow:0 5px 18px #20354a33;pointer-events:auto;";
+    const miLayouts = [
+      ["inline","In Line with Text"],
+      ["square","Square"],
+      ["tight","Tight"],
+      ["top-bottom","Top and Bottom"],
+      ["behind","Behind Text"],
+      ["front","In Front of Text"]
+    ];
+    miLayouts.forEach(([value,label]) => {
+      const option=document.createElement("button");
+      option.type="button"; option.textContent=label;
+      option.style.cssText="display:block;width:100%;padding:7px 9px;margin:0;border:0;border-radius:5px;background:#fff;color:#263d56;text-align:left;font-size:12px;cursor:pointer;";
+      option.addEventListener("click",()=>applyMiPictureLayout(value));
+      miLayoutMenu.append(option);
+    });
+    miSelectionUI.append(miLayoutMenu);
+    document.body.append(miSelectionUI);
+    function syncMiDocumentHtml(){
+      $("content").value=miDocumentEditor.innerHTML;
+    }
+    function updateMiSelectionUI(){
+      const item=miSelectedDocumentItem;
+      if(!item || !miDocumentEditor.contains(item)){miSelectionUI.style.display="none";return;}
+      const r=item.getBoundingClientRect();
+      miSelectionUI.style.display="block";
+      miSelectionUI.style.left=Math.max(0,r.left)+"px";
+      miSelectionUI.style.top=Math.max(0,r.top)+"px";
+      miSelectionUI.style.width=Math.max(12,r.width)+"px";
+      miSelectionUI.style.height=Math.max(12,r.height)+"px";
+      miLayoutMenu.style.display="none";
+    }
+    function selectMiDocumentItem(item){
+      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(n=>n.classList.remove("mi-image-selected","mi-file-selected"));
+      miSelectedDocumentItem=item||null;
+      if(item){
+        item.classList.add(item.dataset.miAttachedFile==="true"?"mi-file-selected":"mi-image-selected");
+        updateMiSelectionUI();
+      }else miSelectionUI.style.display="none";
+    }
+    function applyMiPictureLayout(layout){
+      const item=miSelectedDocumentItem;
+      if(!item || item.dataset.miDocumentImage!=="true") return;
+      item.dataset.miPictureLayout=layout;
+      item.style.position="";
+      item.style.zIndex="";
+      item.style.float="";
+      item.style.display="block";
+      item.style.verticalAlign="";
+      item.style.margin="14px 0";
+      if(layout==="inline"){item.style.display="inline-block";item.style.verticalAlign="middle";item.style.float="none";}
+      if(layout==="square"||layout==="tight"){item.style.float="left";item.style.margin="4px 14px 10px 0";item.style.display="block";}
+      if(layout==="top-bottom"){item.style.float="none";item.style.display="block";item.style.clear="both";item.style.margin="14px 0";}
+      if(layout==="behind"){item.style.position="relative";item.style.zIndex="0";item.style.opacity="0.72";}
+      if(layout==="front"){item.style.position="relative";item.style.zIndex="5";item.style.opacity="1";}
+      syncMiDocumentHtml();updateMiSelectionUI();
+      setMiWorkStatus("Picture layout changed — save your project to store it.");
+      miLayoutMenu.style.display="none";
+    }
+    miLayoutButton.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();miLayoutMenu.style.display=miLayoutMenu.style.display==="block"?"none":"block";});
+    miDocumentEditor.addEventListener("click",event=>{
+      const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
+      if(target&&miDocumentEditor.contains(target))selectMiDocumentItem(target);
+    });
+    miDocumentEditor.addEventListener("pointerdown",event=>{
+      if(event.button!==0 || event.target.closest?.(".mi-word-selection-ui"))return;
+      const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
+      if(!target||!miDocumentEditor.contains(target))return;
       selectMiDocumentItem(target);
-      miPointerMovingItem = target;
-      miPointerMoved = false;
-      miPointerStartX = event.clientX;
-      miPointerStartY = event.clientY;
+      miMoveState={item:target,x:event.clientX,y:event.clientY,moved:false};
     });
-    miDocumentEditor.addEventListener("pointermove", event => {
-      if (!miPointerMovingItem || (event.buttons & 1) !== 1) return;
-      if (!miPointerMoved && Math.hypot(event.clientX - miPointerStartX, event.clientY - miPointerStartY) < 7) return;
-      miPointerMoved = true;
-      event.preventDefault();
-      const moving = miPointerMovingItem;
-      moving.classList.add("mi-document-item-dragging");
-      const underPointer = document.elementFromPoint(event.clientX, event.clientY);
-      const targetItem = underPointer instanceof Element ? underPointer.closest(miMovableSelector) : null;
-      if (targetItem && targetItem !== moving && miDocumentEditor.contains(targetItem)) {
-        const rect = targetItem.getBoundingClientRect();
-        targetItem.parentNode.insertBefore(moving, event.clientY < rect.top + rect.height / 2 ? targetItem : targetItem.nextSibling);
-      } else {
-        const caret = document.caretRangeFromPoint ? document.caretRangeFromPoint(event.clientX, event.clientY) : null;
-        if (caret && miDocumentEditor.contains(caret.startContainer)) {
-          let block = caret.startContainer.nodeType === Node.ELEMENT_NODE
-            ? caret.startContainer.childNodes[caret.startOffset] || caret.startContainer.lastElementChild
-            : caret.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
-          if (block && block !== moving && miDocumentEditor.contains(block)) {
-            const rect = block.getBoundingClientRect();
-            block.parentNode.insertBefore(moving, event.clientY < rect.top + rect.height / 2 ? block : block.nextSibling);
+    document.addEventListener("pointermove",event=>{
+      if(miMoveState){
+        const st=miMoveState;
+        if(!st.moved&&Math.hypot(event.clientX-st.x,event.clientY-st.y)<7)return;
+        st.moved=true;event.preventDefault();
+        const under=document.elementFromPoint(event.clientX,event.clientY);
+        const target=under instanceof Element?under.closest(miMovableSelector):null;
+        if(target&&target!==st.item&&miDocumentEditor.contains(target)){
+          const r=target.getBoundingClientRect();
+          target.parentNode.insertBefore(st.item,event.clientY<r.top+r.height/2?target:target.nextSibling);
+        }else{
+          const range=document.caretRangeFromPoint?.(event.clientX,event.clientY);
+          if(range&&miDocumentEditor.contains(range.startContainer)){
+            const node=range.startContainer.nodeType===Node.ELEMENT_NODE?(range.startContainer.childNodes[range.startOffset]||range.startContainer.lastElementChild):range.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
+            if(node&&node!==st.item&&miDocumentEditor.contains(node)){
+              const r=node.getBoundingClientRect();node.parentNode.insertBefore(st.item,event.clientY<r.top+r.height/2?node:node.nextSibling);
+            }
           }
         }
+        st.item.classList.add("mi-document-item-dragging");updateMiSelectionUI();
       }
-      updateMiResizeGrip(moving);
-    });
-    const finishMiPointerMove = () => {
-      if (!miPointerMovingItem) return;
-      const moving = miPointerMovingItem;
-      moving.classList.remove("mi-document-item-dragging");
-      if (miPointerMoved) {
-        selectMiDocumentItem(moving);
-        $("content").value = miDocumentEditor.innerHTML;
-        setMiWorkStatus("Picture or file position changed — save your project to store it.");
+      if(miResizeState){
+        const st=miResizeState,item=st.item,dx=event.clientX-st.x,dy=event.clientY-st.y,dir=st.dir;
+        event.preventDefault();
+        let w=st.w,h=st.h;
+        const isImage=item.dataset.miDocumentImage==="true";
+        if(dir.includes("e"))w=st.w+dx;if(dir.includes("w"))w=st.w-dx;
+        if(dir.includes("s"))h=st.h+dy;if(dir.includes("n"))h=st.h-dy;
+        if(isImage && dir.length===2){
+          const ratio=st.w/Math.max(1,st.h);
+          if(Math.abs(dx)>=Math.abs(dy))h=w/ratio;else w=h*ratio;
+        }
+        w=Math.max(50,Math.min(miDocumentEditor.clientWidth-12,w));
+        h=Math.max(35,Math.min(1200,h));
+        item.style.width=Math.round(w)+"px";
+        item.style.height=Math.round(h)+"px";
+        item.style.maxWidth="100%";
+        if(isImage)item.style.objectFit="contain";
+        updateMiSelectionUI();
       }
-      miPointerMovingItem = null;
-      miPointerMoved = false;
-    };
-    miDocumentEditor.addEventListener("pointerup", finishMiPointerMove);
-    miDocumentEditor.addEventListener("pointercancel", finishMiPointerMove);
-    miResizeGrip.addEventListener("pointerdown", event => {
-      if (event.button !== 0) return;
-      const selected = miDocumentEditor.querySelector(".mi-image-selected,.mi-file-selected");
-      if (!selected) return;
-      event.preventDefault();
-      event.stopPropagation();
-      miResizeItem = selected;
-      const rect = selected.getBoundingClientRect();
-      miResizeStartX = event.clientX;
-      miResizeStartY = event.clientY;
-      miResizeStartWidth = rect.width;
-      miResizeStartHeight = rect.height;
-      miResizeGrip.setPointerCapture?.(event.pointerId);
+    },{passive:false});
+    document.addEventListener("pointerup",()=>{
+      if(miMoveState){const st=miMoveState;st.item.classList.remove("mi-document-item-dragging");if(st.moved){syncMiDocumentHtml();setMiWorkStatus("Picture or file position changed — save your project.");}miMoveState=null;updateMiSelectionUI();}
+      if(miResizeState){syncMiDocumentHtml();setMiWorkStatus("Picture or file size changed — save your project.");miResizeState=null;updateMiSelectionUI();}
     });
-    miResizeGrip.addEventListener("pointermove", event => {
-      if (!miResizeItem) return;
-      event.preventDefault();
-      const maxWidth = Math.max(140, miDocumentEditor.clientWidth - 24);
-      const width = Math.max(90, Math.min(maxWidth, miResizeStartWidth + event.clientX - miResizeStartX));
-      const height = Math.max(55, Math.min(900, miResizeStartHeight + event.clientY - miResizeStartY));
-      miResizeItem.style.width = Math.round(width) + "px";
-      miResizeItem.style.height = Math.round(height) + "px";
-      if (miResizeItem.dataset.miDocumentImage === "true") {
-        miResizeItem.style.maxWidth = "none";
-        miResizeItem.style.objectFit = "contain";
-      } else {
-        miResizeItem.style.maxWidth = "100%";
-        miResizeItem.style.overflow = "hidden";
-      }
-      updateMiResizeGrip(miResizeItem);
+    Object.entries(miHandles).forEach(([dir,handle])=>{
+      handle.addEventListener("pointerdown",event=>{
+        if(event.button!==0||!miSelectedDocumentItem)return;
+        event.preventDefault();event.stopPropagation();
+        const r=miSelectedDocumentItem.getBoundingClientRect();
+        miResizeState={item:miSelectedDocumentItem,dir,x:event.clientX,y:event.clientY,w:r.width,h:r.height};
+        handle.setPointerCapture?.(event.pointerId);
+      });
+      const positions={nw:"left:-5px;top:-5px;cursor:nwse-resize",n:"left:calc(50% - 4px);top:-5px;cursor:ns-resize",ne:"right:-5px;top:-5px;cursor:nesw-resize",e:"right:-5px;top:calc(50% - 4px);cursor:ew-resize",se:"right:-5px;bottom:-5px;cursor:nwse-resize",s:"left:calc(50% - 4px);bottom:-5px;cursor:ns-resize",sw:"left:-5px;bottom:-5px;cursor:nesw-resize",w:"left:-5px;top:calc(50% - 4px);cursor:ew-resize"};
+      handle.style.cssText+=";"+positions[dir]+";";
     });
-    const finishMiResize = () => {
-      if (!miResizeItem) return;
-      $("content").value = miDocumentEditor.innerHTML;
-      setMiWorkStatus("Picture or file size changed — save your project to store it.");
-      const item = miResizeItem;
-      miResizeItem = null;
-      updateMiResizeGrip(item);
-    };
-    miResizeGrip.addEventListener("pointerup", finishMiResize);
-    miResizeGrip.addEventListener("pointercancel", finishMiResize);
-    window.addEventListener("resize", () => updateMiResizeGrip(miDocumentEditor.querySelector(".mi-image-selected,.mi-file-selected")));
-    miDocumentEditor.addEventListener("scroll", () => updateMiResizeGrip(miDocumentEditor.querySelector(".mi-image-selected,.mi-file-selected")));
+    window.addEventListener("resize",updateMiSelectionUI);
+    window.addEventListener("scroll",updateMiSelectionUI,true);
+    miDocumentEditor.addEventListener("scroll",updateMiSelectionUI);
+    document.addEventListener("pointerdown",event=>{if(!miSelectionUI.contains(event.target)&&!miDocumentEditor.contains(event.target))selectMiDocumentItem(null);});
+
     miDocumentEditor.addEventListener("input", () => {
       $("content").value = miDocumentEditor.innerHTML;
     });
