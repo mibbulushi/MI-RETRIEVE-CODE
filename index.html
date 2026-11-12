@@ -2716,6 +2716,40 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
  #saveArea .mi-save-actions #saveResult{grid-template-columns:minmax(0,1fr)!important}
 }
 
+
+/* Explicit two-column wrapper: both generated codes stay in one horizontal row */
+#saveArea #saveResult .mi-generated-codes-row{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ grid-auto-flow:column!important;
+ align-items:stretch!important;
+ gap:10px!important;
+ width:100%!important;
+ min-width:0!important;
+}
+#saveArea #saveResult .mi-generated-codes-row>.mi-generated-code-block{
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:flex-start!important;
+ justify-content:flex-start!important;
+ width:100%!important;
+ min-width:0!important;
+ max-width:none!important;
+ min-height:100%!important;
+ box-sizing:border-box!important;
+}
+#saveArea #saveResult .mi-generated-codes-row .mi-generated-code-value{
+ width:100%!important;
+ max-width:100%!important;
+ overflow-wrap:anywhere!important;
+ word-break:break-word!important;
+}
+@media(max-width:360px){
+ #saveArea #saveResult .mi-generated-codes-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+ #saveArea #saveResult .mi-generated-codes-row>.mi-generated-code-block{padding:6px!important}
+ #saveArea #saveResult .mi-generated-codes-row .mi-generated-code-value{font-size:.66rem!important}
+}
+
 </style>
 </head>
 <body>
@@ -3690,6 +3724,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       }
 
       $("saveResult").replaceChildren();
+      const generatedCodesRow = document.createElement("div");
+      generatedCodesRow.className = "mi-generated-codes-row";
       const privateBlock = document.createElement("div");
       privateBlock.className = "mi-generated-code-block mi-private-code-block";
       const privateLabel = document.createElement("div");
@@ -3711,7 +3747,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         }
       });
       privateBlock.append(privateLabel, privateCode, privateCopy);
-      $("saveResult").append(privateBlock);
+      generatedCodesRow.append(privateBlock);
+      $("saveResult").append(generatedCodesRow);
 
       let shareCreated = false;
       let shareRow = null;
@@ -3738,7 +3775,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       shareHeading.className = "mi-generated-code-label";
       shareHeading.textContent = "Student Share Code:";
       shareBlock.append(shareHeading);
-      $("saveResult").append(shareBlock);
+      generatedCodesRow.append(shareBlock);
       if (shareCreated && shareRow) {
         const requestedSharePassword = $("newSharePassword").value;
         let passwordApplied = !requestedSharePassword;
