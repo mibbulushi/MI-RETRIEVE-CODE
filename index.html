@@ -3057,9 +3057,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
               <input id="title" maxlength="200" placeholder="Enter your project title">
             </div>
             <div class="mi-save-field mi-save-password">
-              <label for="newSharePassword" class="mi-password-label">Student Share Code password (optional)</label>
+              <label for="newSharePassword" class="mi-password-label"><span class="mi-password-title">Student Share Code password (optional)</span><span class="mi-password-help">At least 8 characters. Share this password separately from the Share Code.</span></label>
               <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Set a password if needed">
-              <span class="mi-password-help">At least 8 characters. Share this password separately from the Share Code.</span>
             </div>
           </div>
           <div class="mi-save-actions">
@@ -4715,3 +4714,37 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 </script>
 </body>
 </html>
+
+
+/* Keep password label and its guidance together on one line above the input */
+#saveArea .mi-save-details .mi-save-password .mi-password-label{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:6px!important;
+  width:100%!important;
+  min-height:22px!important;
+  height:auto!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  font-size:.72rem!important;
+  line-height:1.2!important;
+}
+#saveArea .mi-save-details .mi-save-password .mi-password-title{
+  flex:0 0 auto!important;
+  font-size:.72rem!important;
+  font-weight:600!important;
+}
+#saveArea .mi-save-details .mi-save-password .mi-password-help{
+  display:inline!important;
+  flex:0 0 auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:.65rem!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+#saveArea .mi-save-details .mi-save-password .mi-password-help:before{content:"— ";}
