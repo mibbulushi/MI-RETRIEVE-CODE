@@ -4110,6 +4110,32 @@ body button svg{stroke:currentColor!important;}
         list.append(item);
       }
       preview.append(list);
+
+      // Insert a visible attachment card into the Project Document editor for every selected file.
+      const editor = $("miDocumentEditor");
+      for (const file of files) {
+        const card = document.createElement("div");
+        card.contentEditable = "false";
+        card.dataset.miAttachedFile = "true";
+        card.style.cssText = "display:flex;align-items:center;gap:10px;max-width:100%;margin:12px 0;padding:12px 14px;border:1px solid #cbd8e8;border-radius:9px;background:#f4f8fd;color:#26364a;font:inherit;";
+        const icon = document.createElement("span");
+        icon.textContent = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf") ? "📄" : "📎";
+        icon.style.cssText = "font-size:25px;flex:0 0 auto;";
+        const details = document.createElement("span");
+        details.style.cssText = "display:flex;flex-direction:column;min-width:0;overflow-wrap:anywhere;";
+        const name = document.createElement("strong");
+        name.textContent = file.name;
+        name.style.cssText = "font-size:.9rem;font-weight:600;";
+        const note = document.createElement("small");
+        note.textContent = "Attached project file";
+        note.style.cssText = "font-size:.75rem;color:#627895;";
+        details.append(name, note);
+        card.append(icon, details);
+        const spacer = document.createElement("p");
+        spacer.append(document.createElement("br"));
+        editor.append(card, spacer);
+      }
+      $("content").value = editor.innerHTML;
     });
 
     $("saveBtn").addEventListener("click", async () => {
