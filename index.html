@@ -2869,6 +2869,33 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
     margin-right:0!important;
   }
 }
+
+/* Remove the unwanted flexible space between each generated-code label and its code */
+#saveArea .mi-generated-code-block{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  column-gap:5px!important;
+}
+#saveArea .mi-generated-code-block > .mi-generated-code-label{
+  flex:0 1 auto!important;
+  width:auto!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  white-space:nowrap!important;
+}
+#saveArea .mi-generated-code-block > .mi-generated-code-value{
+  flex:0 0 auto!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+#saveArea .mi-generated-code-block > button{
+  flex:0 0 auto!important;
+  margin-left:auto!important;
+}
+
 </style>
 </head>
 <body>
