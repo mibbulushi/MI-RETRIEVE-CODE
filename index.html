@@ -2991,6 +2991,29 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 .mi-builder-heading p{flex:0 0 auto!important;margin:0!important;white-space:nowrap!important}
 .mi-builder-heading .mi-document-tools{flex:0 0 auto!important;margin-left:auto!important}
 @media(max-width:760px){.mi-builder-heading{flex-wrap:wrap!important}.mi-builder-heading>div:first-child{max-width:100%!important;overflow-x:auto!important}.mi-builder-heading .mi-document-tools{margin-left:0!important}}
+
+ 
+/* Final column balance: compact title field, wider password field */
+@media(min-width:651px){
+  #saveArea .mi-save-details{
+    display:grid!important;
+    grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr)!important;
+    column-gap:20px!important;
+    width:100%!important;
+  }
+  #saveArea .mi-save-details>.mi-save-title,
+  #saveArea .mi-save-details>.mi-save-password,
+  #saveArea .mi-save-details>.mi-save-field{
+    min-width:0!important;
+    max-width:none!important;
+  }
+  #saveArea .mi-save-details .mi-save-password .mi-password-label{
+    width:max-content!important;
+    max-width:none!important;
+    white-space:nowrap!important;
+  }
+}
+
 </style>
 </head>
 <body>
