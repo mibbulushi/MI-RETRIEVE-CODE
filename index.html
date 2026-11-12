@@ -2822,6 +2822,36 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
   #saveArea .mi-save-details{grid-template-columns:minmax(0,1fr)!important}
   #saveArea .mi-save-details .mi-save-field>label{height:auto!important;min-height:22px!important}
 }
+
+/* Give the two project fields more real horizontal space */
+@media(min-width:900px){
+  #saveArea.mi-save-layout,
+  #saveArea .mi-save-layout{
+    width:100%!important;
+    max-width:none!important;
+  }
+  #saveArea{
+    width:calc(100% + 120px)!important;
+    max-width:none!important;
+    margin-left:-60px!important;
+    margin-right:-60px!important;
+    box-sizing:border-box!important;
+  }
+  #saveArea .mi-save-details{
+    width:100%!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    column-gap:28px!important;
+  }
+  #saveArea .mi-save-details .mi-save-field,
+  #saveArea .mi-save-details #title,
+  #saveArea .mi-save-details #newSharePassword{
+    width:100%!important;
+    max-width:none!important;
+  }
+}
+@media(max-width:899px){
+  #saveArea{width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important}
+}
 </style>
 </head>
 <body>
