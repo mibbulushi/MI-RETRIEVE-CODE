@@ -3315,6 +3315,69 @@ img{max-width:100%}
   .row{gap:7px}
   .row button{max-width:100%}
 }
+
+/* Hard containment: content created or inserted in Project Document stays within its white editor. */
+#miDocumentEditor{
+  position:relative!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  isolation:isolate;
+}
+#miDocumentEditor,
+#miDocumentEditor *{
+  box-sizing:border-box!important;
+  max-width:100%!important;
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+#miDocumentEditor *{
+  float:none!important;
+}
+#miDocumentEditor img,
+#miDocumentEditor video,
+#miDocumentEditor canvas,
+#miDocumentEditor iframe,
+#miDocumentEditor svg{
+  max-width:100%!important;
+}
+#miDocumentEditor img{
+  height:auto;
+  object-fit:contain;
+}
+#miDocumentEditor [data-mi-attached-file="true"]{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center;
+  width:max-content;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+#miDocumentEditor table{
+  display:block;
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:auto;
+  border-collapse:collapse;
+}
+#miDocumentEditor pre,
+#miDocumentEditor code{
+  white-space:pre-wrap!important;
+  overflow-wrap:anywhere!important;
+}
+#miDocumentEditor p,
+#miDocumentEditor div,
+#miDocumentEditor section,
+#miDocumentEditor blockquote,
+#miDocumentEditor li{
+  max-width:100%!important;
+  overflow-wrap:anywhere!important;
+}
 </style>
 </head>
 <body>
