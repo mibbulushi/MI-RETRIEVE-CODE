@@ -2300,6 +2300,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 .mi-document-tools{display:flex;align-items:center;gap:8px}.mi-document-tools button{margin:0}
 .mi-inline-attach{display:flex;align-items:center;gap:6px;padding:4px 7px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;white-space:nowrap}.mi-inline-attach label{margin:0;font-size:.82rem;font-weight:650}.mi-inline-attach input[type="file"]{width:190px;max-width:34vw;min-width:0;margin:0;padding:2px;font-size:.78rem}.mi-files-preview{margin:6px 0 0 2px}.mi-document-tools{flex-wrap:wrap}
 @media(max-width:650px){.mi-document-editor{min-height:420px;padding:14px}}
+
+.mi-password-help{margin:5px 0 0;font-size:.68rem;line-height:1.25;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -2397,6 +2399,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           <div class="project-title-password-field">
             <label for="newSharePassword">Optional student Share Code password</label>
             <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Optional password">
+            <p class="small mi-password-help">If you set a password, use at least 8 characters. Share it separately from the Share Code.</p>
           </div>
           <div class="project-code-field">
             <label>Your generated Retrieve Code</label>
@@ -2449,7 +2452,6 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         <input type="hidden" id="content" value="">
         <input type="hidden" id="projectStructure" value="">
         <div class="project-save-notes">
-          <p class="small">If you set a password, use at least 8 characters. Share it separately from the Share Code.</p>
           <p class="small">Up to 20 files per project; maximum 25 MB per file. Files are private until you create/share a project code.</p>
         </div>
       </section>
