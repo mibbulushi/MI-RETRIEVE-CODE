@@ -3843,8 +3843,10 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       $("saveResult").replaceChildren();
       const generatedCodesRow = document.createElement("div");
       generatedCodesRow.className = "mi-generated-codes-row";
+      generatedCodesRow.style.cssText = "display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-auto-flow:column!important;align-items:stretch!important;gap:10px!important;width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important;";
       const privateBlock = document.createElement("div");
       privateBlock.className = "mi-generated-code-block mi-private-code-block";
+      privateBlock.style.cssText = "display:flex!important;flex-direction:column!important;align-items:flex-start!important;width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important;";
       const privateLabel = document.createElement("div");
       privateLabel.className = "mi-generated-code-label";
       privateLabel.textContent = "Private account Retrieve Code:";
@@ -3888,6 +3890,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
       const shareBlock = document.createElement("div");
       shareBlock.className = "mi-generated-code-block mi-student-code-block";
+      shareBlock.style.cssText = "display:flex!important;flex-direction:column!important;align-items:flex-start!important;width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important;";
       const shareHeading = document.createElement("h3");
       shareHeading.className = "mi-generated-code-label";
       shareHeading.textContent = "Student Share Code:";
