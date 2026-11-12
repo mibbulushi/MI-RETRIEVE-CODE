@@ -2264,6 +2264,9 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 }
 
 /* Keep the legacy storage fields and old section builder completely hidden; the document editor is the only writing box. */
+
+/* Save New Project uses the rich document editor only; suppress any legacy textarea/section editor boxes. */
+#saveArea textarea,#saveArea .mi-project-sections,#saveArea .mi-project-section,#saveArea #projectSections{display:none!important}
 #content[hidden],#projectStructure[hidden],#projectSections[hidden],#addProjectSectionBtn[hidden]{display:none!important}
 
 .mi-editor-toolbar{display:flex;flex-wrap:nowrap;align-items:center;gap:5px;padding:7px 8px;margin:10px 0;border:1px solid #b9cce4;border-radius:10px;background:#f2f7fd;width:100%;box-sizing:border-box;position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;white-space:nowrap}
