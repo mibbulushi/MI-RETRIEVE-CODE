@@ -3319,6 +3319,7 @@ img{max-width:100%}
 /* Hard containment: content created or inserted in Project Document stays within its white editor. */
 #miDocumentEditor{
   position:relative!important;
+  overflow-x:hidden!important;
   width:100%!important;
   max-width:100%!important;
   min-width:0!important;
@@ -4108,39 +4109,34 @@ img{max-width:100%}
       event.preventDefault();
       target.draggable=false;
       try{target.setPointerCapture(event.pointerId);}catch(_){ }
-      miMoveState={item:target,x:event.clientX,y:event.clientY,moved:false,pointerId:event.pointerId};
+      const editorRect=miDocumentEditor.getBoundingClientRect();
+      const itemRect=target.getBoundingClientRect();
+      const borderLeft=parseFloat(getComputedStyle(miDocumentEditor).borderLeftWidth)||0;
+      const borderTop=parseFloat(getComputedStyle(miDocumentEditor).borderTopWidth)||0;
+      target.style.position="absolute";
+      target.style.float="none";
+      target.style.margin="0";
+      target.style.left=Math.max(0,itemRect.left-editorRect.left-borderLeft+miDocumentEditor.scrollLeft)+"px";
+      target.style.top=Math.max(0,itemRect.top-editorRect.top-borderTop+miDocumentEditor.scrollTop)+"px";
+      target.style.zIndex="10";
+      miMoveState={item:target,x:event.clientX,y:event.clientY,startLeft:parseFloat(target.style.left)||0,startTop:parseFloat(target.style.top)||0,moved:false,pointerId:event.pointerId};
     });
     document.addEventListener("pointermove",event=>{
       if(miMoveState){
         const st=miMoveState;
-        if(!st.moved&&Math.hypot(event.clientX-st.x,event.clientY-st.y)<7)return;
+        if(!st.moved&&Math.hypot(event.clientX-st.x,event.clientY-st.y)<3)return;
         st.moved=true;event.preventDefault();
-        const under=document.elementFromPoint(event.clientX,event.clientY);
-        const target=under instanceof Element?under.closest(miMovableSelector):null;
-        if(target&&target!==st.item&&miDocumentEditor.contains(target)){
-          const r=target.getBoundingClientRect();
-          target.parentNode.insertBefore(st.item,event.clientY<r.top+r.height/2?target:target.nextSibling);
-        }else{
-          let range=document.caretRangeFromPoint?.(event.clientX,event.clientY);
-          if(!range&&document.caretPositionFromPoint){
-            const pos=document.caretPositionFromPoint(event.clientX,event.clientY);
-            if(pos){range=document.createRange();range.setStart(pos.offsetNode,pos.offset);range.collapse(true);}
-          }
-          if(range&&miDocumentEditor.contains(range.startContainer)){
-            const node=range.startContainer.nodeType===Node.ELEMENT_NODE?(range.startContainer.childNodes[range.startOffset]||range.startContainer.lastElementChild):range.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
-            if(node&&node!==st.item&&miDocumentEditor.contains(node)){
-              const r=node.getBoundingClientRect();node.parentNode.insertBefore(st.item,event.clientY<r.top+r.height/2?node:node.nextSibling);
-            }
-          }else{
-            const blocks=[...miDocumentEditor.children].filter(n=>n!==st.item);
-            if(blocks.length){
-              let nearest=blocks[0],best=Infinity;
-              blocks.forEach(n=>{const r=n.getBoundingClientRect();const d=Math.abs(event.clientY-(r.top+r.height/2));if(d<best){best=d;nearest=n;}});
-              const r=nearest.getBoundingClientRect();nearest.parentNode.insertBefore(st.item,event.clientY<r.top+r.height/2?nearest:nearest.nextSibling);
-            }
-          }
-        }
-        st.item.classList.add("mi-document-item-dragging");updateMiSelectionUI();
+        const editorStyle=getComputedStyle(miDocumentEditor);
+        const padRight=parseFloat(editorStyle.paddingRight)||0;
+        const padBottom=parseFloat(editorStyle.paddingBottom)||0;
+        const maxLeft=Math.max(0,miDocumentEditor.clientWidth-st.item.offsetWidth-padRight-2);
+        const maxTop=Math.max(0,miDocumentEditor.clientHeight-st.item.offsetHeight-padBottom-2);
+        const left=Math.max(0,Math.min(maxLeft,st.startLeft+event.clientX-st.x));
+        const top=Math.max(0,Math.min(maxTop,st.startTop+event.clientY-st.y));
+        st.item.style.left=Math.round(left)+"px";
+        st.item.style.top=Math.round(top)+"px";
+        st.item.classList.add("mi-document-item-dragging");
+        updateMiSelectionUI();
       }
       if(miResizeState){
         const st=miResizeState,item=st.item,dx=event.clientX-st.x,dy=event.clientY-st.y,dir=st.dir;
