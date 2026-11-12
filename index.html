@@ -4003,6 +4003,37 @@ img{max-width:100%}
     miLayoutButton.title = "Change how text flows around this picture";
     miLayoutButton.style.cssText = "position:absolute;left:calc(100% + 8px);top:0;white-space:nowrap;padding:6px 9px;border:1px solid #b9cce2;border-radius:6px;background:#fff;color:#24466d;font-size:12px;pointer-events:auto;box-shadow:0 2px 7px #2343;";
     miSelectionUI.append(miLayoutButton);
+    const miCropButton=document.createElement("button");
+    miCropButton.type="button";
+    miCropButton.textContent="Crop";
+    miCropButton.title="Crop picture";
+    miCropButton.style.cssText="position:absolute;left:calc(100% + 8px);top:38px;padding:7px 12px;border:1px solid #b9cce2;border-radius:6px;background:#fff;color:#24466d;font-size:12px;pointer-events:auto;box-shadow:0 2px 7px #2343;cursor:pointer;";
+    miSelectionUI.append(miCropButton);
+    const miCropPanel=document.createElement("div");
+    miCropPanel.style.cssText="position:absolute;left:calc(100% + 8px);top:76px;display:none;width:230px;padding:12px;background:#fff;border:1px solid #c7d2df;border-radius:8px;box-shadow:0 8px 24px #172b4430;pointer-events:auto;color:#263d56;font:12px Arial,sans-serif;";
+    miCropPanel.innerHTML='<strong style="display:block;margin-bottom:9px;">Crop Picture</strong><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Top</span><input data-crop="top" type="range" min="0" max="45" value="0"><span data-crop-value="top">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Right</span><input data-crop="right" type="range" min="0" max="45" value="0"><span data-crop-value="right">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Bottom</span><input data-crop="bottom" type="range" min="0" max="45" value="0"><span data-crop-value="bottom">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Left</span><input data-crop="left" type="range" min="0" max="45" value="0"><span data-crop-value="left">0%</span></div><div style="display:flex;justify-content:space-between;margin-top:10px;"><button type="button" data-crop-reset>Reset</button><button type="button" data-crop-apply>Apply</button></div>';
+    miSelectionUI.append(miCropPanel);
+    const cropRanges=miCropPanel.querySelectorAll("input[data-crop]");
+    function updateMiCrop(){
+      if(!miSelectedDocumentItem)return;
+      const v={};cropRanges.forEach(input=>{v[input.dataset.crop]=input.value;miCropPanel.querySelector('[data-crop-value="'+input.dataset.crop+'"]').textContent=input.value+"%";});
+      miSelectedDocumentItem.style.clipPath="inset("+v.top+"% "+v.right+"% "+v.bottom+"% "+v.left+"%)";
+    }
+    cropRanges.forEach(input=>input.addEventListener("input",updateMiCrop));
+    miCropPanel.querySelector("[data-crop-reset]").addEventListener("click",()=>{
+      cropRanges.forEach(input=>input.value="0");updateMiCrop();
+    });
+    miCropPanel.querySelector("[data-crop-apply]").addEventListener("click",()=>{
+      syncMiDocumentHtml();setMiWorkStatus("Picture crop applied — save your project to store it.");miCropPanel.style.display="none";
+    });
+    miCropButton.addEventListener("click",event=>{
+      event.preventDefault();event.stopPropagation();
+      if(!miSelectedDocumentItem||miSelectedDocumentItem.dataset.miDocumentImage!=="true")return;
+      const m=(miSelectedDocumentItem.style.clipPath||"").match(/inset\(([^)]*)\)/);
+      const vals=m?m[1].split(/\s+/):["0%","0%","0%","0%"];
+      cropRanges.forEach((input,i)=>{input.value=parseFloat(vals[i])||0;});
+      updateMiCrop();miCropPanel.style.display=miCropPanel.style.display==="block"?"none":"block";miLayoutMenu.style.display="none";
+    });
     const miLayoutMenu = document.createElement("div");
     miLayoutMenu.setAttribute("aria-label","Picture layout options");
     miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:330px;padding:12px;background:#fff;border:1px solid #c7d2df;border-radius:8px;box-shadow:0 8px 24px #172b4430;pointer-events:auto;font-family:Arial,sans-serif;";
@@ -4052,6 +4083,8 @@ img{max-width:100%}
       miSelectionUI.style.width=Math.max(12,r.width)+"px";
       miSelectionUI.style.height=Math.max(12,r.height)+"px";
       miLayoutMenu.style.display="none";
+      miCropPanel.style.display="none";
+      miCropButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
     }
     function selectMiDocumentItem(item){
       miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(n=>n.classList.remove("mi-image-selected","mi-file-selected"));
