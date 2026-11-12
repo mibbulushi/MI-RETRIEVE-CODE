@@ -4124,21 +4124,13 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
             shareCopy.setAttribute("aria-label", "Select and copy the code above");
           }
         });
-        const saveAgainButton = document.createElement("button");
-        saveAgainButton.type = "button";
-        saveAgainButton.className = "secondary mi-generated-save-button";
-        saveAgainButton.textContent = "Save Project";
-        saveAgainButton.title = "Save project";
-        saveAgainButton.setAttribute("aria-label", "Save project");
-        saveAgainButton.addEventListener("click", () => $("saveBtn").click());
         shareCopy.classList.add("mi-generated-copy-button");
         shareHeading.style.cssText = "display:inline-flex!important;flex:0 0 auto!important;width:auto!important;max-width:none!important;white-space:nowrap!important;margin:0!important;";
         shareCodeEl.style.cssText = "flex:0 1 auto!important;width:auto!important;min-width:0!important;white-space:nowrap!important;";
         shareCopy.style.cssText = "flex:0 0 27px!important;width:27px!important;min-width:27px!important;height:27px!important;min-height:27px!important;padding:4px!important;";
-        saveAgainButton.style.cssText = "display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:88px!important;height:28px!important;min-height:28px!important;margin:0!important;padding:4px 9px!important;font-size:.72rem!important;line-height:1!important;white-space:nowrap!important;";
-        shareBlock.append(shareCodeEl, shareCopy, saveAgainButton);
+        shareBlock.append(shareCodeEl, shareCopy);
         const originalSaveArea = $("saveBtn").closest(".mi-save-submit");
-        if (originalSaveArea) originalSaveArea.style.display = "none";
+        if (originalSaveArea) originalSaveArea.style.display = "";
       } else {
         const shareNote = document.createElement("p");
         shareNote.className = "notice";
