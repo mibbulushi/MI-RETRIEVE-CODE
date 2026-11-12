@@ -2648,13 +2648,13 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
  box-shadow:0 1px 2px rgba(25,45,70,.06)!important;font-size:.82rem!important;font-weight:600!important;line-height:1!important;
 }
 #saveArea .mi-document-tools #miInsertPictureBtn svg,
-#saveArea .mi-document-tools .mi-inline-attach label svg,
+#saveArea .mi-document-tools .mi-inline-attach button svg,
 #saveArea .mi-save-actions #saveBtn svg{
  width:17px!important;height:17px!important;min-width:17px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;
 }
 #saveArea .mi-document-tools .mi-inline-attach{padding:0 10px!important;gap:8px!important}
-#saveArea .mi-document-tools .mi-inline-attach label{display:inline-flex!important;align-items:center!important;gap:8px!important;margin:0!important;font-size:.82rem!important;font-weight:600!important;cursor:pointer!important}
-#saveArea .mi-document-tools .mi-inline-attach input[type="file"]{width:180px!important;max-width:30vw!important;height:28px!important;font-size:.74rem!important;padding:2px!important}
+#saveArea .mi-document-tools .mi-inline-attach button{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;height:36px!important;min-height:36px!important;margin:0!important;padding:0 10px!important;border:0!important;background:transparent!important;color:#26364a!important;box-shadow:none!important;font-size:.82rem!important;font-weight:600!important;cursor:pointer!important}
+#saveArea .mi-document-tools .mi-inline-attach input[type="file"]{display:none!important}
 #saveArea .mi-document-tools #miInsertPictureBtn:hover,#saveArea .mi-document-tools .mi-inline-attach:hover{border-color:#9db6d5!important;background:#f5f8fc!important}
 #saveArea .mi-save-actions #saveBtn{display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid #cbd8e8!important;border-radius:9px!important;background:#edf3fa!important;color:#285fa6!important;box-shadow:0 1px 2px rgba(25,45,70,.07)!important}
 #saveArea .mi-save-actions #saveBtn svg{width:17px!important;height:17px!important}
@@ -3364,8 +3364,8 @@ body button svg{stroke:currentColor!important;}
               <button id="miInsertPictureBtn" class="secondary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Insert Picture</span></button>
               <input id="miDocumentImageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden>
               <div class="mi-inline-attach">
-                <label for="projectFiles"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 12.5 7.2-7.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2"/></svg><span>Attach Files</span></label>
-                <input id="projectFiles" type="file" multiple>
+                <button id="miAttachFilesBtn" type="button" class="secondary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 12.5 7.2-7.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2"/></svg><span>Attach Files</span></button>
+                <input id="projectFiles" type="file" multiple hidden>
               </div>
             </div>
             <div id="projectFilesPreview" class="small mi-files-preview" aria-live="polite"></div>
@@ -4087,6 +4087,8 @@ body button svg{stroke:currentColor!important;}
         }))
         .filter(section => section.title || section.content);
     }
+
+    $("miAttachFilesBtn").addEventListener("click", () => $("projectFiles").click());
 
     $("projectFiles").addEventListener("change", () => {
       const files = Array.from($("projectFiles").files || []);
