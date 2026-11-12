@@ -2964,6 +2964,21 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
   stroke-linejoin:round!important;
 }
 
+
+/* Match both password guidance phrases and keep them together on one line */
+#saveArea .mi-save-details .mi-save-password .mi-password-label{
+  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+  align-items:center!important;justify-content:flex-start!important;gap:5px!important;
+  width:100%!important;min-height:22px!important;height:auto!important;
+  white-space:nowrap!important;overflow:visible!important;font-size:.58rem!important;line-height:1.2!important;
+}
+#saveArea .mi-save-details .mi-save-password .mi-password-title,
+#saveArea .mi-save-details .mi-save-password .mi-password-help{
+  flex:0 0 auto!important;font-size:.58rem!important;line-height:1.2!important;white-space:nowrap!important;
+}
+#saveArea .mi-save-details .mi-save-password .mi-password-title{font-weight:600!important}
+#saveArea .mi-save-details .mi-save-password .mi-password-help{display:inline!important;min-height:0!important;margin:0!important;padding:0!important}
+#saveArea .mi-save-details .mi-save-password .mi-password-help:before{content:"— "}
 </style>
 </head>
 <body>
@@ -4714,37 +4729,3 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 </script>
 </body>
 </html>
-
-
-/* Keep password label and its guidance together on one line above the input */
-#saveArea .mi-save-details .mi-save-password .mi-password-label{
-  display:flex!important;
-  flex-direction:row!important;
-  flex-wrap:nowrap!important;
-  align-items:center!important;
-  justify-content:flex-start!important;
-  gap:6px!important;
-  width:100%!important;
-  min-height:22px!important;
-  height:auto!important;
-  white-space:nowrap!important;
-  overflow:visible!important;
-  font-size:.72rem!important;
-  line-height:1.2!important;
-}
-#saveArea .mi-save-details .mi-save-password .mi-password-title{
-  flex:0 0 auto!important;
-  font-size:.72rem!important;
-  font-weight:600!important;
-}
-#saveArea .mi-save-details .mi-save-password .mi-password-help{
-  display:inline!important;
-  flex:0 0 auto!important;
-  min-height:0!important;
-  margin:0!important;
-  padding:0!important;
-  font-size:.65rem!important;
-  line-height:1.2!important;
-  white-space:nowrap!important;
-}
-#saveArea .mi-save-details .mi-save-password .mi-password-help:before{content:"— ";}
