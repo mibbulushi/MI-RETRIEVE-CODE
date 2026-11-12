@@ -2216,7 +2216,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
 /* MI Project Builder: flexible, numbered project sections */
 .mi-builder-panel{margin:22px 0;padding:20px;border:1px solid #c9d9ed;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf5ff)}
-#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}
+#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}#miDocumentEditor [data-mi-document-image="true"].mi-image-selected{outline:2px solid #3478c8!important;outline-offset:3px}#miDocumentEditor [data-mi-attached-file="true"].mi-file-selected{outline:2px solid #3478c8!important;outline-offset:3px}
 .mi-builder-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
 .mi-builder-heading h3{margin:0 0 5px;color:#123866;font-size:1.15rem}
 .mi-builder-heading p{margin:0}
@@ -3839,31 +3839,62 @@ body button svg{stroke:currentColor!important;}
         $("miDocumentImageInput").dispatchEvent(new Event("change"));
       }
     });
-    // Reliable pointer-based moving for inserted pictures and attached file cards.
-    // This works inside contenteditable without relying on browser native drag-and-drop.
+    // Select, move, and resize inserted pictures and attached file cards.
+    // The resize grip lives outside the editable document so it is never saved as project content.
     let miPointerMovingItem = null;
     let miPointerMoved = false;
     let miPointerStartX = 0;
     let miPointerStartY = 0;
+    let miResizeItem = null;
+    let miResizeStartX = 0;
+    let miResizeStartY = 0;
+    let miResizeStartWidth = 0;
+    let miResizeStartHeight = 0;
     const miMovableSelector = '[data-mi-document-image="true"],[data-mi-attached-file="true"]';
+    const miResizeGrip = document.createElement("button");
+    miResizeGrip.type = "button";
+    miResizeGrip.className = "mi-document-resize-grip";
+    miResizeGrip.title = "Drag to make the selected picture or file card larger or smaller";
+    miResizeGrip.setAttribute("aria-label", "Resize selected picture or file card");
+    miResizeGrip.textContent = "↘";
+    miResizeGrip.style.cssText = "position:fixed;z-index:99999;display:none;width:25px;height:25px;min-width:25px;padding:0;margin:0;border:2px solid #fff;border-radius:6px;background:#246fbd;color:#fff;font-size:17px;line-height:20px;box-shadow:0 1px 6px #34567866;cursor:nwse-resize;touch-action:none;";
+    document.body.append(miResizeGrip);
+    function updateMiResizeGrip(item) {
+      if (!item || !miDocumentEditor.contains(item)) {
+        miResizeGrip.style.display = "none";
+        return;
+      }
+      const rect = item.getBoundingClientRect();
+      miResizeGrip.style.display = "block";
+      miResizeGrip.style.left = Math.max(0, Math.min(window.innerWidth - 27, rect.right - 12)) + "px";
+      miResizeGrip.style.top = Math.max(0, Math.min(window.innerHeight - 27, rect.bottom - 12)) + "px";
+    }
+    function selectMiDocumentItem(item) {
+      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(node => node.classList.remove("mi-image-selected","mi-file-selected"));
+      if (!item) {
+        updateMiResizeGrip(null);
+        return;
+      }
+      item.classList.add(item.dataset.miAttachedFile === "true" ? "mi-file-selected" : "mi-image-selected");
+      updateMiResizeGrip(item);
+    }
     miDocumentEditor.addEventListener("click", event => {
-      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(item => item.classList.remove("mi-image-selected","mi-file-selected"));
       const target = event.target instanceof Element ? event.target.closest(miMovableSelector) : null;
-      if (target && miDocumentEditor.contains(target)) target.classList.add(target.dataset.miAttachedFile === "true" ? "mi-file-selected" : "mi-image-selected");
+      if (target && miDocumentEditor.contains(target)) selectMiDocumentItem(target);
     });
     miDocumentEditor.addEventListener("pointerdown", event => {
-      if (event.button !== 0) return;
+      if (event.button !== 0 || event.target === miResizeGrip) return;
       const target = event.target instanceof Element ? event.target.closest(miMovableSelector) : null;
       if (!target || !miDocumentEditor.contains(target)) return;
+      selectMiDocumentItem(target);
       miPointerMovingItem = target;
       miPointerMoved = false;
       miPointerStartX = event.clientX;
       miPointerStartY = event.clientY;
-      target.setPointerCapture?.(event.pointerId);
     });
     miDocumentEditor.addEventListener("pointermove", event => {
       if (!miPointerMovingItem || (event.buttons & 1) !== 1) return;
-      if (!miPointerMoved && Math.hypot(event.clientX - miPointerStartX, event.clientY - miPointerStartY) < 5) return;
+      if (!miPointerMoved && Math.hypot(event.clientX - miPointerStartX, event.clientY - miPointerStartY) < 7) return;
       miPointerMoved = true;
       event.preventDefault();
       const moving = miPointerMovingItem;
@@ -3873,32 +3904,77 @@ body button svg{stroke:currentColor!important;}
       if (targetItem && targetItem !== moving && miDocumentEditor.contains(targetItem)) {
         const rect = targetItem.getBoundingClientRect();
         targetItem.parentNode.insertBefore(moving, event.clientY < rect.top + rect.height / 2 ? targetItem : targetItem.nextSibling);
-        return;
-      }
-      const caret = document.caretRangeFromPoint ? document.caretRangeFromPoint(event.clientX, event.clientY) : null;
-      if (caret && miDocumentEditor.contains(caret.startContainer)) {
-        let block = caret.startContainer.nodeType === Node.ELEMENT_NODE
-          ? caret.startContainer.childNodes[caret.startOffset] || caret.startContainer.lastElementChild
-          : caret.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
-        if (block && block !== moving && miDocumentEditor.contains(block)) {
-          const rect = block.getBoundingClientRect();
-          block.parentNode.insertBefore(moving, event.clientY < rect.top + rect.height / 2 ? block : block.nextSibling);
+      } else {
+        const caret = document.caretRangeFromPoint ? document.caretRangeFromPoint(event.clientX, event.clientY) : null;
+        if (caret && miDocumentEditor.contains(caret.startContainer)) {
+          let block = caret.startContainer.nodeType === Node.ELEMENT_NODE
+            ? caret.startContainer.childNodes[caret.startOffset] || caret.startContainer.lastElementChild
+            : caret.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
+          if (block && block !== moving && miDocumentEditor.contains(block)) {
+            const rect = block.getBoundingClientRect();
+            block.parentNode.insertBefore(moving, event.clientY < rect.top + rect.height / 2 ? block : block.nextSibling);
+          }
         }
       }
+      updateMiResizeGrip(moving);
     });
     const finishMiPointerMove = () => {
       if (!miPointerMovingItem) return;
       const moving = miPointerMovingItem;
       moving.classList.remove("mi-document-item-dragging");
       if (miPointerMoved) {
-        moving.classList.add(moving.dataset.miAttachedFile === "true" ? "mi-file-selected" : "mi-image-selected");
+        selectMiDocumentItem(moving);
         $("content").value = miDocumentEditor.innerHTML;
+        setMiWorkStatus("Picture or file position changed — save your project to store it.");
       }
       miPointerMovingItem = null;
       miPointerMoved = false;
     };
     miDocumentEditor.addEventListener("pointerup", finishMiPointerMove);
     miDocumentEditor.addEventListener("pointercancel", finishMiPointerMove);
+    miResizeGrip.addEventListener("pointerdown", event => {
+      if (event.button !== 0) return;
+      const selected = miDocumentEditor.querySelector(".mi-image-selected,.mi-file-selected");
+      if (!selected) return;
+      event.preventDefault();
+      event.stopPropagation();
+      miResizeItem = selected;
+      const rect = selected.getBoundingClientRect();
+      miResizeStartX = event.clientX;
+      miResizeStartY = event.clientY;
+      miResizeStartWidth = rect.width;
+      miResizeStartHeight = rect.height;
+      miResizeGrip.setPointerCapture?.(event.pointerId);
+    });
+    miResizeGrip.addEventListener("pointermove", event => {
+      if (!miResizeItem) return;
+      event.preventDefault();
+      const maxWidth = Math.max(140, miDocumentEditor.clientWidth - 24);
+      const width = Math.max(90, Math.min(maxWidth, miResizeStartWidth + event.clientX - miResizeStartX));
+      const height = Math.max(55, Math.min(900, miResizeStartHeight + event.clientY - miResizeStartY));
+      miResizeItem.style.width = Math.round(width) + "px";
+      miResizeItem.style.height = Math.round(height) + "px";
+      if (miResizeItem.dataset.miDocumentImage === "true") {
+        miResizeItem.style.maxWidth = "none";
+        miResizeItem.style.objectFit = "contain";
+      } else {
+        miResizeItem.style.maxWidth = "100%";
+        miResizeItem.style.overflow = "hidden";
+      }
+      updateMiResizeGrip(miResizeItem);
+    });
+    const finishMiResize = () => {
+      if (!miResizeItem) return;
+      $("content").value = miDocumentEditor.innerHTML;
+      setMiWorkStatus("Picture or file size changed — save your project to store it.");
+      const item = miResizeItem;
+      miResizeItem = null;
+      updateMiResizeGrip(item);
+    };
+    miResizeGrip.addEventListener("pointerup", finishMiResize);
+    miResizeGrip.addEventListener("pointercancel", finishMiResize);
+    window.addEventListener("resize", () => updateMiResizeGrip(miDocumentEditor.querySelector(".mi-image-selected,.mi-file-selected")));
+    miDocumentEditor.addEventListener("scroll", () => updateMiResizeGrip(miDocumentEditor.querySelector(".mi-image-selected,.mi-file-selected")));
     miDocumentEditor.addEventListener("input", () => {
       $("content").value = miDocumentEditor.innerHTML;
     });
