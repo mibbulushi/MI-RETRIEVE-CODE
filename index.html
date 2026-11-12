@@ -2296,6 +2296,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 @media(max-width:760px){#miEditorToolbar{gap:6px;padding:7px}#miEditorToolbar .mi-tool-group{padding:7px}#miEditorToolbar .mi-tool-label{font-size:10px}#miEditorToolbar button{height:29px;min-height:29px;padding:4px 7px}}
 
 .mi-document-editor{min-height:520px;padding:24px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#26364a;font:inherit;line-height:1.75;outline:none;overflow-wrap:anywhere}
+/* Keep floated Word-style pictures contained inside the document editing box. */
+.mi-document-editor::after{content:"";display:table;clear:both}.mi-document-editor [data-mi-document-image="true"]{max-width:100%;box-sizing:border-box}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="square"],.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="tight"]{max-width:min(100%,calc(100% - 14px));}
 .mi-document-editor:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(57,118,197,.12)}
 .mi-document-editor p{margin:0 0 14px}.mi-document-editor img{display:block;width:300px;height:200px;max-width:100%;max-height:none;object-fit:contain;object-position:left center;margin:14px 0;border:1px solid #b8cbe0;border-radius:8px;resize:both;overflow:auto;min-width:70px;min-height:50px;cursor:grab;box-sizing:border-box}.mi-document-editor img:active{cursor:grabbing}.mi-document-editor img.mi-image-selected{outline:2px solid #3478c8;outline-offset:3px;resize:both}.mi-document-editor img.mi-image-dragging{opacity:.45}
 .mi-document-tools{display:flex;align-items:center;gap:8px}.mi-document-tools button{margin:0}
@@ -3971,12 +3973,12 @@ body button svg{stroke:currentColor!important;}
           const ratio=st.w/Math.max(1,st.h);
           if(Math.abs(dx)>=Math.abs(dy))h=w/ratio;else w=h*ratio;
         }
-        w=Math.max(50,Math.min(miDocumentEditor.clientWidth-12,w));
+        const editorStyle=getComputedStyle(miDocumentEditor);const contentWidth=miDocumentEditor.clientWidth-parseFloat(editorStyle.paddingLeft)-parseFloat(editorStyle.paddingRight)-2;w=Math.max(50,Math.min(contentWidth,w));
         h=Math.max(35,Math.min(1200,h));
         item.style.width=Math.round(w)+"px";
         item.style.height=Math.round(h)+"px";
         item.style.maxWidth="100%";
-        if(isImage)item.style.objectFit="contain";
+        if(isImage){item.style.objectFit="contain";item.style.maxWidth="100%";}
         updateMiSelectionUI();
       }
     },{passive:false});
