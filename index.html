@@ -3373,6 +3373,7 @@ body button svg{stroke:currentColor!important;}
           </div>
           <div class="mi-editor-toolbar" id="miEditorToolbar" role="toolbar" aria-label="Document formatting">
             <label class="mi-tool-label" title="Font family">Font <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
+            <button type="button" class="secondary mi-format-icon" id="miChangeCaseBtn" title="Change selected text between UPPERCASE and lowercase" aria-label="Change letter case"><span aria-hidden="true">Aa</span></button>
             <label class="mi-tool-label" title="Font size">Size <select id="miFontSize" aria-label="Font size"><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">32</option></select></label>
             <label class="mi-tool-label mi-color-label" title="Text colour">Colour <input id="miFontColor" type="color" value="#26364a" aria-label="Text colour"></label>
             <button type="button" class="secondary mi-format-icon" data-mi-command="bold" title="Bold" aria-label="Bold"><b>B</b></button>
@@ -3614,6 +3615,37 @@ body button svg{stroke:currentColor!important;}
       document.execCommand(button.dataset.miCommand, false, null);
       $("content").value = miDocumentEditor.innerHTML;
       setMiWorkStatus("Formatting changed — save your project to store it.");
+    });
+    $("miChangeCaseBtn").addEventListener("click", () => {
+      restoreMiEditorSelection();
+      const selection = window.getSelection();
+      if (!selection || !selection.rangeCount || selection.isCollapsed) {
+        setMiWorkStatus("Select the text first, then use Aa to change its letter case.", "working");
+        return;
+      }
+      const range = selection.getRangeAt(0);
+      if (!miDocumentEditor.contains(range.commonAncestorContainer)) return;
+      const walker = document.createTreeWalker(miDocumentEditor, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        if (range.intersectsNode(node)) {
+          const start = node === range.startContainer ? range.startOffset : 0;
+          const end = node === range.endContainer ? range.endOffset : node.nodeValue.length;
+          if (end > start) nodes.push({node, start, end});
+        }
+      }
+      const selectedText = nodes.map(item => item.node.nodeValue.slice(item.start, item.end)).join("");
+      const makeUpper = selectedText !== selectedText.toUpperCase();
+      nodes.forEach(({node, start, end}) => {
+        const value = node.nodeValue;
+        const part = value.slice(start, end);
+        node.nodeValue = value.slice(0, start) + (makeUpper ? part.toUpperCase() : part.toLowerCase()) + value.slice(end);
+      });
+      $("content").value = miDocumentEditor.innerHTML;
+      setMiWorkStatus(makeUpper ? "Selected text changed to UPPERCASE." : "Selected text changed to lowercase.", "working");
+      selection.removeAllRanges();
+      miSavedEditorRange = null;
     });
     $("miFontFamily").addEventListener("change", event => {
       restoreMiEditorSelection();
