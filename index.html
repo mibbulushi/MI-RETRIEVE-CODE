@@ -2935,6 +2935,35 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
   margin-left:auto!important;
 }
 
+
+/* Small icon-only copy controls for generated code cards */
+#saveArea #saveResult .mi-copy-icon-button{
+  display:inline-flex!important;
+  flex:0 0 27px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:27px!important;
+  min-width:27px!important;
+  max-width:27px!important;
+  height:27px!important;
+  min-height:27px!important;
+  max-height:27px!important;
+  margin:0 0 0 auto!important;
+  padding:5px!important;
+  border-radius:6px!important;
+  cursor:pointer!important;
+}
+#saveArea #saveResult .mi-copy-icon-button svg{
+  display:block!important;
+  width:16px!important;
+  height:16px!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:1.8!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+
 </style>
 </head>
 <body>
@@ -3921,14 +3950,20 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       privateCode.textContent = codeRow.code;
       const privateCopy = document.createElement("button");
       privateCopy.type = "button";
-      privateCopy.className = "secondary";
-      privateCopy.textContent = "Copy private code";
+      privateCopy.className = "secondary mi-copy-icon-button";
+      privateCopy.type = "button";
+      privateCopy.title = "Copy private code";
+      privateCopy.setAttribute("aria-label", "Copy private code");
+      privateCopy.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg>';
       privateCopy.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(codeRow.code);
-          privateCopy.textContent = "Copied";
+          privateCopy.title = "Copied";
+          privateCopy.setAttribute("aria-label", "Copied");
+          privateCopy.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>';
         } catch {
-          privateCopy.textContent = "Select and copy the code above";
+          privateCopy.title = "Select and copy the code above";
+          privateCopy.setAttribute("aria-label", "Select and copy the code above");
         }
       });
       privateBlock.append(privateLabel, privateCode, privateCopy);
@@ -3990,13 +4025,19 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         shareCodeEl.textContent = shareRow.share_code;
         const shareCopy = document.createElement("button");
         shareCopy.type = "button";
-        shareCopy.textContent = "Copy student share code";
+        shareCopy.className = "secondary mi-copy-icon-button";
+        shareCopy.title = "Copy student share code";
+        shareCopy.setAttribute("aria-label", "Copy student share code");
+        shareCopy.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg>';
         shareCopy.addEventListener("click", async () => {
           try {
             await navigator.clipboard.writeText(shareRow.share_code);
-            shareCopy.textContent = "Copied";
+            shareCopy.title = "Copied";
+            shareCopy.setAttribute("aria-label", "Copied");
+            shareCopy.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>';
           } catch {
-            shareCopy.textContent = "Select and copy the code above";
+            shareCopy.title = "Select and copy the code above";
+            shareCopy.setAttribute("aria-label", "Select and copy the code above");
           }
         });
         const shareNote = document.createElement("p");
