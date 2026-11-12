@@ -2750,6 +2750,69 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
  #saveArea #saveResult .mi-generated-codes-row .mi-generated-code-value{font-size:.66rem!important}
 }
 
+
+/* Final equal sizing for Project title and Student Share Code password */
+#saveArea .mi-save-details{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:start!important;
+  gap:16px!important;
+}
+#saveArea .mi-save-details .mi-save-field{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  width:100%!important;
+  min-width:0!important;
+  gap:7px!important;
+  margin:0!important;
+  padding:0!important;
+}
+#saveArea .mi-save-details .mi-save-field>label{
+  display:flex!important;
+  align-items:center!important;
+  width:100%!important;
+  min-height:22px!important;
+  height:22px!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:.82rem!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+}
+#saveArea .mi-save-details #title,
+#saveArea .mi-save-details #newSharePassword{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:42px!important;
+  min-height:42px!important;
+  max-height:42px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:9px 12px!important;
+}
+#saveArea .mi-save-details .mi-password-help{
+  display:block!important;
+  min-height:30px!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:.72rem!important;
+  line-height:1.35!important;
+  white-space:normal!important;
+}
+@media(max-width:650px){
+  #saveArea .mi-save-details{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  #saveArea .mi-save-details .mi-save-field>label{white-space:normal!important;min-height:34px!important;height:34px!important;align-items:flex-end!important}
+  #saveArea .mi-save-details .mi-password-help{min-height:0!important}
+}
+@media(max-width:390px){
+  #saveArea .mi-save-details{grid-template-columns:minmax(0,1fr)!important}
+  #saveArea .mi-save-details .mi-save-field>label{height:auto!important;min-height:22px!important}
+}
 </style>
 </head>
 <body>
@@ -2843,11 +2906,9 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
               <input id="title" maxlength="200" placeholder="Enter your project title">
             </div>
             <div class="mi-save-field mi-save-password">
-              <label for="newSharePassword" class="mi-password-label">
-                <span>Student Share Code password (optional)</span>
-                <span class="mi-password-help">At least 8 characters. Share this password separately from the Share Code.</span>
-              </label>
+              <label for="newSharePassword" class="mi-password-label">Student Share Code password (optional)</label>
               <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Set a password if needed">
+              <span class="mi-password-help">At least 8 characters. Share this password separately from the Share Code.</span>
             </div>
           </div>
           <div class="mi-save-actions">
