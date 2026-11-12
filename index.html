@@ -2639,6 +2639,27 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 #saveArea .mi-save-actions .mi-save-submit{width:76px!important;max-width:76px!important;justify-self:end!important}
 #saveArea .mi-save-actions #saveBtn{width:76px!important;min-width:76px!important;max-width:76px!important;height:34px!important;min-height:34px!important;padding:0!important}
 @media(max-width:650px){#saveArea .mi-save-actions .mi-save-submit{width:76px!important;max-width:76px!important}#saveArea .mi-save-actions #saveBtn{width:76px!important;min-width:76px!important;max-width:76px!important}}
+
+/* Unified icon language for Insert Picture, Attach Files and Save Project */
+#saveArea .mi-document-tools #miInsertPictureBtn,
+#saveArea .mi-document-tools .mi-inline-attach{
+ min-height:38px!important;height:38px!important;display:inline-flex!important;align-items:center!important;gap:8px!important;
+ padding:0 12px!important;border:1px solid #d5deea!important;border-radius:9px!important;background:#fff!important;color:#26364a!important;
+ box-shadow:0 1px 2px rgba(25,45,70,.06)!important;font-size:.82rem!important;font-weight:600!important;line-height:1!important;
+}
+#saveArea .mi-document-tools #miInsertPictureBtn svg,
+#saveArea .mi-document-tools .mi-inline-attach label svg,
+#saveArea .mi-save-actions #saveBtn svg{
+ width:17px!important;height:17px!important;min-width:17px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+#saveArea .mi-document-tools .mi-inline-attach{padding:0 10px!important;gap:8px!important}
+#saveArea .mi-document-tools .mi-inline-attach label{display:inline-flex!important;align-items:center!important;gap:8px!important;margin:0!important;font-size:.82rem!important;font-weight:600!important;cursor:pointer!important}
+#saveArea .mi-document-tools .mi-inline-attach input[type="file"]{width:180px!important;max-width:30vw!important;height:28px!important;font-size:.74rem!important;padding:2px!important}
+#saveArea .mi-document-tools #miInsertPictureBtn:hover,#saveArea .mi-document-tools .mi-inline-attach:hover{border-color:#9db6d5!important;background:#f5f8fc!important}
+#saveArea .mi-save-actions #saveBtn{display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid #cbd8e8!important;border-radius:9px!important;background:#edf3fa!important;color:#285fa6!important;box-shadow:0 1px 2px rgba(25,45,70,.07)!important}
+#saveArea .mi-save-actions #saveBtn svg{width:17px!important;height:17px!important}
+#saveArea .mi-save-actions #saveBtn:hover{background:#e3edf9!important;border-color:#9db6d5!important}
+@media(max-width:650px){#saveArea .mi-document-tools #miInsertPictureBtn,#saveArea .mi-document-tools .mi-inline-attach{min-height:36px!important;height:auto!important;flex-wrap:wrap!important}#saveArea .mi-document-tools .mi-inline-attach input[type="file"]{max-width:100%!important}}
 </style>
 </head>
 <body>
@@ -2744,7 +2765,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
             </div>
             <div class="mi-save-submit">
               <label for="saveBtn">Save project</label>
-              <button id="saveBtn" type="button" aria-label="Save project" title="Save project"></button>
+              <button id="saveBtn" type="button" aria-label="Save project" title="Save project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3h2Z"/><path d="M7 3v6h10V3M7 21v-7h10v7"/></svg></button>
             </div>
           </div>
         </div>
@@ -2756,10 +2777,10 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
               <p class="small">Write your text and insert pictures anywhere in this document.</p>
             </div>
             <div class="mi-document-tools">
-              <button id="miInsertPictureBtn" class="secondary" type="button">＋ Insert Picture</button>
+              <button id="miInsertPictureBtn" class="secondary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Insert Picture</span></button>
               <input id="miDocumentImageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden>
               <div class="mi-inline-attach">
-                <label for="projectFiles">Attach Files</label>
+                <label for="projectFiles"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 12.5 7.2-7.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2"/></svg><span>Attach Files</span></label>
                 <input id="projectFiles" type="file" multiple>
               </div>
             </div>
