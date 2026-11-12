@@ -2446,6 +2446,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           <div class="project-save-field">
             <label for="projectFiles">Attach project files (images, PDF, Word, Excel, PowerPoint, ZIP, code, audio, video, etc.)</label>
             <input id="projectFiles" type="file" multiple>
+            <div id="projectFilesPreview" class="small" aria-live="polite" style="margin-top:8px"></div>
           </div>
         </div>
         <div class="project-save-notes">
@@ -3113,6 +3114,28 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         .filter(section => section.title || section.content);
     }
 
+    $("projectFiles").addEventListener("change", () => {
+      const files = Array.from($("projectFiles").files || []);
+      const preview = $("projectFilesPreview");
+      preview.replaceChildren();
+      if (!files.length) { preview.textContent = ""; return; }
+      const heading = document.createElement("strong");
+      heading.textContent = files.length + " file(s) selected:";
+      preview.append(heading);
+      const list = document.createElement("ul");
+      list.style.margin = "6px 0 0";
+      list.style.paddingLeft = "22px";
+      for (const file of files) {
+        const item = document.createElement("li");
+        const size = file.size < 1024 * 1024
+          ? (file.size / 1024).toFixed(1) + " KB"
+          : (file.size / (1024 * 1024)).toFixed(2) + " MB";
+        item.textContent = file.name + " (" + size + ")";
+        list.append(item);
+      }
+      preview.append(list);
+    });
+
     $("saveBtn").addEventListener("click", async () => {
       const title = $("title").value.trim();
       $("content").value = miDocumentEditor.innerHTML.trim();
@@ -3412,6 +3435,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       $("content").value = "";
       $("projectStructure").value = "";
       $("projectFiles").value = "";
+      $("projectFilesPreview").textContent = "";
       $("newSharePassword").value = "";
     });
 
