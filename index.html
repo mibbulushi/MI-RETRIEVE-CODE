@@ -2621,7 +2621,20 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
   }
 }
 
-  </style>
+  
+/* Clean project-first Save Project layout */
+#saveArea .mi-save-layout{display:flex!important;flex-direction:column!important;gap:18px!important;width:100%!important;margin:0 0 20px!important}
+#saveArea .mi-save-details{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)!important;gap:16px!important;align-items:start!important}
+#saveArea .mi-save-field,#saveArea .mi-save-code,#saveArea .mi-save-submit{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important;min-width:0!important;width:100%!important;margin:0!important;padding:0!important}
+#saveArea .mi-save-layout label{display:block!important;position:static!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;font-size:.82rem!important;font-weight:600!important;line-height:1.35!important;white-space:normal!important;overflow:visible!important}
+#saveArea .mi-save-layout #title,#saveArea .mi-save-layout #newSharePassword{display:block!important;width:100%!important;min-width:0!important;max-width:none!important;height:42px!important;min-height:42px!important;box-sizing:border-box!important;margin:0!important;padding:9px 12px!important}
+#saveArea .mi-save-layout .mi-password-help{display:block!important;margin:0!important;padding:0!important;min-height:0!important;font-size:.74rem!important;line-height:1.4!important;overflow-wrap:anywhere!important}
+#saveArea .mi-save-actions{display:grid!important;grid-template-columns:minmax(0,1fr) 150px!important;gap:16px!important;align-items:end!important}
+#saveArea .mi-save-actions #saveResult{display:flex!important;align-items:center!important;width:100%!important;min-width:0!important;min-height:42px!important;height:auto!important;box-sizing:border-box!important;margin:0!important;padding:9px 12px!important;overflow-wrap:anywhere!important}
+#saveArea .mi-save-actions #saveBtn{display:block!important;width:100%!important;height:42px!important;min-height:42px!important;box-sizing:border-box!important;margin:0!important;padding:0!important;font-size:0!important}
+@media(max-width:650px){#saveArea .mi-save-details{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}#saveArea .mi-save-actions{grid-template-columns:minmax(0,1fr) 110px!important;gap:10px!important}}
+@media(max-width:390px){#saveArea .mi-save-actions{grid-template-columns:minmax(0,1fr)!important}#saveArea .mi-save-submit{max-width:110px!important}}
+</style>
 </head>
 <body>
   <div id="top"></div>
@@ -2707,23 +2720,27 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
     <section id="appArea" class="hidden">
       <section class="card page-panel page-hidden" id="saveArea" data-panel="new-project">
-        <div class="project-title-password-row project-save-all-in-one-row project-three-box-row project-four-item-row">
-          <div class="project-title-password-field">
-            <label for="title">Title</label>
-            <input id="title" maxlength="200" placeholder="Enter your project title">
+        <div class="mi-save-layout">
+          <div class="mi-save-details">
+            <div class="mi-save-field mi-save-title">
+              <label for="title">Project title</label>
+              <input id="title" maxlength="200" placeholder="Enter your project title">
+            </div>
+            <div class="mi-save-field mi-save-password">
+              <label for="newSharePassword">Student Share Code password (optional)</label>
+              <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Set a password if needed">
+              <p class="small mi-password-help">At least 8 characters. Share this password separately from the Share Code.</p>
+            </div>
           </div>
-          <div class="project-title-password-field">
-            <label for="newSharePassword">Optional student Share Code password</label>
-            <input id="newSharePassword" type="password" autocomplete="new-password" maxlength="256" placeholder="Optional password">
-            <p class="small mi-password-help">If you set a password, use at least 8 characters. Share it separately from the Share Code.</p>
-          </div>
-          <div class="project-code-field">
-            <label>Your generated Retrieve Code</label>
-            <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
-          </div>
-          <div class="project-save-button-field">
-            <label>Save project</label>
-            <button id="saveBtn" type="button" aria-label="Save project"></button>
+          <div class="mi-save-actions">
+            <div class="mi-save-code">
+              <label>Your generated Retrieve Code</label>
+              <div id="saveResult" class="result" role="status" aria-live="polite">Your generated Retrieve Code will appear here.</div>
+            </div>
+            <div class="mi-save-submit">
+              <label for="saveBtn">Save project</label>
+              <button id="saveBtn" type="button" aria-label="Save project" title="Save project"></button>
+            </div>
           </div>
         </div>
         <div id="titleValidation" class="title-validation" role="alert" aria-live="polite"></div>
