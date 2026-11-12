@@ -3173,6 +3173,47 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
   }
 }
 
+
+/* Unified MI button theme: consistent refined blue with a subtle embossed finish */
+button,
+#saveArea .mi-save-actions #saveBtn{
+  color:#ffffff!important;
+  background:linear-gradient(180deg,#527eae 0%,#315f91 100%)!important;
+  border:1px solid #294f79!important;
+  border-radius:8px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 2px 0 #23466c,0 3px 6px rgba(24,53,85,.16)!important;
+  text-shadow:0 1px 1px rgba(15,39,66,.2)!important;
+  transition:background .14s ease,transform .14s ease,box-shadow .14s ease!important;
+}
+button:hover:not(:disabled),
+#saveArea .mi-save-actions #saveBtn:hover:not(:disabled){
+  color:#ffffff!important;
+  background:linear-gradient(180deg,#628dbb 0%,#3c6d9f 100%)!important;
+  border-color:#294f79!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 2px 0 #23466c,0 4px 8px rgba(24,53,85,.2)!important;
+  transform:translateY(-1px);
+}
+button:active:not(:disabled),
+#saveArea .mi-save-actions #saveBtn:active:not(:disabled){
+  color:#ffffff!important;
+  background:linear-gradient(180deg,#315f91 0%,#284f7b 100%)!important;
+  transform:translateY(1px)!important;
+  box-shadow:inset 0 2px 4px rgba(10,29,49,.2),0 1px 0 #23466c!important;
+}
+button:disabled,
+#saveArea .mi-save-actions #saveBtn:disabled{
+  color:#edf3f9!important;
+  background:linear-gradient(180deg,#9aafc5 0%,#8198b1 100%)!important;
+  border-color:#8298b0!important;
+  box-shadow:0 1px 2px rgba(24,53,85,.1)!important;
+  text-shadow:none!important;
+  transform:none!important;
+  cursor:not-allowed!important;
+}
+button svg{
+  stroke:currentColor!important;
+}
+
 </style>
 </head>
 <body>
