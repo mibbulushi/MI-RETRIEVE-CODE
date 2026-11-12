@@ -2216,7 +2216,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
 /* MI Project Builder: flexible, numbered project sections */
 .mi-builder-panel{margin:22px 0;padding:20px;border:1px solid #c9d9ed;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf5ff)}
-#miDocumentEditor [data-mi-attached-file="true"]{cursor:grab!important;user-select:none}#miDocumentEditor [data-mi-attached-file="true"]:active{cursor:grabbing!important}#miDocumentEditor .mi-document-item-dragging{opacity:.45;outline:2px dashed #5b9bd5;outline-offset:3px}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}
+#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}
 .mi-builder-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
 .mi-builder-heading h3{margin:0 0 5px;color:#123866;font-size:1.15rem}
 .mi-builder-heading p{margin:0}
@@ -3839,60 +3839,66 @@ body button svg{stroke:currentColor!important;}
         $("miDocumentImageInput").dispatchEvent(new Event("change"));
       }
     });
-    let miDraggingDocumentItem = null;
+    // Reliable pointer-based moving for inserted pictures and attached file cards.
+    // This works inside contenteditable without relying on browser native drag-and-drop.
+    let miPointerMovingItem = null;
+    let miPointerMoved = false;
+    let miPointerStartX = 0;
+    let miPointerStartY = 0;
+    const miMovableSelector = '[data-mi-document-image="true"],[data-mi-attached-file="true"]';
     miDocumentEditor.addEventListener("click", event => {
       miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(item => item.classList.remove("mi-image-selected","mi-file-selected"));
-      const target = event.target instanceof Element ? event.target.closest('[data-mi-document-image="true"],[data-mi-attached-file="true"]') : null;
+      const target = event.target instanceof Element ? event.target.closest(miMovableSelector) : null;
       if (target && miDocumentEditor.contains(target)) target.classList.add(target.dataset.miAttachedFile === "true" ? "mi-file-selected" : "mi-image-selected");
     });
-    miDocumentEditor.addEventListener("dragstart", event => {
-      const target = event.target instanceof Element ? event.target.closest('[data-mi-document-image="true"],[data-mi-attached-file="true"]') : null;
+    miDocumentEditor.addEventListener("pointerdown", event => {
+      if (event.button !== 0) return;
+      const target = event.target instanceof Element ? event.target.closest(miMovableSelector) : null;
       if (!target || !miDocumentEditor.contains(target)) return;
-      miDraggingDocumentItem = target;
-      target.classList.add("mi-document-item-dragging");
-      event.dataTransfer.effectAllowed = "move";
-      event.dataTransfer.setData("text/plain", target.dataset.miAttachedFile === "true" ? "MI_DOCUMENT_FILE" : "MI_DOCUMENT_IMAGE");
+      miPointerMovingItem = target;
+      miPointerMoved = false;
+      miPointerStartX = event.clientX;
+      miPointerStartY = event.clientY;
+      target.setPointerCapture?.(event.pointerId);
     });
-    miDocumentEditor.addEventListener("dragover", event => {
-      if (miDraggingDocumentItem) {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = "move";
-      }
-    });
-    miDocumentEditor.addEventListener("drop", event => {
-      if (!miDraggingDocumentItem) return;
+    miDocumentEditor.addEventListener("pointermove", event => {
+      if (!miPointerMovingItem || (event.buttons & 1) !== 1) return;
+      if (!miPointerMoved && Math.hypot(event.clientX - miPointerStartX, event.clientY - miPointerStartY) < 5) return;
+      miPointerMoved = true;
       event.preventDefault();
-      const movingItem = miDraggingDocumentItem;
-      const target = document.elementFromPoint(event.clientX, event.clientY);
-      const targetItem = target instanceof Element ? target.closest('[data-mi-document-image="true"],[data-mi-attached-file="true"]') : null;
-      if (targetItem && targetItem !== movingItem && miDocumentEditor.contains(targetItem)) {
+      const moving = miPointerMovingItem;
+      moving.classList.add("mi-document-item-dragging");
+      const underPointer = document.elementFromPoint(event.clientX, event.clientY);
+      const targetItem = underPointer instanceof Element ? underPointer.closest(miMovableSelector) : null;
+      if (targetItem && targetItem !== moving && miDocumentEditor.contains(targetItem)) {
         const rect = targetItem.getBoundingClientRect();
-        targetItem.parentNode.insertBefore(movingItem, event.clientY < rect.top + rect.height / 2 ? targetItem : targetItem.nextSibling);
-      } else {
-        const caret = document.caretRangeFromPoint
-          ? document.caretRangeFromPoint(event.clientX, event.clientY)
-          : null;
-        if (caret && miDocumentEditor.contains(caret.startContainer)) {
-          const block = caret.startContainer.nodeType === Node.ELEMENT_NODE
-            ? caret.startContainer.childNodes[caret.startOffset] || null
-            : caret.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
-          if (block && block !== movingItem && miDocumentEditor.contains(block)) {
-            block.parentNode.insertBefore(movingItem, block);
-          } else {
-            caret.insertNode(movingItem);
-          }
-        } else {
-          miDocumentEditor.append(movingItem);
+        targetItem.parentNode.insertBefore(moving, event.clientY < rect.top + rect.height / 2 ? targetItem : targetItem.nextSibling);
+        return;
+      }
+      const caret = document.caretRangeFromPoint ? document.caretRangeFromPoint(event.clientX, event.clientY) : null;
+      if (caret && miDocumentEditor.contains(caret.startContainer)) {
+        let block = caret.startContainer.nodeType === Node.ELEMENT_NODE
+          ? caret.startContainer.childNodes[caret.startOffset] || caret.startContainer.lastElementChild
+          : caret.startContainer.parentElement?.closest("p,div,h1,h2,h3,h4,li,blockquote");
+        if (block && block !== moving && miDocumentEditor.contains(block)) {
+          const rect = block.getBoundingClientRect();
+          block.parentNode.insertBefore(moving, event.clientY < rect.top + rect.height / 2 ? block : block.nextSibling);
         }
       }
-      movingItem.classList.remove("mi-document-item-dragging");
-      miDraggingDocumentItem = null;
-      $("content").value = miDocumentEditor.innerHTML;
     });
-    miDocumentEditor.addEventListener("dragend", () => {
-      if (miDraggingDocumentItem) miDraggingDocumentItem.classList.remove("mi-document-item-dragging");
-      miDraggingDocumentItem = null;
-    });
+    const finishMiPointerMove = () => {
+      if (!miPointerMovingItem) return;
+      const moving = miPointerMovingItem;
+      moving.classList.remove("mi-document-item-dragging");
+      if (miPointerMoved) {
+        moving.classList.add(moving.dataset.miAttachedFile === "true" ? "mi-file-selected" : "mi-image-selected");
+        $("content").value = miDocumentEditor.innerHTML;
+      }
+      miPointerMovingItem = null;
+      miPointerMoved = false;
+    };
+    miDocumentEditor.addEventListener("pointerup", finishMiPointerMove);
+    miDocumentEditor.addEventListener("pointercancel", finishMiPointerMove);
     miDocumentEditor.addEventListener("input", () => {
       $("content").value = miDocumentEditor.innerHTML;
     });
@@ -4130,8 +4136,8 @@ body button svg{stroke:currentColor!important;}
         const card = document.createElement("div");
         card.contentEditable = "false";
         card.dataset.miAttachedFile = "true";
-        card.draggable = true;
-        card.title = "Drag this file card to move it anywhere in the document";
+        card.draggable = false;
+        card.title = "Press and hold the left mouse button, then move this file to reposition it";
         card.style.cssText = "display:flex;align-items:center;gap:10px;max-width:100%;margin:12px 0;padding:12px 14px;border:1px solid #cbd8e8;border-radius:9px;background:#f4f8fd;color:#26364a;font:inherit;cursor:grab;user-select:none;";
         const icon = document.createElement("span");
         icon.textContent = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf") ? "📄" : "📎";
