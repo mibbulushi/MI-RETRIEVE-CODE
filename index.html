@@ -3803,7 +3803,13 @@ img{max-width:100%}
         image.src = dataUrl;
         image.alt = file.name;
         image.dataset.miDocumentImage = "true";
-        image.draggable = true;
+        image.draggable = false;
+        image.style.display = "block";
+        image.style.float = "none";
+        image.style.position = "static";
+        image.style.clear = "both";
+        image.style.maxWidth = "100%";
+        image.style.margin = "14px 0";
         const selection = window.getSelection();
         if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) {
           const range = selection.getRangeAt(0);
@@ -4008,6 +4014,29 @@ img{max-width:100%}
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
       if(target&&miDocumentEditor.contains(target))selectMiDocumentItem(target);
     });
+    // Recovery: if a document picture has become detached from the white editor,
+    // clicking it brings it back into the editor so it can be moved normally.
+    document.addEventListener("pointerdown",event=>{
+      if(event.button!==0)return;
+      const target=event.target instanceof Element?event.target.closest('[data-mi-document-image="true"]'):null;
+      if(!target || miDocumentEditor.contains(target))return;
+      event.preventDefault();
+      event.stopPropagation();
+      target.style.float="none";
+      target.style.position="static";
+      target.style.clear="both";
+      target.style.maxWidth="100%";
+      target.style.margin="14px 0";
+      miDocumentEditor.append(target);
+      const spacer=document.createElement("p");
+      spacer.append(document.createElement("br"));
+      target.after(spacer);
+      selectMiDocumentItem(target);
+      miMoveState={item:target,x:event.clientX,y:event.clientY,moved:false,pointerId:event.pointerId};
+      try{target.setPointerCapture(event.pointerId);}catch(_){ }
+      syncMiDocumentHtml();
+      setMiWorkStatus("Picture restored to the document — you can now move or resize it. Save your project to keep the change.","working");
+    },true);
     miDocumentEditor.addEventListener("pointerdown",event=>{
       if(event.button!==0 || event.target.closest?.(".mi-word-selection-ui"))return;
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
