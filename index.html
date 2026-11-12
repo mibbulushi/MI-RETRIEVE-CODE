@@ -3639,10 +3639,13 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
       }
 
       $("saveResult").replaceChildren();
+      const privateBlock = document.createElement("div");
+      privateBlock.className = "mi-generated-code-block mi-private-code-block";
       const privateLabel = document.createElement("div");
+      privateLabel.className = "mi-generated-code-label";
       privateLabel.textContent = "Private account Retrieve Code:";
       const privateCode = document.createElement("div");
-      privateCode.className = "code";
+      privateCode.className = "code mi-generated-code-value";
       privateCode.textContent = codeRow.code;
       const privateCopy = document.createElement("button");
       privateCopy.type = "button";
@@ -3656,7 +3659,8 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           privateCopy.textContent = "Select and copy the code above";
         }
       });
-      $("saveResult").append(privateLabel, privateCode, privateCopy);
+      privateBlock.append(privateLabel, privateCode, privateCopy);
+      $("saveResult").append(privateBlock);
 
       let shareCreated = false;
       let shareRow = null;
@@ -3677,9 +3681,13 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         }
       }
 
+      const shareBlock = document.createElement("div");
+      shareBlock.className = "mi-generated-code-block mi-student-code-block";
       const shareHeading = document.createElement("h3");
+      shareHeading.className = "mi-generated-code-label";
       shareHeading.textContent = "Student Share Code:";
-      $("saveResult").append(shareHeading);
+      shareBlock.append(shareHeading);
+      $("saveResult").append(shareBlock);
       if (shareCreated && shareRow) {
         const requestedSharePassword = $("newSharePassword").value;
         let passwordApplied = !requestedSharePassword;
@@ -3704,7 +3712,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
           }
         }
         const shareCodeEl = document.createElement("div");
-        shareCodeEl.className = "code";
+        shareCodeEl.className = "code mi-generated-code-value";
         shareCodeEl.textContent = shareRow.share_code;
         const shareCopy = document.createElement("button");
         shareCopy.type = "button";
@@ -3722,12 +3730,15 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
         shareNote.textContent = requestedSharePassword && passwordApplied
           ? "Send the Share Code and its password separately to the intended recipients."
           : "Send this short code to your students. Anyone with this code can view this shared information.";
-        $("saveResult").append(shareCodeEl, shareCopy, shareNote);
+        shareCopy.classList.add("mi-generated-copy-button");
+        shareNote.classList.add("mi-generated-code-note");
+        shareBlock.append(shareCodeEl, shareCopy, shareNote);
       } else {
         const shareNote = document.createElement("p");
         shareNote.className = "notice";
         shareNote.textContent = "Your information was saved, but student sharing is not enabled yet. Apply the SQL setup file named supabase-sharing-setup.sql in your Supabase SQL Editor, then save new information again. Details: " + friendlyError(shareError);
-        $("saveResult").append(shareNote);
+        shareNote.classList.add("mi-generated-code-note");
+        shareBlock.append(shareNote);
       }
 
       // Show successfully saved section pictures in the project save result.
@@ -4390,3 +4401,45 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 </script>
 </body>
 </html>
+
+/* Keep generated Retrieve and Student Share codes compact after saving */
+#saveArea .mi-save-actions{grid-template-columns:minmax(0,1fr) 76px!important;align-items:start!important}
+#saveArea .mi-save-actions .mi-save-code{min-width:0!important;align-self:start!important}
+#saveArea .mi-save-actions #saveResult{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ justify-content:flex-start!important;gap:10px!important;width:100%!important;
+ min-width:0!important;height:auto!important;min-height:42px!important;
+ max-height:none!important;box-sizing:border-box!important;overflow:visible!important;
+}
+#saveArea #saveResult .mi-generated-code-block{
+ display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+ gap:6px!important;width:100%!important;max-width:560px!important;min-width:0!important;
+ flex:0 0 auto!important;box-sizing:border-box!important;
+ padding:10px 12px!important;margin:0!important;border:1px solid #dce5f0!important;
+ border-radius:9px!important;background:#f8fbff!important;
+}
+#saveArea #saveResult .mi-generated-code-label{
+ display:block!important;width:100%!important;margin:0!important;padding:0!important;
+ font-size:.84rem!important;line-height:1.3!important;font-weight:650!important;
+}
+#saveArea #saveResult .mi-generated-code-value{
+ display:block!important;width:auto!important;max-width:100%!important;min-width:0!important;
+ min-height:0!important;height:auto!important;box-sizing:border-box!important;
+ margin:0!important;padding:7px 9px!important;font-size:.88rem!important;
+ line-height:1.35!important;letter-spacing:.035em!important;overflow-wrap:anywhere!important;
+ word-break:break-word!important;
+}
+#saveArea #saveResult .mi-generated-code-block button{
+ display:inline-flex!important;align-self:flex-start!important;width:auto!important;
+ max-width:100%!important;min-height:32px!important;height:auto!important;
+ margin:0!important;padding:6px 10px!important;font-size:.76rem!important;
+ line-height:1.2!important;white-space:normal!important;
+}
+#saveArea #saveResult .mi-generated-code-note{
+ margin:0!important;padding:0!important;font-size:.76rem!important;line-height:1.35!important;
+}
+#saveArea #saveResult .mi-generated-code-block h3{font-size:.86rem!important;margin:0!important}
+@media(max-width:560px){
+ #saveArea .mi-save-actions{grid-template-columns:minmax(0,1fr)!important}
+ #saveArea .mi-save-actions .mi-save-submit{justify-self:start!important}
+}
