@@ -3050,6 +3050,54 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
   box-sizing:border-box!important;
 }
 
+
+/* Match the password input width to the full label/help text above it */
+@media(min-width:651px){
+  #saveArea .mi-save-details{
+    grid-template-columns:minmax(0,1fr) max-content!important;
+    column-gap:20px!important;
+  }
+  #saveArea .mi-save-details .mi-save-password{
+    width:max-content!important;
+    max-width:100%!important;
+  }
+  #saveArea .mi-save-details .mi-save-password .mi-password-label{
+    display:flex!important;
+    flex-direction:column!important;
+    flex-wrap:nowrap!important;
+    align-items:flex-start!important;
+    width:max-content!important;
+    max-width:100%!important;
+    white-space:normal!important;
+  }
+  #saveArea .mi-save-details .mi-save-password .mi-password-title,
+  #saveArea .mi-save-details .mi-save-password .mi-password-help{
+    display:block!important;
+    width:max-content!important;
+    max-width:100%!important;
+    white-space:nowrap!important;
+    overflow-wrap:normal!important;
+  }
+  #saveArea .mi-save-details .mi-save-password #newSharePassword{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+}
+@media(max-width:650px){
+  #saveArea .mi-save-details .mi-save-password,
+  #saveArea .mi-save-details .mi-save-password .mi-password-label,
+  #saveArea .mi-save-details .mi-save-password #newSharePassword{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  #saveArea .mi-save-details .mi-save-password .mi-password-title,
+  #saveArea .mi-save-details .mi-save-password .mi-password-help{
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+
 </style>
 </head>
 <body>
