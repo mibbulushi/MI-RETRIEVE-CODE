@@ -4254,6 +4254,36 @@ img{max-width:100%}
     });
     miLayoutMenu.append(layoutGrid);
     miSelectionUI.append(miLayoutMenu);
+    function makeMiPopupMovable(popup,handle){
+      if(!popup||!handle||popup.dataset.miMovablePopup==="true")return;
+      popup.dataset.miMovablePopup="true";
+      handle.style.cursor="move";handle.style.userSelect="none";handle.title="Drag to move this popup";
+      handle.addEventListener("pointerdown",event=>{
+        if(event.button!==0)return;
+        event.preventDefault();event.stopPropagation();
+        const rect=popup.getBoundingClientRect(),parent=popup.offsetParent;
+        const parentRect=parent?parent.getBoundingClientRect():{left:0,top:0};
+        const sx=event.clientX,sy=event.clientY;
+        const sl=rect.left-parentRect.left+(parent?parent.scrollLeft:window.scrollX);
+        const st=rect.top-parentRect.top+(parent?parent.scrollTop:window.scrollY);
+        popup.style.left=sl+"px";popup.style.top=st+"px";popup.style.right="auto";popup.style.bottom="auto";
+        const move=e=>{popup.style.left=(sl+e.clientX-sx)+"px";popup.style.top=(st+e.clientY-sy)+"px";};
+        const stop=()=>{document.removeEventListener("pointermove",move);document.removeEventListener("pointerup",stop);};
+        document.addEventListener("pointermove",move);document.addEventListener("pointerup",stop,{once:true});
+      });
+    }
+    const miCropPanelDragHandle=miCropPanel.firstElementChild;
+    const miCropMenuDragHandle=document.createElement("div");
+    miCropMenuDragHandle.textContent="Crop options";
+    miCropMenuDragHandle.style.cssText="padding:7px 12px;border-bottom:1px solid #e5e5e5;color:#444;font-weight:600;cursor:move;";
+    miCropMenu.insertBefore(miCropMenuDragHandle,miCropMenu.firstChild);
+    const miLayoutMenuDragHandle=document.createElement("div");
+    miLayoutMenuDragHandle.textContent="Wrap Text";
+    miLayoutMenuDragHandle.style.cssText="padding:7px 10px;margin:-2px -2px 6px;border-bottom:1px solid #e5e5e5;color:#444;font-size:12px;font-weight:600;cursor:move;";
+    miLayoutMenu.insertBefore(miLayoutMenuDragHandle,miLayoutMenu.firstChild);
+    makeMiPopupMovable(miCropPanel,miCropPanelDragHandle);
+    makeMiPopupMovable(miCropMenu,miCropMenuDragHandle);
+    makeMiPopupMovable(miLayoutMenu,miLayoutMenuDragHandle);
     // Keep editor controls outside contenteditable so they never become document content.
     // A fixed overlay uses the same viewport coordinates returned by getBoundingClientRect().
     document.body.append(miSelectionUI);
@@ -4383,6 +4413,11 @@ img{max-width:100%}
     miWordContextMenu.className="mi-word-context-menu";
     miWordContextMenu.hidden=true;
     document.body.append(miWordContextMenu);
+    const miContextMenuDragHandle=document.createElement("div");
+    miContextMenuDragHandle.textContent="Picture options";
+    miContextMenuDragHandle.style.cssText="padding:8px 12px;border-bottom:1px solid #e5e7eb;background:#fff;color:#444;font-size:12px;font-weight:600;cursor:move;";
+    miWordContextMenu.append(miContextMenuDragHandle);
+    makeMiPopupMovable(miWordContextMenu,miContextMenuDragHandle);
     let miDocumentClipboard=[];
     function getMiCommandSelection(fallback){
       const chosen=Array.from(miSelectedDocumentItems).filter(node=>miDocumentEditor.contains(node));
