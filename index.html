@@ -3491,6 +3491,13 @@ img{max-width:100%}
  #miDocumentEditor{padding:28px 20px!important}
 }
 
+/* Compact Microsoft Word-style view-mode icon buttons */
+.mi-document-viewbar .mi-view-mode-button{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:30px!important;height:27px!important;min-width:30px!important;padding:3px!important;border:1px solid transparent!important;border-radius:2px!important;background:transparent!important;color:#5b6570!important;box-shadow:none!important}
+.mi-document-viewbar .mi-view-mode-button svg{display:block;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
+.mi-document-viewbar .mi-view-mode-button:hover{background:#f0f3f6!important;border-color:#cbd2da!important}
+.mi-document-viewbar .mi-view-mode-button.is-active{background:#e8f1fb!important;border-color:#9db8d5!important;color:#185a91!important;box-shadow:inset 0 -2px 0 #2878c8!important}
+.mi-document-viewbar .mi-view-mode-button:focus-visible{outline:2px solid #2878c8!important;outline-offset:1px}
+@media(max-width:650px){.mi-document-viewbar .mi-view-mode-button{width:25px!important;min-width:25px!important;height:24px!important;padding:2px!important}.mi-document-viewbar .mi-view-mode-button svg{width:17px;height:17px}}
 /* Word-like zoom slider and +/- controls in the status row */
 .mi-document-zoom{display:flex;align-items:center;gap:5px;flex:0 0 auto;padding-left:9px;margin-left:4px;border-left:1px solid #d7dde5;white-space:nowrap}
 .mi-document-zoom .mi-zoom-step{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;min-width:25px;margin:0;padding:0;border:1px solid #cbd2da;border-radius:3px;background:#fff;color:#354252;box-shadow:none;text-shadow:none;font:18px/1 Arial,sans-serif;cursor:pointer}
@@ -6249,10 +6256,15 @@ img{max-width:100%}
         viewbar.className="mi-document-viewbar";
         viewbar.setAttribute("role","toolbar");
         viewbar.setAttribute("aria-label","Document view");
-        const viewModes=[["read","Read Mode"],["print","Print Layout"],["web","Web Layout"]];
+        const viewModes=[
+          ["read","Read Mode",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.2C9.2 4.4 5.8 4.2 2.8 5.3v13.2c3.2-1.1 6.4-.8 9.2 1.2 2.8-2 6-2.3 9.2-1.2V5.3C18.2 4.2 14.8 4.4 12 6.2Z"/><path d="M12 6.2v13.5M5.2 8.2c1.7-.3 3.2 0 4.5.7M18.8 8.2c-1.7-.3-3.2 0-4.5.7"/></svg>'],
+          ["print","Print Layout",'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.8h8l4 4v14.4H6z"/><path d="M14 2.8v4h4M9 12h6M9 15.5h6"/></svg>'],
+          ["web","Web Layout",'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M2.9 12h18.2M12 2.8c2.3 2.5 3.4 5.6 3.4 9.2s-1.1 6.7-3.4 9.2c-2.3-2.5-3.4-5.6-3.4-9.2S9.7 5.3 12 2.8Z"/></svg>']
+        ];
         const viewButtons={};
-        viewModes.forEach(([mode,label])=>{
-          const button=document.createElement("button");button.type="button";button.textContent=label;
+        viewModes.forEach(([mode,label,iconSvg])=>{
+          const button=document.createElement("button");button.type="button";button.className="mi-view-mode-button";
+          button.innerHTML=iconSvg;button.setAttribute("aria-label",label);button.title=label;
           button.addEventListener("click",()=>{
             stage.dataset.viewMode=mode;
             editor.contentEditable=mode==="read"?"false":"true";
