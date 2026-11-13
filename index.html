@@ -2297,7 +2297,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
 .mi-document-editor{min-height:520px;padding:24px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#26364a;font:inherit;line-height:1.75;outline:none;overflow-wrap:anywhere}
 /* Keep floated Word-style pictures contained inside the document editing box. */
-.mi-document-editor::after{content:"";display:table;clear:both}.mi-document-editor [data-mi-document-image="true"]{max-width:100%;box-sizing:border-box;float:none!important;clear:both!important;display:block!important}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="square"],.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="tight"]{max-width:min(100%,calc(100% - 14px));}
+.mi-document-editor::after{content:"";display:table;clear:both}.mi-document-editor [data-mi-document-image="true"]{max-width:100%;box-sizing:border-box;clear:none;display:block}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="inline"]{display:inline-block;vertical-align:middle;float:none}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="square"],.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="tight"]{max-width:min(100%,calc(100% - 14px));float:left;clear:none;margin:8px 16px 8px 0}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="top-bottom"]{display:block;float:none;clear:both;margin:14px 0}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="behind"]{position:absolute;z-index:0;opacity:.72}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="front"]{position:absolute;z-index:5;opacity:1}.mi-word-context-menu{position:fixed;z-index:100001;min-width:220px;padding:6px;background:#fff;border:1px solid #cbd5e1;border-radius:9px;box-shadow:0 12px 32px rgba(15,35,60,.2);color:#24364b;font:13px/1.35 system-ui,sans-serif}.mi-word-context-menu button{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;min-height:34px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}.mi-word-context-menu button:hover{background:#edf4fc}.mi-word-context-menu .mi-menu-divider{height:1px;margin:5px 4px;background:#e5eaf0}.mi-word-size-dialog{position:fixed;z-index:100002;left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,calc(100vw - 32px));padding:18px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 18px 48px rgba(15,35,60,.25);color:#24364b;font:13px system-ui,sans-serif}.mi-word-size-dialog label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0}.mi-word-size-dialog input[type=number]{width:105px;padding:7px;border:1px solid #b8c6d8;border-radius:6px}
 .mi-document-editor:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(57,118,197,.12)}
 .mi-document-editor p{margin:0 0 14px}.mi-document-editor img{display:block;width:300px;height:200px;max-width:100%;max-height:none;object-fit:contain;object-position:left center;margin:14px 0;border:1px solid #b8cbe0;border-radius:8px;resize:both;overflow:auto;min-width:70px;min-height:50px;cursor:grab;box-sizing:border-box}.mi-document-editor img:active{cursor:grabbing}.mi-document-editor img.mi-image-selected{outline:2px solid #3478c8;outline-offset:3px;resize:both}.mi-document-editor img.mi-image-dragging{opacity:.45}
 .mi-document-tools{display:flex;align-items:center;gap:8px}.mi-document-tools button{margin:0}
@@ -4145,11 +4145,14 @@ img{max-width:100%}
       miSelectionUI.style.top=Math.max(0,r.top)+"px";
       miSelectionUI.style.width=Math.max(12,r.width)+"px";
       miSelectionUI.style.height=Math.max(12,r.height)+"px";
-      miLayoutMenu.style.display="none";
-      miCropPanel.style.display="none";
-      miLayoutButton.style.display="none";
-      miCropButton.style.display="none";
-      miRemoveItemButton.style.display="none";
+      miLayoutButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
+      miCropButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
+      miRemoveItemButton.style.display="block";
+      miSelectionUI.style.pointerEvents="none";
+      miLayoutButton.style.pointerEvents="auto";
+      miCropButton.style.pointerEvents="auto";
+      miRemoveItemButton.style.pointerEvents="auto";
+      Object.values(miHandles).forEach(handle=>handle.style.pointerEvents="auto");
     }
     function selectMiDocumentItem(item){
       miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(n=>n.classList.remove("mi-image-selected","mi-file-selected"));
@@ -4168,17 +4171,80 @@ img{max-width:100%}
       item.style.float="";
       item.style.display="block";
       item.style.verticalAlign="";
+      item.style.clear="";
+      item.style.opacity="1";
       item.style.margin="14px 0";
-      if(layout==="inline"){item.style.display="inline-block";item.style.verticalAlign="middle";item.style.float="none";}
-      if(layout==="square"||layout==="tight"){item.style.float="none";item.style.clear="both";item.style.margin="14px 0";item.style.display="block";}
+      if(layout==="inline"){item.style.display="inline-block";item.style.verticalAlign="middle";item.style.float="none";item.style.margin="8px 8px";}
+      if(layout==="square"||layout==="tight"){item.style.float="left";item.style.clear="none";item.style.margin="8px 16px 8px 0";item.style.display="block";}
       if(layout==="top-bottom"){item.style.float="none";item.style.display="block";item.style.clear="both";item.style.margin="14px 0";}
-      if(layout==="behind"){item.style.position="relative";item.style.zIndex="0";item.style.opacity="0.72";}
-      if(layout==="front"){item.style.position="relative";item.style.zIndex="5";item.style.opacity="1";}
+      if(layout==="behind"){item.style.position="absolute";item.style.zIndex="0";item.style.opacity="0.72";}
+      if(layout==="front"){item.style.position="absolute";item.style.zIndex="5";item.style.opacity="1";}
       syncMiDocumentHtml();updateMiSelectionUI();
       setMiWorkStatus("Picture layout changed — save your project to store it.");
       miLayoutMenu.style.display="none";
     }
     miLayoutButton.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();miLayoutMenu.style.display=miLayoutMenu.style.display==="block"?"none":"block";});
+    // Microsoft Word-like context menu for pictures and attached files.
+    const miWordContextMenu=document.createElement("div");
+    miWordContextMenu.className="mi-word-context-menu";
+    miWordContextMenu.hidden=true;
+    document.body.append(miWordContextMenu);
+    let miDocumentClipboard=null;
+    function closeMiWordContextMenu(){miWordContextMenu.hidden=true;}
+    function addMiWordMenuItem(label,action,shortcut){
+      const button=document.createElement("button");button.type="button";
+      const name=document.createElement("span");name.textContent=label;button.append(name);
+      if(shortcut){const key=document.createElement("span");key.textContent=shortcut;key.style.cssText="color:#8794a4;font-size:11px";button.append(key);}
+      button.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();closeMiWordContextMenu();action();});
+      miWordContextMenu.append(button);
+    }
+    function miWordMenuDivider(){const line=document.createElement("div");line.className="mi-menu-divider";miWordContextMenu.append(line);}
+    function showMiWordSizeDialog(){
+      const item=miSelectedDocumentItem;if(!item)return;
+      document.querySelector(".mi-word-size-dialog")?.remove();
+      const dialog=document.createElement("div");dialog.className="mi-word-size-dialog";
+      const heading=document.createElement("strong");heading.textContent="Size and Position";dialog.append(heading);
+      const rect=item.getBoundingClientRect(),isImage=item.dataset.miDocumentImage==="true",ratio=rect.width/Math.max(1,rect.height);
+      const width=document.createElement("input");width.type="number";width.min="40";width.max="2000";width.value=Math.round(rect.width);
+      const height=document.createElement("input");height.type="number";height.min="30";height.max="2000";height.value=Math.round(rect.height);
+      const lock=document.createElement("input");lock.type="checkbox";lock.checked=isImage;
+      const lockLabel=document.createElement("label");lockLabel.style.justifyContent="flex-start";lockLabel.append(lock,document.createTextNode(" Lock aspect ratio"));dialog.append(lockLabel);
+      [["Width (px)",width],["Height (px)",height]].forEach(pair=>{const row=document.createElement("label");row.append(document.createTextNode(pair[0]),pair[1]);dialog.append(row);});
+      const buttons=document.createElement("div");buttons.style.cssText="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;";
+      const cancel=document.createElement("button");cancel.type="button";cancel.textContent="Cancel";cancel.addEventListener("click",()=>dialog.remove());
+      const apply=document.createElement("button");apply.type="button";apply.textContent="Apply";apply.addEventListener("click",()=>{
+        const w=Math.max(40,Math.min(2000,Number(width.value)||rect.width));
+        let h=Math.max(30,Math.min(2000,Number(height.value)||rect.height));
+        if(lock.checked)h=w/ratio;
+        item.style.width=Math.round(w)+"px";item.style.height=Math.round(h)+"px";item.style.maxWidth="100%";
+        syncMiDocumentHtml();dialog.remove();updateMiSelectionUI();setMiWorkStatus("Picture or file dimensions updated — save your project.");
+      });
+      buttons.append(cancel,apply);dialog.append(buttons);document.body.append(dialog);
+    }
+    function openMiWordContextMenu(event,item){
+      event.preventDefault();selectMiDocumentItem(item);miWordContextMenu.replaceChildren();
+      addMiWordMenuItem("Cut",()=>{miDocumentClipboard=item.cloneNode(true);item.remove();selectMiDocumentItem(null);syncMiDocumentHtml();setMiWorkStatus("Item cut — right-click in the document and choose Paste.");},"Ctrl+X");
+      addMiWordMenuItem("Copy",()=>{miDocumentClipboard=item.cloneNode(true);setMiWorkStatus("Item copied — right-click in the document and choose Paste.");},"Ctrl+C");
+      addMiWordMenuItem("Paste",()=>{if(!miDocumentClipboard)return;const copy=miDocumentClipboard.cloneNode(true);item.after(copy);selectMiDocumentItem(copy);syncMiDocumentHtml();setMiWorkStatus("Item pasted — save your project.");},"Ctrl+V");
+      miWordMenuDivider();
+      if(item.dataset.miDocumentImage==="true"){
+        addMiWordMenuItem("Crop",()=>miCropButton.click());
+        addMiWordMenuItem("Wrap Text",()=>{miLayoutMenu.style.display="block";miCropPanel.style.display="none";});
+      }
+      addMiWordMenuItem("Size and Position…",showMiWordSizeDialog);
+      addMiWordMenuItem("Bring to Front",()=>{item.style.zIndex="20";item.style.position="absolute";syncMiDocumentHtml();});
+      addMiWordMenuItem("Send to Back",()=>{item.style.zIndex="0";item.style.position="absolute";syncMiDocumentHtml();});
+      miWordMenuDivider();addMiWordMenuItem("Remove",()=>miRemoveItemButton.click(),"Delete");
+      miWordContextMenu.hidden=false;
+      const x=Math.min(event.clientX,window.innerWidth-240),y=Math.min(event.clientY,window.innerHeight-360);
+      miWordContextMenu.style.left=Math.max(6,x)+"px";miWordContextMenu.style.top=Math.max(6,y)+"px";
+    }
+    miDocumentEditor.addEventListener("contextmenu",event=>{
+      const item=event.target instanceof Element?event.target.closest(miMovableSelector):null;
+      if(item&&miDocumentEditor.contains(item))openMiWordContextMenu(event,item);
+    });
+    document.addEventListener("pointerdown",event=>{if(!miWordContextMenu.contains(event.target))closeMiWordContextMenu();});
+    document.addEventListener("keydown",event=>{if(event.key==="Escape")closeMiWordContextMenu();});
     miDocumentEditor.addEventListener("click",event=>{
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
       if(target&&miDocumentEditor.contains(target))selectMiDocumentItem(target);
@@ -4235,7 +4301,7 @@ img{max-width:100%}
         const padRight=parseFloat(editorStyle.paddingRight)||0;
         const padBottom=parseFloat(editorStyle.paddingBottom)||0;
         const maxLeft=Math.max(0,miDocumentEditor.clientWidth-st.item.offsetWidth-padRight-2);
-        const maxTop=Math.max(0,miDocumentEditor.clientHeight-st.item.offsetHeight-padBottom-2);
+        const maxTop=Math.max(0,miDocumentEditor.scrollHeight-st.item.offsetHeight-padBottom-2);
         const left=Math.max(0,Math.min(maxLeft,st.startLeft+event.clientX-st.x));
         const top=Math.max(0,Math.min(maxTop,st.startTop+event.clientY-st.y));
         st.item.style.left=Math.round(left)+"px";
