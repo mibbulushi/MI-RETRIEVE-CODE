@@ -4464,6 +4464,7 @@ img{max-width:100%}
         addMiWordMenuItem("Crop",()=>miCropButton.click());
         addMiWordMenuItem("Wrap Text",()=>{miLayoutMenu.style.display="block";miCropPanel.style.display="none";});
         addMiWordMenuItem("Size and Position…",showMiWordSizeDialog);
+        addMiWordMenuItem("Format Picture…",()=>{syncMiPictureRibbon();miPictureRibbon.classList.add("is-active");document.getElementById("miEditorToolbar")?.scrollIntoView({behavior:"smooth",block:"nearest",inline:"nearest"});setMiWorkStatus("Picture Format tools are ready in the editor toolbar.");});
       }
       if(selected.length===1){
         addMiWordMenuItem("Bring to Front",()=>{item.style.zIndex="20";item.style.position="absolute";syncMiDocumentHtml();});
