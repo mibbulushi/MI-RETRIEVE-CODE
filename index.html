@@ -4441,8 +4441,12 @@ img{max-width:100%}
     }
     miDocumentEditor.addEventListener("contextmenu",event=>{
       const item=event.target instanceof Element?event.target.closest(miMovableSelector):null;
-      if(item&&miDocumentEditor.contains(item))openMiWordContextMenu(event,item);
-    });
+      if(item&&miDocumentEditor.contains(item)){
+        openMiWordContextMenu(event,item);
+        // Stop the legacy single-picture menu below from clearing multi-selection.
+        event.stopImmediatePropagation();
+      }
+    },true);
     document.addEventListener("pointerdown",event=>{if(!miWordContextMenu.contains(event.target))closeMiWordContextMenu();});
     document.addEventListener("keydown",event=>{if(event.key==="Escape")closeMiWordContextMenu();});
     miDocumentEditor.addEventListener("pointerdown",event=>{
