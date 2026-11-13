@@ -2299,7 +2299,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 /* Independent document and page scrolling; remove excess gap below the editor card. */
 .mi-builder-panel{margin-bottom:6px!important}
 html,body{overflow-y:auto!important;overscroll-behavior-y:auto}
-#miDocumentEditor{height:420px!important;min-height:420px!important;max-height:65vh!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;scrollbar-gutter:stable}
+#miDocumentEditor{position:relative!important;height:420px!important;min-height:420px!important;max-height:65vh!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;scrollbar-gutter:stable}
 @media(max-width:760px){#miDocumentEditor{height:360px!important;min-height:360px!important;max-height:60vh!important}}
 #miDocumentEditor .mi-multi-selected{outline:2px solid #1769c2!important;outline-offset:3px!important;box-shadow:0 0 0 3px rgba(23,105,194,.15)!important}
 /* Keep floated Word-style pictures contained inside the document editing box. */
