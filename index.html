@@ -4239,22 +4239,35 @@ img{max-width:100%}
       const editorTop=editorRect.top+miDocumentEditor.clientTop;
       const editorRight=editorLeft+miDocumentEditor.clientWidth;
       const editorBottom=editorTop+miDocumentEditor.clientHeight;
-      // Keep the complete selection frame anchored to the selected item.
-      // It moves with the picture during editor/page scrolling instead of
-      // shrinking to a clipped rectangle and making the handles disappear.
+      // Keep the selection frame inside the editor's visible viewport.
+      // Recalculate from the picture's live rectangle on every scroll/resize,
+      // so the frame and its controls travel with the selected picture.
       const visibleLeft=Math.max(r.left,editorLeft);
       const visibleTop=Math.max(r.top,editorTop);
       const visibleRight=Math.min(r.right,editorRight);
       const visibleBottom=Math.min(r.bottom,editorBottom);
-      if(r.width<=0||r.height<=0||visibleRight<=visibleLeft||visibleBottom<=visibleTop){
+      const visibleWidth=visibleRight-visibleLeft;
+      const visibleHeight=visibleBottom-visibleTop;
+      if(r.width<=0||r.height<=0||visibleWidth<=0||visibleHeight<=0){
         miSelectionUI.style.display="none";
         return;
       }
       miSelectionUI.style.display="block";
-      miSelectionUI.style.left=r.left+"px";
-      miSelectionUI.style.top=r.top+"px";
-      miSelectionUI.style.width=r.width+"px";
-      miSelectionUI.style.height=r.height+"px";
+      miSelectionUI.style.left=visibleLeft+"px";
+      miSelectionUI.style.top=visibleTop+"px";
+      miSelectionUI.style.width=visibleWidth+"px";
+      miSelectionUI.style.height=visibleHeight+"px";
+      // Keep action controls beside the picture but inside the editor.
+      // They remain children of the selection frame, so they follow it while scrolling.
+      miLayoutButton.style.left="8px";
+      miLayoutButton.style.top="8px";
+      miCropButton.style.left="8px";
+      miCropButton.style.top="42px";
+      miCropPanel.style.left="8px";
+      miCropPanel.style.top="78px";
+      miRemoveItemButton.style.left="8px";
+      miRemoveItemButton.style.top="auto";
+      miRemoveItemButton.style.bottom="8px";
       miLayoutButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
       miCropButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
       miRemoveItemButton.style.display="block";
