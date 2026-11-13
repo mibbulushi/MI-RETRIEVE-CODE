@@ -3437,33 +3437,13 @@ img{max-width:100%}
 #miPictureRibbon .mi-ribbon-caption{display:inline-block!important;flex:0 0 auto!important;width:auto!important;margin:0!important;font-size:10px!important;white-space:nowrap!important;}
 @media(max-width:760px){#miEditorToolbar{overflow-x:auto!important;touch-action:pan-x;}}
 
-/* Word-style contextual Picture Format ribbon: a dedicated full-width row below the text toolbar. */
-#miEditorToolbar{flex-wrap:nowrap!important;overflow-x:auto!important}
-#miPictureRibbon{display:none!important;position:relative!important;flex:0 0 100%!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0 0 12px!important;padding:0!important;overflow:hidden!important;border:1px solid #c7d3e2!important;border-radius:8px!important;background:#f5f7fa!important;box-shadow:0 2px 5px rgba(25,45,70,.07)!important;color:#26364a!important;font:12px/1.25 "Segoe UI",Arial,sans-serif!important}
-#miPictureRibbon.is-active{display:block!important}
-#miPictureRibbon .mi-picture-ribbon-tab{display:flex!important;align-items:center!important;gap:7px!important;min-height:34px!important;padding:0 13px!important;background:#e8f0fa!important;border-bottom:1px solid #c7d3e2!important;color:#244b75!important;font-size:12px!important;font-weight:700!important}
-#miPictureRibbon .mi-picture-tab-icon{font-size:16px!important}
-#miPictureRibbon .mi-picture-tab-hint{margin-left:auto!important;color:#6d7f93!important;font-size:9px!important;font-weight:700!important;letter-spacing:1px!important}
-#miPictureRibbon .mi-picture-ribbon-content{display:flex!important;align-items:stretch!important;flex-wrap:wrap!important;gap:0!important;padding:8px 10px 7px!important}
-#miPictureRibbon .mi-ribbon-group{position:relative!important;display:flex!important;flex:0 0 auto!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;gap:6px!important;min-height:82px!important;margin:0 12px 0 0!important;padding:0 14px 15px 0!important;border:0!important;border-right:1px solid #d5dde7!important;background:transparent!important}
-#miPictureRibbon .mi-ribbon-group:last-child{margin-right:0!important;padding-right:0!important;border-right:0!important}
-#miPictureRibbon .mi-ribbon-group-title{position:absolute!important;right:14px!important;bottom:0!important;left:0!important;text-align:center!important;color:#68798d!important;font-size:10px!important;line-height:12px!important}
-#miPictureRibbon .mi-ribbon-size-fields{display:flex!important;align-items:center!important;gap:10px!important}
-#miPictureRibbon .mi-ribbon-size-fields label{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:4px!important;margin:0!important;padding:0!important;color:#34475d!important;font-size:11px!important;font-weight:600!important;white-space:nowrap!important}
-#miPictureRibbon .mi-ribbon-size-fields label span{display:flex!important;align-items:center!important;gap:4px!important}
-#miPictureRibbon .mi-ribbon-size-fields input{width:70px!important;height:29px!important;min-height:29px!important;box-sizing:border-box!important;padding:3px 6px!important;border:1px solid #aebdce!important;border-radius:4px!important;background:#fff!important;color:#23364c!important;font:12px "Segoe UI",Arial,sans-serif!important}
-#miPictureRibbon .mi-ribbon-size-fields small{color:#748397!important;font-size:10px!important}
-#miPictureRibbon .mi-ribbon-lock{display:flex!important;align-items:center!important;gap:6px!important;margin:0!important;padding:0!important;color:#40546b!important;font-size:11px!important;font-weight:500!important;white-space:nowrap!important}
-#miPictureRibbon .mi-ribbon-lock input{width:14px!important;height:14px!important;margin:0!important}
-#miPictureRibbon button{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;min-width:0!important;height:30px!important;min-height:30px!important;margin:0!important;padding:4px 10px!important;border:1px solid #b9c7d7!important;border-radius:5px!important;background:#fff!important;color:#29445f!important;font:600 11px "Segoe UI",Arial,sans-serif!important;box-shadow:none!important;white-space:nowrap!important;cursor:pointer!important}
-#miPictureRibbon button:hover{background:#e8f1fb!important;border-color:#7899bd!important}
-#miPictureRibbon .mi-ribbon-apply{height:26px!important;min-height:26px!important;padding:3px 12px!important;background:#e8f0fa!important}
-#miPictureRibbon .mi-ribbon-dialog-launch{position:absolute!important;right:3px!important;bottom:1px!important;width:18px!important;height:16px!important;min-height:16px!important;padding:0!important;border:0!important;background:transparent!important;color:#63758a!important;font-size:14px!important}
-#miPictureRibbon .mi-ribbon-dialog-launch:hover{background:#dfe9f4!important}
-#miPictureRibbon .mi-ribbon-action-row{display:flex!important;align-items:flex-start!important;gap:7px!important}
-#miPictureRibbon .mi-ribbon-action-row button{flex-direction:column!important;justify-content:center!important;min-width:62px!important;height:53px!important;min-height:53px!important;padding:5px 8px!important;font-size:19px!important}
-#miPictureRibbon .mi-ribbon-action-row button span{font-size:10px!important;font-weight:600!important}
-@media(max-width:600px){#miPictureRibbon .mi-picture-ribbon-content{flex-wrap:nowrap!important;overflow-x:auto!important;padding:8px!important}#miPictureRibbon .mi-ribbon-group{margin-right:9px!important;padding-right:10px!important}#miPictureRibbon .mi-ribbon-size-fields{gap:6px!important}#miPictureRibbon .mi-ribbon-size-fields input{width:58px!important}}
+
+/* Picture-only sizing frame: clear Word-like eight-point handles on corners and edge centres. */
+.mi-word-selection-ui{border:1px solid #2878cf!important;outline:1px solid rgba(40,120,207,.16)!important;box-shadow:0 0 0 1px rgba(255,255,255,.75)!important}
+.mi-word-selection-ui .mi-word-resize-handle{width:11px!important;height:11px!important;min-width:11px!important;min-height:11px!important;padding:0!important;border:1.5px solid #1764ad!important;border-radius:2px!important;background:#fff!important;box-shadow:0 1px 3px rgba(20,55,90,.28)!important;touch-action:none!important;z-index:2!important}
+.mi-word-selection-ui .mi-word-resize-handle:hover{background:#e5f1ff!important;border-color:#0e559c!important;transform:scale(1.12)}
+.mi-word-selection-ui .mi-handle-n,.mi-word-selection-ui .mi-handle-s{width:13px!important;height:9px!important;min-width:13px!important;min-height:9px!important}
+.mi-word-selection-ui .mi-handle-e,.mi-word-selection-ui .mi-handle-w{width:9px!important;height:13px!important;min-width:9px!important;min-height:13px!important}
 </style>
 </head>
 <body>
@@ -3602,34 +3582,23 @@ img{max-width:100%}
             <button type="button" class="secondary mi-format-icon" data-mi-command="indent" title="Indent" aria-label="Indent">⇥</button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="outdent" title="Outdent" aria-label="Outdent">⇤</button>
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
-          </div>
-          <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
-            <div class="mi-picture-ribbon-tab"><span class="mi-picture-tab-icon">▧</span> Picture Format <span class="mi-picture-tab-hint">PICTURE TOOLS</span></div>
-            <div class="mi-picture-ribbon-content">
-              <div class="mi-ribbon-group mi-ribbon-size-group">
-                <div class="mi-ribbon-group-title">Size</div>
-                <div class="mi-ribbon-size-fields">
-                  <label>Width <span><input id="miRibbonWidth" type="number" min="40" max="2000" aria-label="Picture width"> <small>px</small></span></label>
-                  <label>Height <span><input id="miRibbonHeight" type="number" min="30" max="2000" aria-label="Picture height"> <small>px</small></span></label>
-                </div>
-                <label class="mi-ribbon-lock"><input id="miRibbonLock" type="checkbox" checked> Lock aspect ratio</label>
-                <button type="button" class="mi-ribbon-apply" data-mi-ribbon="apply-size">Apply</button>
-                <button type="button" class="mi-ribbon-dialog-launch" data-mi-ribbon="size-dialog" title="Open advanced size and position settings" aria-label="More size and position settings">↘</button>
-              </div>
-              <div class="mi-ribbon-group mi-ribbon-arrange-group">
-                <div class="mi-ribbon-group-title">Arrange</div>
-                <div class="mi-ribbon-action-row">
-                  <button type="button" data-mi-ribbon="position" title="Position picture">▦ <span>Position</span></button>
-                  <button type="button" data-mi-ribbon="layout" title="Wrap text around picture">▤ <span>Wrap Text</span></button>
-                </div>
-              </div>
-              <div class="mi-ribbon-group mi-ribbon-adjust-group">
-                <div class="mi-ribbon-group-title">Adjust</div>
-                <div class="mi-ribbon-action-row">
-                  <button type="button" data-mi-ribbon="crop" title="Crop picture">✂ <span>Crop</span></button>
-                  <button type="button" data-mi-ribbon="rotate" title="Rotate picture 90 degrees">↻ <span>Rotate</span></button>
-                </div>
-              </div>
+            <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
+            <div class="mi-ribbon-group">
+              <button type="button" data-mi-ribbon="crop" title="Crop picture">✂ Crop</button>
+              <button type="button" data-mi-ribbon="layout" title="Wrap text">▣ Wrap Text</button>
+              <button type="button" data-mi-ribbon="rotate" title="Rotate picture 90 degrees">↻ Rotate</button>
+            </div>
+            <div class="mi-ribbon-group">
+              <label>Width (px)<input id="miRibbonWidth" type="number" min="40" max="2000"></label>
+              <label>Height (px)<input id="miRibbonHeight" type="number" min="30" max="2000"></label>
+              <label style="flex-direction:row;align-items:center;padding-bottom:8px"><input id="miRibbonLock" type="checkbox" checked> Lock ratio</label>
+              <button type="button" data-mi-ribbon="apply-size">Apply size</button>
+            </div>
+            <div class="mi-ribbon-group">
+              <button type="button" data-mi-ribbon="position" title="Position picture">Position ▾</button>
+              <button type="button" data-mi-ribbon="size-dialog" title="More size options">Size &amp; Position…</button>
+            </div>
+            <div class="mi-ribbon-caption">Picture Format · Select a picture in the document to edit it</div>
             </div>
           </div>
           <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
@@ -4508,9 +4477,7 @@ img{max-width:100%}
       const pointerOnToolbarSurface=event.clientX>=toolbarRect.left&&event.clientX<=toolbarRect.right&&event.clientY>=toolbarRect.top&&event.clientY<=toolbarRect.bottom;
       // Native horizontal scrollbar hit-testing can report the page as the event target.
       // Treat the complete toolbar rectangle, including its scrollbar, as a safe area.
-      const ribbonRect=miPictureRibbon.getBoundingClientRect();
-      const pointerOnPictureRibbon=miPictureRibbon.classList.contains("is-active")&&event.clientX>=ribbonRect.left&&event.clientX<=ribbonRect.right&&event.clientY>=ribbonRect.top&&event.clientY<=ribbonRect.bottom;
-      if(pointerOnToolbarSurface||pointerOnPictureRibbon||miSelectionUI.contains(target)||miDocumentEditor.contains(target)||miEditorToolbar.contains(target)||miPictureRibbon.contains(target)||miWordContextMenu.contains(target)||target.closest?.(".mi-word-size-dialog"))return;
+      if(pointerOnToolbarSurface||miSelectionUI.contains(target)||miDocumentEditor.contains(target)||miEditorToolbar.contains(target)||miWordContextMenu.contains(target)||target.closest?.(".mi-word-size-dialog"))return;
       selectMiDocumentItem(null);
     });
 
