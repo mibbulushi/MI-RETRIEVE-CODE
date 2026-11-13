@@ -2297,7 +2297,17 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
 .mi-document-editor{min-height:520px;padding:24px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#26364a;font:inherit;line-height:1.75;outline:none;overflow-wrap:anywhere}
 /* Keep floated Word-style pictures contained inside the document editing box. */
-.mi-document-editor::after{content:"";display:table;clear:both}.mi-document-editor [data-mi-document-image="true"]{max-width:100%;box-sizing:border-box;clear:none;display:block}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="inline"]{display:inline-block;vertical-align:middle;float:none}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="square"],.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="tight"]{max-width:min(100%,calc(100% - 14px));float:left;clear:none;margin:8px 16px 8px 0}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="top-bottom"]{display:block;float:none;clear:both;margin:14px 0}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="behind"]{position:absolute;z-index:0;opacity:.72}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="front"]{position:absolute;z-index:5;opacity:1}.mi-word-context-menu{position:fixed;z-index:100001;min-width:220px;padding:6px;background:#fff;border:1px solid #cbd5e1;border-radius:9px;box-shadow:0 12px 32px rgba(15,35,60,.2);color:#24364b;font:13px/1.35 system-ui,sans-serif}.mi-word-context-menu button{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;min-height:34px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}.mi-word-context-menu button:hover{background:#edf4fc}.mi-word-context-menu .mi-menu-divider{height:1px;margin:5px 4px;background:#e5eaf0}.mi-word-size-dialog{position:fixed;z-index:100002;left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,calc(100vw - 32px));padding:18px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 18px 48px rgba(15,35,60,.25);color:#24364b;font:13px system-ui,sans-serif}.mi-word-size-dialog label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0}.mi-word-size-dialog input[type=number]{width:105px;padding:7px;border:1px solid #b8c6d8;border-radius:6px}
+.mi-document-editor::after{content:"";display:table;clear:both}.mi-document-editor [data-mi-document-image="true"]{max-width:100%;box-sizing:border-box;clear:none;display:block}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="inline"]{display:inline-block;vertical-align:middle;float:none}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="square"],.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="tight"]{max-width:min(100%,calc(100% - 14px));float:left;clear:none;margin:8px 16px 8px 0}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="top-bottom"]{display:block;float:none;clear:both;margin:14px 0}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="behind"]{position:absolute;z-index:0;opacity:.72}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="front"]{position:absolute;z-index:5;opacity:1}.mi-picture-ribbon{display:none;position:sticky;top:0;z-index:30;margin:0 0 12px;padding:10px 12px;background:linear-gradient(180deg,#f8fbff,#edf3fa);border:1px solid #cbd8e6;border-radius:10px;box-shadow:0 3px 10px rgba(24,48,75,.08);color:#24364b;font:12px/1.35 system-ui,sans-serif}
+.mi-picture-ribbon.is-active{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}
+.mi-picture-ribbon .mi-ribbon-group{display:flex;flex-wrap:wrap;align-items:flex-end;gap:5px;padding-right:10px;border-right:1px solid #d2dce8}
+.mi-picture-ribbon .mi-ribbon-group:last-child{border-right:0;padding-right:0}
+.mi-picture-ribbon button{min-height:34px;padding:6px 10px;border:1px solid #c4d1df;border-radius:6px;background:#fff;color:#29435f;font:600 12px system-ui;cursor:pointer}
+.mi-picture-ribbon button:hover{background:#e4effb;border-color:#8eafd2}
+.mi-picture-ribbon label{display:flex;flex-direction:column;gap:3px;color:#52657a;font-size:10px;font-weight:600}
+.mi-picture-ribbon input[type=number]{width:68px;height:32px;padding:4px 6px;border:1px solid #c4d1df;border-radius:5px;background:#fff;color:#24364b;font:12px system-ui}
+.mi-picture-ribbon .mi-ribbon-caption{width:100%;font-size:10px;color:#66788c;margin-top:-4px}
+@media(max-width:600px){.mi-picture-ribbon.is-active{gap:7px;padding:8px}.mi-picture-ribbon .mi-ribbon-group{padding-right:6px}.mi-picture-ribbon button{padding:5px 7px}}
+.mi-word-context-menu{position:fixed;z-index:100001;min-width:220px;padding:6px;background:#fff;border:1px solid #cbd5e1;border-radius:9px;box-shadow:0 12px 32px rgba(15,35,60,.2);color:#24364b;font:13px/1.35 system-ui,sans-serif}.mi-word-context-menu button{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;min-height:34px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}.mi-word-context-menu button:hover{background:#edf4fc}.mi-word-context-menu .mi-menu-divider{height:1px;margin:5px 4px;background:#e5eaf0}.mi-word-size-dialog{position:fixed;z-index:100002;left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,calc(100vw - 32px));padding:18px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 18px 48px rgba(15,35,60,.25);color:#24364b;font:13px system-ui,sans-serif}.mi-word-size-dialog label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0}.mi-word-size-dialog input[type=number]{width:105px;padding:7px;border:1px solid #b8c6d8;border-radius:6px}
 .mi-document-editor:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(57,118,197,.12)}
 .mi-document-editor p{margin:0 0 14px}.mi-document-editor img{display:block;width:300px;height:200px;max-width:100%;max-height:none;object-fit:contain;object-position:left center;margin:14px 0;border:1px solid #b8cbe0;border-radius:8px;resize:both;overflow:auto;min-width:70px;min-height:50px;cursor:grab;box-sizing:border-box}.mi-document-editor img:active{cursor:grabbing}.mi-document-editor img.mi-image-selected{outline:2px solid #3478c8;outline-offset:3px;resize:both}.mi-document-editor img.mi-image-dragging{opacity:.45}
 .mi-document-tools{display:flex;align-items:center;gap:8px}.mi-document-tools button{margin:0}
@@ -3339,6 +3349,17 @@ img{max-width:100%}
 #miDocumentEditor *{
   float:none!important;
 }
+#miDocumentEditor img[data-mi-document-image="true"][data-mi-picture-layout="square"],
+#miDocumentEditor img[data-mi-document-image="true"][data-mi-picture-layout="tight"]{
+  float:left!important;
+  clear:none!important;
+  display:block!important;
+}
+#miDocumentEditor img[data-mi-document-image="true"][data-mi-picture-layout="top-bottom"]{
+  float:none!important;
+  clear:both!important;
+  display:block!important;
+}
 #miDocumentEditor img,
 #miDocumentEditor video,
 #miDocumentEditor canvas,
@@ -3517,6 +3538,24 @@ img{max-width:100%}
             <button type="button" class="secondary mi-format-icon" data-mi-command="indent" title="Indent" aria-label="Indent">⇥</button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="outdent" title="Outdent" aria-label="Outdent">⇤</button>
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
+          </div>
+          <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
+            <div class="mi-ribbon-group">
+              <button type="button" data-mi-ribbon="crop" title="Crop picture">✂ Crop</button>
+              <button type="button" data-mi-ribbon="layout" title="Wrap text">▣ Wrap Text</button>
+              <button type="button" data-mi-ribbon="rotate" title="Rotate picture 90 degrees">↻ Rotate</button>
+            </div>
+            <div class="mi-ribbon-group">
+              <label>Width (px)<input id="miRibbonWidth" type="number" min="40" max="2000"></label>
+              <label>Height (px)<input id="miRibbonHeight" type="number" min="30" max="2000"></label>
+              <label style="flex-direction:row;align-items:center;padding-bottom:8px"><input id="miRibbonLock" type="checkbox" checked> Lock ratio</label>
+              <button type="button" data-mi-ribbon="apply-size">Apply size</button>
+            </div>
+            <div class="mi-ribbon-group">
+              <button type="button" data-mi-ribbon="position" title="Position picture">Position ▾</button>
+              <button type="button" data-mi-ribbon="size-dialog" title="More size options">Size &amp; Position…</button>
+            </div>
+            <div class="mi-ribbon-caption">Picture Format · Select a picture in the document to edit it</div>
           </div>
           <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
           <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
@@ -4160,7 +4199,8 @@ img{max-width:100%}
       if(item){
         item.classList.add(item.dataset.miAttachedFile==="true"?"mi-file-selected":"mi-image-selected");
         updateMiSelectionUI();
-      }else miSelectionUI.style.display="none";
+        syncMiPictureRibbon();
+      }else{miSelectionUI.style.display="none";miPictureRibbon.classList.remove("is-active");}
     }
     function applyMiPictureLayout(layout){
       const item=miSelectedDocumentItem;
@@ -4221,6 +4261,35 @@ img{max-width:100%}
       });
       buttons.append(cancel,apply);dialog.append(buttons);document.body.append(dialog);
     }
+    const miPictureRibbon=$("miPictureRibbon");
+    const miRibbonWidth=$("miRibbonWidth"),miRibbonHeight=$("miRibbonHeight"),miRibbonLock=$("miRibbonLock");
+    let miRibbonRatio=1,miRibbonLastEdited="width";
+    function syncMiPictureRibbon(){
+      const item=miSelectedDocumentItem,isImage=!!item&&item.dataset.miDocumentImage==="true";
+      miPictureRibbon.classList.toggle("is-active",isImage);
+      if(!isImage)return;
+      const r=item.getBoundingClientRect();
+      miRibbonWidth.value=Math.round(r.width);miRibbonHeight.value=Math.round(r.height);
+      miRibbonRatio=r.width/Math.max(1,r.height);
+      miRibbonLock.checked=true;
+    }
+    miRibbonWidth.addEventListener("input",()=>{miRibbonLastEdited="width";if(miRibbonLock.checked)miRibbonHeight.value=Math.max(30,Math.round((Number(miRibbonWidth.value)||1)/miRibbonRatio));});
+    miRibbonHeight.addEventListener("input",()=>{miRibbonLastEdited="height";if(miRibbonLock.checked)miRibbonWidth.value=Math.max(40,Math.round((Number(miRibbonHeight.value)||1)*miRibbonRatio));});
+    miPictureRibbon.addEventListener("click",event=>{
+      const action=event.target.closest("[data-mi-ribbon]")?.dataset.miRibbon;if(!action)return;
+      if(!miSelectedDocumentItem||miSelectedDocumentItem.dataset.miDocumentImage!=="true")return;
+      if(action==="crop"){miCropButton.click();return;}
+      if(action==="layout"){miLayoutButton.click();return;}
+      if(action==="size-dialog"){showMiWordSizeDialog();return;}
+      if(action==="rotate"){const item=miSelectedDocumentItem;const old=item.style.transform||"";const m=old.match(/rotate\((-?[\d.]+)deg\)/);const angle=((m?Number(m[1]):0)+90)%360;item.style.transform="rotate("+angle+"deg)";syncMiDocumentHtml();updateMiSelectionUI();syncMiPictureRibbon();setMiWorkStatus("Picture rotated — save your project.");return;}
+      if(action==="position"){miLayoutButton.click();return;}
+      if(action==="apply-size"){
+        const item=miSelectedDocumentItem;let w=Math.max(40,Math.min(2000,Number(miRibbonWidth.value)||item.getBoundingClientRect().width));let h=Math.max(30,Math.min(2000,Number(miRibbonHeight.value)||item.getBoundingClientRect().height));
+        if(miRibbonLock.checked){if(miRibbonLastEdited==="height")w=h*miRibbonRatio;else h=w/miRibbonRatio;}
+        item.style.width=Math.round(w)+"px";item.style.height=Math.round(h)+"px";item.style.maxWidth="100%";
+        syncMiDocumentHtml();updateMiSelectionUI();syncMiPictureRibbon();setMiWorkStatus("Picture size updated — save your project.");
+      }
+    });
     function openMiWordContextMenu(event,item){
       event.preventDefault();selectMiDocumentItem(item);miWordContextMenu.replaceChildren();
       addMiWordMenuItem("Cut",()=>{miDocumentClipboard=item.cloneNode(true);item.remove();selectMiDocumentItem(null);syncMiDocumentHtml();setMiWorkStatus("Item cut — right-click in the document and choose Paste.");},"Ctrl+X");
@@ -5583,6 +5652,8 @@ img{max-width:100%}
         event.preventDefault();miRemoveItemButton.click();
       }
     });
+    window.addEventListener("scroll",()=>{updateMiSelectionUI();syncMiPictureRibbon();},true);
+    window.addEventListener("resize",()=>{updateMiSelectionUI();syncMiPictureRibbon();});
     window.addEventListener("scroll",closeMiPictureContextMenu,true);
 
     document.addEventListener("keydown", event => {
