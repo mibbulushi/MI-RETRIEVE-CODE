@@ -4104,7 +4104,7 @@ img{max-width:100%}
     const miMovableSelector = '[data-mi-document-image="true"],[data-mi-attached-file="true"]';
     const miSelectionUI = document.createElement("div");
     miSelectionUI.className = "mi-word-selection-ui";
-    miSelectionUI.style.cssText = "position:fixed;z-index:100000;display:none;pointer-events:none;box-sizing:border-box;border:1px solid #2878cf;";
+    miSelectionUI.style.cssText = "position:absolute;z-index:100000;display:none;pointer-events:none;box-sizing:border-box;border:1px solid #2878cf;";
     const miHandleNames = ["nw","n","ne","e","se","s","sw","w"];
     const miHandles = {};
     miHandleNames.forEach(name => {
@@ -4221,7 +4221,10 @@ img{max-width:100%}
     });
     miLayoutMenu.append(layoutGrid);
     miSelectionUI.append(miLayoutMenu);
-    document.body.append(miSelectionUI);
+    // Keep the selection frame in the same scrolling coordinate space as the document.
+    // A fixed body-level overlay drifts away from pictures inside nested scroll containers.
+    if(getComputedStyle(miDocumentEditor).position==="static")miDocumentEditor.style.position="relative";
+    miDocumentEditor.append(miSelectionUI);
     function syncMiDocumentHtml(){
       $("content").value=miDocumentEditor.innerHTML;
     }
@@ -4245,8 +4248,10 @@ img{max-width:100%}
         return;
       }
       miSelectionUI.style.display="block";
-      miSelectionUI.style.left=r.left+"px";
-      miSelectionUI.style.top=r.top+"px";
+      const frameLeft=r.left-editorRect.left-miDocumentEditor.clientLeft+miDocumentEditor.scrollLeft;
+      const frameTop=r.top-editorRect.top-miDocumentEditor.clientTop+miDocumentEditor.scrollTop;
+      miSelectionUI.style.left=frameLeft+"px";
+      miSelectionUI.style.top=frameTop+"px";
       miSelectionUI.style.width=Math.max(12,r.width)+"px";
       miSelectionUI.style.height=Math.max(12,r.height)+"px";
       miLayoutButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
