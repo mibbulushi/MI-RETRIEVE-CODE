@@ -4427,7 +4427,11 @@ img{max-width:100%}
     window.addEventListener("resize",updateMiSelectionUI);
     window.addEventListener("scroll",updateMiSelectionUI,true);
     miDocumentEditor.addEventListener("scroll",updateMiSelectionUI);
-    document.addEventListener("pointerdown",event=>{if(!miSelectionUI.contains(event.target)&&!miDocumentEditor.contains(event.target))selectMiDocumentItem(null);});
+    document.addEventListener("pointerdown",event=>{
+      const target=event.target;
+      if(miSelectionUI.contains(target)||miDocumentEditor.contains(target)||miPictureRibbon.contains(target)||miWordContextMenu.contains(target)||target.closest?.(".mi-word-size-dialog"))return;
+      selectMiDocumentItem(null);
+    });
 
     miDocumentEditor.addEventListener("input", () => {
       $("content").value = miDocumentEditor.innerHTML;
