@@ -3941,58 +3941,89 @@ img{max-width:100%}
         selection.addRange(miSavedEditorRange);
       }
     }
-    // Additional Microsoft Word-style Home formatting tools.
+    // Keep the document selection available while the user operates Home toolbar controls.
+    document.addEventListener("selectionchange",()=>{
+      const selection=window.getSelection();
+      if(selection&&selection.rangeCount&&!selection.isCollapsed&&miDocumentEditor.contains(selection.anchorNode)&&miDocumentEditor.contains(selection.focusNode)){
+        miSavedEditorRange=selection.getRangeAt(0).cloneRange();
+      }
+    });
+    function miRestoreTextRange(){
+      if(!miSavedEditorRange)return null;
+      miDocumentEditor.focus();
+      const selection=window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(miSavedEditorRange);
+      return selection;
+    }
+    function miWrapSelectedText(styleObject){
+      const selection=miRestoreTextRange();
+      if(!selection||selection.isCollapsed||!miDocumentEditor.contains(selection.anchorNode))return false;
+      const range=selection.getRangeAt(0);
+      if(!miDocumentEditor.contains(range.commonAncestorContainer))return false;
+      const span=document.createElement("span");
+      Object.assign(span.style,styleObject);
+      try{span.append(range.extractContents());range.insertNode(span);}
+      catch(error){return false;}
+      selection.removeAllRanges();
+      miSavedEditorRange=null;
+      $("content").value=miDocumentEditor.innerHTML;
+      return true;
+    }
+    // Format Painter: click once on formatted text, then select destination text and click again.
     let miFormatPainterStyle=null;
     const miFormatPainterButton=$("miFormatPainterBtn");
     miFormatPainterButton.addEventListener("click",()=>{
-      restoreMiEditorSelection();
-      const selection=window.getSelection();
-      if(!selection||!selection.rangeCount||selection.isCollapsed||!miDocumentEditor.contains(selection.anchorNode)){
-        setMiWorkStatus("Format Painter: select formatted text first, then click the brush.","working");return;
+      const selection=miRestoreTextRange();
+      if(!selection||selection.isCollapsed){
+        setMiWorkStatus("Select some formatted text first, then click Format Painter.","working");return;
       }
       if(!miFormatPainterStyle){
         const range=selection.getRangeAt(0);
-        const node=range.startContainer.nodeType===Node.TEXT_NODE?range.startContainer.parentElement:range.startContainer;
+        let node=range.startContainer.nodeType===Node.TEXT_NODE?range.startContainer.parentElement:range.startContainer;
+        if(!node||!miDocumentEditor.contains(node))return;
         const style=getComputedStyle(node);
         miFormatPainterStyle={fontFamily:style.fontFamily,fontSize:style.fontSize,fontWeight:style.fontWeight,fontStyle:style.fontStyle,color:style.color,textDecoration:style.textDecoration,backgroundColor:style.backgroundColor};
         miFormatPainterButton.classList.add("is-armed");
-        setMiWorkStatus("Format copied. Select destination text and click the brush again.","working");
+        setMiWorkStatus("Format copied. Select the text to format, then click the brush again.","working");
       }else{
-        const range=selection.getRangeAt(0);
-        if(!miDocumentEditor.contains(range.commonAncestorContainer))return;
-        const fragment=range.extractContents();
-        const span=document.createElement("span");
-        Object.assign(span.style,miFormatPainterStyle);
-        span.append(fragment);range.insertNode(span);
-        selection.removeAllRanges();miFormatPainterStyle=null;miFormatPainterButton.classList.remove("is-armed");
-        $("content").value=miDocumentEditor.innerHTML;setMiWorkStatus("Formatting applied. Save your project to store the change.","working");
+        const applied=miWrapSelectedText(miFormatPainterStyle);
+        if(!applied){setMiWorkStatus("Select the destination text before applying Format Painter.","working");return;}
+        miFormatPainterStyle=null;miFormatPainterButton.classList.remove("is-armed");
+        setMiWorkStatus("Format Painter applied. Save your project to store the change.","working");
       }
     });
+    // Text Effects: apply a visible Word-like typography shadow to the selected text.
     $("miTextEffectsBtn").addEventListener("click",()=>{
-      restoreMiEditorSelection();
-      const selection=window.getSelection();
-      if(!selection||!selection.rangeCount||selection.isCollapsed||!miDocumentEditor.contains(selection.anchorNode)){
-        setMiWorkStatus("Select text first to apply Text Effects.","working");return;
-      }
-      const range=selection.getRangeAt(0);
-      if(!miDocumentEditor.contains(range.commonAncestorContainer))return;
-      const fragment=range.extractContents(),span=document.createElement("span");
-      span.style.textShadow="1px 1px 0 #9aa8b8, 2px 2px 2px rgba(40,60,85,.25)";
-      span.append(fragment);range.insertNode(span);
-      selection.removeAllRanges();$("content").value=miDocumentEditor.innerHTML;
-      setMiWorkStatus("Text Effect applied. Save your project to store the change.","working");
+      const applied=miWrapSelectedText({textShadow:"1px 1px 0 #8b9bb0, 2px 2px 3px rgba(35,55,80,.35)"});
+      setMiWorkStatus(applied?"Text Effect applied. Save your project to store the change.":"Select text first, then choose Text Effects and Typography.","working");
     });
-    $("miTextHighlightColor").addEventListener("input",event=>{
-      restoreMiEditorSelection();
-      document.execCommand("hiliteColor",false,event.target.value);
-      $("content").value=miDocumentEditor.innerHTML;
+    // Highlight the saved selection, not the toolbar's current focus.
+    $("miTextHighlightColor").addEventListener("change",event=>{
+      const selection=miRestoreTextRange();
+      if(!selection||selection.isCollapsed){setMiWorkStatus("Select text first, then choose a highlight colour.","working");return;}
+      const color=event.target.value;
+      let applied=false;
+      try{applied=document.execCommand("hiliteColor",false,color)||document.execCommand("backColor",false,color);}catch(error){}
+      if(applied){
+        $("content").value=miDocumentEditor.innerHTML;
+        const updated=window.getSelection();
+        if(updated&&updated.rangeCount&&!updated.isCollapsed)miSavedEditorRange=updated.getRangeAt(0).cloneRange();
+        setMiWorkStatus("Text highlight applied. Save your project to store the change.","working");
+      }else setMiWorkStatus("This browser could not apply the highlight. Please select the text again and retry.","error");
     });
+    // Clear formatting only from the selected text.
     $("miClearFormattingBtn").addEventListener("click",()=>{
-      restoreMiEditorSelection();
-      document.execCommand("removeFormat",false,null);
-      document.execCommand("unlink",false,null);
-      $("content").value=miDocumentEditor.innerHTML;
-      setMiWorkStatus("Formatting cleared from selected text. Save your project to store the change.","working");
+      const selection=miRestoreTextRange();
+      if(!selection||selection.isCollapsed){setMiWorkStatus("Select formatted text first, then click Clear All Formatting.","working");return;}
+      try{
+        document.execCommand("removeFormat",false,null);
+        document.execCommand("unlink",false,null);
+        $("content").value=miDocumentEditor.innerHTML;
+        const updated=window.getSelection();
+        if(updated&&updated.rangeCount&&!updated.isCollapsed)miSavedEditorRange=updated.getRangeAt(0).cloneRange();
+        setMiWorkStatus("Formatting cleared from selected text. Save your project to store the change.","working");
+      }catch(error){setMiWorkStatus("Could not clear formatting from this selection. Please try again.","error");}
     });
     // Run formatting from pointerdown so toolbar actions work even if a later click
     // is swallowed by browser focus/selection handling.
