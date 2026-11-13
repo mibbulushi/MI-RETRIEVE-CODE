@@ -4430,19 +4430,23 @@ img{max-width:100%}
       miSelectionUI.style.top=visibleTop+"px";
       miSelectionUI.style.width=visibleWidth+"px";
       miSelectionUI.style.height=visibleHeight+"px";
-      // Keep action controls beside the picture but inside the editor.
-      // They remain children of the selection frame, so they follow it while scrolling.
-      miLayoutButton.style.left="8px";
-      miLayoutButton.style.top="8px";
-      miCropButton.style.left="8px";
-      miCropButton.style.top="42px";
-      miCropPanel.style.left="8px";
-      miCropPanel.style.top="76px";
-      miCropMenu.style.left="8px";
-      miCropMenu.style.top="76px";
-      miRemoveItemButton.style.left="8px";
-      miRemoveItemButton.style.top="auto";
-      miRemoveItemButton.style.bottom="8px";
+      // Keep picture actions outside the picture in a separate vertical rail.
+      // Prefer the right side; switch to the left when the editor edge is too close.
+      const actionRailWidth=84;
+      const spaceRight=editorRight-visibleRight;
+      const placeActionsRight=spaceRight>=actionRailWidth+12;
+      const actionRailLeft=placeActionsRight?(visibleRight-visibleLeft+8):-actionRailWidth-8;
+      miLayoutButton.style.left=actionRailLeft+"px";
+      miLayoutButton.style.top="0px";
+      miCropButton.style.left=actionRailLeft+"px";
+      miCropButton.style.top="38px";
+      miRemoveItemButton.style.left=actionRailLeft+"px";
+      miRemoveItemButton.style.top="76px";
+      miRemoveItemButton.style.bottom="auto";
+      miCropPanel.style.left=actionRailLeft+"px";
+      miCropPanel.style.top="114px";
+      miCropMenu.style.left=actionRailLeft+"px";
+      miCropMenu.style.top="114px";
       miLayoutButton.style.display=miDirectCropMode?"none":(item.dataset.miDocumentImage==="true"?"block":"none");
       miCropButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
       miRemoveItemButton.style.display=miDirectCropMode?"none":"block";
