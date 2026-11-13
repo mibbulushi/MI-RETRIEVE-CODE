@@ -5418,7 +5418,76 @@ img{max-width:100%}
     });
     document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
       link.addEventListener("click", () => {
-        if (window.matchMedia("(max-width: 760px)").matches) setSidebarCollapsed(true);
+    
+    // Professional picture context menu and keyboard shortcuts
+    let miClipboardDocumentItem = null;
+    const miPictureContextMenu = document.createElement("div");
+    miPictureContextMenu.id = "miPictureContextMenu";
+    miPictureContextMenu.setAttribute("role","menu");
+    miPictureContextMenu.style.cssText = "position:fixed;z-index:100020;display:none;min-width:218px;padding:6px;background:#fff;border:1px solid #d5dfeb;border-radius:10px;box-shadow:0 12px 32px rgba(20,42,68,.18);font:13px system-ui,-apple-system,Segoe UI,sans-serif;color:#263d56;";
+    document.body.append(miPictureContextMenu);
+    function closeMiPictureContextMenu(){miPictureContextMenu.style.display="none";}
+    function miContextAction(label,shortcut,action,disabled=false){
+      const b=document.createElement("button");b.type="button";b.setAttribute("role","menuitem");
+      b.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;min-height:35px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:#fff;color:#263d56;text-align:left;font:inherit;cursor:pointer;";
+      const name=document.createElement("span");name.textContent=label;
+      const key=document.createElement("span");key.textContent=shortcut||"";key.style.cssText="color:#7b8b9c;font-size:11px;white-space:nowrap;";
+      b.append(name,key);b.disabled=disabled;
+      b.addEventListener("mouseenter",()=>{if(!b.disabled)b.style.background="#edf4fb";});
+      b.addEventListener("mouseleave",()=>b.style.background="#fff");
+      b.addEventListener("click",()=>{closeMiPictureContextMenu();action();});
+      miPictureContextMenu.append(b);return b;
+    }
+    function showMiPictureContextMenu(event,item){
+      event.preventDefault();event.stopPropagation();
+      selectMiDocumentItem(item);
+      miPictureContextMenu.replaceChildren();
+      const heading=document.createElement("div");heading.textContent="Picture options";heading.style.cssText="padding:7px 10px 9px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8291a1;";
+      miPictureContextMenu.append(heading);
+      miContextAction("Copy","Ctrl + C",()=>{miClipboardDocumentItem=item.cloneNode(true);setMiWorkStatus("Picture copied. Use Ctrl + V to paste.");});
+      miContextAction("Cut","Ctrl + X",()=>{miClipboardDocumentItem=item.cloneNode(true);miRemoveItemButton.click();});
+      miContextAction("Paste","Ctrl + V",()=>{
+        if(!miClipboardDocumentItem)return;
+        const copy=miClipboardDocumentItem.cloneNode(true);
+        if(miSelectedDocumentItem&&miSelectedDocumentItem.parentNode===miDocumentEditor)miSelectedDocumentItem.after(copy);else miDocumentEditor.append(copy);
+        selectMiDocumentItem(copy);syncMiDocumentHtml();setMiWorkStatus("Picture pasted. Save your project to store the change.");
+      },!miClipboardDocumentItem);
+      const sep=document.createElement("div");sep.style.cssText="height:1px;margin:5px 3px;background:#e7edf3;";miPictureContextMenu.append(sep);
+      miContextAction("Crop picture","",()=>miCropButton.click(),item.dataset.miDocumentImage!=="true");
+      miContextAction("Change layout","",()=>miLayoutButton.click(),item.dataset.miDocumentImage!=="true");
+      miContextAction("Remove","Delete",()=>miRemoveItemButton.click());
+      miContextAction("Bring to front","",()=>{item.style.position="relative";item.style.zIndex="2";syncMiDocumentHtml();});
+      miContextAction("Send to back","",()=>{item.style.position="relative";item.style.zIndex="0";syncMiDocumentHtml();});
+      miPictureContextMenu.style.display="block";
+      const x=Math.min(event.clientX,window.innerWidth-miPictureContextMenu.offsetWidth-8);
+      const y=Math.min(event.clientY,window.innerHeight-miPictureContextMenu.offsetHeight-8);
+      miPictureContextMenu.style.left=Math.max(8,x)+"px";miPictureContextMenu.style.top=Math.max(8,y)+"px";
+    }
+    miDocumentEditor.addEventListener("contextmenu",event=>{
+      const item=event.target.closest('[data-mi-document-image="true"]');
+      if(item&&miDocumentEditor.contains(item))showMiPictureContextMenu(event,item);
+      else closeMiPictureContextMenu();
+    });
+    document.addEventListener("pointerdown",event=>{if(!miPictureContextMenu.contains(event.target))closeMiPictureContextMenu();});
+    document.addEventListener("keydown",event=>{
+      if(event.key==="Escape"){closeMiPictureContextMenu();return;}
+      const item=miSelectedDocumentItem;
+      if(!item||!miDocumentEditor.contains(item)||event.altKey||!(event.ctrlKey||event.metaKey)&&!["Delete","Backspace"].includes(event.key))return;
+      const key=event.key.toLowerCase();
+      if((event.ctrlKey||event.metaKey)&&key==="c"){
+        event.preventDefault();miClipboardDocumentItem=item.cloneNode(true);setMiWorkStatus("Picture copied. Use Ctrl + V to paste."); 
+      }else if((event.ctrlKey||event.metaKey)&&key==="x"){
+        event.preventDefault();miClipboardDocumentItem=item.cloneNode(true);miRemoveItemButton.click();
+      }else if((event.ctrlKey||event.metaKey)&&key==="v"){
+        if(!miClipboardDocumentItem)return;
+        event.preventDefault();const copy=miClipboardDocumentItem.cloneNode(true);item.after(copy);selectMiDocumentItem(copy);syncMiDocumentHtml();setMiWorkStatus("Picture pasted. Save your project to store the change.");
+      }else if(key==="delete"||key==="backspace"){
+        event.preventDefault();miRemoveItemButton.click();
+      }
+    });
+    window.addEventListener("scroll",closeMiPictureContextMenu,true);
+
+    if (window.matchMedia("(max-width: 760px)").matches) setSidebarCollapsed(true);
       });
     });
     document.addEventListener("keydown", event => {
