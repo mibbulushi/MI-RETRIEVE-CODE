@@ -3491,6 +3491,17 @@ img{max-width:100%}
  #miDocumentEditor{padding:28px 20px!important}
 }
 
+/* Keep status text and document view controls on one horizontal row */
+#miProjectWorkStatus{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;flex-wrap:nowrap!important;gap:8px!important;min-width:0;overflow-x:auto}
+#miProjectWorkStatusText{display:block;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi-document-viewbar{display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;white-space:nowrap}
+.mi-document-viewbar button{flex:0 0 auto;white-space:nowrap}
+@media(max-width:650px){
+ #miProjectWorkStatus{flex-direction:row!important;align-items:center!important;flex-wrap:nowrap!important;gap:5px!important;padding:8px 9px!important}
+ #miProjectWorkStatusText{font-size:11px;min-width:50px}
+ .mi-document-viewbar{flex-wrap:nowrap!important;gap:2px!important;margin-left:auto!important}
+ .mi-document-viewbar button{padding:5px 6px;font-size:10px}
+}
 /* Document view modes */
 .mi-document-viewbar{display:flex;align-items:center;justify-content:flex-end;gap:5px;margin-left:auto;padding:0;background:transparent;border:0;flex:0 0 auto}
 .mi-document-viewbar button{appearance:none;border:1px solid transparent;border-radius:3px;background:transparent;color:#3f4853;padding:6px 11px;font:12px Arial,sans-serif;cursor:pointer}
@@ -6244,7 +6255,7 @@ img{max-width:100%}
           });
           viewButtons[mode]=button;viewbar.append(button);
         });
-        const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);statusRow.style.display="flex";statusRow.style.alignItems="center";statusRow.style.justifyContent="space-between";statusRow.style.flexWrap="wrap";statusRow.style.gap="8px";}else stage.insertBefore(viewbar,editor);
+        const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);statusRow.style.display="flex";statusRow.style.alignItems="center";statusRow.style.justifyContent="space-between";statusRow.style.flexWrap="nowrap";statusRow.style.gap="8px";}else stage.insertBefore(viewbar,editor);
         viewButtons.print.click();
       }
       function updatePictureTab(){
