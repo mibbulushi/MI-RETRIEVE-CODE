@@ -4227,11 +4227,26 @@ img{max-width:100%}
     }
     function updateMiSelectionUI(){
       const item=miSelectedDocumentItem;
-      if(!item || !miDocumentEditor.contains(item)){miSelectionUI.style.display="none";return;}
+      if(!item || !miDocumentEditor.contains(item)){
+        miSelectionUI.style.display="none";
+        return;
+      }
       const r=item.getBoundingClientRect();
+      const editorRect=miDocumentEditor.getBoundingClientRect();
+      const editorLeft=editorRect.left+miDocumentEditor.clientLeft;
+      const editorTop=editorRect.top+miDocumentEditor.clientTop;
+      const editorRight=editorLeft+miDocumentEditor.clientWidth;
+      const editorBottom=editorTop+miDocumentEditor.clientHeight;
+      // Hide the frame when its picture is outside the visible document area.
+      // Never clamp an off-screen picture to the top-left of the browser window.
+      const visible=r.width>0&&r.height>0&&r.right>editorLeft&&r.left<editorRight&&r.bottom>editorTop&&r.top<editorBottom;
+      if(!visible){
+        miSelectionUI.style.display="none";
+        return;
+      }
       miSelectionUI.style.display="block";
-      miSelectionUI.style.left=Math.max(0,r.left)+"px";
-      miSelectionUI.style.top=Math.max(0,r.top)+"px";
+      miSelectionUI.style.left=r.left+"px";
+      miSelectionUI.style.top=r.top+"px";
       miSelectionUI.style.width=Math.max(12,r.width)+"px";
       miSelectionUI.style.height=Math.max(12,r.height)+"px";
       miLayoutButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
