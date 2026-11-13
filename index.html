@@ -5416,9 +5416,6 @@ img{max-width:100%}
         link.hidden = Boolean(query) && !link.textContent.toLocaleLowerCase().includes(query);
       });
     });
-    document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
-      link.addEventListener("click", () => {
-    
     // Professional picture context menu and keyboard shortcuts
     let miClipboardDocumentItem = null;
     const miPictureContextMenu = document.createElement("div");
@@ -5487,9 +5484,6 @@ img{max-width:100%}
     });
     window.addEventListener("scroll",closeMiPictureContextMenu,true);
 
-    if (window.matchMedia("(max-width: 760px)").matches) setSidebarCollapsed(true);
-      });
-    });
     document.addEventListener("keydown", event => {
       if (event.key === "Escape" && !document.body.classList.contains("sidebar-collapsed")) setSidebarCollapsed(true);
     });
