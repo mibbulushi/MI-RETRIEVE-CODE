@@ -4452,7 +4452,7 @@ img{max-width:100%}
     miDocumentEditor.addEventListener("scroll",updateMiSelectionUI);
     document.addEventListener("pointerdown",event=>{
       const target=event.target;
-      if(miSelectionUI.contains(target)||miDocumentEditor.contains(target)||miPictureRibbon.contains(target)||miWordContextMenu.contains(target)||target.closest?.(".mi-word-size-dialog"))return;
+      if(miSelectionUI.contains(target)||miDocumentEditor.contains(target)||miEditorToolbar.contains(target)||miWordContextMenu.contains(target)||target.closest?.(".mi-word-size-dialog"))return;
       selectMiDocumentItem(null);
     });
 
