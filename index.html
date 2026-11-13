@@ -3014,13 +3014,15 @@ html,body{overflow-y:auto!important;overscroll-behavior-y:auto}
 #saveArea .mi-save-details .mi-save-password .mi-password-help{flex:0 0 auto!important;display:inline!important;min-height:0!important;margin:0!important;padding:0!important;font-weight:400!important;white-space:nowrap!important}
 #saveArea .mi-save-details .mi-save-password .mi-password-help:before{content:"— "}
 
-/* Keep Project Document heading and its description on one line */
-.mi-builder-heading{flex-wrap:nowrap!important;align-items:center!important;gap:12px!important}
-.mi-builder-heading>div:first-child{display:flex!important;flex-direction:row!important;align-items:baseline!important;flex-wrap:nowrap!important;gap:10px!important;min-width:0!important;white-space:nowrap!important}
-.mi-builder-heading h3{flex:0 0 auto!important;margin:0!important;white-space:nowrap!important}
-.mi-builder-heading p{flex:0 0 auto!important;margin:0!important;white-space:nowrap!important}
+/* Keep the Project Document title and its helper text together in one row.
+   The grammar notice remains a separate row below the editor toolbar. */
+.mi-builder-heading{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:12px!important}
+.mi-builder-heading>div:first-child{display:flex!important;flex:1 1 auto!important;flex-direction:row!important;align-items:baseline!important;flex-wrap:nowrap!important;gap:10px!important;min-width:0!important;white-space:nowrap!important}
+.mi-builder-heading h3{display:block!important;flex:0 0 auto!important;margin:0!important;white-space:nowrap!important}
+.mi-builder-heading>div:first-child p{display:block!important;flex:0 1 auto!important;margin:0!important;white-space:nowrap!important}
 .mi-builder-heading .mi-document-tools{flex:0 0 auto!important;margin-left:auto!important}
-@media(max-width:760px){.mi-builder-heading{flex-wrap:wrap!important}.mi-builder-heading>div:first-child{max-width:100%!important;overflow-x:auto!important}.mi-builder-heading .mi-document-tools{margin-left:0!important}}
+.mi-builder-heading>#projectFilesPreview{flex:0 1 auto!important;min-width:0!important}
+@media(max-width:760px){.mi-builder-heading{flex-wrap:wrap!important}.mi-builder-heading>div:first-child{flex:1 1 100%!important;max-width:100%!important;overflow-x:auto!important}.mi-builder-heading .mi-document-tools{margin-left:0!important}}
 
  
 /* Final column balance: compact title field, wider password field */
