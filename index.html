@@ -4430,23 +4430,45 @@ img{max-width:100%}
       miSelectionUI.style.top=visibleTop+"px";
       miSelectionUI.style.width=visibleWidth+"px";
       miSelectionUI.style.height=visibleHeight+"px";
-      // Keep picture actions outside the picture in a separate vertical rail.
-      // Prefer the right side; switch to the left when the editor edge is too close.
-      const actionRailWidth=84;
+      // Keep the three picture actions OUTSIDE the picture.
+      // Use a vertical rail beside the picture when possible. If the picture is
+      // too small or fills the editor width, move the controls into a compact
+      // horizontal rail above/below it instead of letting them overlap.
+      const actionRailWidth=84, actionRailHeight=108;
       const spaceRight=editorRight-visibleRight;
+      const spaceLeft=visibleLeft-editorLeft;
       const placeActionsRight=spaceRight>=actionRailWidth+12;
-      const actionRailLeft=placeActionsRight?(visibleRight-visibleLeft+8):-actionRailWidth-8;
-      miLayoutButton.style.left=actionRailLeft+"px";
-      miLayoutButton.style.top="0px";
-      miCropButton.style.left=actionRailLeft+"px";
-      miCropButton.style.top="38px";
-      miRemoveItemButton.style.left=actionRailLeft+"px";
-      miRemoveItemButton.style.top="76px";
+      const placeActionsLeft=!placeActionsRight&&spaceLeft>=actionRailWidth+12;
+      let actionRailLeft, actionTopLayout, actionTopCrop, actionTopRemove, actionRailMode;
+      if(placeActionsRight||placeActionsLeft){
+        actionRailMode="vertical";
+        actionRailLeft=placeActionsRight?(visibleRight-visibleLeft+8):-actionRailWidth-8;
+        actionTopLayout="0px";actionTopCrop="38px";actionTopRemove="76px";
+      }else{
+        actionRailMode="horizontal";
+        const railWidth=196;
+        actionRailLeft=Math.max(editorLeft-visibleLeft+8,Math.min((editorRight-visibleLeft)-railWidth-8,(visibleWidth-railWidth)/2));
+        const roomAbove=visibleTop-editorTop, roomBelow=editorBottom-visibleBottom;
+        const railTop=roomAbove>=40?-40:(visibleHeight+8);
+        actionTopLayout=railTop+"px";actionTopCrop=railTop+"px";actionTopRemove=railTop+"px";
+        miLayoutButton.style.left=actionRailLeft+"px";
+        miCropButton.style.left=(actionRailLeft+40)+"px";
+        miRemoveItemButton.style.left=(actionRailLeft+124)+"px";
+      }
+      if(actionRailMode==="vertical"){
+        miLayoutButton.style.left=actionRailLeft+"px";
+        miCropButton.style.left=actionRailLeft+"px";
+        miRemoveItemButton.style.left=actionRailLeft+"px";
+      }
+      miLayoutButton.style.top=actionTopLayout;
+      miCropButton.style.top=actionTopCrop;
+      miRemoveItemButton.style.top=actionTopRemove;
       miRemoveItemButton.style.bottom="auto";
-      miCropPanel.style.left=actionRailLeft+"px";
-      miCropPanel.style.top="114px";
-      miCropMenu.style.left=actionRailLeft+"px";
-      miCropMenu.style.top="114px";
+      miCropButton.style.minWidth=actionRailMode==="horizontal"?"76px":"76px";
+      miCropPanel.style.left=(actionRailMode==="horizontal"?actionRailLeft+40:actionRailLeft)+"px";
+      miCropPanel.style.top=(actionRailMode==="horizontal"?(parseFloat(actionTopCrop)+38)+"px":"114px");
+      miCropMenu.style.left=miCropPanel.style.left;
+      miCropMenu.style.top=miCropPanel.style.top;
       miLayoutButton.style.display=miDirectCropMode?"none":(item.dataset.miDocumentImage==="true"?"block":"none");
       miCropButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
       miRemoveItemButton.style.display=miDirectCropMode?"none":"block";
