@@ -4241,16 +4241,23 @@ img{max-width:100%}
       const editorBottom=editorTop+miDocumentEditor.clientHeight;
       // Hide the frame when its picture is outside the visible document area.
       // Never clamp an off-screen picture to the top-left of the browser window.
-      const visible=r.width>0&&r.height>0&&r.right>editorLeft&&r.left<editorRight&&r.bottom>editorTop&&r.top<editorBottom;
-      if(!visible){
+      const clippedLeft=Math.max(r.left,editorLeft);
+      const clippedTop=Math.max(r.top,editorTop);
+      const clippedRight=Math.min(r.right,editorRight);
+      const clippedBottom=Math.min(r.bottom,editorBottom);
+      const clippedWidth=clippedRight-clippedLeft;
+      const clippedHeight=clippedBottom-clippedTop;
+      // Keep the selection frame strictly inside the visible editor viewport,
+      // even when an inserted image/file is positioned beyond the text box.
+      if(r.width<=0||r.height<=0||clippedWidth<=0||clippedHeight<=0){
         miSelectionUI.style.display="none";
         return;
       }
       miSelectionUI.style.display="block";
-      miSelectionUI.style.left=r.left+"px";
-      miSelectionUI.style.top=r.top+"px";
-      miSelectionUI.style.width=Math.max(12,r.width)+"px";
-      miSelectionUI.style.height=Math.max(12,r.height)+"px";
+      miSelectionUI.style.left=clippedLeft+"px";
+      miSelectionUI.style.top=clippedTop+"px";
+      miSelectionUI.style.width=clippedWidth+"px";
+      miSelectionUI.style.height=clippedHeight+"px";
       miLayoutButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
       miCropButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
       miRemoveItemButton.style.display="block";
