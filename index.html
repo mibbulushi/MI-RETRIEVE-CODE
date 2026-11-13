@@ -2270,6 +2270,9 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 #saveArea textarea,#saveArea .mi-project-sections,#saveArea .mi-project-section,#saveArea #projectSections{display:none!important}
 #content[hidden],#projectStructure[hidden],#projectSections[hidden],#addProjectSectionBtn[hidden]{display:none!important}
 
+#miEditorToolbar #miFormatPainterBtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#miEditorToolbar #miFormatPainterBtn.is-armed{background:#dcecff!important;border-color:#3976c5!important;color:#174f86!important;box-shadow:inset 0 0 0 1px #3976c5!important}
+#miEditorToolbar #miTextHighlightColor{width:30px;height:28px;min-height:28px;padding:2px;border:1px solid #9fb2ca;border-radius:4px;background:#fff}
 .mi-editor-toolbar{display:flex;flex-wrap:nowrap;align-items:center;gap:5px;padding:7px 8px;margin:10px 0;border:1px solid #b9cce4;border-radius:10px;background:#f2f7fd;width:100%;box-sizing:border-box;position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;white-space:nowrap}
 .mi-editor-toolbar .mi-tool-label{display:inline-flex;flex:0 0 auto;align-items:center;gap:4px;margin:0;font-size:11px;font-weight:650;white-space:nowrap;color:#26364a}
 #miEditorToolbar .mi-tool-label select{display:inline-block;width:auto;min-width:0;max-width:150px;height:30px;min-height:30px;padding:3px 6px;font-size:11px;background:#fff;color:#172b45;border:1px solid #9fb2ca;border-radius:6px;box-sizing:border-box}
@@ -3668,6 +3671,10 @@ img{max-width:100%}
             <label class="mi-tool-label" title="Line spacing">↕ <select id="miLineSpacing" aria-label="Line spacing"><option value="1.2">1.2</option><option value="1.5" selected>1.5</option><option value="1.75">1.75</option><option value="2">2.0</option></select></label>
             <button type="button" class="secondary mi-format-icon" data-mi-command="indent" title="Indent" aria-label="Indent">⇥</button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="outdent" title="Outdent" aria-label="Outdent">⇤</button>
+            <button type="button" class="secondary mi-format-icon" id="miFormatPainterBtn" title="Format Painter" aria-label="Format Painter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 3.5 6 6-3 3-6-6zM4 20l7.5-7.5 3 3L7 23H4z"/><path d="m11.5 6.5 6 6M3 21h6"/></svg></button>
+            <button type="button" class="secondary mi-format-icon" id="miTextEffectsBtn" title="Text Effects and Typography" aria-label="Text Effects and Typography"><span style="font-weight:800;text-shadow:1px 1px 0 #8aa5c2">A</span></button>
+            <label class="mi-tool-label mi-color-label" title="Text highlight colour">Highlight <input id="miTextHighlightColor" type="color" value="#ffff00" aria-label="Text highlight colour"></label>
+            <button type="button" class="secondary mi-grammar-compact" id="miClearFormattingBtn" title="Clear All Formatting" aria-label="Clear All Formatting">Clear Formatting</button>
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
             <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
             <div class="mi-ribbon-group">
@@ -3934,6 +3941,59 @@ img{max-width:100%}
         selection.addRange(miSavedEditorRange);
       }
     }
+    // Additional Microsoft Word-style Home formatting tools.
+    let miFormatPainterStyle=null;
+    const miFormatPainterButton=$("miFormatPainterBtn");
+    miFormatPainterButton.addEventListener("click",()=>{
+      restoreMiEditorSelection();
+      const selection=window.getSelection();
+      if(!selection||!selection.rangeCount||selection.isCollapsed||!miDocumentEditor.contains(selection.anchorNode)){
+        setMiWorkStatus("Format Painter: select formatted text first, then click the brush.","working");return;
+      }
+      if(!miFormatPainterStyle){
+        const range=selection.getRangeAt(0);
+        const node=range.startContainer.nodeType===Node.TEXT_NODE?range.startContainer.parentElement:range.startContainer;
+        const style=getComputedStyle(node);
+        miFormatPainterStyle={fontFamily:style.fontFamily,fontSize:style.fontSize,fontWeight:style.fontWeight,fontStyle:style.fontStyle,color:style.color,textDecoration:style.textDecoration,backgroundColor:style.backgroundColor};
+        miFormatPainterButton.classList.add("is-armed");
+        setMiWorkStatus("Format copied. Select destination text and click the brush again.","working");
+      }else{
+        const range=selection.getRangeAt(0);
+        if(!miDocumentEditor.contains(range.commonAncestorContainer))return;
+        const fragment=range.extractContents();
+        const span=document.createElement("span");
+        Object.assign(span.style,miFormatPainterStyle);
+        span.append(fragment);range.insertNode(span);
+        selection.removeAllRanges();miFormatPainterStyle=null;miFormatPainterButton.classList.remove("is-armed");
+        $("content").value=miDocumentEditor.innerHTML;setMiWorkStatus("Formatting applied. Save your project to store the change.","working");
+      }
+    });
+    $("miTextEffectsBtn").addEventListener("click",()=>{
+      restoreMiEditorSelection();
+      const selection=window.getSelection();
+      if(!selection||!selection.rangeCount||selection.isCollapsed||!miDocumentEditor.contains(selection.anchorNode)){
+        setMiWorkStatus("Select text first to apply Text Effects.","working");return;
+      }
+      const range=selection.getRangeAt(0);
+      if(!miDocumentEditor.contains(range.commonAncestorContainer))return;
+      const fragment=range.extractContents(),span=document.createElement("span");
+      span.style.textShadow="1px 1px 0 #9aa8b8, 2px 2px 2px rgba(40,60,85,.25)";
+      span.append(fragment);range.insertNode(span);
+      selection.removeAllRanges();$("content").value=miDocumentEditor.innerHTML;
+      setMiWorkStatus("Text Effect applied. Save your project to store the change.","working");
+    });
+    $("miTextHighlightColor").addEventListener("input",event=>{
+      restoreMiEditorSelection();
+      document.execCommand("hiliteColor",false,event.target.value);
+      $("content").value=miDocumentEditor.innerHTML;
+    });
+    $("miClearFormattingBtn").addEventListener("click",()=>{
+      restoreMiEditorSelection();
+      document.execCommand("removeFormat",false,null);
+      document.execCommand("unlink",false,null);
+      $("content").value=miDocumentEditor.innerHTML;
+      setMiWorkStatus("Formatting cleared from selected text. Save your project to store the change.","working");
+    });
     // Run formatting from pointerdown so toolbar actions work even if a later click
     // is swallowed by browser focus/selection handling.
     miEditorToolbar.addEventListener("pointerdown", event => {
