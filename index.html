@@ -4279,11 +4279,11 @@ img{max-width:100%}
     }
     function miPaintDirectCrop(){
       if(!miSelectedDocumentItem)return;
-      const v=miReadDirectCrop();
-      // The crop boundary, not the original picture boundary, is the active selection while cropping.
+      // The selection overlay is already positioned on the visible crop bounds.
+      // Keep the crop frame aligned to that box instead of applying the insets twice.
       miDirectCropFrame.style.display=miDirectCropMode?"block":"none";
-      miDirectCropFrame.style.left=v.left+"%";miDirectCropFrame.style.top=v.top+"%";
-      miDirectCropFrame.style.width=(100-v.left-v.right)+"%";miDirectCropFrame.style.height=(100-v.top-v.bottom)+"%";
+      miDirectCropFrame.style.left="0%";miDirectCropFrame.style.top="0%";
+      miDirectCropFrame.style.width="100%";miDirectCropFrame.style.height="100%";
       miDirectCropHandles.top.style.top="-5px";miDirectCropHandles.bottom.style.bottom="-5px";
       miDirectCropHandles.left.style.left="-5px";miDirectCropHandles.right.style.right="-5px";
     }
@@ -4317,7 +4317,7 @@ img{max-width:100%}
       const next=Math.max(0,Math.min(85-d.start[side],d.start[side]+delta/Math.max(1,extent)*100));
       const v={...d.start,[side]:next};
       miSelectedDocumentItem.style.clipPath="inset("+v.top+"% "+v.right+"% "+v.bottom+"% "+v.left+"%)";
-      miPaintDirectCrop();
+      updateMiSelectionUI();
     },{passive:false});
     document.addEventListener("pointerup",()=>{miDirectCropDrag=null;});
     const miLayoutMenu = document.createElement("div");
@@ -4398,6 +4398,13 @@ img{max-width:100%}
         return;
       }
       const r=item.getBoundingClientRect();
+      // clip-path does not change getBoundingClientRect(); calculate the visible
+      // cropped picture bounds so the four selection lines follow the crop.
+      const crop=item.dataset.miDocumentImage==="true"?miReadDirectCrop():{top:0,right:0,bottom:0,left:0};
+      const cropLeft=r.left+r.width*crop.left/100;
+      const cropTop=r.top+r.height*crop.top/100;
+      const cropRight=r.right-r.width*crop.right/100;
+      const cropBottom=r.bottom-r.height*crop.bottom/100;
       const editorRect=miDocumentEditor.getBoundingClientRect();
       const editorLeft=editorRect.left+miDocumentEditor.clientLeft;
       const editorTop=editorRect.top+miDocumentEditor.clientTop;
@@ -4406,10 +4413,10 @@ img{max-width:100%}
       // Keep the selection frame inside the editor's visible viewport.
       // Recalculate from the picture's live rectangle on every scroll/resize,
       // so the frame and its controls travel with the selected picture.
-      const visibleLeft=Math.max(r.left,editorLeft);
-      const visibleTop=Math.max(r.top,editorTop);
-      const visibleRight=Math.min(r.right,editorRight);
-      const visibleBottom=Math.min(r.bottom,editorBottom);
+      const visibleLeft=Math.max(cropLeft,editorLeft);
+      const visibleTop=Math.max(cropTop,editorTop);
+      const visibleRight=Math.min(cropRight,editorRight);
+      const visibleBottom=Math.min(cropBottom,editorBottom);
       const visibleWidth=visibleRight-visibleLeft;
       const visibleHeight=visibleBottom-visibleTop;
       if(r.width<=0||r.height<=0||visibleWidth<=0||visibleHeight<=0){
