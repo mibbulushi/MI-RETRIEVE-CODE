@@ -4013,6 +4013,36 @@ img{max-width:100%}
     miCropPanel.style.cssText="position:absolute;left:calc(100% + 8px);top:76px;display:none;width:230px;padding:12px;background:#fff;border:1px solid #c7d2df;border-radius:8px;box-shadow:0 8px 24px #172b4430;pointer-events:auto;color:#263d56;font:12px Arial,sans-serif;";
     miCropPanel.innerHTML='<strong style="display:block;margin-bottom:9px;">Crop Picture</strong><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Top</span><input data-crop="top" type="range" min="0" max="45" value="0"><span data-crop-value="top">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Right</span><input data-crop="right" type="range" min="0" max="45" value="0"><span data-crop-value="right">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Bottom</span><input data-crop="bottom" type="range" min="0" max="45" value="0"><span data-crop-value="bottom">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Left</span><input data-crop="left" type="range" min="0" max="45" value="0"><span data-crop-value="left">0%</span></div><div style="display:flex;justify-content:space-between;margin-top:10px;"><button type="button" data-crop-reset>Reset</button><button type="button" data-crop-apply>Apply</button></div>';
     miSelectionUI.append(miCropPanel);
+    const miRemoveItemButton=document.createElement("button");
+    miRemoveItemButton.type="button";
+    miRemoveItemButton.textContent="Remove";
+    miRemoveItemButton.title="Remove selected picture or attached file";
+    miRemoveItemButton.style.cssText="position:absolute;left:0;top:calc(100% + 8px);padding:6px 11px;border:1px solid #e0b8b8;border-radius:6px;background:#fff;color:#a52d35;font:12px Arial,sans-serif;pointer-events:auto;box-shadow:0 2px 7px #2343;cursor:pointer;";
+    miSelectionUI.append(miRemoveItemButton);
+    miRemoveItemButton.addEventListener("click",event=>{
+      event.preventDefault();event.stopPropagation();
+      const item=miSelectedDocumentItem;
+      if(!item||!miDocumentEditor.contains(item))return;
+      if(item.dataset.miAttachedFile==="true"){
+        const input=$("projectFiles"),fileName=item.dataset.miFileName||"",fileSize=item.dataset.miFileSize||"",fileLastModified=item.dataset.miFileLastModified||"";
+        const transfer=new DataTransfer();
+        Array.from(input.files||[]).forEach(file=>{
+          if(!(file.name===fileName&&String(file.size)===fileSize&&String(file.lastModified)===fileLastModified))transfer.items.add(file);
+        });
+        input.files=transfer.files;
+        const preview=$("projectFilesPreview");preview.replaceChildren();
+        if(input.files.length){
+          const heading=document.createElement("strong");heading.textContent=input.files.length+" file(s) selected:";preview.append(heading);
+          const list=document.createElement("ul");list.style.margin="6px 0 0";list.style.paddingLeft="22px";
+          Array.from(input.files).forEach(file=>{const li=document.createElement("li");const size=file.size<1024*1024?(file.size/1024).toFixed(1)+" KB":(file.size/(1024*1024)).toFixed(2)+" MB";li.textContent=file.name+" ("+size+")";list.append(li);});
+          preview.append(list);
+        }
+      }
+      const next=item.nextElementSibling;item.remove();
+      if(next&&next.tagName==="P"&&!next.textContent.trim()&&!next.querySelector("img,[data-mi-attached-file]"))next.remove();
+      selectMiDocumentItem(null);syncMiDocumentHtml();
+      setMiWorkStatus("Selected picture or file removed — save your project to store the change.");
+    });
     const cropRanges=miCropPanel.querySelectorAll("input[data-crop]");
     function updateMiCrop(){
       if(!miSelectedDocumentItem)return;
@@ -4455,6 +4485,9 @@ img{max-width:100%}
         const card = document.createElement("div");
         card.contentEditable = "false";
         card.dataset.miAttachedFile = "true";
+        card.dataset.miFileName = file.name;
+        card.dataset.miFileSize = String(file.size);
+        card.dataset.miFileLastModified = String(file.lastModified);
         card.draggable = false;
         card.title = "Press and hold the left mouse button, then move this file to reposition it";
         card.style.cssText = "display:flex;align-items:center;gap:10px;max-width:100%;margin:12px 0;padding:12px 14px;border:1px solid #cbd8e8;border-radius:9px;background:#f4f8fd;color:#26364a;font:inherit;cursor:grab;user-select:none;";
