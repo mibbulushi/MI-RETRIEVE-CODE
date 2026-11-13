@@ -3491,6 +3491,18 @@ img{max-width:100%}
  #miDocumentEditor{padding:28px 20px!important}
 }
 
+/* Word-like zoom slider and +/- controls in the status row */
+.mi-document-zoom{display:flex;align-items:center;gap:5px;flex:0 0 auto;padding-left:9px;margin-left:4px;border-left:1px solid #d7dde5;white-space:nowrap}
+.mi-document-zoom .mi-zoom-step{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;min-width:25px;margin:0;padding:0;border:1px solid #cbd2da;border-radius:3px;background:#fff;color:#354252;box-shadow:none;text-shadow:none;font:18px/1 Arial,sans-serif;cursor:pointer}
+.mi-document-zoom .mi-zoom-step:hover{background:#edf3f9;border-color:#aebbc9;transform:none;box-shadow:none}
+.mi-document-zoom .mi-zoom-step:disabled{opacity:.4;cursor:default}
+.mi-document-zoom .mi-zoom-slider{appearance:none;-webkit-appearance:none;width:104px;height:18px;min-height:18px!important;margin:0;padding:0!important;border:0!important;border-radius:0;background:transparent;box-shadow:none;cursor:pointer}
+.mi-document-zoom .mi-zoom-slider::-webkit-slider-runnable-track{height:3px;border-radius:3px;background:#aeb8c4}
+.mi-document-zoom .mi-zoom-slider::-moz-range-track{height:3px;border-radius:3px;background:#aeb8c4}
+.mi-document-zoom .mi-zoom-slider::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;margin-top:-5px;border:1px solid #fff;border-radius:50%;background:#3976c5;box-shadow:0 0 0 1px #3976c5}
+.mi-document-zoom .mi-zoom-slider::-moz-range-thumb{width:12px;height:12px;border:1px solid #fff;border-radius:50%;background:#3976c5;box-shadow:0 0 0 1px #3976c5}
+.mi-document-zoom .mi-zoom-value{min-width:38px;color:#3f4853;font:12px Arial,sans-serif;text-align:right}
+@media(max-width:650px){.mi-document-zoom{gap:3px;padding-left:5px;margin-left:2px}.mi-document-zoom .mi-zoom-slider{width:65px}.mi-document-zoom .mi-zoom-step{width:22px;height:23px;min-width:22px}.mi-document-zoom .mi-zoom-value{min-width:32px;font-size:10px}}
 /* Keep status text and document view controls on one horizontal row */
 #miProjectWorkStatus{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;flex-wrap:nowrap!important;gap:8px!important;min-width:0;overflow-x:auto}
 #miProjectWorkStatusText{display:block;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -6255,6 +6267,34 @@ img{max-width:100%}
           });
           viewButtons[mode]=button;viewbar.append(button);
         });
+        /* Microsoft Word-style document zoom controls */
+        const zoomBar=document.createElement("div");
+        zoomBar.className="mi-document-zoom";
+        zoomBar.setAttribute("role","group");
+        zoomBar.setAttribute("aria-label","Document zoom");
+        const zoomOut=document.createElement("button");
+        zoomOut.type="button";zoomOut.className="mi-zoom-step";zoomOut.textContent="−";
+        zoomOut.setAttribute("aria-label","Zoom out");zoomOut.title="Zoom out";
+        const zoomSlider=document.createElement("input");
+        zoomSlider.type="range";zoomSlider.min="50";zoomSlider.max="200";zoomSlider.step="10";zoomSlider.value="100";
+        zoomSlider.className="mi-zoom-slider";zoomSlider.setAttribute("aria-label","Zoom level");
+        const zoomValue=document.createElement("span");
+        zoomValue.className="mi-zoom-value";zoomValue.textContent="100%";
+        const zoomIn=document.createElement("button");
+        zoomIn.type="button";zoomIn.className="mi-zoom-step";zoomIn.textContent="+";
+        zoomIn.setAttribute("aria-label","Zoom in");zoomIn.title="Zoom in";
+        function setDocumentZoom(value){
+          const next=Math.max(50,Math.min(200,Math.round(Number(value)/10)*10));
+          zoomSlider.value=String(next);zoomValue.textContent=next+"%";
+          editor.style.zoom=(next/100).toString();
+          zoomOut.disabled=next===50;zoomIn.disabled=next===200;
+        }
+        zoomOut.addEventListener("click",()=>setDocumentZoom(Number(zoomSlider.value)-10));
+        zoomIn.addEventListener("click",()=>setDocumentZoom(Number(zoomSlider.value)+10));
+        zoomSlider.addEventListener("input",()=>setDocumentZoom(zoomSlider.value));
+        zoomBar.append(zoomOut,zoomSlider,zoomIn,zoomValue);
+        viewbar.append(zoomBar);
+        setDocumentZoom(100);
         const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);statusRow.style.display="flex";statusRow.style.alignItems="center";statusRow.style.justifyContent="space-between";statusRow.style.flexWrap="nowrap";statusRow.style.gap="8px";}else stage.insertBefore(viewbar,editor);
         viewButtons.print.click();
       }
