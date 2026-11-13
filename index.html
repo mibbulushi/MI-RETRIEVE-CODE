@@ -2296,6 +2296,12 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 @media(max-width:760px){#miEditorToolbar{gap:6px;padding:7px}#miEditorToolbar .mi-tool-group{padding:7px}#miEditorToolbar .mi-tool-label{font-size:10px}#miEditorToolbar button{height:29px;min-height:29px;padding:4px 7px}}
 
 .mi-document-editor{min-height:520px;padding:24px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#26364a;font:inherit;line-height:1.75;outline:none;overflow-wrap:anywhere}
+/* Independent document and page scrolling; remove excess gap below the editor card. */
+.mi-builder-panel{margin-bottom:6px!important}
+html,body{overflow-y:auto!important;overscroll-behavior-y:auto}
+#miDocumentEditor{height:420px!important;min-height:420px!important;max-height:65vh!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;scrollbar-gutter:stable}
+@media(max-width:760px){#miDocumentEditor{height:360px!important;min-height:360px!important;max-height:60vh!important}}
+#miDocumentEditor .mi-multi-selected{outline:2px solid #1769c2!important;outline-offset:3px!important;box-shadow:0 0 0 3px rgba(23,105,194,.15)!important}
 /* Keep floated Word-style pictures contained inside the document editing box. */
 .mi-document-editor::after{content:"";display:table;clear:both}.mi-document-editor [data-mi-document-image="true"]{max-width:100%;box-sizing:border-box;clear:none;display:block}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="inline"]{display:inline-block;vertical-align:middle;float:none}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="square"],.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="tight"]{max-width:min(100%,calc(100% - 14px));float:left;clear:none;margin:8px 16px 8px 0}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="top-bottom"]{display:block;float:none;clear:both;margin:14px 0}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="behind"]{position:absolute;z-index:0;opacity:.72}.mi-document-editor [data-mi-document-image="true"][data-mi-picture-layout="front"]{position:absolute;z-index:5;opacity:1}.mi-picture-ribbon{display:none;position:sticky;top:0;z-index:30;margin:0 0 12px;padding:10px 12px;background:linear-gradient(180deg,#f8fbff,#edf3fa);border:1px solid #cbd8e6;border-radius:10px;box-shadow:0 3px 10px rgba(24,48,75,.08);color:#24364b;font:12px/1.35 system-ui,sans-serif}
 .mi-picture-ribbon.is-active{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}
@@ -4237,14 +4243,27 @@ img{max-width:100%}
       miRemoveItemButton.style.pointerEvents="auto";
       Object.values(miHandles).forEach(handle=>handle.style.pointerEvents="auto");
     }
+    const miSelectedDocumentItems=new Set();
     function selectMiDocumentItem(item){
-      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected").forEach(n=>n.classList.remove("mi-image-selected","mi-file-selected"));
+      miSelectedDocumentItems.clear();
+      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected,.mi-multi-selected").forEach(n=>n.classList.remove("mi-image-selected","mi-file-selected","mi-multi-selected"));
       miSelectedDocumentItem=item||null;
       if(item){
+        miSelectedDocumentItems.add(item);
         item.classList.add(item.dataset.miAttachedFile==="true"?"mi-file-selected":"mi-image-selected");
-        updateMiSelectionUI();
-        syncMiPictureRibbon();
+        updateMiSelectionUI();syncMiPictureRibbon();
       }else{miSelectionUI.style.display="none";miPictureRibbon.classList.remove("is-active");}
+    }
+    function toggleMiMultiSelection(item){
+      if(!item||!miDocumentEditor.contains(item))return;
+      if(miSelectedDocumentItems.has(item)){if(miSelectedDocumentItems.size>1)miSelectedDocumentItems.delete(item);}
+      else miSelectedDocumentItems.add(item);
+      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected,.mi-multi-selected").forEach(n=>n.classList.remove("mi-image-selected","mi-file-selected","mi-multi-selected"));
+      miSelectedDocumentItem=item;
+      miSelectedDocumentItems.forEach(node=>node.classList.add("mi-multi-selected"));
+      item.classList.add(item.dataset.miAttachedFile==="true"?"mi-file-selected":"mi-image-selected");
+      updateMiSelectionUI();syncMiPictureRibbon();
+      setMiWorkStatus(miSelectedDocumentItems.size+" items selected. Ctrl-click / Cmd-click / Shift-click to select multiple items.");
     }
     function applyMiPictureLayout(layout){
       const item=miSelectedDocumentItem;
@@ -4363,7 +4382,9 @@ img{max-width:100%}
     document.addEventListener("keydown",event=>{if(event.key==="Escape")closeMiWordContextMenu();});
     miDocumentEditor.addEventListener("click",event=>{
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
-      if(target&&miDocumentEditor.contains(target))selectMiDocumentItem(target);
+      if(!target||!miDocumentEditor.contains(target))return;
+      if(event.ctrlKey||event.metaKey||event.shiftKey)toggleMiMultiSelection(target);
+      else if(miSelectedDocumentItem!==target||miSelectedDocumentItems.size!==1)selectMiDocumentItem(target);
     });
     // Recovery: if a document picture has become detached from the white editor,
     // clicking it brings it back into the editor so it can be moved normally.
@@ -4392,6 +4413,7 @@ img{max-width:100%}
       if(event.button!==0 || event.target.closest?.(".mi-word-selection-ui"))return;
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
       if(!target||!miDocumentEditor.contains(target))return;
+      if(event.ctrlKey||event.metaKey||event.shiftKey)return;
       selectMiDocumentItem(target);
       event.preventDefault();
       target.draggable=false;
