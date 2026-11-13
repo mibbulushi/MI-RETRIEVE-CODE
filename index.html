@@ -3409,6 +3409,20 @@ img{max-width:100%}
   max-width:100%!important;
   overflow-wrap:anywhere!important;
 }
+/* Keep picture-format tools in the same single toolbar row as text-format tools. */
+#miEditorToolbar{flex-wrap:nowrap!important;align-items:center!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important}
+#miPictureRibbon{display:none;position:static;flex:0 0 auto;width:auto;min-width:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
+#miPictureRibbon.is-active{display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;align-items:center!important;gap:5px!important;margin-left:3px!important}
+#miPictureRibbon .mi-ribbon-group{display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;align-items:center!important;gap:4px!important;padding:0 7px 0 0!important;margin:0!important;border:0!important;border-right:1px solid #cbd8e6!important}
+#miPictureRibbon .mi-ribbon-group:last-of-type{border-right:0!important;padding-right:0!important}
+#miPictureRibbon button{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;height:29px!important;min-height:29px!important;min-width:29px!important;padding:3px 6px!important;margin:0!important;border:1px solid #c4d1df!important;border-radius:6px!important;background:#fff!important;color:#29435f!important;font:600 11px/1 system-ui,sans-serif!important;white-space:nowrap!important;box-shadow:none!important}
+#miPictureRibbon button:hover{background:#e4effb!important;border-color:#8eafd2!important}
+#miPictureRibbon .mi-ribbon-group label{display:inline-flex!important;flex:0 0 auto!important;flex-direction:row!important;align-items:center!important;gap:3px!important;width:auto!important;min-width:0!important;height:29px!important;min-height:29px!important;margin:0!important;padding:0!important;color:#26364a!important;font:600 10px/1 system-ui,sans-serif!important;white-space:nowrap!important}
+#miPictureRibbon #miRibbonWidth,#miPictureRibbon #miRibbonHeight{display:inline-block!important;flex:0 0 48px!important;width:48px!important;min-width:48px!important;max-width:48px!important;height:29px!important;min-height:29px!important;max-height:29px!important;margin:0!important;padding:3px 4px!important;border:1px solid #9fb2ca!important;border-radius:6px!important;background:#fff!important;color:#172b45!important;box-sizing:border-box!important;font:11px/1 system-ui,sans-serif!important}
+#miPictureRibbon .mi-ribbon-group label:has(#miRibbonLock){display:inline-flex!important;flex-direction:row!important;align-items:center!important;gap:3px!important;height:29px!important;min-height:29px!important;padding:0!important;font-size:10px!important}
+#miPictureRibbon #miRibbonLock{display:inline-block!important;flex:0 0 13px!important;width:13px!important;min-width:13px!important;height:13px!important;min-height:13px!important;margin:0!important;padding:0!important}
+#miPictureRibbon .mi-ribbon-caption{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;width:auto!important;max-width:none!important;margin:0 0 0 2px!important;padding:0!important;color:#66788c!important;font:10px/1.2 system-ui,sans-serif!important;white-space:nowrap!important}
+@media(max-width:760px){#miEditorToolbar{flex-wrap:nowrap!important}#miPictureRibbon.is-active{flex-wrap:nowrap!important}}
 </style>
 </head>
 <body>
@@ -3547,8 +3561,7 @@ img{max-width:100%}
             <button type="button" class="secondary mi-format-icon" data-mi-command="indent" title="Indent" aria-label="Indent">⇥</button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="outdent" title="Outdent" aria-label="Outdent">⇤</button>
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
-          </div>
-          <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
+            <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
             <div class="mi-ribbon-group">
               <button type="button" data-mi-ribbon="crop" title="Crop picture">✂ Crop</button>
               <button type="button" data-mi-ribbon="layout" title="Wrap text">▣ Wrap Text</button>
@@ -3565,6 +3578,7 @@ img{max-width:100%}
               <button type="button" data-mi-ribbon="size-dialog" title="More size options">Size &amp; Position…</button>
             </div>
             <div class="mi-ribbon-caption">Picture Format · Select a picture in the document to edit it</div>
+            </div>
           </div>
           <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
           <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
