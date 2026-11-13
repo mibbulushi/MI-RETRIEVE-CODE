@@ -3490,6 +3490,17 @@ img{max-width:100%}
  .mi-word-stage{padding:10px 6px}
  #miDocumentEditor{padding:28px 20px!important}
 }
+
+/* Document view modes */
+.mi-document-viewbar{display:flex;align-items:center;justify-content:flex-end;gap:5px;padding:7px 10px;background:#f5f6f8;border:1px solid #d9dde3;border-bottom:0}
+.mi-document-viewbar button{appearance:none;border:1px solid transparent;border-radius:3px;background:transparent;color:#3f4853;padding:6px 11px;font:12px Arial,sans-serif;cursor:pointer}
+.mi-document-viewbar button:hover{background:#fff;border-color:#cbd2da}
+.mi-document-viewbar button.is-active{background:#fff;border-color:#aeb8c4;color:#1f2937;font-weight:600;box-shadow:inset 0 -2px 0 #2878c8}
+.mi-word-stage[data-view-mode="print"] #miDocumentEditor{width:min(100%,816px)!important;max-width:816px!important;min-height:1056px!important;margin:0 auto!important;padding:64px 76px!important;background:#fff!important;border:1px solid #c9cdd2!important;box-shadow:0 2px 9px rgba(28,36,46,.13)!important}
+.mi-word-stage[data-view-mode="web"] #miDocumentEditor{width:100%!important;max-width:none!important;min-height:620px!important;margin:0!important;padding:28px 34px!important;background:#fff!important;border:1px solid #d5d9de!important;box-shadow:none!important}
+.mi-word-stage[data-view-mode="read"] #miDocumentEditor{width:min(100%,900px)!important;max-width:900px!important;min-height:620px!important;margin:18px auto!important;padding:42px 54px!important;background:#fff!important;border:0!important;box-shadow:none!important;color:#30343b!important;font-size:16px!important;line-height:1.8!important;cursor:default}
+.mi-word-stage[data-view-mode="read"] .mi-document-viewbar{border-bottom:1px solid #d9dde3}
+@media(max-width:650px){.mi-document-viewbar{justify-content:center;flex-wrap:wrap}.mi-word-stage[data-view-mode="print"] #miDocumentEditor,.mi-word-stage[data-view-mode="read"] #miDocumentEditor{padding:22px 16px!important;min-height:520px!important}.mi-word-stage[data-view-mode="web"] #miDocumentEditor{padding:18px 14px!important}}
 </style>
 </head>
 <body>
@@ -6208,6 +6219,33 @@ img{max-width:100%}
         stage.className="mi-word-stage";
         editor.parentNode.insertBefore(stage,editor);
         stage.append(editor);
+      }
+      const stage=editor?.parentElement;
+      if(stage&&!stage.querySelector(".mi-document-viewbar")){
+        const viewbar=document.createElement("div");
+        viewbar.className="mi-document-viewbar";
+        viewbar.setAttribute("role","toolbar");
+        viewbar.setAttribute("aria-label","Document view");
+        const viewModes=[["read","Read Mode"],["print","Print Layout"],["web","Web Layout"]];
+        const viewButtons={};
+        viewModes.forEach(([mode,label])=>{
+          const button=document.createElement("button");button.type="button";button.textContent=label;
+          button.addEventListener("click",()=>{
+            stage.dataset.viewMode=mode;
+            editor.contentEditable=mode==="read"?"false":"true";
+            editor.setAttribute("aria-readonly",String(mode==="read"));
+            Object.entries(viewButtons).forEach(([key,btn])=>{
+              const selected=key===mode;btn.classList.toggle("is-active",selected);
+              btn.setAttribute("aria-pressed",String(selected));
+            });
+            toolbar.hidden=mode==="read";
+            const status=document.getElementById("miProjectWorkStatusText");
+            if(status)status.textContent=mode==="read"?"Read Mode — editing is paused.":mode==="print"?"Print Layout — page view.":"Web Layout — continuous document view.";
+          });
+          viewButtons[mode]=button;viewbar.append(button);
+        });
+        stage.insertBefore(viewbar,editor);
+        viewButtons.print.click();
       }
       function updatePictureTab(){
         const active=pictureRibbon.classList.contains("is-active");
