@@ -4121,16 +4121,17 @@ img{max-width:100%}
     });
     const miLayoutButton = document.createElement("button");
     miLayoutButton.type = "button";
-    miLayoutButton.className = "mi-word-layout-button";
-    miLayoutButton.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="4" width="9" height="9" rx="1" fill="#e8f1fb" stroke="#315f91" stroke-width="1.4"/><path d="M15 5h6M15 9h6M3 16h18M3 20h18" stroke="#64748b" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    miLayoutButton.className = "mi-word-layout-button mi-picture-action-icon";
+    miLayoutButton.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="5" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M14 5h7M14 9h7M3 16h18M3 20h13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12.5 5v8" stroke="currentColor" stroke-width="1.5"/></svg>';
     miLayoutButton.title = "Change how text flows around this picture";
-    miLayoutButton.style.cssText = "display:none;position:absolute;left:calc(100% + 8px);top:0;white-space:nowrap;padding:6px 9px;border:1px solid #b9cce2;border-radius:6px;background:#fff;color:#24466d;font-size:12px;pointer-events:auto;box-shadow:0 2px 7px #2343;";
+    miLayoutButton.style.cssText = "display:none;position:absolute;left:calc(100% + 8px);top:0;width:32px;height:32px;padding:6px;border:1px solid #d7dee8;border-radius:5px;background:#fff;color:#334155;box-shadow:none;cursor:pointer;pointer-events:auto;";
     miSelectionUI.append(miLayoutButton);
     const miCropButton=document.createElement("button");
     miCropButton.type="button";
-    miCropButton.textContent="Crop";
+    miCropButton.className="mi-picture-action-icon";
+    miCropButton.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 3v13a2 2 0 0 0 2 2h12M3 7h13a2 2 0 0 1 2 2v12M7 7h9v9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     miCropButton.title="Crop picture";
-    miCropButton.style.cssText="display:none;position:absolute;left:calc(100% + 8px);top:38px;padding:7px 12px;border:1px solid #b9cce2;border-radius:6px;background:#fff;color:#24466d;font-size:12px;pointer-events:auto;box-shadow:0 2px 7px #2343;cursor:pointer;";
+    miCropButton.style.cssText="display:none;position:absolute;left:calc(100% + 8px);top:38px;width:32px;height:32px;padding:6px;border:1px solid #d7dee8;border-radius:5px;background:#fff;color:#334155;box-shadow:none;cursor:pointer;pointer-events:auto;";
     miSelectionUI.append(miCropButton);
     const miCropPanel=document.createElement("div");
     miCropPanel.style.cssText="position:absolute;left:calc(100% + 8px);top:76px;display:none;width:230px;padding:12px;background:#fff;border:1px solid #c7d2df;border-radius:8px;box-shadow:0 8px 24px #172b4430;pointer-events:auto;color:#263d56;font:12px Arial,sans-serif;";
@@ -4138,9 +4139,10 @@ img{max-width:100%}
     miSelectionUI.append(miCropPanel);
     const miRemoveItemButton=document.createElement("button");
     miRemoveItemButton.type="button";
-    miRemoveItemButton.textContent="Remove";
+    miRemoveItemButton.className="mi-picture-action-icon";
+    miRemoveItemButton.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 10v7M14 10v7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     miRemoveItemButton.title="Remove selected picture or attached file";
-    miRemoveItemButton.style.cssText="display:none;position:absolute;left:0;top:calc(100% + 8px);padding:6px 11px;border:1px solid #e0b8b8;border-radius:6px;background:#fff;color:#a52d35;font:12px Arial,sans-serif;pointer-events:auto;box-shadow:0 2px 7px #2343;cursor:pointer;";
+    miRemoveItemButton.style.cssText="display:none;position:absolute;left:0;top:calc(100% + 8px);width:32px;height:32px;padding:6px;border:1px solid #f0d4d4;border-radius:5px;background:#fff;color:#b4232c;box-shadow:none;cursor:pointer;pointer-events:auto;";
     miSelectionUI.append(miRemoveItemButton);
     miRemoveItemButton.addEventListener("click",event=>{
       event.preventDefault();event.stopPropagation();
