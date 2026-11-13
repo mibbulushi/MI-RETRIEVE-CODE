@@ -3451,6 +3451,40 @@ img{max-width:100%}
 .mi-word-selection-ui .mi-word-resize-handle:hover{background:#e5f1ff!important;border-color:#0e559c!important;transform:scale(1.12)}
 
 
+
+/* Word-inspired document workspace and functional ribbon tabs */
+#saveArea.card{background:#f4f5f7!important;border:1px solid #d7dbe0!important;border-radius:8px!important;box-shadow:0 2px 8px rgba(25,35,48,.07)!important;padding:18px!important}
+#saveArea .mi-builder-panel{margin:14px 0 4px!important;padding:0!important;border:1px solid #cfd3d8!important;border-radius:4px!important;background:#fff!important;box-shadow:none!important}
+#saveArea .mi-builder-panel:before{display:none!important}
+#saveArea .mi-builder-heading{padding:12px 16px;background:#fff;border-bottom:1px solid #d9dde2}
+#saveArea .mi-builder-heading h3{font:600 15px "Segoe UI",Arial,sans-serif;color:#252a31}
+#saveArea .mi-builder-heading p{font:12px "Segoe UI",Arial,sans-serif;color:#68717d}
+#miEditorToolbar.mi-word-ribbon{display:block!important;overflow:visible!important;white-space:normal!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#fff!important;box-shadow:none!important}
+.mi-word-ribbon-tabs{display:flex;align-items:stretch;gap:2px;padding:5px 12px 0;background:#fff;border-bottom:1px solid #cfd4da}
+.mi-word-ribbon-tab{height:34px!important;min-height:34px!important;margin:0!important;padding:0 15px!important;border:0!important;border-radius:3px 3px 0 0!important;background:transparent!important;color:#343a40!important;box-shadow:none!important;text-shadow:none!important;font:13px "Segoe UI",Arial,sans-serif!important}
+.mi-word-ribbon-tab:hover{background:#f0f3f6!important;box-shadow:none!important;transform:none!important}
+.mi-word-ribbon-tab[aria-selected="true"]{background:#f5f7f9!important;color:#155ca8!important;border-bottom:2px solid #2176c7!important;font-weight:650!important}
+.mi-word-ribbon-panels{background:#f5f7f9;border-bottom:1px solid #cfd4da;min-height:92px}
+.mi-word-ribbon-panel{display:flex;align-items:center;flex-wrap:wrap;gap:9px;min-height:92px;padding:10px 14px;background:#f5f7f9}
+.mi-word-ribbon-panel[hidden]{display:none!important}
+.mi-word-ribbon-panel .mi-tool-label{font:12px "Segoe UI",Arial,sans-serif!important;color:#333!important}
+#miEditorToolbar .mi-word-ribbon-panel button{border:1px solid #c8cdd3!important;border-radius:3px!important;background:#fff!important;color:#27313b!important;box-shadow:none!important;text-shadow:none!important}
+#miEditorToolbar .mi-word-ribbon-panel button:hover{background:#eaf2fa!important;border-color:#8daecc!important;transform:none!important;box-shadow:none!important}
+.mi-word-ribbon-panel .mi-document-tools{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.mi-word-ribbon-panel .mi-document-tools button{min-height:38px!important;padding:7px 13px!important}
+.mi-word-ribbon-panel #miPictureRibbon{width:100%;margin:0;padding:4px 0;background:transparent;border:0;box-shadow:none}
+.mi-word-ribbon-panel #miPictureRibbon.is-active{display:flex}
+.mi-word-stage{padding:22px 18px;background:#e7e9ec;border-top:1px solid #fff;min-width:0}
+#miDocumentEditor{width:min(100%,816px)!important;max-width:816px!important;margin:0 auto!important;padding:64px 76px!important;border:1px solid #c9cdd2!important;border-radius:0!important;background:#fff!important;color:#20252b!important;box-shadow:0 2px 9px rgba(28,36,46,.13)!important;font:16px/1.6 Calibri,"Segoe UI",Arial,sans-serif!important}
+#miDocumentEditor:focus{outline:1px solid #8fb6df!important;box-shadow:0 2px 9px rgba(28,36,46,.13),0 0 0 2px rgba(52,120,190,.12)!important}
+#miProjectWorkStatus{margin:0!important;border-radius:0 0 4px 4px!important}
+@media(max-width:760px){
+ .mi-word-ribbon-tabs{overflow-x:auto;padding-left:6px}
+ .mi-word-ribbon-tab{padding:0 11px!important;flex:0 0 auto}
+ .mi-word-ribbon-panel{gap:7px;padding:9px;min-height:80px}
+ .mi-word-stage{padding:10px 6px}
+ #miDocumentEditor{padding:28px 20px!important}
+}
 </style>
 </head>
 <body>
@@ -4129,7 +4163,7 @@ img{max-width:100%}
     const miCropButton=document.createElement("button");
     miCropButton.type="button";
     miCropButton.className="mi-picture-action-icon";
-    miCropButton.textContent="Crop  ▾";
+    miCropButton.textContent="Crop";
     miCropButton.title="Picture crop options";
     miCropButton.style.cssText="display:none;position:absolute;left:calc(100% + 8px);top:38px;min-width:76px;height:30px;padding:4px 9px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#242424;box-shadow:none;font:12px Arial,sans-serif;cursor:pointer;pointer-events:auto;text-align:left;";
     miSelectionUI.append(miCropButton);
@@ -4236,8 +4270,8 @@ img{max-width:100%}
       });
     });
     function miReadDirectCrop(){
-      const m=(miSelectedDocumentItem?.style.clipPath||"").match(/inset\\(([^)]*)\\)/);
-      const v=m?m[1].split(/\\s+/):[];
+      const m=(miSelectedDocumentItem?.style.clipPath||"").match(/inset\(([^)]*)\)/);
+      const v=m?m[1].trim().split(/\s+/):[];
       return {top:parseFloat(v[0])||0,right:parseFloat(v[1]||v[0])||0,bottom:parseFloat(v[2]||v[0])||0,left:parseFloat(v[3]||v[1]||v[0])||0};
     }
     function miPaintDirectCrop(){
@@ -4393,9 +4427,9 @@ img{max-width:100%}
       miRemoveItemButton.style.left="8px";
       miRemoveItemButton.style.top="auto";
       miRemoveItemButton.style.bottom="8px";
-      miLayoutButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
+      miLayoutButton.style.display=miDirectCropMode?"none":(item.dataset.miDocumentImage==="true"?"block":"none");
       miCropButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
-      miRemoveItemButton.style.display="block";
+      miRemoveItemButton.style.display=miDirectCropMode?"none":"block";
       miSelectionUI.style.pointerEvents="none";
       miLayoutButton.style.pointerEvents="auto";
       miCropButton.style.pointerEvents="auto";
@@ -6068,6 +6102,68 @@ img{max-width:100%}
       if (event.key === "Escape" && !document.body.classList.contains("sidebar-collapsed")) setSidebarCollapsed(true);
     });
     if (window.matchMedia("(max-width: 760px)").matches) setSidebarCollapsed(true);
+
+    // Build real, working Word-style ribbon tabs from the existing editor controls.
+    (function initMiWordRibbon(){
+      const toolbar=document.getElementById("miEditorToolbar");
+      const pictureRibbon=document.getElementById("miPictureRibbon");
+      const insertTools=document.querySelector("#saveArea .mi-document-tools");
+      const editor=document.getElementById("miDocumentEditor");
+      if(!toolbar||!pictureRibbon||toolbar.dataset.wordRibbonReady==="true")return;
+      toolbar.dataset.wordRibbonReady="true";
+      const original=Array.from(toolbar.children);
+      const homeItems=original.filter(node=>node!==pictureRibbon);
+      const tabs=document.createElement("div");
+      tabs.className="mi-word-ribbon-tabs";
+      tabs.setAttribute("role","tablist");
+      tabs.setAttribute("aria-label","Document tools");
+      const panels=document.createElement("div");
+      panels.className="mi-word-ribbon-panels";
+      const panelMap={};
+      const tabMap={};
+      function makeTab(key,label){
+        const tab=document.createElement("button");
+        tab.type="button";tab.className="mi-word-ribbon-tab";
+        tab.setAttribute("role","tab");tab.textContent=label;
+        tab.addEventListener("click",()=>activate(key));
+        tabs.append(tab);tabMap[key]=tab;
+        const panel=document.createElement("div");
+        panel.className="mi-word-ribbon-panel";
+        panel.setAttribute("role","tabpanel");
+        panelMap[key]=panel;panels.append(panel);
+      }
+      function activate(key){
+        Object.entries(tabMap).forEach(([name,tab])=>{
+          const selected=name===key;
+          tab.setAttribute("aria-selected",String(selected));
+          tab.tabIndex=selected?0:-1;
+          panelMap[name].hidden=!selected;
+        });
+      }
+      makeTab("home","Home");
+      makeTab("insert","Insert");
+      makeTab("picture","Picture Format");
+      homeItems.forEach(node=>panelMap.home.append(node));
+      if(insertTools)panelMap.insert.append(insertTools);
+      panelMap.picture.append(pictureRibbon);
+      toolbar.replaceChildren(tabs,panels);
+      if(editor&&!editor.parentElement.classList.contains("mi-word-stage")){
+        const stage=document.createElement("div");
+        stage.className="mi-word-stage";
+        editor.parentNode.insertBefore(stage,editor);
+        stage.append(editor);
+      }
+      function updatePictureTab(){
+        const active=pictureRibbon.classList.contains("is-active");
+        tabMap.picture.hidden=!active;
+        if(active)activate("picture");
+        else if(tabMap.picture.getAttribute("aria-selected")==="true")activate("home");
+      }
+      const observer=new MutationObserver(updatePictureTab);
+      observer.observe(pictureRibbon,{attributes:true,attributeFilter:["class"]});
+      updatePictureTab();
+      activate("home");
+    })();
 </script>
 </body>
 </html>
