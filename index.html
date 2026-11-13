@@ -4629,7 +4629,21 @@ img{max-width:100%}
       const item=miSelectedDocumentItem;if(!item)return;
       document.querySelector(".mi-word-size-dialog")?.remove();
       const dialog=document.createElement("div");dialog.className="mi-word-size-dialog";
-      const heading=document.createElement("strong");heading.textContent="Size and Position";dialog.append(heading);
+      const heading=document.createElement("strong");heading.textContent="Size and Position";heading.style.cssText="display:block;padding:2px 0 10px;margin:-2px 0 10px;border-bottom:1px solid #e5e7eb;cursor:move;user-select:none;";heading.title="Drag to move this popup";dialog.append(heading);
+      heading.addEventListener("pointerdown",event=>{
+        if(event.button!==0)return;
+        event.preventDefault();event.stopPropagation();
+        const rect=dialog.getBoundingClientRect(),startX=event.clientX,startY=event.clientY;
+        const startLeft=rect.left,startTop=rect.top;
+        dialog.style.transform="none";dialog.style.left=startLeft+"px";dialog.style.top=startTop+"px";
+        const move=e=>{
+          const maxLeft=Math.max(0,window.innerWidth-dialog.offsetWidth),maxTop=Math.max(0,window.innerHeight-dialog.offsetHeight);
+          dialog.style.left=Math.max(0,Math.min(maxLeft,startLeft+e.clientX-startX))+"px";
+          dialog.style.top=Math.max(0,Math.min(maxTop,startTop+e.clientY-startY))+"px";
+        };
+        const stop=()=>{document.removeEventListener("pointermove",move);document.removeEventListener("pointerup",stop);};
+        document.addEventListener("pointermove",move);document.addEventListener("pointerup",stop,{once:true});
+      });
       const rect=item.getBoundingClientRect(),isImage=item.dataset.miDocumentImage==="true",ratio=rect.width/Math.max(1,rect.height);
       const width=document.createElement("input");width.type="number";width.min="40";width.max="2000";width.value=Math.round(rect.width);
       const height=document.createElement("input");height.type="number";height.min="30";height.max="2000";height.value=Math.round(rect.height);
