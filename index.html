@@ -4163,23 +4163,23 @@ img{max-width:100%}
     miLayoutButton.className = "mi-word-layout-button mi-picture-action-icon";
     miLayoutButton.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="5" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M14 5h7M14 9h7M3 16h18M3 20h13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12.5 5v8" stroke="currentColor" stroke-width="1.5"/></svg>';
     miLayoutButton.title = "Change how text flows around this picture";
-    miLayoutButton.style.cssText = "display:none;position:absolute;left:calc(100% + 8px);top:0;width:32px;height:32px;padding:6px;border:1px solid #d7dee8;border-radius:5px;background:#fff;color:#334155;box-shadow:none;cursor:pointer;pointer-events:auto;";
+    miLayoutButton.style.cssText = "display:none;position:absolute;left:calc(100% + 8px);top:0;width:34px;height:34px;min-width:34px;padding:7px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#333;box-shadow:none;cursor:pointer;pointer-events:auto;box-sizing:border-box;";
     miSelectionUI.append(miLayoutButton);
     const miCropButton=document.createElement("button");
     miCropButton.type="button";
     miCropButton.className="mi-picture-action-icon";
-    miCropButton.textContent="Crop";
+    miCropButton.innerHTML='<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M6 2v12a2 2 0 0 0 2 2h10M2 6h12a2 2 0 0 1 2 2v10M6 6h8v8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     miCropButton.title="Picture crop options";
-    miCropButton.style.cssText="display:none;position:absolute;left:calc(100% + 8px);top:38px;min-width:76px;height:30px;padding:4px 9px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#242424;box-shadow:none;font:12px Arial,sans-serif;cursor:pointer;pointer-events:auto;text-align:left;";
+    miCropButton.style.cssText="display:none;position:absolute;left:calc(100% + 8px);top:38px;width:34px;height:34px;min-width:34px;padding:7px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#333;box-shadow:none;font:12px Arial,sans-serif;cursor:pointer;pointer-events:auto;align-items:center;justify-content:center;box-sizing:border-box;";
     miSelectionUI.append(miCropButton);
     const miCropPanel=document.createElement("div");
-    miCropPanel.style.cssText="position:absolute;left:calc(100% + 8px);top:76px;display:none;width:248px;padding:6px;background:#fff;border:1px solid #d5dfeb;border-radius:10px;box-shadow:0 12px 32px rgba(20,42,68,.18);pointer-events:auto;color:#263d56;font:13px system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box;";
+    miCropPanel.style.cssText="position:absolute;left:calc(100% + 8px);top:76px;display:none;width:226px;padding:5px;background:#fff;border:1px solid #c8c8c8;border-radius:2px;box-shadow:0 2px 5px rgba(0,0,0,.12);pointer-events:auto;color:#242424;font:12px Arial,sans-serif;box-sizing:border-box;";
     miCropPanel.innerHTML='<div style="display:flex;align-items:center;gap:8px;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #e5e7eb;"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M7 2v13a2 2 0 0 0 2 2h13M2 7h13a2 2 0 0 1 2 2v13" fill="none" stroke="currentColor" stroke-width="1.7"/></svg><strong style="font-size:14px;font-weight:600;">Crop</strong></div><div style="font-size:11px;color:#616161;margin-bottom:8px;">Adjust picture edges</div><div style="display:grid;grid-template-columns:48px 1fr 34px;gap:7px;align-items:center;margin:9px 0;"><label for="miCropTop">Top</label><input id="miCropTop" data-crop="top" type="range" min="0" max="45" value="0" style="width:100%;accent-color:#217346;"><span data-crop-value="top" style="text-align:right;font-variant-numeric:tabular-nums;">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 34px;gap:7px;align-items:center;margin:9px 0;"><label for="miCropRight">Right</label><input id="miCropRight" data-crop="right" type="range" min="0" max="45" value="0" style="width:100%;accent-color:#217346;"><span data-crop-value="right" style="text-align:right;font-variant-numeric:tabular-nums;">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 34px;gap:7px;align-items:center;margin:9px 0;"><label for="miCropBottom">Bottom</label><input id="miCropBottom" data-crop="bottom" type="range" min="0" max="45" value="0" style="width:100%;accent-color:#217346;"><span data-crop-value="bottom" style="text-align:right;font-variant-numeric:tabular-nums;">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 34px;gap:7px;align-items:center;margin:9px 0;"><label for="miCropLeft">Left</label><input id="miCropLeft" data-crop="left" type="range" min="0" max="45" value="0" style="width:100%;accent-color:#217346;"><span data-crop-value="left" style="text-align:right;font-variant-numeric:tabular-nums;">0%</span></div><div style="display:flex;justify-content:flex-end;gap:7px;border-top:1px solid #e5e7eb;padding-top:11px;margin-top:12px;"><button type="button" data-crop-reset style="padding:6px 12px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#242424;font-size:12px;">Reset</button><button type="button" data-crop-apply style="padding:6px 14px;border:1px solid #217346;border-radius:2px;background:#217346;color:#fff;font-size:12px;">Apply</button></div>';
     miSelectionUI.append(miCropPanel);
     const miCropMenu=document.createElement("div");
     miCropMenu.setAttribute("role","menu");
     miCropMenu.setAttribute("aria-label","Crop options");
-    miCropMenu.style.cssText="position:absolute;left:8px;top:76px;display:none;width:218px;padding:6px;background:#fff;border:1px solid #d5dfeb;border-radius:10px;box-shadow:0 12px 32px rgba(20,42,68,.18);pointer-events:auto;color:#263d56;font:13px system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box;z-index:20;";
+    miCropMenu.style.cssText="position:absolute;left:8px;top:76px;display:none;width:206px;padding:4px;background:#fff;border:1px solid #c8c8c8;border-radius:2px;box-shadow:0 2px 5px rgba(0,0,0,.12);pointer-events:auto;color:#242424;font:12px Arial,sans-serif;box-sizing:border-box;z-index:20;";
     miCropMenu.innerHTML='<button type="button" data-crop-action="crop" style="display:block;width:100%;min-height:36px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:#fff;color:#263d56;text-align:left;font:inherit;cursor:pointer;">Crop</button><button type="button" data-crop-action="oval" style="display:block;width:100%;min-height:36px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:#fff;color:#263d56;text-align:left;font:inherit;cursor:pointer;">Crop to Shape · Oval</button><div style="height:1px;background:#e5e5e5;margin:3px 0;"></div><button type="button" data-crop-action="fill" style="display:block;width:100%;min-height:36px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:#fff;color:#263d56;text-align:left;font:inherit;cursor:pointer;">Fill</button><button type="button" data-crop-action="fit" style="display:block;width:100%;min-height:36px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:#fff;color:#263d56;text-align:left;font:inherit;cursor:pointer;">Fit</button>';
     miSelectionUI.append(miCropMenu);
     miCropMenu.querySelectorAll("button").forEach(option=>{
@@ -4212,7 +4212,7 @@ img{max-width:100%}
     miRemoveItemButton.className="mi-picture-action-icon";
     miRemoveItemButton.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 10v7M14 10v7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     miRemoveItemButton.title="Remove selected picture or attached file";
-    miRemoveItemButton.style.cssText="display:none;position:absolute;left:0;top:calc(100% + 8px);width:32px;height:32px;padding:6px;border:1px solid #f0d4d4;border-radius:5px;background:#fff;color:#b4232c;box-shadow:none;cursor:pointer;pointer-events:auto;";
+    miRemoveItemButton.style.cssText="display:none;position:absolute;left:0;top:calc(100% + 8px);width:34px;height:34px;min-width:34px;padding:7px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#333;box-shadow:none;cursor:pointer;pointer-events:auto;box-sizing:border-box;";
     miSelectionUI.append(miRemoveItemButton);
     miRemoveItemButton.addEventListener("click",event=>{
       event.preventDefault();event.stopPropagation();
@@ -4294,7 +4294,7 @@ img{max-width:100%}
       miSelectionUI.style.border=enabled?"0":"1px solid #2878cf";
       miDirectCropFrame.style.border=enabled?"1.5px dotted #111":"1.5px solid #111";
       miSelectedDocumentItem?.classList.toggle("mi-direct-cropping",enabled);
-      miCropButton.textContent=enabled?"Apply Crop":"Crop";
+      miCropButton.innerHTML=enabled?'<span style="font:11px Arial,sans-serif;white-space:nowrap">Apply</span>':'<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M6 2v12a2 2 0 0 0 2 2h10M2 6h12a2 2 0 0 1 2 2v10M6 6h8v8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       miCropButton.title=enabled?"Apply picture crop":"Crop picture";
       Object.values(miHandles).forEach(h=>h.style.display=enabled?"none":"block");
       miLayoutButton.style.display=enabled?"none":(miSelectedDocumentItem?.dataset.miDocumentImage==="true"?"block":"none");
@@ -4324,7 +4324,7 @@ img{max-width:100%}
     document.addEventListener("pointerup",()=>{miDirectCropDrag=null;});
     const miLayoutMenu = document.createElement("div");
     miLayoutMenu.setAttribute("aria-label","Picture layout options");
-    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:252px;padding:6px;background:#fff;border:1px solid #d5dfeb;border-radius:10px;box-shadow:0 12px 32px rgba(20,42,68,.18);pointer-events:auto;color:#263d56;font:13px system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box;";
+    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:236px;padding:4px;background:#fff;border:1px solid #c8c8c8;border-radius:2px;box-shadow:0 2px 5px rgba(0,0,0,.12);pointer-events:auto;color:#242424;font:12px Arial,sans-serif;box-sizing:border-box;";
     const miLayouts = [["inline","In Line with Text"],["square","Square"],["tight","Tight"],["top-bottom","Top and Bottom"],["behind","Behind Text"],["front","In Front of Text"]];
     function miLayoutIcon(kind){
       const blue="#2878c8",gray="#6b7785";
@@ -4446,14 +4446,14 @@ img{max-width:100%}
         actionTopLayout="0px";actionTopCrop="38px";actionTopRemove="76px";
       }else{
         actionRailMode="horizontal";
-        const railWidth=196;
+        const railWidth=126;
         actionRailLeft=Math.max(editorLeft-visibleLeft+8,Math.min((editorRight-visibleLeft)-railWidth-8,(visibleWidth-railWidth)/2));
         const roomAbove=visibleTop-editorTop, roomBelow=editorBottom-visibleBottom;
         const railTop=roomAbove>=40?-40:(visibleHeight+8);
         actionTopLayout=railTop+"px";actionTopCrop=railTop+"px";actionTopRemove=railTop+"px";
         miLayoutButton.style.left=actionRailLeft+"px";
-        miCropButton.style.left=(actionRailLeft+40)+"px";
-        miRemoveItemButton.style.left=(actionRailLeft+124)+"px";
+        miCropButton.style.left=(actionRailLeft+42)+"px";
+        miRemoveItemButton.style.left=(actionRailLeft+84)+"px";
       }
       if(actionRailMode==="vertical"){
         miLayoutButton.style.left=actionRailLeft+"px";
@@ -4464,13 +4464,13 @@ img{max-width:100%}
       miCropButton.style.top=actionTopCrop;
       miRemoveItemButton.style.top=actionTopRemove;
       miRemoveItemButton.style.bottom="auto";
-      miCropButton.style.minWidth=actionRailMode==="horizontal"?"76px":"76px";
+      miCropButton.style.minWidth="34px";
       miCropPanel.style.left=(actionRailMode==="horizontal"?actionRailLeft+40:actionRailLeft)+"px";
       miCropPanel.style.top=(actionRailMode==="horizontal"?(parseFloat(actionTopCrop)+38)+"px":"114px");
       miCropMenu.style.left=miCropPanel.style.left;
       miCropMenu.style.top=miCropPanel.style.top;
       miLayoutButton.style.display=miDirectCropMode?"none":(item.dataset.miDocumentImage==="true"?"block":"none");
-      miCropButton.style.display=item.dataset.miDocumentImage==="true"?"block":"none";
+      miCropButton.style.display=item.dataset.miDocumentImage==="true"?"flex":"none";
       miRemoveItemButton.style.display=miDirectCropMode?"none":"block";
       miSelectionUI.style.pointerEvents="none";
       miLayoutButton.style.pointerEvents="auto";
