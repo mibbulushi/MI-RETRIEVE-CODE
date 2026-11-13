@@ -4134,8 +4134,8 @@ img{max-width:100%}
     miCropButton.style.cssText="display:none;position:absolute;left:calc(100% + 8px);top:38px;width:32px;height:32px;padding:6px;border:1px solid #d7dee8;border-radius:5px;background:#fff;color:#334155;box-shadow:none;cursor:pointer;pointer-events:auto;";
     miSelectionUI.append(miCropButton);
     const miCropPanel=document.createElement("div");
-    miCropPanel.style.cssText="position:absolute;left:calc(100% + 8px);top:76px;display:none;width:230px;padding:12px;background:#fff;border:1px solid #c7d2df;border-radius:8px;box-shadow:0 8px 24px #172b4430;pointer-events:auto;color:#263d56;font:12px Arial,sans-serif;";
-    miCropPanel.innerHTML='<strong style="display:block;margin-bottom:9px;">Crop Picture</strong><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Top</span><input data-crop="top" type="range" min="0" max="45" value="0"><span data-crop-value="top">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Right</span><input data-crop="right" type="range" min="0" max="45" value="0"><span data-crop-value="right">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Bottom</span><input data-crop="bottom" type="range" min="0" max="45" value="0"><span data-crop-value="bottom">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 30px;gap:6px;align-items:center;margin:7px 0;"><span>Left</span><input data-crop="left" type="range" min="0" max="45" value="0"><span data-crop-value="left">0%</span></div><div style="display:flex;justify-content:space-between;margin-top:10px;"><button type="button" data-crop-reset>Reset</button><button type="button" data-crop-apply>Apply</button></div>';
+    miCropPanel.style.cssText="position:absolute;left:calc(100% + 8px);top:76px;display:none;width:248px;padding:14px;background:#fff;border:1px solid #d1d5db;border-radius:3px;box-shadow:0 4px 12px #00000020;pointer-events:auto;color:#242424;font:12px/1.4 Arial,sans-serif;box-sizing:border-box;";
+    miCropPanel.innerHTML='<div style="display:flex;align-items:center;gap:8px;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #e5e7eb;"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M7 2v13a2 2 0 0 0 2 2h13M2 7h13a2 2 0 0 1 2 2v13" fill="none" stroke="currentColor" stroke-width="1.7"/></svg><strong style="font-size:14px;font-weight:600;">Crop</strong></div><div style="font-size:11px;color:#616161;margin-bottom:8px;">Adjust picture edges</div><div style="display:grid;grid-template-columns:48px 1fr 34px;gap:7px;align-items:center;margin:9px 0;"><label for="miCropTop">Top</label><input id="miCropTop" data-crop="top" type="range" min="0" max="45" value="0" style="width:100%;accent-color:#217346;"><span data-crop-value="top" style="text-align:right;font-variant-numeric:tabular-nums;">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 34px;gap:7px;align-items:center;margin:9px 0;"><label for="miCropRight">Right</label><input id="miCropRight" data-crop="right" type="range" min="0" max="45" value="0" style="width:100%;accent-color:#217346;"><span data-crop-value="right" style="text-align:right;font-variant-numeric:tabular-nums;">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 34px;gap:7px;align-items:center;margin:9px 0;"><label for="miCropBottom">Bottom</label><input id="miCropBottom" data-crop="bottom" type="range" min="0" max="45" value="0" style="width:100%;accent-color:#217346;"><span data-crop-value="bottom" style="text-align:right;font-variant-numeric:tabular-nums;">0%</span></div><div style="display:grid;grid-template-columns:48px 1fr 34px;gap:7px;align-items:center;margin:9px 0;"><label for="miCropLeft">Left</label><input id="miCropLeft" data-crop="left" type="range" min="0" max="45" value="0" style="width:100%;accent-color:#217346;"><span data-crop-value="left" style="text-align:right;font-variant-numeric:tabular-nums;">0%</span></div><div style="display:flex;justify-content:flex-end;gap:7px;border-top:1px solid #e5e7eb;padding-top:11px;margin-top:12px;"><button type="button" data-crop-reset style="padding:6px 12px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#242424;font-size:12px;">Reset</button><button type="button" data-crop-apply style="padding:6px 14px;border:1px solid #217346;border-radius:2px;background:#217346;color:#fff;font-size:12px;">Apply</button></div>';
     miSelectionUI.append(miCropPanel);
     const miRemoveItemButton=document.createElement("button");
     miRemoveItemButton.type="button";
@@ -4191,7 +4191,7 @@ img{max-width:100%}
     });
     const miLayoutMenu = document.createElement("div");
     miLayoutMenu.setAttribute("aria-label","Picture layout options");
-    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:330px;padding:12px;background:#fff;border:1px solid #c7d2df;border-radius:8px;box-shadow:0 8px 24px #172b4430;pointer-events:auto;font-family:Arial,sans-serif;";
+    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:252px;padding:10px;background:#fff;border:1px solid #d1d5db;border-radius:3px;box-shadow:0 4px 12px #00000020;pointer-events:auto;font-family:Arial,sans-serif;box-sizing:border-box;";
     const miLayouts = [["inline","In Line with Text"],["square","Square"],["tight","Tight"],["top-bottom","Top and Bottom"],["behind","Behind Text"],["front","In Front of Text"]];
     function miLayoutIcon(kind){
       const blue="#2878c8",gray="#6b7785";
@@ -4208,17 +4208,17 @@ img{max-width:100%}
     }
     const layoutHeading=document.createElement("div");
     layoutHeading.textContent="With Text Wrapping";
-    layoutHeading.style.cssText="font-size:12px;font-weight:600;color:#536579;padding:1px 3px 10px;";
+    layoutHeading.style.cssText="font-size:13px;font-weight:600;color:#242424;padding:2px 7px 9px;border-bottom:1px solid #e5e7eb;margin-bottom:5px;";
     miLayoutMenu.append(layoutHeading);
     const layoutGrid=document.createElement("div");
-    layoutGrid.style.cssText="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;";
+    layoutGrid.style.cssText="display:flex;flex-direction:column;gap:1px;";
     miLayouts.forEach(([value,label]) => {
       const option=document.createElement("button");
       option.type="button"; option.dataset.layout=value; option.title=label;
-      option.innerHTML='<span style="display:flex;align-items:center;justify-content:center;width:100%;height:43px;">'+miLayoutIcon(value)+'</span><span style="display:block;white-space:normal;line-height:1.25;">'+label+'</span>';
-      option.style.cssText="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:100%;min-height:76px;padding:6px 5px;margin:0;border:1px solid #d9e1ea;border-radius:5px;background:#fff;color:#263d56;text-align:center;font-size:11px;cursor:pointer;box-sizing:border-box;";
-      option.addEventListener("mouseenter",()=>{option.style.background="#eef5fc";option.style.borderColor="#7da7d2";});
-      option.addEventListener("mouseleave",()=>{option.style.background="#fff";option.style.borderColor="#d9e1ea";});
+      option.innerHTML='<span style="display:flex;align-items:center;justify-content:center;width:34px;height:28px;flex:0 0 34px;">'+miLayoutIcon(value)+'</span><span style="display:block;flex:1;text-align:left;white-space:normal;line-height:1.25;">'+label+'</span><span aria-hidden="true" style="width:12px;color:#217346;font-size:15px;">›</span>';
+      option.style.cssText="display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:9px;width:100%;min-height:42px;padding:5px 7px;margin:0;border:1px solid transparent;border-radius:2px;background:#fff;color:#242424;text-align:left;font-size:12px;cursor:pointer;box-sizing:border-box;";
+      option.addEventListener("mouseenter",()=>{option.style.background="#f1f5f9";option.style.borderColor="transparent";});
+      option.addEventListener("mouseleave",()=>{option.style.background="#fff";option.style.borderColor="transparent";});
       option.addEventListener("click",()=>applyMiPictureLayout(value));
       layoutGrid.append(option);
     });
