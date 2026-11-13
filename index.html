@@ -4247,6 +4247,9 @@ img{max-width:100%}
       const rect=item.getBoundingClientRect(),isImage=item.dataset.miDocumentImage==="true",ratio=rect.width/Math.max(1,rect.height);
       const width=document.createElement("input");width.type="number";width.min="40";width.max="2000";width.value=Math.round(rect.width);
       const height=document.createElement("input");height.type="number";height.min="30";height.max="2000";height.value=Math.round(rect.height);
+      let lastEdited="width";
+      width.addEventListener("input",()=>{lastEdited="width";if(lock.checked)height.value=Math.round((Number(width.value)||1)/ratio);});
+      height.addEventListener("input",()=>{lastEdited="height";if(lock.checked)width.value=Math.round((Number(height.value)||1)*ratio);});
       const lock=document.createElement("input");lock.type="checkbox";lock.checked=isImage;
       const lockLabel=document.createElement("label");lockLabel.style.justifyContent="flex-start";lockLabel.append(lock,document.createTextNode(" Lock aspect ratio"));dialog.append(lockLabel);
       [["Width (px)",width],["Height (px)",height]].forEach(pair=>{const row=document.createElement("label");row.append(document.createTextNode(pair[0]),pair[1]);dialog.append(row);});
@@ -4255,7 +4258,7 @@ img{max-width:100%}
       const apply=document.createElement("button");apply.type="button";apply.textContent="Apply";apply.addEventListener("click",()=>{
         const w=Math.max(40,Math.min(2000,Number(width.value)||rect.width));
         let h=Math.max(30,Math.min(2000,Number(height.value)||rect.height));
-        if(lock.checked)h=w/ratio;
+        if(lock.checked){if(lastEdited==="height")w=h*ratio;else h=w/ratio;}
         item.style.width=Math.round(w)+"px";item.style.height=Math.round(h)+"px";item.style.maxWidth="100%";
         syncMiDocumentHtml();dialog.remove();updateMiSelectionUI();setMiWorkStatus("Picture or file dimensions updated — save your project.");
       });
@@ -4353,19 +4356,27 @@ img{max-width:100%}
       const itemRect=target.getBoundingClientRect();
       const borderLeft=parseFloat(getComputedStyle(miDocumentEditor).borderLeftWidth)||0;
       const borderTop=parseFloat(getComputedStyle(miDocumentEditor).borderTopWidth)||0;
-      target.style.position="absolute";
-      target.style.float="none";
-      target.style.margin="0";
-      target.style.left=Math.max(0,itemRect.left-editorRect.left-borderLeft+miDocumentEditor.scrollLeft)+"px";
-      target.style.top=Math.max(0,itemRect.top-editorRect.top-borderTop+miDocumentEditor.scrollTop)+"px";
-      target.style.zIndex="10";
-      miMoveState={item:target,x:event.clientX,y:event.clientY,startLeft:parseFloat(target.style.left)||0,startTop:parseFloat(target.style.top)||0,moved:false,pointerId:event.pointerId};
+      miMoveState={
+        item:target,x:event.clientX,y:event.clientY,
+        startLeft:Math.max(0,itemRect.left-editorRect.left-borderLeft+miDocumentEditor.scrollLeft),
+        startTop:Math.max(0,itemRect.top-editorRect.top-borderTop+miDocumentEditor.scrollTop),
+        moved:false,positioned:false,pointerId:event.pointerId
+      };
     });
     document.addEventListener("pointermove",event=>{
       if(miMoveState){
         const st=miMoveState;
         if(!st.moved&&Math.hypot(event.clientX-st.x,event.clientY-st.y)<3)return;
         st.moved=true;event.preventDefault();
+        if(!st.positioned){
+          st.item.style.position="absolute";
+          st.item.style.float="none";
+          st.item.style.margin="0";
+          st.item.style.left=Math.round(st.startLeft)+"px";
+          st.item.style.top=Math.round(st.startTop)+"px";
+          st.item.style.zIndex="10";
+          st.positioned=true;
+        }
         const editorStyle=getComputedStyle(miDocumentEditor);
         const padRight=parseFloat(editorStyle.paddingRight)||0;
         const padBottom=parseFloat(editorStyle.paddingBottom)||0;
@@ -4399,8 +4410,8 @@ img{max-width:100%}
       }
     },{passive:false});
     document.addEventListener("pointerup",()=>{
-      if(miMoveState){const st=miMoveState;st.item.classList.remove("mi-document-item-dragging");if(st.moved){syncMiDocumentHtml();setMiWorkStatus("Picture or file position changed — save your project.");}miMoveState=null;updateMiSelectionUI();}
-      if(miResizeState){syncMiDocumentHtml();setMiWorkStatus("Picture or file size changed — save your project.");miResizeState=null;updateMiSelectionUI();}
+      if(miMoveState){const st=miMoveState;st.item.classList.remove("mi-document-item-dragging");if(st.moved){syncMiDocumentHtml();setMiWorkStatus("Picture or file position changed — save your project.");}miMoveState=null;updateMiSelectionUI();syncMiPictureRibbon();}
+      if(miResizeState){syncMiDocumentHtml();setMiWorkStatus("Picture or file size changed — save your project.");miResizeState=null;updateMiSelectionUI();syncMiPictureRibbon();}
     });
     Object.entries(miHandles).forEach(([dir,handle])=>{
       handle.addEventListener("pointerdown",event=>{
