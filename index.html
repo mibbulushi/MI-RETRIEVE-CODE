@@ -3423,6 +3423,19 @@ img{max-width:100%}
 #miPictureRibbon #miRibbonLock{display:inline-block!important;flex:0 0 13px!important;width:13px!important;min-width:13px!important;height:13px!important;min-height:13px!important;margin:0!important;padding:0!important}
 #miPictureRibbon .mi-ribbon-caption{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;width:auto!important;max-width:none!important;margin:0 0 0 2px!important;padding:0!important;color:#66788c!important;font:10px/1.2 system-ui,sans-serif!important;white-space:nowrap!important}
 @media(max-width:760px){#miEditorToolbar{flex-wrap:nowrap!important}#miPictureRibbon.is-active{flex-wrap:nowrap!important}}
+
+/* Final authoritative picture-toolbar rules: one row, consistent control sizing, stable selection. */
+#miEditorToolbar{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;overscroll-behavior-x:contain;scrollbar-gutter:stable;}
+#miPictureRibbon{display:none;position:static!important;flex:0 0 auto!important;width:max-content!important;min-width:max-content!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important;}
+#miPictureRibbon.is-active{display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;align-items:center!important;gap:6px!important;white-space:nowrap!important;}
+#miPictureRibbon .mi-ribbon-group{display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;align-items:center!important;gap:5px!important;padding:0 8px 0 0!important;margin:0!important;border:0!important;border-right:1px solid #cbd8e6!important;white-space:nowrap!important;}
+#miPictureRibbon .mi-ribbon-group:last-of-type{border-right:0!important;padding-right:0!important;}
+#miPictureRibbon button{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;height:30px!important;min-height:30px!important;padding:4px 8px!important;margin:0!important;border:1px solid #c4d1df!important;border-radius:7px!important;background:#fff!important;color:#29435f!important;font:600 11px/1 system-ui,sans-serif!important;white-space:nowrap!important;box-shadow:none!important;}
+#miPictureRibbon .mi-ribbon-group label{display:inline-flex!important;flex:0 0 auto!important;flex-direction:row!important;align-items:center!important;gap:4px!important;width:auto!important;min-width:0!important;height:30px!important;min-height:30px!important;margin:0!important;padding:0!important;font:600 10px/1 system-ui,sans-serif!important;white-space:nowrap!important;}
+#miPictureRibbon #miRibbonWidth,#miPictureRibbon #miRibbonHeight{display:inline-block!important;flex:0 0 48px!important;width:48px!important;min-width:48px!important;max-width:48px!important;height:30px!important;min-height:30px!important;max-height:30px!important;margin:0!important;padding:3px 4px!important;box-sizing:border-box!important;font:11px/1 system-ui,sans-serif!important;}
+#miPictureRibbon #miRibbonLock{width:13px!important;height:13px!important;min-width:13px!important;min-height:13px!important;margin:0!important;padding:0!important;}
+#miPictureRibbon .mi-ribbon-caption{display:inline-block!important;flex:0 0 auto!important;width:auto!important;margin:0!important;font-size:10px!important;white-space:nowrap!important;}
+@media(max-width:760px){#miEditorToolbar{overflow-x:auto!important;touch-action:pan-x;}}
 </style>
 </head>
 <body>
@@ -4452,7 +4465,11 @@ img{max-width:100%}
     miDocumentEditor.addEventListener("scroll",updateMiSelectionUI);
     document.addEventListener("pointerdown",event=>{
       const target=event.target;
-      if(miSelectionUI.contains(target)||miDocumentEditor.contains(target)||miEditorToolbar.contains(target)||miWordContextMenu.contains(target)||target.closest?.(".mi-word-size-dialog"))return;
+      const toolbarRect=miEditorToolbar.getBoundingClientRect();
+      const pointerOnToolbarSurface=event.clientX>=toolbarRect.left&&event.clientX<=toolbarRect.right&&event.clientY>=toolbarRect.top&&event.clientY<=toolbarRect.bottom;
+      // Native horizontal scrollbar hit-testing can report the page as the event target.
+      // Treat the complete toolbar rectangle, including its scrollbar, as a safe area.
+      if(pointerOnToolbarSurface||miSelectionUI.contains(target)||miDocumentEditor.contains(target)||miEditorToolbar.contains(target)||miWordContextMenu.contains(target)||target.closest?.(".mi-word-size-dialog"))return;
       selectMiDocumentItem(null);
     });
 
