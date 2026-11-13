@@ -3453,6 +3453,9 @@ img{max-width:100%}
 
 
 /* Word-inspired document workspace and functional ribbon tabs */
+#miDocumentEditor .mi-direct-cropping{outline:none!important;box-shadow:none!important}
+.mi-word-selection-ui:has(.mi-direct-crop-frame){border:0!important}
+
 #saveArea.card{background:#f4f5f7!important;border:1px solid #d7dbe0!important;border-radius:8px!important;box-shadow:0 2px 8px rgba(25,35,48,.07)!important;padding:18px!important}
 #saveArea .mi-builder-panel{margin:14px 0 4px!important;padding:0!important;border:1px solid #cfd3d8!important;border-radius:4px!important;background:#fff!important;box-shadow:none!important}
 #saveArea .mi-builder-panel:before{display:none!important}
@@ -4277,6 +4280,7 @@ img{max-width:100%}
     function miPaintDirectCrop(){
       if(!miSelectedDocumentItem)return;
       const v=miReadDirectCrop();
+      // The crop boundary, not the original picture boundary, is the active selection while cropping.
       miDirectCropFrame.style.display=miDirectCropMode?"block":"none";
       miDirectCropFrame.style.left=v.left+"%";miDirectCropFrame.style.top=v.top+"%";
       miDirectCropFrame.style.width=(100-v.left-v.right)+"%";miDirectCropFrame.style.height=(100-v.top-v.bottom)+"%";
@@ -4285,6 +4289,9 @@ img{max-width:100%}
     }
     function miSetDirectCropMode(enabled){
       miDirectCropMode=enabled;miCropMenu.style.display="none";miCropPanel.style.display="none";miLayoutMenu.style.display="none";
+      miSelectionUI.style.border=enabled?"0":"1px solid #2878cf";
+      miDirectCropFrame.style.border=enabled?"1.5px dotted #111":"1.5px solid #111";
+      miSelectedDocumentItem?.classList.toggle("mi-direct-cropping",enabled);
       miCropButton.textContent=enabled?"Apply Crop":"Crop";
       miCropButton.title=enabled?"Apply picture crop":"Crop picture";
       Object.values(miHandles).forEach(h=>h.style.display=enabled?"none":"block");
