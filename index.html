@@ -4172,14 +4172,14 @@ img{max-width:100%}
     const miLayoutButton = document.createElement("button");
     miLayoutButton.type = "button";
     miLayoutButton.className = "mi-word-layout-button mi-picture-action-icon";
-    miLayoutButton.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><rect x="2.5" y="5" width="8" height="7" fill="none" stroke="#333" stroke-width="1.6"/><path d="M2.5 3h19M13 6h8.5M13 9h8.5M2.5 15h19M2.5 18h19M2.5 21h13" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/><path d="M12 4v9" stroke="#217346" stroke-width="1.8"/></svg>';
+    miLayoutButton.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><rect x="2.5" y="5" width="8" height="7" fill="none" stroke="#333" stroke-width="1.6"/><path d="M2.5 3h19M13 6h8.5M13 9h8.5M2.5 15h19M2.5 18h19M2.5 21h13" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/><path d="M12 4v9" stroke="#217346" stroke-width="1.8"/></svg>`;
     miLayoutButton.title = "Change how text flows around this picture";
     miLayoutButton.style.cssText = "display:none;position:absolute;left:calc(100% + 8px);top:0;width:34px;height:34px;min-width:34px;padding:7px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#333;box-shadow:none;cursor:pointer;pointer-events:auto;box-sizing:border-box;";
     miSelectionUI.append(miLayoutButton);
     const miCropButton=document.createElement("button");
     miCropButton.type="button";
     miCropButton.className="mi-picture-action-icon";
-    miCropButton.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M7 2v15a2 2 0 0 0 2 2h13M2 7h15a2 2 0 0 1 2 2v13" fill="none" stroke="#333" stroke-width="2" stroke-linecap="square"/><path d="M7 7h10v10" fill="none" stroke="#217346" stroke-width="2" stroke-linecap="square"/></svg>';
+    miCropButton.innerHTML=`<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M7 2v15a2 2 0 0 0 2 2h13M2 7h15a2 2 0 0 1 2 2v13" fill="none" stroke="#333" stroke-width="2" stroke-linecap="square"/><path d="M7 7h10v10" fill="none" stroke="#217346" stroke-width="2" stroke-linecap="square"/></svg>`;
     miCropButton.title="Picture crop options";
     miCropButton.style.cssText="display:none;position:absolute;left:calc(100% + 8px);top:38px;width:34px;height:34px;min-width:34px;padding:7px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#333;box-shadow:none;font:12px Arial,sans-serif;cursor:pointer;pointer-events:auto;align-items:center;justify-content:center;box-sizing:border-box;";
     miSelectionUI.append(miCropButton);
