@@ -3492,7 +3492,7 @@ img{max-width:100%}
 }
 
 /* Document view modes */
-.mi-document-viewbar{display:flex;align-items:center;justify-content:flex-end;gap:5px;padding:7px 10px;background:#f5f6f8;border:1px solid #d9dde3;border-bottom:0}
+.mi-document-viewbar{display:flex;align-items:center;justify-content:flex-end;gap:5px;margin-left:auto;padding:0;background:transparent;border:0;flex:0 0 auto}
 .mi-document-viewbar button{appearance:none;border:1px solid transparent;border-radius:3px;background:transparent;color:#3f4853;padding:6px 11px;font:12px Arial,sans-serif;cursor:pointer}
 .mi-document-viewbar button:hover{background:#fff;border-color:#cbd2da}
 .mi-document-viewbar button.is-active{background:#fff;border-color:#aeb8c4;color:#1f2937;font-weight:600;box-shadow:inset 0 -2px 0 #2878c8}
@@ -3500,7 +3500,7 @@ img{max-width:100%}
 .mi-word-stage[data-view-mode="web"] #miDocumentEditor{width:100%!important;max-width:none!important;min-height:620px!important;margin:0!important;padding:28px 34px!important;background:#fff!important;border:1px solid #d5d9de!important;box-shadow:none!important}
 .mi-word-stage[data-view-mode="read"] #miDocumentEditor{width:min(100%,900px)!important;max-width:900px!important;min-height:620px!important;margin:18px auto!important;padding:42px 54px!important;background:#fff!important;border:0!important;box-shadow:none!important;color:#30343b!important;font-size:16px!important;line-height:1.8!important;cursor:default}
 .mi-word-stage[data-view-mode="read"] .mi-document-viewbar{border-bottom:1px solid #d9dde3}
-@media(max-width:650px){.mi-document-viewbar{justify-content:center;flex-wrap:wrap}.mi-word-stage[data-view-mode="print"] #miDocumentEditor,.mi-word-stage[data-view-mode="read"] #miDocumentEditor{padding:22px 16px!important;min-height:520px!important}.mi-word-stage[data-view-mode="web"] #miDocumentEditor{padding:18px 14px!important}}
+@media(max-width:650px){#miProjectWorkStatus{align-items:flex-start!important;flex-direction:column!important}.mi-document-viewbar{justify-content:flex-start;flex-wrap:wrap;margin-left:0}.mi-word-stage[data-view-mode="print"] #miDocumentEditor,.mi-word-stage[data-view-mode="read"] #miDocumentEditor{padding:22px 16px!important;min-height:520px!important}.mi-word-stage[data-view-mode="web"] #miDocumentEditor{padding:18px 14px!important}}
 </style>
 </head>
 <body>
@@ -6244,7 +6244,7 @@ img{max-width:100%}
           });
           viewButtons[mode]=button;viewbar.append(button);
         });
-        stage.insertBefore(viewbar,editor);
+        const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);statusRow.style.display="flex";statusRow.style.alignItems="center";statusRow.style.justifyContent="space-between";statusRow.style.flexWrap="wrap";statusRow.style.gap="8px";}else stage.insertBefore(viewbar,editor);
         viewButtons.print.click();
       }
       function updatePictureTab(){
