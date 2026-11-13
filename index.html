@@ -4313,7 +4313,21 @@ img{max-width:100%}
     miWordContextMenu.className="mi-word-context-menu";
     miWordContextMenu.hidden=true;
     document.body.append(miWordContextMenu);
-    let miDocumentClipboard=null;
+    let miDocumentClipboard=[];
+    function getMiCommandSelection(fallback){
+      const chosen=Array.from(miSelectedDocumentItems).filter(node=>miDocumentEditor.contains(node));
+      return chosen.length?chosen:[fallback].filter(Boolean);
+    }
+    function removeMiCommandSelection(items){
+      const valid=items.filter(node=>miDocumentEditor.contains(node));
+      valid.forEach(node=>node.remove());
+      miSelectedDocumentItems.clear();
+      miSelectedDocumentItem=null;
+      miSelectionUI.style.display="none";
+      miPictureRibbon.classList.remove("is-active");
+      syncMiDocumentHtml();
+      setMiWorkStatus(valid.length+" selected item(s) removed — save your project.");
+    }
     function closeMiWordContextMenu(){miWordContextMenu.hidden=true;}
     function addMiWordMenuItem(label,action,shortcut){
       const button=document.createElement("button");button.type="button";
@@ -4378,22 +4392,52 @@ img{max-width:100%}
       }
     });
     function openMiWordContextMenu(event,item){
-      event.preventDefault();selectMiDocumentItem(item);miWordContextMenu.replaceChildren();
-      addMiWordMenuItem("Cut",()=>{miDocumentClipboard=item.cloneNode(true);item.remove();selectMiDocumentItem(null);syncMiDocumentHtml();setMiWorkStatus("Item cut — right-click in the document and choose Paste.");},"Ctrl+X");
-      addMiWordMenuItem("Copy",()=>{miDocumentClipboard=item.cloneNode(true);setMiWorkStatus("Item copied — right-click in the document and choose Paste.");},"Ctrl+C");
-      addMiWordMenuItem("Paste",()=>{if(!miDocumentClipboard)return;const copy=miDocumentClipboard.cloneNode(true);item.after(copy);selectMiDocumentItem(copy);syncMiDocumentHtml();setMiWorkStatus("Item pasted — save your project.");},"Ctrl+V");
+      event.preventDefault();
+      if(!miSelectedDocumentItems.has(item))selectMiDocumentItem(item);
+      const selected=getMiCommandSelection(item);
+      miWordContextMenu.replaceChildren();
+      addMiWordMenuItem(selected.length>1?"Cut selected items":"Cut",()=>{
+        miDocumentClipboard=selected.map(node=>node.cloneNode(true));
+        removeMiCommandSelection(selected);
+        setMiWorkStatus(miDocumentClipboard.length+" item(s) cut — right-click and choose Paste.");
+      },"Ctrl+X");
+      addMiWordMenuItem(selected.length>1?"Copy selected items":"Copy",()=>{
+        miDocumentClipboard=selected.map(node=>node.cloneNode(true));
+        setMiWorkStatus(miDocumentClipboard.length+" item(s) copied — right-click and choose Paste.");
+      },"Ctrl+C");
+      addMiWordMenuItem("Paste",()=>{
+        if(!miDocumentClipboard.length)return;
+        let anchor=selected[selected.length-1]||item;
+        const pasted=[];
+        miDocumentClipboard.forEach(node=>{
+          const copy=node.cloneNode(true);
+          if(anchor&&anchor.parentNode){anchor.after(copy);anchor=copy;}
+          else miDocumentEditor.append(copy);
+          pasted.push(copy);
+        });
+        selectMiDocumentItem(pasted[pasted.length-1]);
+        syncMiDocumentHtml();
+        setMiWorkStatus(pasted.length+" item(s) pasted — save your project.");
+      },"Ctrl+V");
       miWordMenuDivider();
-      if(item.dataset.miDocumentImage==="true"){
+      if(selected.length===1&&item.dataset.miDocumentImage==="true"){
         addMiWordMenuItem("Crop",()=>miCropButton.click());
         addMiWordMenuItem("Wrap Text",()=>{miLayoutMenu.style.display="block";miCropPanel.style.display="none";});
+        addMiWordMenuItem("Size and Position…",showMiWordSizeDialog);
       }
-      addMiWordMenuItem("Size and Position…",showMiWordSizeDialog);
-      addMiWordMenuItem("Bring to Front",()=>{item.style.zIndex="20";item.style.position="absolute";syncMiDocumentHtml();});
-      addMiWordMenuItem("Send to Back",()=>{item.style.zIndex="0";item.style.position="absolute";syncMiDocumentHtml();});
-      miWordMenuDivider();addMiWordMenuItem("Remove",()=>miRemoveItemButton.click(),"Delete");
+      if(selected.length===1){
+        addMiWordMenuItem("Bring to Front",()=>{item.style.zIndex="20";item.style.position="absolute";syncMiDocumentHtml();});
+        addMiWordMenuItem("Send to Back",()=>{item.style.zIndex="0";item.style.position="absolute";syncMiDocumentHtml();});
+      }else{
+        addMiWordMenuItem("Bring selected items to Front",()=>{selected.forEach((node,index)=>{node.style.position="relative";node.style.zIndex=String(20+index);});syncMiDocumentHtml();setMiWorkStatus("Selected items brought to front.");});
+        addMiWordMenuItem("Send selected items to Back",()=>{selected.forEach(node=>{node.style.position="relative";node.style.zIndex="0";});syncMiDocumentHtml();setMiWorkStatus("Selected items sent to back.");});
+      }
+      miWordMenuDivider();
+      addMiWordMenuItem(selected.length>1?"Remove selected items":"Remove",()=>removeMiCommandSelection(selected),"Delete");
       miWordContextMenu.hidden=false;
-      const x=Math.min(event.clientX,window.innerWidth-240),y=Math.min(event.clientY,window.innerHeight-360);
-      miWordContextMenu.style.left=Math.max(6,x)+"px";miWordContextMenu.style.top=Math.max(6,y)+"px";
+      const x=Math.min(event.clientX,window.innerWidth-260),y=Math.min(event.clientY,window.innerHeight-380);
+      miWordContextMenu.style.left=Math.max(6,x)+"px";
+      miWordContextMenu.style.top=Math.max(6,y)+"px";
     }
     miDocumentEditor.addEventListener("contextmenu",event=>{
       const item=event.target instanceof Element?event.target.closest(miMovableSelector):null;
