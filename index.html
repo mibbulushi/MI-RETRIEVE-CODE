@@ -3591,8 +3591,8 @@ img{max-width:100%}
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
             <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
             <div class="mi-ribbon-group">
-              <button type="button" data-mi-ribbon="crop" title="Crop picture"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2v11a2 2 0 0 0 2 2h10M2 6h11a2 2 0 0 1 2 2v10"/></svg><span>Crop</span></button>
-              <button type="button" data-mi-ribbon="layout" title="Wrap text"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3" width="7" height="6" rx=".8"/><path d="M12 4h5.5M12 7h5.5M2.5 12h15M2.5 15.5h10"/></svg><span>Wrap Text</span></button>
+              <button type="button" data-mi-ribbon="crop" title="Crop picture"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2v12a2 2 0 0 0 2 2h10M2 6h12a2 2 0 0 1 2 2v10"/><path d="M6 6h8v8"/></svg><span>Crop</span></button>
+              <button type="button" data-mi-ribbon="layout" title="Wrap text"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="5" width="6.5" height="7" rx=".7"/><path d="M11.5 4h6M11.5 7h6M11.5 10h6M2.5 15h15M2.5 18h11"/><path d="M9 5v7"/></svg><span>Wrap Text</span></button>
               <button type="button" data-mi-ribbon="rotate" title="Rotate picture 90 degrees">↻ Rotate</button>
             </div>
             <div class="mi-ribbon-group">
@@ -5862,9 +5862,18 @@ img{max-width:100%}
     function closeMiPictureContextMenu(){miPictureContextMenu.style.display="none";}
     function miContextAction(label,shortcut,action,disabled=false){
       const b=document.createElement("button");b.type="button";b.setAttribute("role","menuitem");
-      b.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;min-height:35px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:#fff;color:#263d56;text-align:left;font:inherit;cursor:pointer;";
-      const name=document.createElement("span");name.textContent=label;
+      b.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;min-height:36px;padding:7px 10px;margin:0;border:0;border-radius:6px;background:#fff;color:#263d56;text-align:left;font:inherit;cursor:pointer;";
+      const name=document.createElement("span");name.style.cssText="display:inline-flex;align-items:center;gap:10px;min-width:0;";
+      const icon=document.createElementNS("http://www.w3.org/2000/svg","svg");icon.setAttribute("viewBox","0 0 20 20");icon.setAttribute("width","17");icon.setAttribute("height","17");icon.setAttribute("aria-hidden","true");icon.style.cssText="display:block;flex:0 0 17px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round;";
+      const paths={
+        "Crop picture":'<path d="M6 2v12a2 2 0 0 0 2 2h10M2 6h12a2 2 0 0 1 2 2v10"/><path d="M6 6h8v8"/>',
+        "Change layout":'<rect x="2.5" y="5" width="6.5" height="7" rx=".7"/><path d="M11.5 4h6M11.5 7h6M11.5 10h6M2.5 15h15M2.5 18h11"/>',
+        "Remove":'<path d="M3.5 5.5h13M8 5.5V3.5h4v2M6 5.5l.8 11h6.4l.8-11M8.5 8.5v5M11.5 8.5v5"/>'
+      };
+      if(paths[label]){icon.innerHTML=paths[label];name.append(icon);}
+      const caption=document.createElement("span");caption.textContent=label;name.append(caption);
       const key=document.createElement("span");key.textContent=shortcut||"";key.style.cssText="color:#7b8b9c;font-size:11px;white-space:nowrap;";
+      if(label==="Remove"){b.style.color="#b42318";icon.style.color="#b42318";}
       b.append(name,key);b.disabled=disabled;
       b.addEventListener("mouseenter",()=>{if(!b.disabled)b.style.background="#edf4fb";});
       b.addEventListener("mouseleave",()=>b.style.background="#fff");
