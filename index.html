@@ -3593,7 +3593,7 @@ img{max-width:100%}
             <div class="mi-ribbon-group">
               <button type="button" data-mi-ribbon="crop" title="Crop picture"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2v12a2 2 0 0 0 2 2h10M2 6h12a2 2 0 0 1 2 2v10"/><path d="M6 6h8v8"/></svg><span>Crop</span></button>
               <button type="button" data-mi-ribbon="layout" title="Wrap text"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="5" width="6.5" height="7" rx=".7"/><path d="M11.5 4h6M11.5 7h6M11.5 10h6M2.5 15h15M2.5 18h11"/><path d="M9 5v7"/></svg><span>Wrap Text</span></button>
-              <button type="button" data-mi-ribbon="rotate" title="Rotate picture 90 degrees">↻ Rotate</button>
+              <button type="button" data-mi-ribbon="remove" title="Remove selected picture"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5.5h12M7.5 5.5V3.8h5v1.7M6 5.5l.8 11h6.4l.8-11M8.5 8v5M11.5 8v5"/></svg><span>Remove</span></button>
             </div>
             <div class="mi-ribbon-group">
               <label>Width (px)<input id="miRibbonWidth" type="number" min="40" max="2000"></label>
@@ -4461,6 +4461,7 @@ img{max-width:100%}
       if(!miSelectedDocumentItem||miSelectedDocumentItem.dataset.miDocumentImage!=="true")return;
       if(action==="crop"){miCropButton.click();return;}
       if(action==="layout"){miLayoutButton.click();return;}
+      if(action==="remove"){removeMiCommandSelection([miSelectedDocumentItem]);return;}
       if(action==="size-dialog"){showMiWordSizeDialog();return;}
       if(action==="rotate"){const item=miSelectedDocumentItem;const old=item.style.transform||"";const m=old.match(/rotate\((-?[\d.]+)deg\)/);const angle=((m?Number(m[1]):0)+90)%360;item.style.transform="rotate("+angle+"deg)";syncMiDocumentHtml();updateMiSelectionUI();syncMiPictureRibbon();setMiWorkStatus("Picture rotated — save your project.");return;}
       if(action==="position"){miLayoutButton.click();return;}
