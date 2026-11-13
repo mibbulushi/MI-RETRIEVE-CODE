@@ -2216,7 +2216,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 
 /* MI Project Builder: flexible, numbered project sections */
 .mi-builder-panel{margin:22px 0;padding:20px;border:1px solid #c9d9ed;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#edf5ff)}
-.mi-word-selection-ui [data-layout] svg{flex:0 0 38px}.mi-word-selection-ui [data-layout]:focus{outline:2px solid #75a9e3;outline-offset:1px}.mi-word-selection-ui .mi-word-resize-handle{box-sizing:border-box!important;z-index:2!important}.mi-word-selection-ui .mi-word-layout-button:hover,.mi-word-selection-ui .mi-word-resize-handle:hover{background:#e8f2ff!important}.mi-word-selection-ui .mi-word-layout-button{cursor:pointer!important}.mi-word-selection-ui [data-direction]{touch-action:none!important}#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}#miDocumentEditor [data-mi-document-image="true"].mi-image-selected{outline:2px solid #3478c8!important;outline-offset:3px}#miDocumentEditor [data-mi-attached-file="true"].mi-file-selected{outline:2px solid #3478c8!important;outline-offset:3px}
+.mi-word-selection-ui [data-layout] svg{flex:0 0 38px}.mi-word-selection-ui [data-layout]:focus{outline:2px solid #75a9e3;outline-offset:1px}.mi-word-selection-ui .mi-word-resize-handle{box-sizing:border-box!important;z-index:2!important}.mi-word-selection-ui .mi-word-layout-button:hover,.mi-word-selection-ui .mi-word-resize-handle:hover{background:#e8f2ff!important}.mi-word-selection-ui .mi-word-layout-button{cursor:pointer!important}.mi-word-selection-ui [data-direction]{touch-action:none!important}#miDocumentEditor [data-mi-attached-file="true"],#miDocumentEditor [data-mi-document-image="true"]{cursor:grab!important;user-select:none;touch-action:none}#miDocumentEditor .mi-document-item-dragging{opacity:.55;outline:2px dashed #5b9bd5;outline-offset:3px;cursor:grabbing!important}#miDocumentEditor .mi-file-selected{border-color:#4389c8!important;box-shadow:0 0 0 2px rgba(67,137,200,.18)!important}#miDocumentEditor .mi-multi-selected{outline:3px solid #176fc1!important;outline-offset:3px!important;box-shadow:0 0 0 4px rgba(23,111,193,.14)!important;cursor:default!important}#miDocumentEditor [data-mi-document-image="true"].mi-image-selected{outline:2px solid #3478c8!important;outline-offset:3px}#miDocumentEditor [data-mi-attached-file="true"].mi-file-selected{outline:2px solid #3478c8!important;outline-offset:3px}
 .mi-builder-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
 .mi-builder-heading h3{margin:0 0 5px;color:#123866;font-size:1.15rem}
 .mi-builder-heading p{margin:0}
@@ -4254,16 +4254,37 @@ img{max-width:100%}
         updateMiSelectionUI();syncMiPictureRibbon();
       }else{miSelectionUI.style.display="none";miPictureRibbon.classList.remove("is-active");}
     }
-    function toggleMiMultiSelection(item){
-      if(!item||!miDocumentEditor.contains(item))return;
-      if(miSelectedDocumentItems.has(item)){if(miSelectedDocumentItems.size>1)miSelectedDocumentItems.delete(item);}
-      else miSelectedDocumentItems.add(item);
+    let miMultiSelectionAnchor=null;
+    function paintMiMultiSelection(){
       miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected,.mi-multi-selected").forEach(n=>n.classList.remove("mi-image-selected","mi-file-selected","mi-multi-selected"));
-      miSelectedDocumentItem=item;
       miSelectedDocumentItems.forEach(node=>node.classList.add("mi-multi-selected"));
-      item.classList.add(item.dataset.miAttachedFile==="true"?"mi-file-selected":"mi-image-selected");
-      updateMiSelectionUI();syncMiPictureRibbon();
-      setMiWorkStatus(miSelectedDocumentItems.size+" items selected. Ctrl-click / Cmd-click / Shift-click to select multiple items.");
+      miSelectedDocumentItem=Array.from(miSelectedDocumentItems).at(-1)||null;
+      if(miSelectedDocumentItems.size>1){
+        miSelectionUI.style.display="none";
+        miPictureRibbon.classList.remove("is-active");
+      }else if(miSelectedDocumentItem){
+        miSelectedDocumentItem.classList.add(miSelectedDocumentItem.dataset.miAttachedFile==="true"?"mi-file-selected":"mi-image-selected");
+        updateMiSelectionUI();syncMiPictureRibbon();
+      }else{
+        miSelectionUI.style.display="none";
+        miPictureRibbon.classList.remove("is-active");
+      }
+      setMiWorkStatus(miSelectedDocumentItems.size+" items selected.");
+    }
+    function toggleMiMultiSelection(item,shiftKey){
+      if(!item||!miDocumentEditor.contains(item))return;
+      const items=Array.from(miDocumentEditor.querySelectorAll(miMovableSelector));
+      if(shiftKey&&miMultiSelectionAnchor&&items.includes(miMultiSelectionAnchor)){
+        const a=items.indexOf(miMultiSelectionAnchor),b=items.indexOf(item),start=Math.min(a,b),end=Math.max(a,b);
+        miSelectedDocumentItems.clear();
+        items.slice(start,end+1).forEach(node=>miSelectedDocumentItems.add(node));
+      }else{
+        if(miSelectedDocumentItems.has(item)){
+          if(miSelectedDocumentItems.size>1)miSelectedDocumentItems.delete(item);
+        }else miSelectedDocumentItems.add(item);
+        miMultiSelectionAnchor=item;
+      }
+      paintMiMultiSelection();
     }
     function applyMiPictureLayout(layout){
       const item=miSelectedDocumentItem;
@@ -4380,12 +4401,15 @@ img{max-width:100%}
     });
     document.addEventListener("pointerdown",event=>{if(!miWordContextMenu.contains(event.target))closeMiWordContextMenu();});
     document.addEventListener("keydown",event=>{if(event.key==="Escape")closeMiWordContextMenu();});
-    miDocumentEditor.addEventListener("click",event=>{
+    miDocumentEditor.addEventListener("pointerdown",event=>{
+      if(event.button!==0||!(event.ctrlKey||event.metaKey||event.shiftKey))return;
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
       if(!target||!miDocumentEditor.contains(target))return;
-      if(event.ctrlKey||event.metaKey||event.shiftKey)toggleMiMultiSelection(target);
-      else if(miSelectedDocumentItem!==target||miSelectedDocumentItems.size!==1)selectMiDocumentItem(target);
-    });
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      toggleMiMultiSelection(target,event.shiftKey);
+    },true);
     // Recovery: if a document picture has become detached from the white editor,
     // clicking it brings it back into the editor so it can be moved normally.
     document.addEventListener("pointerdown",event=>{
