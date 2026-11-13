@@ -3606,6 +3606,39 @@ img{max-width:100%}
     </div>
   </main>
 
+  <script>
+    // Temporary diagnostics: surface JavaScript failures instead of leaving controls silently inactive.
+    (() => {
+      function showMiDiagnostic(message) {
+        let panel = document.getElementById("miDiagnosticPanel");
+        if (!panel) {
+          panel = document.createElement("div");
+          panel.id = "miDiagnosticPanel";
+          panel.style.cssText = "position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483647;padding:14px 16px;border:1px solid #d99b9b;border-radius:10px;background:#fff7f7;color:#762b2b;box-shadow:0 8px 28px rgba(0,0,0,.18);font:13px/1.5 system-ui,sans-serif;white-space:pre-wrap;overflow-wrap:anywhere;";
+          const heading = document.createElement("strong");
+          heading.textContent = "MI-RETRIEVE-CODE detected a JavaScript error";
+          heading.style.display = "block";
+          heading.style.marginBottom = "5px";
+          panel.append(heading);
+          const detail = document.createElement("div");
+          detail.id = "miDiagnosticDetail";
+          panel.append(detail);
+          document.body.append(panel);
+        }
+        document.getElementById("miDiagnosticDetail").textContent = message;
+      }
+      window.addEventListener("error", event => {
+        showMiDiagnostic((event.message || "Script loading error") +
+          (event.filename ? "\\nFile: " + event.filename : "") +
+          (event.lineno ? "\\nLine: " + event.lineno + ", column: " + (event.colno || 0) : ""));
+      });
+      window.addEventListener("unhandledrejection", event => {
+        const reason = event.reason;
+        showMiDiagnostic("Unhandled promise rejection: " +
+          (reason && reason.message ? reason.message : String(reason)));
+      });
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // A Supabase publishable key is designed for browser use.
