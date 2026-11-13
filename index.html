@@ -4212,13 +4212,73 @@ img{max-width:100%}
     miCropPanel.querySelector("[data-crop-apply]").addEventListener("click",()=>{
       syncMiDocumentHtml();setMiWorkStatus("Picture crop applied — save your project to store it.");miCropPanel.style.display="none";
     });
+    let miDirectCropMode=false;
+    let miDirectCropDrag=null;
+    const miDirectCropFrame=document.createElement("div");
+    miDirectCropFrame.style.cssText="position:absolute;display:none;border:1.5px solid #111;box-sizing:border-box;pointer-events:none;z-index:30;";
+    miSelectionUI.append(miDirectCropFrame);
+    const miDirectCropHandles={};
+    ["top","right","bottom","left"].forEach(side=>{
+      const h=document.createElement("div");
+      h.dataset.cropSide=side;
+      h.title="Drag to crop "+side;
+      h.style.cssText="position:absolute;background:#fff;border:2px solid #111;box-sizing:border-box;pointer-events:auto;touch-action:none;z-index:31;";
+      if(side==="top"||side==="bottom")h.style.cssText+="width:34px;height:8px;left:calc(50% - 17px);cursor:ns-resize;";
+      else h.style.cssText+="width:8px;height:34px;top:calc(50% - 17px);cursor:ew-resize;";
+      miDirectCropFrame.append(h);miDirectCropHandles[side]=h;
+      h.addEventListener("pointerdown",event=>{
+        if(!miDirectCropMode||!miSelectedDocumentItem)return;
+        event.preventDefault();event.stopPropagation();
+        const r=miSelectedDocumentItem.getBoundingClientRect();
+        const current=miReadDirectCrop();
+        miDirectCropDrag={side,x:event.clientX,y:event.clientY,width:r.width,height:r.height,start:{...current}};
+        h.setPointerCapture?.(event.pointerId);
+      });
+    });
+    function miReadDirectCrop(){
+      const m=(miSelectedDocumentItem?.style.clipPath||"").match(/inset\\(([^)]*)\\)/);
+      const v=m?m[1].split(/\\s+/):[];
+      return {top:parseFloat(v[0])||0,right:parseFloat(v[1]||v[0])||0,bottom:parseFloat(v[2]||v[0])||0,left:parseFloat(v[3]||v[1]||v[0])||0};
+    }
+    function miPaintDirectCrop(){
+      if(!miSelectedDocumentItem)return;
+      const v=miReadDirectCrop();
+      miDirectCropFrame.style.display=miDirectCropMode?"block":"none";
+      miDirectCropFrame.style.left=v.left+"%";miDirectCropFrame.style.top=v.top+"%";
+      miDirectCropFrame.style.width=(100-v.left-v.right)+"%";miDirectCropFrame.style.height=(100-v.top-v.bottom)+"%";
+      miDirectCropHandles.top.style.top="-5px";miDirectCropHandles.bottom.style.bottom="-5px";
+      miDirectCropHandles.left.style.left="-5px";miDirectCropHandles.right.style.right="-5px";
+    }
+    function miSetDirectCropMode(enabled){
+      miDirectCropMode=enabled;miCropMenu.style.display="none";miCropPanel.style.display="none";miLayoutMenu.style.display="none";
+      miCropButton.textContent=enabled?"Apply Crop":"Crop";
+      miCropButton.title=enabled?"Apply picture crop":"Crop picture";
+      Object.values(miHandles).forEach(h=>h.style.display=enabled?"none":"block");
+      miLayoutButton.style.display=enabled?"none":(miSelectedDocumentItem?.dataset.miDocumentImage==="true"?"block":"none");
+      miRemoveItemButton.style.display=enabled?"none":"block";
+      miPaintDirectCrop();updateMiSelectionUI();
+    }
     miCropButton.addEventListener("click",event=>{
       event.preventDefault();event.stopPropagation();
       if(!miSelectedDocumentItem||miSelectedDocumentItem.dataset.miDocumentImage!=="true")return;
-      miCropPanel.style.display="none";
-      miCropMenu.style.display=miCropMenu.style.display==="block"?"none":"block";
-      miLayoutMenu.style.display="none";
+      if(miDirectCropMode){
+        miSetDirectCropMode(false);syncMiDocumentHtml();
+        setMiWorkStatus("Picture crop applied — save your project to store it.");
+      }else{
+        miSetDirectCropMode(true);
+      }
     });
+    document.addEventListener("pointermove",event=>{
+      if(!miDirectCropDrag||!miSelectedDocumentItem)return;
+      const d=miDirectCropDrag,side=d.side;
+      const delta=side==="left"?event.clientX-d.x:side==="right"?d.x-event.clientX:side==="top"?event.clientY-d.y:d.y-event.clientY;
+      const extent=(side==="left"||side==="right")?d.width:d.height;
+      const next=Math.max(0,Math.min(85-d.start[side],d.start[side]+delta/Math.max(1,extent)*100));
+      const v={...d.start,[side]:next};
+      miSelectedDocumentItem.style.clipPath="inset("+v.top+"% "+v.right+"% "+v.bottom+"% "+v.left+"%)";
+      miPaintDirectCrop();
+    },{passive:false});
+    document.addEventListener("pointerup",()=>{miDirectCropDrag=null;});
     const miLayoutMenu = document.createElement("div");
     miLayoutMenu.setAttribute("aria-label","Picture layout options");
     miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:252px;padding:6px;background:#fff;border:1px solid #d5dfeb;border-radius:10px;box-shadow:0 12px 32px rgba(20,42,68,.18);pointer-events:auto;color:#263d56;font:13px system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box;";
@@ -4342,9 +4402,11 @@ img{max-width:100%}
       miCropMenu.style.pointerEvents="auto";
       miRemoveItemButton.style.pointerEvents="auto";
       Object.values(miHandles).forEach(handle=>handle.style.pointerEvents="auto");
+      miPaintDirectCrop();
     }
     const miSelectedDocumentItems=new Set();
     function selectMiDocumentItem(item){
+      if(miDirectCropMode)miSetDirectCropMode(false);
       miSelectedDocumentItems.clear();
       miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected,.mi-multi-selected").forEach(n=>n.classList.remove("mi-image-selected","mi-file-selected","mi-multi-selected"));
       miSelectedDocumentItem=item||null;
