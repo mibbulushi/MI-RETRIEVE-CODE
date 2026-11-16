@@ -5964,11 +5964,25 @@ img{max-width:100%}
           request.onsuccess = () => resolve(request.result || null);
           request.onerror = () => reject(request.error || new Error("Could not read the local draft."));
         });
-        if (!draft) return;
+        if (!draft) {
+          const firstWorkspace = { id: "mi-project-" + Date.now(), name: "Project 1", title: "", editorHtml: "", projectStructure: "", files: [] };
+          miProjectWorkspaces = [firstWorkspace];
+          miActiveWorkspaceId = firstWorkspace.id;
+          miWorkspaceCounter = 1;
+          miApplyWorkspace(firstWorkspace);
+          return;
+        }
         const hasWork = Boolean((draft.title || "").trim() || (draft.editorHtml || "").trim() ||
           (draft.projectStructure || "").trim() || (draft.files || []).length ||
           (Array.isArray(draft.workspaces) && draft.workspaces.length));
-        if (!hasWork) return;
+        if (!hasWork) {
+          const firstWorkspace = { id: "mi-project-" + Date.now(), name: "Project 1", title: "", editorHtml: "", projectStructure: "", files: [] };
+          miProjectWorkspaces = [firstWorkspace];
+          miActiveWorkspaceId = firstWorkspace.id;
+          miWorkspaceCounter = 1;
+          miApplyWorkspace(firstWorkspace);
+          return;
+        }
 
         if (Array.isArray(draft.workspaces) && draft.workspaces.length) {
           miProjectWorkspaces = draft.workspaces;
