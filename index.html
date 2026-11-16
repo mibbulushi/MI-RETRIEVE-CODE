@@ -4015,16 +4015,59 @@ img{max-width:100%}
         setMiWorkStatus("Format Painter applied. Save your project to store the change.","working");
       }
     });
-    // Text Effects and Typography: apply while the editor selection is still active.
-    // pointerdown runs before the toolbar takes focus, so the selected text range is preserved.
-    $("miTextEffectsBtn").addEventListener("pointerdown",event=>{
+    // Text Effects and Typography menu. Preserve the document selection before opening the menu.
+    const miTextEffectsButton=$("miTextEffectsBtn");
+    let miTextEffectsMenu=null;
+    miTextEffectsButton.addEventListener("pointerdown",event=>{
       event.preventDefault();
       const current=window.getSelection();
-      if(current&&current.rangeCount&&!current.isCollapsed&&miDocumentEditor.contains(current.anchorNode)){
+      if(current&&current.rangeCount&&!current.isCollapsed&&miDocumentEditor.contains(current.anchorNode)&&miDocumentEditor.contains(current.focusNode)){
         miSavedEditorRange=current.getRangeAt(0).cloneRange();
       }
-      const applied=miWrapSelectedText({textShadow:"1px 1px 0 #8b9bb0, 2px 2px 3px rgba(35,55,80,.35)"});
-      setMiWorkStatus(applied?"Text Effect applied. Save your project to store the change.":"Select text in the document first, then click Text Effects and Typography.","working");
+    });
+    function miCloseTextEffectsMenu(){
+      if(miTextEffectsMenu){miTextEffectsMenu.remove();miTextEffectsMenu=null;}
+    }
+    miTextEffectsButton.addEventListener("click",()=>{
+      if(miTextEffectsMenu){miCloseTextEffectsMenu();return;}
+      const rect=miTextEffectsButton.getBoundingClientRect();
+      const menu=document.createElement("div");
+      miTextEffectsMenu=menu;
+      menu.setAttribute("role","menu");
+      menu.setAttribute("aria-label","Text Effects and Typography");
+      menu.style.cssText="position:fixed;z-index:20000;top:"+Math.min(window.innerHeight-250,rect.bottom+6)+"px;left:"+Math.max(8,Math.min(window.innerWidth-238,rect.left))+"px;width:230px;padding:8px;background:#fff;border:1px solid #cbd5e1;border-radius:6px;box-shadow:0 6px 20px rgba(15,23,42,.16);display:grid;gap:4px;";
+      const effects=[
+        {label:"Shadow",style:{textShadow:"2px 2px 3px rgba(35,55,80,.45)"}},
+        {label:"Soft Glow",style:{textShadow:"0 0 5px rgba(45,125,220,.75)"}},
+        {label:"Outline",style:{WebkitTextStroke:"1px #334155",color:"transparent"}},
+        {label:"Emboss",style:{textShadow:"1px 1px 0 #fff, 2px 2px 0 #64748b"}},
+        {label:"Reflection style",style:{textShadow:"0 2px 2px rgba(35,55,80,.35)"}}
+      ];
+      effects.forEach(effect=>{
+        const option=document.createElement("button");
+        option.type="button";
+        option.textContent=effect.label;
+        option.setAttribute("role","menuitem");
+        option.style.cssText="width:100%;text-align:left;padding:8px 10px;border:0;border-radius:4px;background:#fff;color:#26364a;font:inherit;cursor:pointer;";
+        option.addEventListener("pointerdown",event=>event.preventDefault());
+        option.addEventListener("mouseenter",()=>option.style.background="#eef4fb");
+        option.addEventListener("mouseleave",()=>option.style.background="#fff");
+        option.addEventListener("click",()=>{
+          const applied=miWrapSelectedText(effect.style);
+          miCloseTextEffectsMenu();
+          setMiWorkStatus(applied?effect.label+" effect applied. Save your project to store the change.":"Select text in the document first, then choose a text effect.","working");
+        });
+        menu.append(option);
+      });
+      const note=document.createElement("small");
+      note.textContent="Select text in the document before choosing an effect.";
+      note.style.cssText="padding:5px 10px;color:#64748b;font-size:11px;";
+      menu.append(note);
+      document.body.append(menu);
+      const closeOnOutside=event=>{
+        if(!menu.contains(event.target)&&event.target!==miTextEffectsButton){miCloseTextEffectsMenu();document.removeEventListener("pointerdown",closeOnOutside,true);}
+      };
+      document.addEventListener("pointerdown",closeOnOutside,true);
     });
     // Highlight the saved selection, not the toolbar's current focus.
     $("miTextHighlightColor").addEventListener("change",event=>{
