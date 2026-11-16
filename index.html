@@ -4193,14 +4193,11 @@ img{max-width:100%}
     window.addEventListener("resize", () => { if (!miVideoOptions.hidden) $("miAddVideoBtn").click(); });
     $("miCloseVideoOptions").addEventListener("click", () => { miVideoOptions.hidden = true; });
     $("miChooseVideoFile").addEventListener("click", () => $("miVideoFileInput").click());
-    const miVideoFileKeys = new Set();
-    const miGetProjectFileKey = file => [file.name, file.size, file.lastModified].join("|");
     $("miVideoFileInput").addEventListener("change", event => {
       const chosen = Array.from(event.target.files || []).filter(file => file.type.startsWith("video/"));
       if (!chosen.length) { event.target.value = ""; return; }
       const existing = Array.from($("projectFiles").files || []);
       if (existing.length + chosen.length > 20) { $("saveResult").textContent = "Please add no more than 20 files to one project."; event.target.value = ""; return; }
-      chosen.forEach(file => miVideoFileKeys.add(miGetProjectFileKey(file)));
       const transfer = new DataTransfer();
       existing.forEach(file => transfer.items.add(file));
       chosen.forEach(file => transfer.items.add(file));
@@ -4209,13 +4206,12 @@ img{max-width:100%}
       const speed = Number($("miVideoSpeed").value) || 1;
       chosen.filter(file => file.type.startsWith("video/")).forEach(file => {
         const video = document.createElement("video"); video.controls = true; video.preload = "metadata"; video.src = URL.createObjectURL(file);
-        video.dataset.miDocumentVideo = "true"; video.dataset.miVideoFileName = file.name;
+        video.dataset.miDocumentVideo = "true"; video.dataset.miVideoFileName = file.name; video.dataset.miVideoFileSize = String(file.size); video.dataset.miVideoFileLastModified = String(file.lastModified);
         video.style.width = Math.max(120, Math.min(1600, Number($("miVideoWidth").value) || 640)) + "px";
         video.style.height = Math.max(90, Math.min(1200, Number($("miVideoHeight").value) || 360)) + "px"; video.style.maxWidth = "100%"; video.playbackRate = speed;
         video.addEventListener("loadedmetadata", () => { video.playbackRate = speed; }, {once:true});
         if ($("miVideoCrop").checked) video.classList.add("mi-video-cropped");
-        const caption = document.createElement("p"); caption.className = "small"; caption.textContent = "Video file: " + file.name + " (attached to this project)";
-        miDocumentEditor.append(video, caption);
+        miDocumentEditor.append(video);
       });
       const lastVideo = miDocumentEditor.querySelector('video[data-mi-document-video="true"]:last-of-type');
       if (lastVideo) selectMiDocumentItem(lastVideo);
@@ -4464,20 +4460,15 @@ img{max-width:100%}
       event.preventDefault();event.stopPropagation();
       const item=miSelectedDocumentItem;
       if(!item||!miDocumentEditor.contains(item))return;
-      if(item.dataset.miAttachedFile==="true"){
-        const input=$("projectFiles"),fileName=item.dataset.miFileName||"",fileSize=item.dataset.miFileSize||"",fileLastModified=item.dataset.miFileLastModified||"";
+      if(item.dataset.miAttachedFile==="true"||item.dataset.miDocumentVideo==="true"){
+        const isVideo=item.dataset.miDocumentVideo==="true";
+        const input=$("projectFiles"),fileName=isVideo?(item.dataset.miVideoFileName||""):(item.dataset.miFileName||""),fileSize=isVideo?(item.dataset.miVideoFileSize||""):(item.dataset.miFileSize||""),fileLastModified=isVideo?(item.dataset.miVideoFileLastModified||""):(item.dataset.miFileLastModified||"");
         const transfer=new DataTransfer();
         Array.from(input.files||[]).forEach(file=>{
           if(!(file.name===fileName&&String(file.size)===fileSize&&String(file.lastModified)===fileLastModified))transfer.items.add(file);
         });
         input.files=transfer.files;
-        const preview=$("projectFilesPreview");preview.replaceChildren();
-        if(input.files.length){
-          const heading=document.createElement("strong");heading.textContent=input.files.length+" file(s) selected:";preview.append(heading);
-          const list=document.createElement("ul");list.style.margin="6px 0 0";list.style.paddingLeft="22px";
-          Array.from(input.files).forEach(file=>{const li=document.createElement("li");const size=file.size<1024*1024?(file.size/1024).toFixed(1)+" KB":(file.size/(1024*1024)).toFixed(2)+" MB";li.textContent=file.name+" ("+size+")";list.append(li);});
-          preview.append(list);
-        }
+        input.dispatchEvent(new Event("change"));
       }
       const next=item.nextElementSibling;item.remove();
       if(next&&next.tagName==="P"&&!next.textContent.trim()&&!next.querySelector("img,[data-mi-attached-file]"))next.remove();
@@ -5367,7 +5358,7 @@ img{max-width:100%}
 
     $("projectFiles").addEventListener("change", () => {
       const files = Array.from($("projectFiles").files || []);
-      const visibleFiles = files.filter(file => !miVideoFileKeys.has(miGetProjectFileKey(file)));
+      const visibleFiles = files.filter(file => !(file.type || "").startsWith("video/") && !/\.(mp4|m4v|mov|webm|avi|mkv|mpeg|mpg|3gp)$/i.test(file.name));
       const preview = $("projectFilesPreview");
       preview.replaceChildren();
       if (!visibleFiles.length) { preview.textContent = ""; }
