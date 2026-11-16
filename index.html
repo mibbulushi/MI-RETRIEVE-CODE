@@ -4774,7 +4774,7 @@ img{max-width:100%}
       });
       const unique = [...new Set(proposed)];
       if (!replacements.length) {
-        notice.textContent = "No basic grammar or spelling suggestions were found. Browser spellcheck is also available while you type.";
+        if (notice) notice.textContent = "No basic grammar or spelling suggestions were found. Browser spellcheck is also available while you type.";
         return;
       }
       notice.textContent = "Suggestions found: " + unique.join(" ");
