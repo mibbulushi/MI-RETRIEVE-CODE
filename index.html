@@ -4152,9 +4152,8 @@ img{max-width:100%}
 .mi-tab-color-standard-heading{margin-top:3px!important}
 .mi-tab-standard-row{grid-template-columns:repeat(10,21px)!important;gap:3px!important}
 .mi-tab-no-color{display:block!important;width:100%!important;height:24px!important;min-height:24px!important;margin:4px 0 0!important;padding:3px 5px!important;background:#fff!important;border:1px solid #bbb!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
-.mi-tab-more-colors{display:flex!important;align-items:center!important;justify-content:space-between!important;box-sizing:border-box!important;width:100%!important;height:31px!important;min-height:31px!important;margin:9px 0 0!important;padding:7px 5px 2px!important;background:#fff!important;border:0!important;border-top:1px solid #c8c8c8!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
+.mi-tab-more-colors{display:block!important;box-sizing:border-box!important;width:100%!important;height:29px!important;min-height:29px!important;margin:9px 0 0!important;padding:6px 5px!important;background:#fff!important;border:0!important;border-top:1px solid #c8c8c8!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
 .mi-tab-no-color:hover,.mi-tab-more-colors:hover{background:#e5f1fb!important;border-color:#8ab6d8!important}
-.mi-tab-more-colors input{width:24px!important;height:20px!important;min-height:20px!important;padding:0!important;margin:0!important;border:1px solid #888!important;border-radius:0!important;cursor:pointer!important}
 @media(max-width:520px){.mi-tab-color-submenu{left:auto!important;right:100%!important}}
 </style>
 </head>
@@ -6819,15 +6818,24 @@ img{max-width:100%}
           noColor.textContent="No Color";
           noColor.addEventListener("click",e=>{e.stopPropagation();applyTabColor("");});
           palette.append(noColor);
-          const more=document.createElement("label");
+          /* Excel-style separate More Colors command; the picker opens only after clicking it. */
+          const more=document.createElement("button");
+          more.type="button";
           more.className="mi-tab-more-colors";
           more.textContent="More Colors...";
           const picker=document.createElement("input");
-          picker.type="color";picker.value="#4472c4";picker.setAttribute("aria-label","Choose a custom tab color");
+          picker.type="color";
+          picker.value="#4472c4";
+          picker.setAttribute("aria-label","Choose a custom tab color");
+          picker.style.cssText="position:fixed!important;left:-10000px!important;top:0!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;";
           picker.addEventListener("input",e=>{e.stopPropagation();});
           picker.addEventListener("change",e=>{e.stopPropagation();applyTabColor(picker.value);});
-          more.append(picker);
+          more.addEventListener("click",e=>{
+            e.stopPropagation();
+            picker.click();
+          });
           palette.append(more);
+          document.body.append(picker);
           document.body.append(palette);
           item.addEventListener("click",e=>{
             e.stopPropagation();
