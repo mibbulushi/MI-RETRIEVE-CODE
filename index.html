@@ -3679,6 +3679,11 @@ img{max-width:100%}
             <div id="projectFilesPreview" class="small mi-files-preview" aria-live="polite"></div>
           </div>
           <div class="mi-editor-toolbar" id="miEditorToolbar" role="toolbar" aria-label="Document formatting">
+            <button type="button" class="secondary mi-format-icon" data-mi-command="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="redo" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list">• List</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="insertOrderedList" title="Numbered list" aria-label="Numbered list">1. List</button>
+            <button type="button" class="secondary mi-format-icon" id="miInsertLinkBtn" title="Insert hyperlink (Ctrl+K)" aria-label="Insert hyperlink">Link</button>
             <label class="mi-tool-label" title="Font family">Font <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
             <button type="button" class="secondary mi-format-icon" id="miChangeCaseBtn" title="Change selected text between UPPERCASE and lowercase" aria-label="Change letter case"><span aria-hidden="true">Aa</span></button>
             <label class="mi-tool-label mi-font-size-control" title="Font size">Size <span class="mi-font-size-row"><button type="button" class="mi-font-size-step" id="miFontSizeDecrease" title="Decrease font size" aria-label="Decrease font size">−</button><select id="miFontSize" aria-label="Font size"><option value="1">8</option><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option></select><button type="button" class="mi-font-size-step" id="miFontSizeIncrease" title="Increase font size" aria-label="Increase font size">+</button></span></label>
@@ -6953,6 +6958,69 @@ img{max-width:100%}
       selectMiDocumentItem(null);
       syncMiDocumentHtml();
     }
+    // Microsoft Word-style keyboard shortcuts for text editing.
+    // Only intercept shortcuts while focus is inside the document editor.
+    document.addEventListener("keydown",event=>{
+      const editor=miDocumentEditor;
+      const path=typeof event.composedPath==="function"?event.composedPath():[];
+      const inEditor=(event.target instanceof Node&&editor.contains(event.target))||path.includes(editor);
+      if(!inEditor||event.altKey)return;
+      const mod=event.ctrlKey||event.metaKey;
+      if(!mod)return;
+      const key=event.key.toLowerCase();
+      const hasObjectSelection=typeof getMiSelectedObjects==="function"&&getMiSelectedObjects().length>0;
+      if(key==="a"&&!hasObjectSelection){
+        event.preventDefault();
+        const range=document.createRange();
+        range.selectNodeContents(editor);
+        const selection=window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        miSavedEditorRange=range.cloneRange();
+        return;
+      }
+      const commands={b:"bold",i:"italic",u:"underline",l:"justifyLeft",e:"justifyCenter",r:"justifyRight",j:"justifyFull",z:"undo",y:"redo"};
+      if(commands[key]){
+        event.preventDefault();
+        editor.focus();
+        document.execCommand(commands[key],false,null);
+        $("content").value=editor.innerHTML;
+        setMiWorkStatus("Shortcut applied ("+(event.ctrlKey?"Ctrl":"⌘")+"+"+event.key.toUpperCase()+"). Save your project to store the change.");
+        return;
+      }
+      if(key==="k"){
+        event.preventDefault();
+        const selection=window.getSelection();
+        if(!selection||selection.isCollapsed){setMiWorkStatus("Select text first, then press Ctrl+K to add a hyperlink.","working");return;}
+        const url=window.prompt("Enter the hyperlink address (https://...)");
+        if(url){
+          editor.focus();
+          document.execCommand("createLink",false,/^https?:\/\//i.test(url)?url:"https://"+url);
+          $("content").value=editor.innerHTML;
+          setMiWorkStatus("Hyperlink added. Save your project to store the change.");
+        }
+        return;
+      }
+      if(event.shiftKey&&key==="l"){
+        event.preventDefault();
+        editor.focus();
+        document.execCommand("insertUnorderedList",false,null);
+        $("content").value=editor.innerHTML;
+        setMiWorkStatus("Bulleted list applied. Save your project to store the change.");
+      }
+    },true);
+    $("miInsertLinkBtn")?.addEventListener("pointerdown",event=>{
+      event.preventDefault();
+      restoreMiEditorSelection();
+      const selection=window.getSelection();
+      if(!selection||selection.isCollapsed){setMiWorkStatus("Select text first, then click Link.","working");return;}
+      const url=window.prompt("Enter the hyperlink address (https://...)");
+      if(url){
+        document.execCommand("createLink",false,/^https?:\/\//i.test(url)?url:"https://"+url);
+        $("content").value=miDocumentEditor.innerHTML;
+        setMiWorkStatus("Hyperlink added. Save your project to store the change.");
+      }
+    });
     document.addEventListener("keydown",event=>{
       if(event.key==="Escape"){closeMiPictureContextMenu();return;}
       if(event.altKey)return;
