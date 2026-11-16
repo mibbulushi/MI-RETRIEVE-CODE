@@ -6980,7 +6980,7 @@ img{max-width:100%}
         return;
       }
       const commands={b:"bold",i:"italic",u:"underline",l:"justifyLeft",e:"justifyCenter",r:"justifyRight",j:"justifyFull",z:"undo",y:"redo"};
-      if(commands[key]){
+      if(commands[key]&&!(key==="l"&&event.shiftKey)){
         event.preventDefault();
         editor.focus();
         document.execCommand(commands[key],false,null);
