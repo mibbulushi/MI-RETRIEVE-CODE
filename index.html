@@ -4193,11 +4193,14 @@ img{max-width:100%}
     window.addEventListener("resize", () => { if (!miVideoOptions.hidden) $("miAddVideoBtn").click(); });
     $("miCloseVideoOptions").addEventListener("click", () => { miVideoOptions.hidden = true; });
     $("miChooseVideoFile").addEventListener("click", () => $("miVideoFileInput").click());
+    const miVideoFileKeys = new Set();
+    const miGetProjectFileKey = file => [file.name, file.size, file.lastModified].join("|");
     $("miVideoFileInput").addEventListener("change", event => {
-      const chosen = Array.from(event.target.files || []);
-      if (!chosen.length) return;
+      const chosen = Array.from(event.target.files || []).filter(file => file.type.startsWith("video/"));
+      if (!chosen.length) { event.target.value = ""; return; }
       const existing = Array.from($("projectFiles").files || []);
-      if (existing.length + chosen.length > 20) { $("saveResult").textContent = "Please attach no more than 20 files to one project."; event.target.value = ""; return; }
+      if (existing.length + chosen.length > 20) { $("saveResult").textContent = "Please add no more than 20 files to one project."; event.target.value = ""; return; }
+      chosen.forEach(file => miVideoFileKeys.add(miGetProjectFileKey(file)));
       const transfer = new DataTransfer();
       existing.forEach(file => transfer.items.add(file));
       chosen.forEach(file => transfer.items.add(file));
@@ -5364,16 +5367,18 @@ img{max-width:100%}
 
     $("projectFiles").addEventListener("change", () => {
       const files = Array.from($("projectFiles").files || []);
+      const visibleFiles = files.filter(file => !miVideoFileKeys.has(miGetProjectFileKey(file)));
       const preview = $("projectFilesPreview");
       preview.replaceChildren();
-      if (!files.length) { preview.textContent = ""; return; }
+      if (!visibleFiles.length) { preview.textContent = ""; }
+      else {
       const heading = document.createElement("strong");
-      heading.textContent = files.length + " file(s) selected:";
+      heading.textContent = visibleFiles.length + " file(s) selected:";
       preview.append(heading);
       const list = document.createElement("ul");
       list.style.margin = "6px 0 0";
       list.style.paddingLeft = "22px";
-      for (const file of files) {
+      for (const file of visibleFiles) {
         const item = document.createElement("li");
         const size = file.size < 1024 * 1024
           ? (file.size / 1024).toFixed(1) + " KB"
@@ -5382,10 +5387,11 @@ img{max-width:100%}
         list.append(item);
       }
       preview.append(list);
+      }
 
-      // Insert a visible attachment card into the Project Document editor for every selected file.
+      // Video uploads are retained for saving, but appear only as video elements in the document.
       const editor = $("miDocumentEditor");
-      for (const file of files) {
+      for (const file of visibleFiles) {
         const card = document.createElement("div");
         card.contentEditable = "false";
         card.dataset.miAttachedFile = "true";
