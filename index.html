@@ -7464,6 +7464,7 @@ img{max-width:100%}
       const insertTools=document.querySelector("#saveArea .mi-document-tools");
       const editor=document.getElementById("miDocumentEditor");
       if(!toolbar||!pictureRibbon||toolbar.dataset.wordRibbonReady==="true")return;
+      toolbar.classList.add("mi-word-ribbon");
       toolbar.dataset.wordRibbonReady="true";
       const original=Array.from(toolbar.children);
       const homeItems=original.filter(node=>node!==pictureRibbon);
