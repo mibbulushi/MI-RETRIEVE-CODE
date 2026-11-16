@@ -3884,6 +3884,56 @@ img{max-width:100%}
 #miEditorToolbar.mi-word-ribbon .mi-word-ribbon-panel[hidden]{
   display:none!important;
 }
+
+
+/* Keep Paragraph alignment as one complete, clearly separated group in the Home ribbon. */
+#miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:4px!important;
+  width:auto!important;
+  min-width:max-content!important;
+  max-width:100%!important;
+  margin:0 0 0 8px!important;
+  padding:4px 0 4px 10px!important;
+  border:0!important;
+  border-left:1px solid #cbd1d8!important;
+  background:transparent!important;
+  box-sizing:border-box!important;
+}
+#miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar .mi-main-alignment-label{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  width:auto!important;
+  margin:0 4px 0 0!important;
+  white-space:nowrap!important;
+  font:600 12px "Segoe UI",Arial,sans-serif!important;
+}
+#miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar button{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  min-width:66px!important;
+  height:30px!important;
+  min-height:30px!important;
+  margin:0!important;
+  padding:4px 8px!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:760px){
+  #miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar{
+    margin-left:0!important;
+    padding-left:0!important;
+    border-left:0!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -7582,54 +7632,3 @@ img{max-width:100%}
 </script>
 </body>
 </html>
-
-
-/* Keep Paragraph alignment as one complete, clearly separated group in the Home ribbon. */
-#miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar{
-  display:inline-flex!important;
-  flex:0 0 auto!important;
-  flex-flow:row nowrap!important;
-  align-items:center!important;
-  justify-content:flex-start!important;
-  gap:4px!important;
-  width:auto!important;
-  min-width:max-content!important;
-  max-width:100%!important;
-  margin:0 0 0 8px!important;
-  padding:4px 0 4px 10px!important;
-  border:0!important;
-  border-left:1px solid #cbd1d8!important;
-  background:transparent!important;
-  box-sizing:border-box!important;
-}
-#miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar .mi-main-alignment-label{
-  display:inline-flex!important;
-  flex:0 0 auto!important;
-  align-items:center!important;
-  width:auto!important;
-  margin:0 4px 0 0!important;
-  white-space:nowrap!important;
-  font:600 12px "Segoe UI",Arial,sans-serif!important;
-}
-#miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar button{
-  display:inline-flex!important;
-  flex:0 0 auto!important;
-  align-items:center!important;
-  justify-content:center!important;
-  width:auto!important;
-  min-width:66px!important;
-  height:30px!important;
-  min-height:30px!important;
-  margin:0!important;
-  padding:4px 8px!important;
-  white-space:nowrap!important;
-  box-sizing:border-box!important;
-}
-@media(max-width:760px){
-  #miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar{
-    margin-left:0!important;
-    padding-left:0!important;
-    border-left:0!important;
-  }
-}
-
