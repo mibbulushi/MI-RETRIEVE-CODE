@@ -4051,18 +4051,18 @@ img{max-width:100%}
       if(miTextEffectsMenu){miCloseTextEffectsMenu();return;}
       const rect=miTextEffectsButton.getBoundingClientRect(),menu=document.createElement("div");
       miTextEffectsMenu=menu;menu.setAttribute("role","menu");menu.setAttribute("aria-label","Text Effects and Typography");
-      menu.style.cssText="position:fixed;z-index:20000;top:"+Math.max(8,Math.min(window.innerHeight-390,rect.bottom+4))+"px;left:"+Math.max(8,Math.min(window.innerWidth-250,rect.left))+"px;width:238px;max-height:min(390px,calc(100vh - 16px));overflow:auto;padding:5px 0;background:#fff;border:1px solid #aeb5bd;border-radius:0;box-shadow:0 3px 9px rgba(0,0,0,.22);font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
+      menu.style.cssText="position:fixed;z-index:20000;top:"+Math.max(8,Math.min(window.innerHeight-390,rect.bottom+4))+"px;left:"+Math.max(8,Math.min(window.innerWidth-250,rect.left))+"px;width:238px;max-height:min(390px,calc(100vh - 16px));overflow:auto;padding:4px 0;background:#fff;border:1px solid #c8c8c8;border-radius:0;box-shadow:none;font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
       const styles=[
-        {color:"#111"},{color:"#3677bd"},{color:"#e5a17e"},{color:"#91a9b9",WebkitTextStroke:".35px #91a9b9"},{color:"#d7a900"},
-        {color:"#888",textShadow:"1px 1px 1px #ccc"},{color:"#3677bd",textShadow:"1px 2px 2px #555"},{color:"#e3b51b",textShadow:"0 0 2px #f4d66a"},{color:"#fff",WebkitTextStroke:"1px #91a9b9"},{color:"#555",textShadow:"1px 1px 0 #bbb"},
-        {color:"#111",textShadow:"1px 1px 1px #888"},{color:"#243b4a",WebkitTextStroke:".6px #111"},{color:"#6fa1c9",textShadow:"0 1px 1px #ddd"},{color:"#fff",WebkitTextStroke:"1px #df854d"},{color:"#aaa",textShadow:"0 2px 2px #ddd"}
+        {color:"#111"},{color:"#4472c4"},{color:"#d99675"},{color:"#9db7c5",WebkitTextStroke:".35px #9db7c5"},{color:"#c9a227"},
+        {color:"#999"},{color:"#5b91bd",textShadow:"1px 1px 1px #d0d0d0"},{color:"#d8b33e"},{color:"#fff",WebkitTextStroke:"1px #9db7c5"},{color:"#666"},
+        {color:"#222",textShadow:"1px 1px 1px #bbb"},{color:"#38566b",WebkitTextStroke:".6px #38566b"},{color:"#7da6c2"},{color:"#fff",WebkitTextStroke:"1px #d99675"},{color:"#aaa"}
       ];
       const grid=document.createElement("div");grid.style.cssText="display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding:2px 5px 6px;border-bottom:1px solid #d5d5d5;margin-bottom:2px;";
       styles.forEach((style,index)=>{
         const b=document.createElement("button");b.type="button";b.title="Text effect style "+(index+1);b.setAttribute("aria-label",b.title);b.textContent="A";
         b.style.cssText="height:37px;min-width:0;padding:0;margin:0;border:1px solid transparent;border-radius:0;background:#fff;color:#222;font:27px Georgia,'Times New Roman',serif;line-height:1;cursor:default;box-shadow:none;";
         Object.assign(b.style,style);b.addEventListener("pointerdown",e=>e.preventDefault());
-        b.addEventListener("mouseenter",()=>b.style.background="#e7e7e7");b.addEventListener("mouseleave",()=>b.style.background="#fff");
+        b.addEventListener("mouseenter",()=>b.style.background="#e6e6e6");b.addEventListener("mouseleave",()=>b.style.background="#fff");
         b.addEventListener("click",()=>{const ok=miWrapSelectedText(style);miCloseTextEffectsMenu();setMiWorkStatus(ok?"Text effect applied. Save your project to store the change.":"Select text in the document first, then choose a style.","working");});
         grid.append(b);
       });menu.append(grid);
@@ -4085,14 +4085,14 @@ img{max-width:100%}
         cat.a.forEach(([name,style])=>{
           const b=document.createElement("button");b.type="button";b.textContent=name;
           b.style.cssText="display:block;width:100%;padding:5px 10px 5px 31px;margin:0;border:0;border-radius:0;background:#fff;color:#222;text-align:left;font:12px 'Segoe UI',Arial,sans-serif;cursor:default;box-shadow:none;text-shadow:none;";
-          b.addEventListener("pointerdown",e=>e.preventDefault());b.addEventListener("mouseenter",()=>b.style.background="#e5e5e5");b.addEventListener("mouseleave",()=>b.style.background="#fff");
+          b.addEventListener("pointerdown",e=>e.preventDefault());b.addEventListener("mouseenter",()=>b.style.background="#e6e6e6");b.addEventListener("mouseleave",()=>b.style.background="#fff");
           b.addEventListener("click",()=>{const ok=miWrapSelectedText(style);miCloseTextEffectsMenu();setMiWorkStatus(ok?name+" applied. Save your project to store the change.":"Select text in the document first, then choose a style.","working");});sub.append(b);
         });
-        head.addEventListener("pointerdown",e=>e.preventDefault());head.addEventListener("mouseenter",()=>head.style.background="#d9d9d9");head.addEventListener("mouseleave",()=>head.style.background=sub.style.display==="block"?"#e9e9e9":"#fff");
+        head.addEventListener("pointerdown",e=>e.preventDefault());head.addEventListener("mouseenter",()=>head.style.background="#e6e6e6");head.addEventListener("mouseleave",()=>head.style.background=sub.style.display==="block"?"#e9e9e9":"#fff");
         head.addEventListener("click",()=>{const open=sub.style.display==="none";sub.style.display=open?"block":"none";head.setAttribute("aria-expanded",String(open));head.style.background=open?"#e9e9e9":"#fff";});
         row.append(head,sub);menu.append(row);
       });
-      const note=document.createElement("div");note.textContent="Select text first to apply a style.";note.style.cssText="padding:6px 8px 3px;border-top:1px solid #ddd;color:#666;font:10px 'Segoe UI',Arial,sans-serif;";menu.append(note);
+      const note=document.createElement("div");note.textContent="Select text first to apply a style.";note.style.cssText="padding:6px 8px 3px;border-top:1px solid #e1e1e1;color:#666;font:10px 'Segoe UI',Arial,sans-serif;";menu.append(note);
       document.body.append(menu);
       const closeOnOutside=e=>{if(!menu.contains(e.target)&&e.target!==miTextEffectsButton){miCloseTextEffectsMenu();document.removeEventListener("pointerdown",closeOnOutside,true);}};
       document.addEventListener("pointerdown",closeOnOutside,true);
