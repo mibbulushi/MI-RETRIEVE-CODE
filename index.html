@@ -3920,6 +3920,27 @@ img{max-width:100%}
   box-shadow:none!important;
 }
 
+
+/* Word-like compact icon controls: quiet by default, clear on hover/focus. */
+#miEditorToolbar .mi-word-ribbon-panel button.mi-word-quick-button{
+  display:inline-flex!important;flex:0 0 32px!important;align-items:center!important;justify-content:center!important;
+  width:32px!important;min-width:32px!important;height:32px!important;min-height:32px!important;
+  margin:0!important;padding:5px!important;border:1px solid transparent!important;border-radius:3px!important;
+  background:transparent!important;color:#303942!important;box-shadow:none!important;text-shadow:none!important;
+  cursor:pointer!important;vertical-align:middle!important;
+}
+#miEditorToolbar .mi-word-ribbon-panel button.mi-word-quick-button svg{
+  display:block!important;width:21px!important;height:21px!important;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;pointer-events:none;
+}
+#miEditorToolbar .mi-word-ribbon-panel button.mi-word-quick-button:hover{
+  background:#e9edf2!important;border-color:#d2d7de!important;transform:none!important;box-shadow:none!important;
+}
+#miEditorToolbar .mi-word-ribbon-panel button.mi-word-quick-button:active,
+#miEditorToolbar .mi-word-ribbon-panel button.mi-word-quick-button:focus-visible{
+  background:#dce8f5!important;border-color:#9bb6d2!important;outline:none!important;
+}
+
 /* Keep Paragraph alignment as one complete, clearly separated group in the Home ribbon. */
 #miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar{
   display:inline-flex!important;
@@ -4097,9 +4118,9 @@ img{max-width:100%}
           <div class="mi-editor-toolbar" id="miEditorToolbar" role="toolbar" aria-label="Document formatting">
             <button type="button" class="secondary mi-format-icon" data-mi-command="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="redo" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button>
-            <button type="button" class="secondary mi-format-icon" data-mi-command="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list">• Bullets</button>
-            <button type="button" class="secondary mi-format-icon" data-mi-command="insertOrderedList" title="Numbered list" aria-label="Numbered list">1. Numbering</button>
-            <button type="button" class="secondary mi-format-icon" id="miInsertLinkBtn" title="Insert link / hyperlink (Ctrl+K)" aria-label="Insert link or hyperlink">Link</button>
+            <button type="button" class="secondary mi-format-icon mi-word-quick-button" data-mi-command="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1.5" fill="currentColor" stroke="none"/><path d="M10 6h10M10 12h10M10 18h10"/></svg></button>
+            <button type="button" class="secondary mi-format-icon mi-word-quick-button" data-mi-command="insertOrderedList" title="Numbered list" aria-label="Numbered list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5h2v3h-2M3.5 12h2l-2 2h2M3.5 18h2l-2 2h2M10 6h10M10 12h10M10 18h10"/></svg></button>
+            <button type="button" class="secondary mi-format-icon mi-word-quick-button" id="miInsertLinkBtn" title="Insert hyperlink (Ctrl+K)" aria-label="Insert hyperlink"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.8 14.2 8 16a3.2 3.2 0 0 1-4.5-4.5l3.2-3.2a3.2 3.2 0 0 1 4.5 0M14.2 9.8 16 8a3.2 3.2 0 0 1 4.5 4.5l-3.2 3.2a3.2 3.2 0 0 1-4.5 0M8.5 15.5l7-7"/></svg></button>
             <label class="mi-tool-label" title="Font family">Font <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
             <button type="button" class="secondary mi-format-icon" id="miChangeCaseBtn" title="Change selected text between UPPERCASE and lowercase" aria-label="Change letter case"><span aria-hidden="true">Aa</span></button>
             <label class="mi-tool-label mi-font-size-control" title="Font size">Size <span class="mi-font-size-row"><button type="button" class="mi-font-size-step" id="miFontSizeDecrease" title="Decrease font size" aria-label="Decrease font size">−</button><select id="miFontSize" aria-label="Font size"><option value="1">8</option><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option></select><button type="button" class="mi-font-size-step" id="miFontSizeIncrease" title="Increase font size" aria-label="Increase font size">+</button></span></label>
