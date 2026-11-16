@@ -4143,11 +4143,17 @@ img{max-width:100%}
 }
 
 #miProjectTabContextMenu .mi-tab-color-trigger{position:relative!important}
-#miProjectTabContextMenu .mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:-4px!important;z-index:100002!important;width:174px!important;padding:7px!important;grid-template-columns:repeat(6,20px)!important;gap:5px!important;background:#fff!important;border:1px solid #888!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
+#miProjectTabContextMenu .mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:-4px!important;z-index:100002!important;width:264px!important;padding:9px!important;grid-template-columns:1fr!important;gap:0!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
 #miProjectTabContextMenu .mi-tab-color-trigger.mi-tab-color-open .mi-tab-color-submenu,#miProjectTabContextMenu .mi-tab-color-trigger:hover .mi-tab-color-submenu{display:grid!important}
-#miProjectTabContextMenu .mi-tab-color-swatch{display:block!important;width:20px!important;height:20px!important;min-width:20px!important;min-height:20px!important;padding:0!important;margin:0!important;border:1px solid #999!important;border-radius:0!important;box-shadow:none!important;cursor:pointer!important}
-#miProjectTabContextMenu .mi-tab-color-swatch:hover{outline:2px solid #333!important;outline-offset:1px!important}
-#miProjectTabContextMenu .mi-tab-no-color{grid-column:1/-1!important;width:100%!important;height:22px!important;background:#fff!important;text-align:left!important;padding:2px 5px!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;color:#222!important}
+#miProjectTabContextMenu .mi-tab-color-heading{display:block!important;height:21px!important;padding:2px 1px 3px!important;border-bottom:1px solid #d4d4d4!important;margin:0 0 5px!important;color:#333!important;font:600 11px/15px "Segoe UI",Arial,sans-serif!important}
+#miProjectTabContextMenu .mi-tab-color-row{display:grid!important;grid-template-columns:repeat(10,21px)!important;gap:3px!important;margin:0 0 5px!important;padding:0!important}
+#miProjectTabContextMenu .mi-tab-color-swatch{appearance:none!important;-webkit-appearance:none!important;display:block!important;box-sizing:border-box!important;width:21px!important;height:21px!important;min-width:21px!important;min-height:21px!important;padding:0!important;margin:0!important;border:1px solid #777!important;border-radius:0!important;box-shadow:none!important;cursor:pointer!important;opacity:1!important;filter:none!important;transform:none!important}
+#miProjectTabContextMenu .mi-tab-color-swatch:hover,#miProjectTabContextMenu .mi-tab-color-swatch:focus-visible{outline:2px solid #111!important;outline-offset:1px!important;z-index:1!important}
+#miProjectTabContextMenu .mi-tab-color-standard-heading{margin-top:3px!important}
+#miProjectTabContextMenu .mi-tab-standard-row{grid-template-columns:repeat(10,21px)!important;gap:3px!important}
+#miProjectTabContextMenu .mi-tab-no-color,#miProjectTabContextMenu .mi-tab-more-colors{display:block!important;width:100%!important;height:24px!important;min-height:24px!important;margin:3px 0 0!important;padding:3px 5px!important;background:#fff!important;border:1px solid #bbb!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
+#miProjectTabContextMenu .mi-tab-no-color:hover,#miProjectTabContextMenu .mi-tab-more-colors:hover{background:#e5f1fb!important;border-color:#8ab6d8!important}
+#miProjectTabContextMenu .mi-tab-more-colors input{float:right!important;width:24px!important;height:20px!important;min-height:20px!important;padding:0!important;margin:-1px 0 0!important;border:1px solid #888!important;border-radius:0!important;cursor:pointer!important}
 @media(max-width:520px){#miProjectTabContextMenu .mi-tab-color-submenu{left:auto!important;right:100%!important}}
 </style>
 </head>
@@ -6741,19 +6747,66 @@ img{max-width:100%}
           item.classList.add("mi-tab-color-trigger");
           const palette=document.createElement("div");
           palette.className="mi-tab-color-submenu";
-          [["No Color",""],["Red","#c00000"],["Orange","#ed7d31"],["Yellow","#ffc000"],["Green","#70ad47"],["Teal","#00b0f0"],["Blue","#4472c4"],["Light Blue","#5b9bd5"],["Purple","#7030a0"],["Pink","#e6b8b7"],["Gray","#a5a5a5"],["Black","#000000"]].forEach(([label,color])=>{
-            const sw=document.createElement("button");
-            sw.type="button"; sw.className="mi-tab-color-swatch"; sw.title=label;
-            if(color) sw.style.backgroundColor=color;
-            else {sw.classList.add("mi-tab-no-color");sw.textContent="No Color";}
-            sw.addEventListener("click",e=>{
-              e.stopPropagation();
-              const ws=miProjectWorkspaces.find(w=>w.id===id);
-              if(ws){if(color)ws.tabColor=color;else delete ws.tabColor;miRenderProjectTabs();scheduleMiLocalDraftSave();}
-              menu.remove();
+          const applyTabColor=color=>{
+            const ws=miProjectWorkspaces.find(w=>w.id===id);
+            if(ws){if(color)ws.tabColor=color;else delete ws.tabColor;miRenderProjectTabs();scheduleMiLocalDraftSave();}
+            menu.remove();
+          };
+          const addHeading=label=>{
+            const heading=document.createElement("div");
+            heading.className="mi-tab-color-heading";
+            heading.textContent=label;
+            palette.append(heading);
+          };
+          addHeading("Theme Colors");
+          const themeColors=[
+            ["#ffffff","#000000","#e7e6e6","#44546a","#5b9bd5","#ed7d31","#a5a5a5","#ffc000","#4472c4","#70ad47"],
+            ["#f2f2f2","#7f7f7f","#d6dce4","#d9e2f3","#deebf7","#fce4d6","#ededed","#fff2cc","#d9e1f2","#e2f0d9"],
+            ["#d9d9d9","#595959","#adb9ca","#b4c7e7","#bdd7ee","#f8cbad","#dbdbdb","#ffe699","#b4c6e7","#c6e0b4"],
+            ["#bfbfbf","#404040","#8497b0","#8eaadb","#9bc2e6","#f4b183","#c9c9c9","#ffd966","#8ea9db","#a9d18e"],
+            ["#a6a6a6","#262626","#52647a","#2f5597","#5b9bd5","#c55a11","#7f7f7f","#bf9000","#2f5597","#548235"],
+            ["#7f7f7f","#0d0d0d","#333f50","#1f3864","#1f4e78","#843c0c","#595959","#7f6000","#1f4e78","#375623"]
+          ];
+          themeColors.forEach((row,rowIndex)=>{
+            const line=document.createElement("div");
+            line.className="mi-tab-color-row";
+            row.forEach((color,colIndex)=>{
+              const sw=document.createElement("button");
+              sw.type="button";sw.className="mi-tab-color-swatch";
+              sw.style.backgroundColor=color;
+              sw.title="Theme color "+(colIndex+1)+", shade "+(rowIndex+1)+": "+color;
+              sw.setAttribute("aria-label",sw.title);
+              sw.addEventListener("click",e=>{e.stopPropagation();applyTabColor(color);});
+              line.append(sw);
             });
-            palette.append(sw);
+            palette.append(line);
           });
+          addHeading("Standard Colors");
+          const standard=document.createElement("div");
+          standard.className="mi-tab-color-row mi-tab-standard-row";
+          ["#c00000","#ff0000","#ffc000","#ffff00","#92d050","#00b050","#00b0f0","#0070c0","#002060","#7030a0"].forEach(color=>{
+            const sw=document.createElement("button");
+            sw.type="button";sw.className="mi-tab-color-swatch";
+            sw.style.backgroundColor=color;sw.title="Standard color: "+color;
+            sw.setAttribute("aria-label",sw.title);
+            sw.addEventListener("click",e=>{e.stopPropagation();applyTabColor(color);});
+            standard.append(sw);
+          });
+          palette.append(standard);
+          const noColor=document.createElement("button");
+          noColor.type="button";noColor.className="mi-tab-no-color";
+          noColor.textContent="No Color";
+          noColor.addEventListener("click",e=>{e.stopPropagation();applyTabColor("");});
+          palette.append(noColor);
+          const more=document.createElement("label");
+          more.className="mi-tab-more-colors";
+          more.textContent="More Colors...";
+          const picker=document.createElement("input");
+          picker.type="color";picker.value="#4472c4";picker.setAttribute("aria-label","Choose a custom tab color");
+          picker.addEventListener("input",e=>{e.stopPropagation();});
+          picker.addEventListener("change",e=>{e.stopPropagation();applyTabColor(picker.value);});
+          more.append(picker);
+          palette.append(more);
           item.append(palette);
           item.addEventListener("mouseenter",()=>item.classList.add("mi-tab-color-open"));
           item.addEventListener("mouseleave",()=>item.classList.remove("mi-tab-color-open"));
