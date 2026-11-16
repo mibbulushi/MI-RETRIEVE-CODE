@@ -4050,7 +4050,12 @@ img{max-width:100%}
     miTextEffectsButton.addEventListener("click",()=>{
       if(miTextEffectsMenu){miCloseTextEffectsMenu();return;}
       const rect=miTextEffectsButton.getBoundingClientRect(),menu=document.createElement("div");
-      miTextEffectsMenu=menu;menu.setAttribute("role","menu");menu.setAttribute("aria-label","Text Effects and Typography");
+      miTextEffectsMenu=menu;menu.className="mi-word-text-effects-menu";menu.setAttribute("role","menu");menu.setAttribute("aria-label","Text Effects and Typography");
+      if(!document.getElementById("miWordTextEffectsFlatStyle")){
+        const flatStyle=document.createElement("style");flatStyle.id="miWordTextEffectsFlatStyle";
+        flatStyle.textContent=".mi-word-text-effects-menu,.mi-word-text-effects-menu *{box-shadow:none!important;text-shadow:none!important;filter:none!important;transform:none!important;}.mi-word-text-effects-menu button,.mi-word-text-effects-menu button:focus,.mi-word-text-effects-menu button:active{appearance:none!important;-webkit-appearance:none!important;box-shadow:none!important;text-shadow:none!important;filter:none!important;transform:none!important;border-radius:0!important;outline-offset:-2px;background:#fff!important;color:#222!important;border:1px solid transparent!important;}.mi-word-text-effects-menu button:hover{background:#e9e9e9!important;border-color:#e1e1e1!important;}.mi-word-text-effects-menu button:active{background:#e5e5e5!important;}";
+        document.head.append(flatStyle);
+      }
       menu.style.cssText="position:fixed;z-index:20000;top:"+Math.max(8,Math.min(window.innerHeight-390,rect.bottom+4))+"px;left:"+Math.max(8,Math.min(window.innerWidth-250,rect.left))+"px;width:238px;max-height:min(390px,calc(100vh - 16px));overflow:auto;padding:4px 0;background:#fff;border:1px solid #c8c8c8;border-radius:0;box-shadow:none;font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
       const styles=[
         {color:"#111"},{color:"#4472c4"},{color:"#d99675"},{color:"#9db7c5",WebkitTextStroke:".35px #9db7c5"},{color:"#c9a227"},
