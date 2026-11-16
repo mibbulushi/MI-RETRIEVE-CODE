@@ -3554,34 +3554,39 @@ img{max-width:100%}
 #saveArea .mi-project-tab-name{overflow:hidden;text-overflow:ellipsis}
 /* Flat Microsoft Excel-style sheet context menu: crisp edges, compact rows, no rounded UI. */
 #miProjectTabContextMenu{
-  position:fixed!important;z-index:100000!important;
-  display:block!important;min-width:176px!important;width:176px!important;
-  padding:3px!important;margin:0!important;
-  background:#fff!important;color:#222!important;
-  border:1px solid #888!important;border-radius:0!important;
-  box-shadow:1px 2px 4px rgba(0,0,0,.18)!important;
+  position:fixed!important;z-index:100000!important;display:block!important;
+  width:220px!important;min-width:220px!important;padding:3px 0!important;margin:0!important;
+  background:#fff!important;color:#222!important;border:1px solid #8a8a8a!important;
+  border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important;
   font:12px/1.25 "Segoe UI",Arial,sans-serif!important;
 }
-#miProjectTabContextMenu button{
-  appearance:none!important;-webkit-appearance:none!important;
-  display:block!important;width:100%!important;height:26px!important;min-height:26px!important;
-  margin:0!important;padding:4px 9px!important;
-  border:1px solid transparent!important;border-radius:0!important;
-  background:#fff!important;color:#222!important;
-  text-align:left!important;white-space:nowrap!important;
-  font:12px/16px "Segoe UI",Arial,sans-serif!important;
-  font-weight:400!important;letter-spacing:0!important;
-  box-shadow:none!important;transform:none!important;cursor:default!important;
+#miProjectTabContextMenu .mi-project-tab-menu-item{
+  appearance:none!important;-webkit-appearance:none!important;box-sizing:border-box!important;
+  display:grid!important;grid-template-columns:24px 1fr 12px!important;align-items:center!important;
+  width:100%!important;height:25px!important;min-height:25px!important;margin:0!important;
+  padding:2px 8px 2px 7px!important;border:1px solid transparent!important;border-radius:0!important;
+  background:#fff!important;color:#222!important;text-align:left!important;white-space:nowrap!important;
+  font:12px/18px "Segoe UI",Arial,sans-serif!important;font-weight:400!important;
+  letter-spacing:0!important;box-shadow:none!important;transform:none!important;cursor:default!important;
 }
-#miProjectTabContextMenu button:hover,
-#miProjectTabContextMenu button:focus{
-  background:#e5f1fb!important;color:#111!important;
-  border:1px solid #8ab6d8!important;border-radius:0!important;
-  outline:none!important;box-shadow:none!important;
+#miProjectTabContextMenu .mi-project-tab-menu-item svg{
+  display:block!important;width:15px!important;height:15px!important;stroke:#555!important;
+  stroke-width:1.15!important;stroke-linecap:square!important;stroke-linejoin:miter!important;
+  fill:none!important;shape-rendering:geometricPrecision!important;
 }
+#miProjectTabContextMenu .mi-project-tab-menu-item:hover:not(:disabled),
+#miProjectTabContextMenu .mi-project-tab-menu-item:focus-visible{
+  background:#e5f1fb!important;color:#111!important;border:1px solid #8ab6d8!important;
+  border-radius:0!important;outline:none!important;box-shadow:none!important;
+}
+#miProjectTabContextMenu .mi-project-tab-menu-item:disabled{
+  color:#999!important;cursor:default!important;background:#fff!important;opacity:1!important;
+}
+#miProjectTabContextMenu .mi-project-tab-menu-item:disabled svg{stroke:#aaa!important}
+#miProjectTabContextMenu .mi-project-tab-menu-arrow{justify-self:end;font:16px/12px "Segoe UI",Arial,sans-serif!important;color:#555!important}
 #miProjectTabContextMenu .mi-project-tab-menu-divider{
   display:block!important;height:1px!important;min-height:1px!important;
-  margin:3px 2px!important;padding:0!important;background:#c9c9c9!important;
+  margin:3px 7px!important;padding:0!important;background:#c8c8c8!important;
 }
 
 #saveArea .mi-project-add-tab{min-height:32px!important;height:32px!important;margin:0 0 4px!important;padding:6px 12px!important;white-space:nowrap;align-self:flex-end;font:600 13px/1.2 "Segoe UI",Arial,sans-serif!important;border-radius:6px!important;box-shadow:0 1px 2px rgba(30,55,82,.06)!important}
@@ -6618,51 +6623,81 @@ img{max-width:100%}
       const menu = document.createElement("div");
       menu.id = "miProjectTabContextMenu";
       menu.className = "mi-project-tab-context-menu";
-      const actions = [
-        ["New Sheet", () => miAddProjectTab()],
-        ["Rename", () => miRenameProjectTab(id)],
-        ["Move Left", () => miMoveProjectTab(id, -1)],
-        ["Move Right", () => miMoveProjectTab(id, 1)],
-        ["Delete Sheet", () => miRemoveProjectTab(id)]
+      const icon = (paths) => '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' + paths + '</svg>';
+      const items = [
+        {label:"Insert...", svg:icon('<rect x="2.5" y="2.5" width="11" height="11" rx=".5"/><path d="M8 4.5v7M4.5 8h7"/>'), run:()=>miAddProjectTab()},
+        {label:"Delete", svg:icon('<path d="M3 4.5h10M6 4.5V3h4v1.5M5 5.5l.5 7h5l.5-7"/>'), run:()=>miRemoveProjectTab(id)},
+        {label:"Rename", svg:icon('<path d="M3 12.5l.7-2.8L10.8 2.6a1.4 1.4 0 012 2l-7.1 7.1L3 12.5zM9.8 3.6l2.6 2.6"/>'), run:()=>miRenameProjectTab(id)},
+        {divider:true},
+        {label:"Move or Copy...", svg:icon('<rect x="2.5" y="3" width="8" height="10" rx=".7"/><path d="M5 6h3.5M5 8.5h3.5M8.5 2h5v9"/>'), run:()=>{
+          const choice=prompt("Move sheet: enter L for left or R for right. Enter C to create a copy.","L");
+          if(choice===null)return;
+          if(choice.trim().toUpperCase()==="L")miMoveProjectTab(id,-1);
+          else if(choice.trim().toUpperCase()==="R")miMoveProjectTab(id,1);
+          else if(choice.trim().toUpperCase()==="C")miCopyProjectTab(id);
+        }},
+        {label:"View Code", disabled:true, svg:icon('<path d="M5.5 4L2 8l3.5 4M10.5 4L14 8l-3.5 4"/>')},
+        {label:"Protect Sheet...", disabled:true, svg:icon('<rect x="3" y="7" width="10" height="7" rx="1"/><path d="M5 7V5a3 3 0 016 0v2"/>')},
+        {divider:true},
+        {label:"Tab Color", arrow:true, svg:icon('<path d="M8 2.2a5.8 5.8 0 100 11.6h1.1a1.4 1.4 0 001.1-2.3c-.6-.7-.2-1.7.8-1.7H12a2 2 0 002-2A5.6 5.6 0 008 2.2z"/><circle cx="5.2" cy="7" r=".8"/><circle cx="7.5" cy="4.8" r=".8"/><circle cx="10.3" cy="5.5" r=".8"/>')},
+        {label:"Hide", disabled:true, svg:icon('<path d="M2 8s2.2-3.5 6-3.5S14 8 14 8s-2.2 3.5-6 3.5S2 8 2 8z"/><path d="M3 3l10 10"/>')},
+        {label:"Unhide...", disabled:true, svg:icon('<path d="M2 8s2.2-3.5 6-3.5S14 8 14 8s-2.2 3.5-6 3.5S2 8 2 8z"/><circle cx="8" cy="8" r="1.5"/>')},
+        {divider:true},
+        {label:"Select All Sheets", disabled:true, svg:icon('<rect x="2.5" y="3.5" width="8" height="9" rx=".5"/><path d="M5 2h8.5v9"/>')}
       ];
-      actions.forEach(([label, action], index) => {
-        if (index === 4) {
-          const divider = document.createElement("div");
-          divider.className = "mi-project-tab-menu-divider";
+      items.forEach(entry=>{
+        if(entry.divider){
+          const divider=document.createElement("div");
+          divider.className="mi-project-tab-menu-divider";
           menu.append(divider);
+          return;
         }
-        const item = document.createElement("button");
-        item.type = "button";
-        item.textContent = label;
-        item.addEventListener("click", () => {
+        const item=document.createElement("button");
+        item.type="button";
+        item.className="mi-project-tab-menu-item";
+        item.disabled=!!entry.disabled;
+        item.innerHTML=entry.svg+'<span class="mi-project-tab-menu-label"></span>'+(entry.arrow?'<span class="mi-project-tab-menu-arrow">›</span>':"");
+        item.querySelector(".mi-project-tab-menu-label").textContent=entry.label;
+        if(entry.run)item.addEventListener("click",()=>{
           menu.remove();
-          action();
+          entry.run();
         });
         menu.append(item);
       });
       document.body.append(menu);
-      const x = Math.min(event.clientX, window.innerWidth - menu.offsetWidth - 8);
-      const y = Math.min(event.clientY, window.innerHeight - menu.offsetHeight - 8);
-      menu.style.left = Math.max(8, x) + "px";
-      menu.style.top = Math.max(8, y) + "px";
-      const closeMenu = e => {
-        if (!menu.contains(e.target)) {
+      const x=Math.min(event.clientX,window.innerWidth-menu.offsetWidth-8);
+      const y=Math.min(event.clientY,window.innerHeight-menu.offsetHeight-8);
+      menu.style.left=Math.max(8,x)+"px";
+      menu.style.top=Math.max(8,y)+"px";
+      const closeMenu=e=>{
+        if(!menu.contains(e.target)){
           menu.remove();
-          document.removeEventListener("pointerdown", closeMenu, true);
-          document.removeEventListener("keydown", closeOnEscape);
+          document.removeEventListener("pointerdown",closeMenu,true);
+          document.removeEventListener("keydown",closeOnEscape);
         }
       };
-      const closeOnEscape = e => {
-        if (e.key === "Escape") {
+      const closeOnEscape=e=>{
+        if(e.key==="Escape"){
           menu.remove();
-          document.removeEventListener("pointerdown", closeMenu, true);
-          document.removeEventListener("keydown", closeOnEscape);
+          document.removeEventListener("pointerdown",closeMenu,true);
+          document.removeEventListener("keydown",closeOnEscape);
         }
       };
-      setTimeout(() => {
-        document.addEventListener("pointerdown", closeMenu, true);
-        document.addEventListener("keydown", closeOnEscape);
-      }, 0);
+      setTimeout(()=>{
+        document.addEventListener("pointerdown",closeMenu,true);
+        document.addEventListener("keydown",closeOnEscape);
+      },0);
+    }
+    function miCopyProjectTab(id) {
+      const source=miProjectWorkspaces.find(item=>item.id===id);
+      if(!source)return;
+      const copy=JSON.parse(JSON.stringify(source));
+      copy.id="mi-tab-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);
+      copy.tabName=((source.tabName||source.name||"Sheet")+" Copy").slice(0,40);
+      miProjectWorkspaces.splice(miProjectWorkspaces.indexOf(source)+1,0,copy);
+      miActiveWorkspaceId=copy.id;
+      miRenderProjectTabs();
+      scheduleMiLocalDraftSave();
     }
     function miMoveProjectTab(id, direction) {
       const index = miProjectWorkspaces.findIndex(item => item.id === id);
