@@ -4181,34 +4181,41 @@ img{max-width:100%}
       if (typeof scheduleMiLocalDraftSave === "function") scheduleMiLocalDraftSave();
       miVideoOptions.hidden = true; event.target.value = "";
     });
-        $("miInsertVideoUrl").addEventListener("click", () => {
+        function miGetVideoEmbedUrl(parsed) {
+      const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+      if (host === "youtu.be") { const id = parsed.pathname.split("/").filter(Boolean)[0]; return id ? "https://www.youtube.com/embed/" + encodeURIComponent(id) : ""; }
+      if (host === "youtube.com" || host === "m.youtube.com") { const id = parsed.searchParams.get("v") || (parsed.pathname.match(/^\/(?:embed|shorts)\/([^/?]+)/) || [])[1]; return id ? "https://www.youtube.com/embed/" + encodeURIComponent(id) : ""; }
+      if (host === "vimeo.com") { const id = parsed.pathname.split("/").filter(Boolean).pop(); return /^\d+$/.test(id || "") ? "https://player.vimeo.com/video/" + id : ""; }
+      return "";
+    }
+    $("miInsertVideoUrl").addEventListener("click", () => {
       const url = $("miVideoUrl").value.trim();
       if (!url) { $("miVideoUrl").focus(); return; }
       let parsed;
       try { parsed = new URL(url); } catch { $("miVideoUrl").setCustomValidity("Enter a valid video URL."); $("miVideoUrl").reportValidity(); $("miVideoUrl").setCustomValidity(""); return; }
-      if (!["http:","https:"].includes(parsed.protocol)) return;
-      const video = document.createElement("video");
-      video.controls = true;
-      video.preload = "metadata";
-      video.src = parsed.href;
-      video.style.width = Math.max(120, Math.min(1600, Number($("miVideoWidth").value) || 640)) + "px";
-      video.style.height = Math.max(90, Math.min(1200, Number($("miVideoHeight").value) || 360)) + "px";
-      video.style.maxWidth = "100%";
-      video.dataset.miDocumentVideo = "true";
-      video.playbackRate = Number($("miVideoSpeed").value) || 1;
-      video.addEventListener("loadedmetadata", () => { video.playbackRate = Number($("miVideoSpeed").value) || 1; }, {once:true});
-      if ($("miVideoCrop").checked) video.classList.add("mi-video-cropped");
+      if (!["http:", "https:"].includes(parsed.protocol)) return;
+      const embedUrl = miGetVideoEmbedUrl(parsed);
+      let media;
+      if (embedUrl) {
+        media = document.createElement("iframe"); media.src = embedUrl; media.title = "Embedded video";
+        media.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"; media.allowFullscreen = true;
+      } else {
+        media = document.createElement("video"); media.controls = true; media.preload = "metadata"; media.src = parsed.href;
+        media.playbackRate = Number($("miVideoSpeed").value) || 1;
+        media.addEventListener("loadedmetadata", () => { media.playbackRate = Number($("miVideoSpeed").value) || 1; }, {once:true});
+      }
+      media.dataset.miDocumentVideo = "true";
+      media.style.width = Math.max(120, Math.min(1600, Number($("miVideoWidth").value) || 640)) + "px";
+      media.style.height = Math.max(90, Math.min(1200, Number($("miVideoHeight").value) || 360)) + "px"; media.style.maxWidth = "100%";
+      if ($("miVideoCrop").checked && media.tagName === "VIDEO") media.classList.add("mi-video-cropped");
       const selection = window.getSelection();
-      if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) {
-        const range = selection.getRangeAt(0); range.deleteContents(); range.insertNode(video);
-        const spacer = document.createElement("p"); spacer.append(document.createElement("br")); video.after(spacer);
-      } else { miDocumentEditor.append(video, document.createElement("p")); }
+      if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) { const range = selection.getRangeAt(0); range.deleteContents(); range.insertNode(media); const spacer = document.createElement("p"); spacer.append(document.createElement("br")); media.after(spacer); }
+      else miDocumentEditor.append(media, document.createElement("p"));
       $("content").value = miDocumentEditor.innerHTML;
       if (typeof scheduleMiLocalDraftSave === "function") scheduleMiLocalDraftSave();
-      $("miVideoUrl").value = "";
-      miVideoOptions.hidden = true;
+      $("miVideoUrl").value = ""; miVideoOptions.hidden = true;
     });
-    $("miDocumentImageInput").addEventListener("change", async event => {
+        $("miDocumentImageInput").addEventListener("change", async event => {
       const files = Array.from(event.target.files || []);
       for (const file of files) {
         if (!file.type.startsWith("image/")) continue;
