@@ -4877,6 +4877,45 @@ img{max-width:100%}
     miWordContextMenu.className="mi-word-context-menu";
     miWordContextMenu.hidden=true;
     document.body.append(miWordContextMenu);
+    if(!document.getElementById("miWordContextMenuFlatOptionsStyle")){
+      const flatOptions=document.createElement("style");
+      flatOptions.id="miWordContextMenuFlatOptionsStyle";
+      flatOptions.textContent=`
+        .mi-word-context-menu,
+        .mi-word-context-menu .mi-word-submenu{
+          background:#fff!important;border:1px solid #d6d6d6!important;border-radius:2px!important;
+          box-shadow:none!important;filter:none!important;text-shadow:none!important;
+        }
+        .mi-word-context-menu button,
+        .mi-word-context-menu .mi-word-menu-item,
+        .mi-word-context-menu .mi-word-submenu-item{
+          appearance:none!important;-webkit-appearance:none!important;
+          background:#fff!important;border:1px solid transparent!important;border-radius:0!important;
+          box-shadow:none!important;text-shadow:none!important;filter:none!important;
+          transform:none!important;outline-offset:0!important;
+          font-weight:400!important;
+        }
+        .mi-word-context-menu button:hover:not(:disabled),
+        .mi-word-context-menu button:focus-visible,
+        .mi-word-context-menu .mi-word-menu-item:hover,
+        .mi-word-context-menu .mi-word-menu-item:focus-visible,
+        .mi-word-context-menu .mi-word-submenu-item:hover,
+        .mi-word-context-menu .mi-word-submenu-item:focus-visible{
+          background:#f0f0f0!important;border-color:#e5e5e5!important;
+          box-shadow:none!important;outline:none!important;
+        }
+        .mi-word-context-menu button:active,
+        .mi-word-context-menu .mi-word-menu-item:active,
+        .mi-word-context-menu .mi-word-submenu-item:active{
+          background:#e8e8e8!important;box-shadow:none!important;transform:none!important;
+        }
+        .mi-word-context-menu button:disabled{
+          box-shadow:none!important;filter:none!important;opacity:.6!important;
+        }
+      `;
+      document.head.append(flatOptions);
+    }
+
     const miContextMenuDragHandle=document.createElement("div");
     miContextMenuDragHandle.textContent="Picture options";
     miContextMenuDragHandle.style.cssText="padding:8px 12px;border-bottom:1px solid #e5e7eb;background:#fff;color:#444;font-size:12px;font-weight:600;cursor:move;";
