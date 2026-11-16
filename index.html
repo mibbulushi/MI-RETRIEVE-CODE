@@ -5781,6 +5781,7 @@ img{max-width:100%}
       return {
         id: miActiveWorkspaceId || ("mi-project-" + Date.now()),
         name: $("title").value.trim() || ("Project " + miWorkspaceCounter),
+        tabName: miProjectWorkspaces.find(item => item.id === miActiveWorkspaceId)?.tabName || miProjectWorkspaces.find(item => item.id === miActiveWorkspaceId)?.name || ("Project " + miWorkspaceCounter),
         title: $("title").value,
         editorHtml: miDocumentEditor.innerHTML,
         projectStructure: $("projectStructure").value,
@@ -5828,10 +5829,12 @@ img{max-width:100%}
         tab.className = "mi-project-tab";
         tab.setAttribute("role", "tab");
         tab.setAttribute("aria-selected", String(workspace.id === miActiveWorkspaceId));
-        tab.title = workspace.title || workspace.name || ("Project " + (index + 1));
+        const defaultTabName = workspace.name || ("Project " + (index + 1));
+        if (!workspace.tabName) workspace.tabName = defaultTabName;
+        tab.title = "Double-click or right-click to rename " + workspace.tabName;
         const name = document.createElement("span");
         name.className = "mi-project-tab-name";
-        name.textContent = workspace.title.trim() || workspace.name || ("Project " + (index + 1));
+        name.textContent = workspace.tabName;
         const close = document.createElement("button");
         close.type = "button";
         close.className = "mi-project-tab-close";
@@ -5843,6 +5846,14 @@ img{max-width:100%}
           miRemoveProjectTab(workspace.id);
         });
         tab.addEventListener("click", () => miSwitchProjectTab(workspace.id));
+        name.addEventListener("dblclick", event => {
+          event.stopPropagation();
+          miRenameProjectTab(workspace.id);
+        });
+        tab.addEventListener("contextmenu", event => {
+          event.preventDefault();
+          miRenameProjectTab(workspace.id);
+        });
         tab.append(name, close);
         host.append(tab);
       });
@@ -5853,6 +5864,21 @@ img{max-width:100%}
       const snapshot = miCaptureWorkspace();
       if (index >= 0) miProjectWorkspaces[index] = snapshot;
       else miProjectWorkspaces.push(snapshot);
+    }
+    function miRenameProjectTab(id) {
+      const workspace = miProjectWorkspaces.find(item => item.id === id);
+      if (!workspace) return;
+      const currentName = workspace.tabName || workspace.name || "Project";
+      const updatedName = prompt("Enter a new project tab name:", currentName);
+      if (updatedName === null) return;
+      const cleanName = updatedName.trim().slice(0, 40);
+      if (!cleanName) {
+        alert("Project tab name cannot be empty.");
+        return;
+      }
+      workspace.tabName = cleanName;
+      miRenderProjectTabs();
+      scheduleMiLocalDraftSave();
     }
     function miSwitchProjectTab(id) {
       if (id === miActiveWorkspaceId) return;
@@ -5868,6 +5894,7 @@ img{max-width:100%}
       const workspace = {
         id: "mi-project-" + Date.now() + "-" + miWorkspaceCounter,
         name: "Project " + miWorkspaceCounter,
+        tabName: "Project " + miWorkspaceCounter,
         title: "",
         editorHtml: "",
         projectStructure: "",
@@ -5899,7 +5926,6 @@ img{max-width:100%}
       const active = miProjectWorkspaces.find(item => item.id === miActiveWorkspaceId);
       if (active) {
         active.title = $("title").value;
-        active.name = $("title").value.trim() || active.name;
         miRenderProjectTabs();
       }
     });
@@ -5965,7 +5991,7 @@ img{max-width:100%}
           request.onerror = () => reject(request.error || new Error("Could not read the local draft."));
         });
         if (!draft) {
-          const firstWorkspace = { id: "mi-project-" + Date.now(), name: "Project 1", title: "", editorHtml: "", projectStructure: "", files: [] };
+          const firstWorkspace = { id: "mi-project-" + Date.now(), name: "Project 1", tabName: "Project 1", title: "", editorHtml: "", projectStructure: "", files: [] };
           miProjectWorkspaces = [firstWorkspace];
           miActiveWorkspaceId = firstWorkspace.id;
           miWorkspaceCounter = 1;
@@ -5994,7 +6020,8 @@ img{max-width:100%}
         } else {
           const initialWorkspace = {
             id: "mi-project-" + Date.now(),
-            name: (draft.title || "").trim() || "Project 1",
+            name: "Project 1",
+            tabName: "Project 1",
             title: draft.title || "",
             editorHtml: draft.editorHtml || "",
             projectStructure: draft.projectStructure || "",
