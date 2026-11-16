@@ -2299,6 +2299,16 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 @media(max-width:760px){#miEditorToolbar{gap:6px;padding:7px}#miEditorToolbar .mi-tool-group{padding:7px}#miEditorToolbar .mi-tool-label{font-size:10px}#miEditorToolbar button{height:29px;min-height:29px;padding:4px 7px}}
 
 .mi-document-editor{min-height:520px;padding:24px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#26364a;font:inherit;line-height:1.75;outline:none;overflow-wrap:anywhere}
+/* Main text box: integrated paragraph alignment controls */
+.mi-main-textbox-frame{border:1px solid #cbd5e1;border-radius:12px;background:#fff;overflow:hidden}
+.mi-main-alignment-bar{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:6px 10px;border-bottom:1px solid #d7e0ea;background:#f7f9fc}
+.mi-main-alignment-label{font:600 12px "Segoe UI",Arial,sans-serif;color:#53657b;margin-right:5px}
+.mi-main-alignment-bar button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:66px;height:30px;min-height:30px;margin:0;padding:4px 9px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;color:#26364a;box-shadow:none;font:12px "Segoe UI",Arial,sans-serif;cursor:pointer}
+.mi-main-alignment-bar button:hover{background:#eaf2fb;border-color:#8eafd2;transform:none;box-shadow:none}
+.mi-main-alignment-bar button:focus-visible{outline:2px solid #3976c5;outline-offset:1px}
+#miMainAlignmentBar button{font-size:13px}
+#miDocumentEditor.mi-document-editor{border:0!important;border-radius:0!important}
+@media(max-width:520px){.mi-main-alignment-label{width:100%}.mi-main-alignment-bar{gap:4px}.mi-main-alignment-bar button{flex:1;min-width:0;padding:4px 5px}}
 /* Independent document and page scrolling; remove excess gap below the editor card. */
 .mi-builder-panel{margin-bottom:6px!important}
 html,body{overflow-y:auto!important;overscroll-behavior-y:auto}
@@ -3723,7 +3733,16 @@ img{max-width:100%}
             </div>
           </div>
           <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
-          <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
+          <div class="mi-main-textbox-frame">
+            <div id="miMainAlignmentBar" class="mi-main-alignment-bar" role="toolbar" aria-label="Text alignment">
+              <span class="mi-main-alignment-label">Paragraph:</span>
+              <button type="button" data-mi-align="justifyLeft" title="Align left (Ctrl+L)" aria-label="Align left">☰ <span>Left</span></button>
+              <button type="button" data-mi-align="justifyCenter" title="Centre (Ctrl+E)" aria-label="Centre">≡ <span>Centre</span></button>
+              <button type="button" data-mi-align="justifyRight" title="Align right (Ctrl+R)" aria-label="Align right">☷ <span>Right</span></button>
+              <button type="button" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify">▤ <span>Justify</span></button>
+            </div>
+            <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
+          </div>
           <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
         </section>
         <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
@@ -3987,6 +4006,20 @@ img{max-width:100%}
         miSavedEditorRange=current.getRangeAt(0).cloneRange();
       }
     },true);
+    const miMainAlignmentBar=$("miMainAlignmentBar");
+    miMainAlignmentBar.addEventListener("pointerdown",event=>{
+      const selection=window.getSelection();
+      if(selection&&selection.rangeCount&&!selection.isCollapsed&&miDocumentEditor.contains(selection.anchorNode)&&miDocumentEditor.contains(selection.focusNode)){
+        miSavedEditorRange=selection.getRangeAt(0).cloneRange();
+      }
+      const button=event.target.closest("button[data-mi-align]");
+      if(!button)return;
+      event.preventDefault();
+      restoreMiEditorSelection();
+      document.execCommand(button.dataset.miAlign,false,null);
+      $("content").value=miDocumentEditor.innerHTML;
+      setMiWorkStatus("Paragraph alignment changed — save your project to store it.");
+    });
     // Keep the document selection available while the user operates Home toolbar controls.
     document.addEventListener("selectionchange",()=>{
       const selection=window.getSelection();
