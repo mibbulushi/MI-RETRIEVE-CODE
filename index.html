@@ -3857,7 +3857,10 @@ img{max-width:100%}
       $("signedIn").classList.toggle("hidden", !signedIn);
       $("appArea").classList.toggle("hidden", !signedIn);
       $("accountEmail").textContent = signedIn ? "Signed in as " + (session.user.email || "your account") : "";
-      if (signedIn) showStatus("authStatus", "You are signed in. Your saved content is private to this account.", "success");
+      if (signedIn) {
+        showStatus("authStatus", "You are signed in. Your saved content is private to this account.", "success");
+        restoreMiLocalDraft(session.user.id);
+      }
     }
 
     $("signUpBtn").addEventListener("click", async () => {
@@ -4530,6 +4533,7 @@ img{max-width:100%}
     document.body.append(miSelectionUI);
     function syncMiDocumentHtml(){
       $("content").value=miDocumentEditor.innerHTML;
+      scheduleMiLocalDraftSave();
     }
     function updateMiSelectionUI(){
       const item=miSelectedDocumentItem;
@@ -5639,6 +5643,183 @@ img{max-width:100%}
       $("newSharePassword").value = "";
     });
 
+
+    // Automatic local recovery: keep an account-specific working draft in IndexedDB.
+    // This survives refreshes, browser restarts, and unexpected computer shutdowns on this device.
+    const MI_DRAFT_DB_NAME = "mi-retrieve-local-drafts";
+    const MI_DRAFT_STORE_NAME = "working-drafts";
+    let miDraftDatabasePromise = null;
+    let miDraftSaveTimer = null;
+    let miDraftRestoreStartedFor = "";
+    let miDraftRestoring = false;
+
+    function openMiDraftDatabase() {
+      if (miDraftDatabasePromise) return miDraftDatabasePromise;
+      miDraftDatabasePromise = new Promise((resolve, reject) => {
+        if (!("indexedDB" in window)) {
+          reject(new Error("This browser does not support local draft recovery."));
+          return;
+        }
+        const request = indexedDB.open(MI_DRAFT_DB_NAME, 1);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(MI_DRAFT_STORE_NAME)) {
+            db.createObjectStore(MI_DRAFT_STORE_NAME, { keyPath: "userId" });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error("Could not open local draft storage."));
+      });
+      return miDraftDatabasePromise;
+    }
+
+    async function writeMiLocalDraft() {
+      if (miDraftRestoring) return;
+      const { data: { user } } = await client.auth.getUser();
+      if (!user) return;
+      const selectedFiles = Array.from($("projectFiles").files || []);
+      const activePage = document.querySelector(".side-nav a[data-page].active")?.dataset.page || "new-project";
+      const slider = document.querySelector(".mi-zoom-slider");
+      const draft = {
+        userId: user.id,
+        updatedAt: Date.now(),
+        title: $("title").value,
+        editorHtml: miDocumentEditor.innerHTML,
+        projectStructure: $("projectStructure").value,
+        files: selectedFiles,
+        page: activePage,
+        editorScrollTop: miDocumentEditor.scrollTop,
+        windowScrollY: window.scrollY || 0,
+        sidebarCollapsed: document.body.classList.contains("sidebar-collapsed"),
+        zoom: slider ? Number(slider.value) : 100
+      };
+      const db = await openMiDraftDatabase();
+      await new Promise((resolve, reject) => {
+        const transaction = db.transaction(MI_DRAFT_STORE_NAME, "readwrite");
+        transaction.objectStore(MI_DRAFT_STORE_NAME).put(draft);
+        transaction.oncomplete = resolve;
+        transaction.onerror = () => reject(transaction.error || new Error("Could not save the local draft."));
+        transaction.onabort = () => reject(transaction.error || new Error("Local draft saving was interrupted."));
+      });
+      if (typeof setMiWorkStatus === "function") {
+        setMiWorkStatus("Automatic draft saved on this device. You can safely refresh or return later.", "saved");
+      }
+    }
+
+    function scheduleMiLocalDraftSave() {
+      if (miDraftRestoring) return;
+      clearTimeout(miDraftSaveTimer);
+      miDraftSaveTimer = setTimeout(() => {
+        writeMiLocalDraft().catch(error => {
+          console.warn("MI local draft autosave:", error);
+          if (typeof setMiWorkStatus === "function") {
+            setMiWorkStatus("Automatic draft could not be saved: " + (error.message || "storage unavailable"), "error");
+          }
+        });
+      }, 450);
+    }
+
+    async function restoreMiLocalDraft(userId) {
+      if (!userId || miDraftRestoreStartedFor === userId) return;
+      miDraftRestoreStartedFor = userId;
+      try {
+        const db = await openMiDraftDatabase();
+        const draft = await new Promise((resolve, reject) => {
+          const request = db.transaction(MI_DRAFT_STORE_NAME, "readonly")
+            .objectStore(MI_DRAFT_STORE_NAME).get(userId);
+          request.onsuccess = () => resolve(request.result || null);
+          request.onerror = () => reject(request.error || new Error("Could not read the local draft."));
+        });
+        if (!draft) return;
+        const hasWork = Boolean((draft.title || "").trim() || (draft.editorHtml || "").trim() ||
+          (draft.projectStructure || "").trim() || (draft.files || []).length);
+        if (!hasWork) return;
+
+        miDraftRestoring = true;
+        $("title").value = draft.title || "";
+        miDocumentEditor.innerHTML = draft.editorHtml || "";
+        $("content").value = miDocumentEditor.innerHTML;
+        $("projectStructure").value = draft.projectStructure || "";
+        miDocumentEditor.scrollTop = Number(draft.editorScrollTop) || 0;
+
+        const savedFiles = Array.isArray(draft.files) ? draft.files : [];
+        if (savedFiles.length && typeof DataTransfer !== "undefined") {
+          const transfer = new DataTransfer();
+          savedFiles.forEach(file => transfer.items.add(file));
+          $("projectFiles").files = transfer.files;
+          const preview = $("projectFilesPreview");
+          preview.replaceChildren();
+          const heading = document.createElement("strong");
+          heading.textContent = savedFiles.length + " file(s) recovered:";
+          preview.append(heading);
+          const list = document.createElement("ul");
+          list.style.margin = "6px 0 0";
+          list.style.paddingLeft = "22px";
+          savedFiles.forEach(file => {
+            const item = document.createElement("li");
+            const size = file.size < 1024 * 1024
+              ? (file.size / 1024).toFixed(1) + " KB"
+              : (file.size / (1024 * 1024)).toFixed(2) + " MB";
+            item.textContent = file.name + " (" + size + ")";
+            list.append(item);
+          });
+          preview.append(list);
+        }
+
+        if (typeof openPage === "function") openPage(draft.page || "new-project");
+        if (typeof setSidebarCollapsed === "function") setSidebarCollapsed(Boolean(draft.sidebarCollapsed));
+        const zoomSlider = document.querySelector(".mi-zoom-slider");
+        if (zoomSlider && draft.zoom) {
+          zoomSlider.value = String(draft.zoom);
+          zoomSlider.dispatchEvent(new Event("input", { bubbles: true }));
+        } else {
+          miDocumentEditor.style.zoom = String((Number(draft.zoom) || 100) / 100);
+        }
+        $("newSharePassword").value = "";
+        setMiWorkStatus("Your latest automatic draft has been recovered. Continue from where you stopped.", "saved");
+        setTimeout(() => {
+          if (draft.windowScrollY) window.scrollTo(0, Number(draft.windowScrollY));
+          miDocumentEditor.scrollTop = Number(draft.editorScrollTop) || 0;
+          miDraftRestoring = false;
+        }, 250);
+      } catch (error) {
+        miDraftRestoring = false;
+        console.warn("MI local draft recovery:", error);
+        if (typeof setMiWorkStatus === "function") {
+          setMiWorkStatus("Local draft recovery was unavailable: " + (error.message || "storage error"), "error");
+        }
+      }
+    }
+
+    async function clearMiLocalDraft(userId) {
+      if (!userId) return;
+      try {
+        const db = await openMiDraftDatabase();
+        await new Promise((resolve, reject) => {
+          const transaction = db.transaction(MI_DRAFT_STORE_NAME, "readwrite");
+          transaction.objectStore(MI_DRAFT_STORE_NAME).delete(userId);
+          transaction.oncomplete = resolve;
+          transaction.onerror = () => reject(transaction.error || new Error("Could not clear the local draft."));
+        });
+      } catch (error) {
+        console.warn("MI local draft cleanup:", error);
+      }
+    }
+
+    // Save after edits, formatting, attachment changes, and when the page is about to hide.
+    $("saveArea").addEventListener("input", scheduleMiLocalDraftSave, true);
+    $("saveArea").addEventListener("change", scheduleMiLocalDraftSave, true);
+    $("saveArea").addEventListener("pointerup", scheduleMiLocalDraftSave, true);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        clearTimeout(miDraftSaveTimer);
+        writeMiLocalDraft().catch(error => console.warn("MI draft save on hide:", error));
+      }
+    });
+    window.addEventListener("pagehide", () => {
+      clearTimeout(miDraftSaveTimer);
+      writeMiLocalDraft().catch(error => console.warn("MI draft save on page hide:", error));
+    });
 
     // Owner controls for existing Share Codes. Password changes use the signed-in
     // browser session so auth.uid() is available inside mi_set_share_password.
