@@ -3549,6 +3549,9 @@ img{max-width:100%}
 #saveArea .mi-project-tab.mi-tab-dragging{opacity:.45}
 #saveArea .mi-project-tab.mi-tab-drop-target{outline:2px dashed #2878c7;outline-offset:-3px}
 @media(max-width:600px){#saveArea .mi-project-tabbar{gap:5px;padding:6px 4px 0}#saveArea .mi-project-tab{min-width:82px;padding:9px 8px;gap:6px}#saveArea .mi-project-add-tab{min-height:32px!important;height:32px!important;padding:6px 10px!important}}
+
+/* Compact font-size decrease/increase controls beside the size selector */
+#miEditorToolbar .mi-font-size-control{display:inline-flex;align-items:center;gap:5px}#miEditorToolbar .mi-font-size-row{display:inline-flex;align-items:center;gap:3px}#miEditorToolbar .mi-font-size-row select{min-width:54px;width:58px}#miEditorToolbar .mi-font-size-step{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:23px!important;min-width:23px!important;height:25px!important;min-height:25px!important;margin:0!important;padding:0!important;border:1px solid #c8cdd3!important;border-radius:3px!important;background:#fff!important;color:#27313b!important;font:16px/1 Arial,sans-serif!important;box-shadow:none!important;cursor:pointer}#miEditorToolbar .mi-font-size-step:hover{background:#eaf2fa!important;border-color:#8daecc!important}
 </style>
 </head>
 <body>
@@ -3678,7 +3681,7 @@ img{max-width:100%}
           <div class="mi-editor-toolbar" id="miEditorToolbar" role="toolbar" aria-label="Document formatting">
             <label class="mi-tool-label" title="Font family">Font <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
             <button type="button" class="secondary mi-format-icon" id="miChangeCaseBtn" title="Change selected text between UPPERCASE and lowercase" aria-label="Change letter case"><span aria-hidden="true">Aa</span></button>
-            <label class="mi-tool-label" title="Font size">Size <select id="miFontSize" aria-label="Font size"><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">32</option></select></label>
+            <label class="mi-tool-label mi-font-size-control" title="Font size">Size <span class="mi-font-size-row"><button type="button" class="mi-font-size-step" id="miFontSizeDecrease" title="Decrease font size" aria-label="Decrease font size">−</button><select id="miFontSize" aria-label="Font size"><option value="1">8</option><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option></select><button type="button" class="mi-font-size-step" id="miFontSizeIncrease" title="Increase font size" aria-label="Increase font size">+</button></span></label>
             <label class="mi-tool-label mi-color-label" title="Text colour">Colour <input id="miFontColor" type="color" value="#26364a" aria-label="Text colour"></label>
             <button type="button" class="secondary mi-format-icon" data-mi-command="bold" title="Bold" aria-label="Bold"><b>B</b></button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="italic" title="Italic" aria-label="Italic"><i>I</i></button>
@@ -4164,6 +4167,18 @@ img{max-width:100%}
       restoreMiEditorSelection();
       document.execCommand("fontSize", false, event.target.value);
       $("content").value = miDocumentEditor.innerHTML;
+    });
+    function miStepFontSize(direction){
+      const sizeSelect=$("miFontSize");
+      const nextIndex=Math.max(0,Math.min(sizeSelect.options.length-1,sizeSelect.selectedIndex+direction));
+      if(nextIndex===sizeSelect.selectedIndex)return;
+      sizeSelect.selectedIndex=nextIndex;
+      sizeSelect.dispatchEvent(new Event("change",{bubbles:true}));
+    }
+    ["miFontSizeDecrease","miFontSizeIncrease"].forEach(id=>{
+      const button=$(id);
+      button.addEventListener("pointerdown",event=>event.preventDefault());
+      button.addEventListener("click",()=>miStepFontSize(id==="miFontSizeIncrease"?1:-1));
     });
     $("miFontColor").addEventListener("input", event => {
       restoreMiEditorSelection();
