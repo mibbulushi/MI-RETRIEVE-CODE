@@ -6675,8 +6675,17 @@ img{max-width:100%}
         });
         tab.setAttribute("role", "tab");
         tab.setAttribute("aria-selected", String(workspace.id === miActiveWorkspaceId));
-        if(workspace.tabColor){tab.style.borderBottom="3px solid "+workspace.tabColor;tab.style.background=workspace.id===miActiveWorkspaceId?"#fff":workspace.tabColor+"22";}
-        else{tab.style.removeProperty("border-bottom");tab.style.removeProperty("background");}
+        if(workspace.tabColor){
+          tab.style.setProperty("border-bottom","4px solid "+workspace.tabColor,"important");
+          tab.style.setProperty("background",workspace.tabColor+"30","important");
+          tab.style.setProperty("background-color",workspace.tabColor+"30","important");
+          tab.dataset.tabColor=workspace.tabColor;
+        }else{
+          tab.style.removeProperty("border-bottom");
+          tab.style.removeProperty("background");
+          tab.style.removeProperty("background-color");
+          delete tab.dataset.tabColor;
+        }
         const defaultTabName = workspace.name || ("Project " + (index + 1));
         if (!workspace.tabName) workspace.tabName = defaultTabName;
         tab.title = "Double-click to rename; right-click for sheet options: " + workspace.tabName;
@@ -6761,8 +6770,12 @@ img{max-width:100%}
           palette.style.setProperty("border","1px solid #777777","important");
           palette.style.setProperty("box-shadow","1px 2px 5px rgba(0,0,0,.28)","important");
           const applyTabColor=color=>{
-            const ws=miProjectWorkspaces.find(w=>w.id===id);
-            if(ws){if(color)ws.tabColor=color;else delete ws.tabColor;miRenderProjectTabs();scheduleMiLocalDraftSave();}
+            const ws=miProjectWorkspaces.find(w=>String(w.id)===String(id));
+            if(!ws){console.error("MI tab color: worksheet not found",id);return;}
+            if(color)ws.tabColor=String(color).toLowerCase();
+            else delete ws.tabColor;
+            miRenderProjectTabs();
+            scheduleMiLocalDraftSave();
             palette.remove();
             menu.remove();
           };
@@ -6914,7 +6927,7 @@ img{max-width:100%}
             }
             palette.style.setProperty("display","grid","important");
             item.classList.add("mi-tab-color-open");
-            const panelWidth=264;
+            const panelWidth=292;
             const panelHeight=Math.min(palette.scrollHeight||430,window.innerHeight-16);
             let left=rect.right+3;
             if(left+panelWidth>window.innerWidth-8)left=rect.left-panelWidth-3;
