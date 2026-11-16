@@ -4363,7 +4363,7 @@ img{max-width:100%}
     let miSelectedDocumentItem = null;
     let miMoveState = null;
     let miResizeState = null;
-    const miMovableSelector = '[data-mi-document-image="true"],[data-mi-attached-file="true"]';
+    const miMovableSelector = '[data-mi-document-image="true"],[data-mi-attached-file="true"],[data-mi-document-video="true"]';
     const miSelectionUI = document.createElement("div");
     miSelectionUI.className = "mi-word-selection-ui";
     miSelectionUI.style.cssText = "position:fixed;z-index:100000;display:none;pointer-events:none;box-sizing:border-box;border:1px solid #2878cf;";
@@ -5087,9 +5087,10 @@ img{max-width:100%}
         event.preventDefault();
         let w=st.w,h=st.h;
         const isImage=item.dataset.miDocumentImage==="true";
+        const isVideo=item.dataset.miDocumentVideo==="true";
         if(dir.includes("e"))w=st.w+dx;if(dir.includes("w"))w=st.w-dx;
         if(dir.includes("s"))h=st.h+dy;if(dir.includes("n"))h=st.h-dy;
-        if(isImage && dir.length===2){
+        if((isImage||isVideo) && dir.length===2){
           const ratio=st.w/Math.max(1,st.h);
           if(Math.abs(dx)>=Math.abs(dy))h=w/ratio;else w=h*ratio;
         }
@@ -5103,8 +5104,8 @@ img{max-width:100%}
       }
     },{passive:false});
     document.addEventListener("pointerup",()=>{
-      if(miMoveState){const st=miMoveState;st.item.classList.remove("mi-document-item-dragging");if(st.moved){syncMiDocumentHtml();setMiWorkStatus("Picture or file position changed — save your project.");}miMoveState=null;updateMiSelectionUI();syncMiPictureRibbon();}
-      if(miResizeState){syncMiDocumentHtml();setMiWorkStatus("Picture or file size changed — save your project.");miResizeState=null;updateMiSelectionUI();syncMiPictureRibbon();}
+      if(miMoveState){const st=miMoveState;st.item.classList.remove("mi-document-item-dragging");if(st.moved){syncMiDocumentHtml();setMiWorkStatus("Picture, video or file position changed — save your project.");}miMoveState=null;updateMiSelectionUI();syncMiPictureRibbon();}
+      if(miResizeState){syncMiDocumentHtml();setMiWorkStatus("Picture, video or file size changed — save your project.");miResizeState=null;updateMiSelectionUI();syncMiPictureRibbon();}
     });
     Object.entries(miHandles).forEach(([dir,handle])=>{
       handle.addEventListener("pointerdown",event=>{
