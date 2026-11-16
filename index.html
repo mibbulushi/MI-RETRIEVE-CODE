@@ -4054,46 +4054,115 @@ img{max-width:100%}
       miTextEffectsMenu=menu;
       menu.setAttribute("role","menu");
       menu.setAttribute("aria-label","Text Effects and Typography");
-      menu.style.cssText="position:fixed;z-index:20000;top:"+Math.min(window.innerHeight-420,rect.bottom+6)+"px;left:"+Math.max(8,Math.min(window.innerWidth-326,rect.left))+"px;width:318px;max-height:min(420px,calc(100vh - 24px));overflow:auto;padding:10px;background:#fff;border:1px solid #cbd5e1;border-radius:6px;box-shadow:0 6px 20px rgba(15,23,42,.16);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;";
-      const palette=[
-        {name:"Blue",color:"#1674d1",dark:"#123f78",glow:"rgba(22,116,209,.72)"},
-        {name:"Red",color:"#e23b45",dark:"#8e1723",glow:"rgba(226,59,69,.68)"},
-        {name:"Green",color:"#169b62",dark:"#075b3a",glow:"rgba(22,155,98,.68)"},
-        {name:"Purple",color:"#8954c8",dark:"#4b267d",glow:"rgba(137,84,200,.7)"},
-        {name:"Gold",color:"#d49a16",dark:"#805509",glow:"rgba(212,154,22,.68)"}
+      menu.style.cssText="position:fixed;z-index:20000;top:"+Math.max(8,Math.min(window.innerHeight-500,rect.bottom+6))+"px;left:"+Math.max(8,Math.min(window.innerWidth-290,rect.left))+"px;width:276px;max-height:min(500px,calc(100vh - 16px));overflow:auto;padding:9px;background:#fff;border:1px solid #c7cdd5;border-radius:3px;box-shadow:0 5px 18px rgba(0,0,0,.2);";
+      const colors=["#111111","#3677bd","#e5a17e","#91a9b9","#d7a900"];
+      const previews=[
+        {name:"Blue Fill",style:{color:"#3677bd"}},
+        {name:"Blue Shadow",style:{color:"#3677bd",textShadow:"2px 2px 2px #555"}},
+        {name:"Peach Fill",style:{color:"#e5a17e"}},
+        {name:"Outline",style:{color:"transparent",WebkitTextStroke:"1px #8da8ba"}},
+        {name:"Gold Fill",style:{color:"#d7a900"}},
+        {name:"Grey Shadow",style:{color:"#888",textShadow:"1px 2px 2px #444"}},
+        {name:"Blue Glow",style:{color:"#3677bd",textShadow:"0 0 5px #67b8ff"}},
+        {name:"Gold Glow",style:{color:"#d7a900",textShadow:"0 0 5px #f5c542"}},
+        {name:"Soft Outline",style:{color:"#fff",WebkitTextStroke:"1px #8da8ba"}},
+        {name:"Dark Grey",style:{color:"#555"}},
+        {name:"Black Shadow",style:{color:"#111",textShadow:"2px 2px 1px #aaa"}},
+        {name:"Blue Emboss",style:{color:"#3677bd",textShadow:"-1px -1px #fff,1px 1px #234"}},
+        {name:"Light Blue",style:{color:"#78a8d2"}},
+        {name:"Orange Outline",style:{color:"transparent",WebkitTextStroke:"1px #df854d"}},
+        {name:"Silver Reflection",style:{color:"#aaa",textShadow:"0 3px 2px #ddd"}}
       ];
-      const patterns=[
-        {name:"Solid Fill",make:c=>({color:c.color})},
-        {name:"Shadow",make:c=>({color:c.color,textShadow:"2px 2px 3px "+c.dark+"99"})},
-        {name:"Soft Glow",make:c=>({color:c.color,textShadow:"0 0 2px #fff,0 0 7px "+c.glow+",0 0 13px "+c.glow})},
-        {name:"Outline",make:c=>({color:"transparent",WebkitTextStroke:"1.5px "+c.color,textShadow:"none"})},
-        {name:"Emboss",make:c=>({color:c.color,textShadow:"-1px -1px 0 #fff,1px 1px 0 "+c.dark+",2px 2px 2px "+c.dark+"88"})},
-        {name:"Reflection",make:c=>({color:c.color,textShadow:"0 2px 1px "+c.dark+"99,0 5px 3px "+c.color+"66"})}
-      ];
-      const effects=patterns.flatMap(pattern=>palette.map(color=>({
-        label:pattern.name+" · "+color.name,
-        preview:pattern.make(color),
-        style:pattern.make(color)
-      })));
-      effects.forEach(effect=>{
-        const option=document.createElement("button");
-        option.type="button";
-        option.textContent=effect.label;
-        option.setAttribute("role","menuitem");
-        option.style.cssText="width:100%;text-align:left;padding:8px 10px;border:0;border-radius:4px;background:#fff;color:#26364a;font:inherit;cursor:pointer;";
-        option.addEventListener("pointerdown",event=>event.preventDefault());
-        option.addEventListener("mouseenter",()=>option.style.background="#eef4fb");
-        option.addEventListener("mouseleave",()=>option.style.background="#fff");
-        option.addEventListener("click",()=>{
-          const applied=miWrapSelectedText(effect.style);
+      const previewGrid=document.createElement("div");
+      previewGrid.style.cssText="display:grid;grid-template-columns:repeat(5,1fr);gap:2px 5px;padding:0 0 8px;border-bottom:1px solid #e5e7eb;margin-bottom:5px;";
+      previews.forEach(item=>{
+        const button=document.createElement("button");
+        button.type="button";
+        button.title=item.name;
+        button.setAttribute("aria-label",item.name);
+        button.textContent="A";
+        button.style.cssText="height:42px;border:1px solid transparent;border-radius:2px;background:#fff;font:30px Georgia,serif;cursor:pointer;";
+        Object.assign(button.style,item.style);
+        button.addEventListener("pointerdown",event=>event.preventDefault());
+        button.addEventListener("mouseenter",()=>button.style.background="#eef4fb");
+        button.addEventListener("mouseleave",()=>button.style.background="#fff");
+        button.addEventListener("click",()=>{
+          const applied=miWrapSelectedText(item.style);
           miCloseTextEffectsMenu();
-          setMiWorkStatus(applied?effect.label+" effect applied. Save your project to store the change.":"Select text in the document first, then choose a text effect.","working");
+          setMiWorkStatus(applied?item.name+" applied. Save your project to store the change.":"Select text in the document first, then choose a style.","working");
         });
-        menu.append(option);
+        previewGrid.append(button);
+      });
+      menu.append(previewGrid);
+      const categories=[
+        {name:"Outline",items:[
+          ["Thin outline",{color:"transparent",WebkitTextStroke:"1px #222"}],
+          ["Blue outline",{color:"transparent",WebkitTextStroke:"1.5px #3677bd"}],
+          ["White fill + dark outline",{color:"#fff",WebkitTextStroke:"1px #333"}]
+        ]},
+        {name:"Shadow",items:[
+          ["Offset shadow",{textShadow:"2px 2px 2px #777"}],
+          ["Soft shadow",{textShadow:"0 2px 5px #999"}],
+          ["Hard shadow",{textShadow:"3px 3px 0 #555"}]
+        ]},
+        {name:"Reflection",items:[
+          ["Light reflection",{textShadow:"0 3px 2px #bbb"}],
+          ["Strong reflection",{textShadow:"0 4px 2px #888"}],
+          ["Soft reflection",{textShadow:"0 2px 6px #aaa"}]
+        ]},
+        {name:"Glow",items:[
+          ["Blue glow",{textShadow:"0 0 5px #268cff"}],
+          ["Gold glow",{textShadow:"0 0 5px #e0b323"}],
+          ["Green glow",{textShadow:"0 0 5px #25a765"}]
+        ]},
+        {name:"Number Styles",items:[
+          ["Lining numbers",{fontVariantNumeric:"lining-nums"}],
+          ["Old-style numbers",{fontVariantNumeric:"oldstyle-nums"}],
+          ["Proportional numbers",{fontVariantNumeric:"proportional-nums"}],
+          ["Tabular numbers",{fontVariantNumeric:"tabular-nums"}],
+          ["Ordinal numbers",{fontVariantNumeric:"ordinal"}],
+          ["Slashed zero",{fontVariantNumeric:"slashed-zero"}]
+        ]},
+        {name:"Ligatures",items:[
+          ["Standard ligatures",{fontVariantLigatures:"common-ligatures"}],
+          ["Discretionary ligatures",{fontVariantLigatures:"discretionary-ligatures"}],
+          ["Historical ligatures",{fontVariantLigatures:"historical-ligatures"}],
+          ["No ligatures",{fontVariantLigatures:"no-common-ligatures"}]
+        ]},
+        {name:"Stylistic Sets",items:Array.from({length:20},(_,i)=>["Stylistic Set "+String(i+1).padStart(2,"0"),{fontFeatureSettings:'"ss'+String(i+1).padStart(2,"0")+'"'}])}
+      ];
+      categories.forEach(category=>{
+        const row=document.createElement("div");
+        const head=document.createElement("button");
+        head.type="button";
+        head.textContent="A   "+category.name+"   ›";
+        head.style.cssText="display:block;width:100%;text-align:left;padding:5px 3px;border:0;border-radius:2px;background:#fff;color:#222;font:12px Georgia,serif;cursor:pointer;";
+        const choices=document.createElement("div");
+        choices.style.cssText="display:none;padding:3px 0 5px 18px;background:#f7f9fc;";
+        category.items.forEach(([label,style])=>{
+          const choice=document.createElement("button");
+          choice.type="button";
+          choice.textContent=label;
+          choice.style.cssText="display:block;width:100%;padding:5px 7px;text-align:left;border:0;background:transparent;color:#26364a;font:12px Arial,sans-serif;cursor:pointer;";
+          choice.addEventListener("pointerdown",event=>event.preventDefault());
+          choice.addEventListener("click",()=>{
+            const applied=miWrapSelectedText(style);
+            miCloseTextEffectsMenu();
+            setMiWorkStatus(applied?label+" applied. Save your project to store the change.":"Select text in the document first, then choose a style.","working");
+          });
+          choices.append(choice);
+        });
+        head.addEventListener("pointerdown",event=>event.preventDefault());
+        head.addEventListener("click",()=>{
+          choices.style.display=choices.style.display==="none"?"block":"none";
+          head.style.background=choices.style.display==="block"?"#e8edf4":"#fff";
+        });
+        row.append(head,choices);
+        menu.append(row);
       });
       const note=document.createElement("small");
-      note.textContent="Select text in the document before choosing an effect.";
-      note.style.cssText="padding:5px 10px;color:#64748b;font-size:11px;";
+      note.textContent="Select text first. Some OpenType styles depend on the font being used.";
+      note.style.cssText="display:block;padding:7px 3px 2px;color:#687385;font:10px Arial,sans-serif;";
       menu.append(note);
       document.body.append(menu);
       const closeOnOutside=event=>{
@@ -4101,7 +4170,7 @@ img{max-width:100%}
       };
       document.addEventListener("pointerdown",closeOnOutside,true);
     });
-    // Highlight the saved selection, not the toolbar's current focus.
+        // Highlight the saved selection, not the toolbar's current focus.
     $("miTextHighlightColor").addEventListener("change",event=>{
       const selection=miRestoreTextRange();
       if(!selection||selection.isCollapsed){setMiWorkStatus("Select text first, then choose a highlight colour.","working");return;}
