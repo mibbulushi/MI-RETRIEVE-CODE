@@ -4195,8 +4195,9 @@ img{max-width:100%}
         const caption = document.createElement("p"); caption.className = "small"; caption.textContent = "Video file: " + file.name + " (attached to this project)";
         miDocumentEditor.append(video, caption);
       });
-      $("content").value = miDocumentEditor.innerHTML;
-      if (typeof scheduleMiLocalDraftSave === "function") scheduleMiLocalDraftSave();
+      const lastVideo = miDocumentEditor.querySelector('video[data-mi-document-video="true"]:last-of-type');
+      if (lastVideo) selectMiDocumentItem(lastVideo);
+      syncMiDocumentHtml();
       miVideoOptions.hidden = true; event.target.value = "";
     });
         function miGetVideoEmbedUrl(parsed) {
@@ -4229,8 +4230,9 @@ img{max-width:100%}
       const selection = window.getSelection();
       if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) { const range = selection.getRangeAt(0); range.deleteContents(); range.insertNode(media); const spacer = document.createElement("p"); spacer.append(document.createElement("br")); media.after(spacer); }
       else miDocumentEditor.append(media, document.createElement("p"));
-      $("content").value = miDocumentEditor.innerHTML;
-      if (typeof scheduleMiLocalDraftSave === "function") scheduleMiLocalDraftSave();
+      // Immediately show the picture-style resize handles and Remove control.
+      selectMiDocumentItem(media);
+      syncMiDocumentHtml();
       $("miVideoUrl").value = ""; miVideoOptions.hidden = true;
     });
         $("miDocumentImageInput").addEventListener("change", async event => {
