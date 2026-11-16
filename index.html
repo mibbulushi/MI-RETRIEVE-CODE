@@ -5937,15 +5937,27 @@ img{max-width:100%}
       scheduleMiLocalDraftSave();
     }
     function miRemoveProjectTab(id) {
-      if (miProjectWorkspaces.length <= 1) {
-        alert("At least one project tab must remain open.");
-        return;
-      }
       const target = miProjectWorkspaces.find(item => item.id === id);
-      const label = target?.title || target?.name || "this project";
+      if (!target) return;
+      const label = target.tabName || target.title || target.name || "this project";
       if (!confirm('Remove "' + label + '" from the project tabs? This removes its local working copy from this browser. A project already saved to your account is not deleted.')) return;
+      const wasActive = miActiveWorkspaceId === id;
       miProjectWorkspaces = miProjectWorkspaces.filter(item => item.id !== id);
-      if (miActiveWorkspaceId === id) {
+      if (miProjectWorkspaces.length === 0) {
+        miWorkspaceCounter++;
+        const freshWorkspace = {
+          id: "mi-project-" + Date.now() + "-" + miWorkspaceCounter,
+          name: "Project " + miWorkspaceCounter,
+          tabName: "Project " + miWorkspaceCounter,
+          title: "",
+          editorHtml: "",
+          projectStructure: "",
+          files: []
+        };
+        miProjectWorkspaces.push(freshWorkspace);
+        miApplyWorkspace(freshWorkspace);
+        $("title").focus();
+      } else if (wasActive) {
         miApplyWorkspace(miProjectWorkspaces[0]);
       } else {
         miRenderProjectTabs();
