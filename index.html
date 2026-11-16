@@ -4143,7 +4143,7 @@ img{max-width:100%}
 }
 
 .mi-tab-color-trigger{position:relative!important;overflow:visible!important;cursor:default!important}
-.mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:0!important;z-index:100010!important;width:264px!important;min-width:264px!important;padding:9px!important;grid-template-columns:1fr!important;gap:0!important;overflow:visible!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
+.mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:0!important;z-index:100010!important;width:292px!important;min-width:292px!important;padding:10px!important;grid-template-columns:1fr!important;gap:0!important;overflow:visible!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
 .mi-tab-color-trigger.mi-tab-color-open .mi-tab-color-submenu,.mi-tab-color-trigger:hover .mi-tab-color-submenu{display:grid!important}
 .mi-tab-color-heading{display:block!important;height:21px!important;padding:2px 1px 3px!important;border-bottom:1px solid #d4d4d4!important;margin:0 0 5px!important;color:#333!important;font:600 11px/15px "Segoe UI",Arial,sans-serif!important}
 .mi-tab-color-row{display:grid!important;grid-template-columns:repeat(10,22px)!important;grid-auto-rows:22px!important;gap:4px!important;margin:0 0 6px!important;padding:0!important}
@@ -6751,8 +6751,8 @@ img{max-width:100%}
           palette.style.setProperty("position","fixed","important");
           palette.style.setProperty("display","none","important");
           palette.style.setProperty("z-index","2147483000","important");
-          palette.style.setProperty("width","264px","important");
-          palette.style.setProperty("min-width","264px","important");
+          palette.style.setProperty("width","292px","important");
+          palette.style.setProperty("min-width","292px","important");
           /* Keep the complete Excel-style color chooser visible without an inner scrollbar. */
           palette.style.setProperty("max-height","none","important");
           palette.style.setProperty("height","auto","important");
@@ -6773,17 +6773,18 @@ img{max-width:100%}
             palette.append(heading);
           };
           addHeading("Theme Colors");
+          /* Excel Office theme palette: four text/background colors followed by six accents. */
           const themeColumns=[
-            {name:"White",shades:["#ffffff","#f2f2f2","#d9d9d9","#bfbfbf","#a6a6a6","#7f7f7f"]},
-            {name:"Black",shades:["#7f7f7f","#595959","#404040","#262626","#1a1a1a","#000000"]},
-            {name:"Gray",shades:["#f2f2f2","#d9e1f2","#b4c6e7","#8497b0","#52647a","#333f50"]},
-            {name:"Dark Blue",shades:["#d9e2f3","#b4c7e7","#8eaadb","#4472c4","#2f5597","#1f3864"]},
-            {name:"Blue",shades:["#deebf7","#bdd7ee","#9bc2e6","#5b9bd5","#1f4e78","#17365d"]},
-            {name:"Orange",shades:["#fce4d6","#f8cbad","#f4b183","#ed7d31","#c55a11","#843c0c"]},
-            {name:"Gray Accent",shades:["#ededed","#dbdbdb","#c9c9c9","#a5a5a5","#7f7f7f","#595959"]},
-            {name:"Gold",shades:["#fff2cc","#ffe699","#ffd966","#ffc000","#bf9000","#7f6000"]},
-            {name:"Blue Accent",shades:["#d9e1f2","#b4c6e7","#8ea9db","#4472c4","#2f5597","#1f4e78"]},
-            {name:"Green",shades:["#e2f0d9","#c6e0b4","#a9d18e","#70ad47","#548235","#375623"]}
+            {name:"White — Background 1",shades:["#ffffff","#f2f2f2","#d9d9d9","#bfbfbf","#a6a6a6","#7f7f7f"]},
+            {name:"Black — Text 1",shades:["#7f7f7f","#595959","#404040","#262626","#1a1a1a","#000000"]},
+            {name:"Light Gray — Background 2",shades:["#e7e6e6","#d9d9d9","#bfbfbf","#a6a6a6","#7f7f7f","#595959"]},
+            {name:"Dark Blue Gray — Text 2",shades:["#d6dce4","#adb9ca","#8497b0","#44546a","#333f50","#222a35"]},
+            {name:"Blue — Accent 1",shades:["#d9e2f3","#b4c7e7","#8eaadb","#4472c4","#2f5597","#1f3864"]},
+            {name:"Orange — Accent 2",shades:["#fbe5d6","#f7c7ac","#f4b183","#ed7d31","#c55a11","#843c0c"]},
+            {name:"Gray — Accent 3",shades:["#ededed","#dbdbdb","#c9c9c9","#a5a5a5","#7f7f7f","#595959"]},
+            {name:"Gold — Accent 4",shades:["#fff2cc","#ffe699","#ffd966","#ffc000","#bf9000","#7f6000"]},
+            {name:"Light Blue — Accent 5",shades:["#deebf7","#bdd7ee","#9bc2e6","#5b9bd5","#1f4e78","#17365d"]},
+            {name:"Green — Accent 6",shades:["#e2f0d9","#c6e0b4","#a9d18e","#70ad47","#548235","#375623"]}
           ];
           for(let shadeIndex=0;shadeIndex<6;shadeIndex++){
             const line=document.createElement("div");
