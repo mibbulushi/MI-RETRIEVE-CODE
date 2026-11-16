@@ -5181,7 +5181,15 @@ img{max-width:100%}
     miDocumentEditor.addEventListener("pointerdown",event=>{
       if(event.button!==0 || event.target.closest?.(".mi-word-selection-ui"))return;
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
-      if(!target||!miDocumentEditor.contains(target))return;
+      if(!target||!miDocumentEditor.contains(target)){
+        // Clicking in the text/document area clears the active object selection.
+        miSelectedDocumentItems.clear();
+        miMultiSelectionAnchor=null;
+        selectMiDocumentItem(null);
+        closeMiWordContextMenu();
+        closeMiPictureContextMenu();
+        return;
+      }
       if(event.ctrlKey||event.metaKey||event.shiftKey)return;
       selectMiDocumentItem(target);
       event.preventDefault();
