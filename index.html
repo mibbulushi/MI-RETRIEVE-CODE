@@ -4141,6 +4141,14 @@ img{max-width:100%}
   text-rendering:geometricPrecision!important;
   white-space:nowrap!important;
 }
+
+#miProjectTabContextMenu .mi-tab-color-trigger{position:relative!important}
+#miProjectTabContextMenu .mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:-4px!important;z-index:100002!important;width:174px!important;padding:7px!important;grid-template-columns:repeat(6,20px)!important;gap:5px!important;background:#fff!important;border:1px solid #888!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
+#miProjectTabContextMenu .mi-tab-color-trigger.mi-tab-color-open .mi-tab-color-submenu,#miProjectTabContextMenu .mi-tab-color-trigger:hover .mi-tab-color-submenu{display:grid!important}
+#miProjectTabContextMenu .mi-tab-color-swatch{display:block!important;width:20px!important;height:20px!important;min-width:20px!important;min-height:20px!important;padding:0!important;margin:0!important;border:1px solid #999!important;border-radius:0!important;box-shadow:none!important;cursor:pointer!important}
+#miProjectTabContextMenu .mi-tab-color-swatch:hover{outline:2px solid #333!important;outline-offset:1px!important}
+#miProjectTabContextMenu .mi-tab-no-color{grid-column:1/-1!important;width:100%!important;height:22px!important;background:#fff!important;text-align:left!important;padding:2px 5px!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;color:#222!important}
+@media(max-width:520px){#miProjectTabContextMenu .mi-tab-color-submenu{left:auto!important;right:100%!important}}
 </style>
 </head>
 <body>
@@ -6661,6 +6669,8 @@ img{max-width:100%}
         });
         tab.setAttribute("role", "tab");
         tab.setAttribute("aria-selected", String(workspace.id === miActiveWorkspaceId));
+        if(workspace.tabColor){tab.style.borderBottom="3px solid "+workspace.tabColor;tab.style.background=workspace.id===miActiveWorkspaceId?"#fff":workspace.tabColor+"22";}
+        else{tab.style.removeProperty("border-bottom");tab.style.removeProperty("background");}
         const defaultTabName = workspace.name || ("Project " + (index + 1));
         if (!workspace.tabName) workspace.tabName = defaultTabName;
         tab.title = "Double-click to rename; right-click for sheet options: " + workspace.tabName;
@@ -6727,6 +6737,27 @@ img{max-width:100%}
         item.disabled=!!entry.disabled;
         item.innerHTML=entry.svg+'<span class="mi-project-tab-menu-label"></span>'+(entry.arrow?'<span class="mi-project-tab-menu-arrow">›</span>':"");
         item.querySelector(".mi-project-tab-menu-label").textContent=entry.label;
+        if(entry.label==="Tab Color"){
+          item.classList.add("mi-tab-color-trigger");
+          const palette=document.createElement("div");
+          palette.className="mi-tab-color-submenu";
+          [["No Color",""],["Red","#c00000"],["Orange","#ed7d31"],["Yellow","#ffc000"],["Green","#70ad47"],["Teal","#00b0f0"],["Blue","#4472c4"],["Light Blue","#5b9bd5"],["Purple","#7030a0"],["Pink","#e6b8b7"],["Gray","#a5a5a5"],["Black","#000000"]].forEach(([label,color])=>{
+            const sw=document.createElement("button");
+            sw.type="button"; sw.className="mi-tab-color-swatch"; sw.title=label;
+            if(color) sw.style.backgroundColor=color;
+            else {sw.classList.add("mi-tab-no-color");sw.textContent="No Color";}
+            sw.addEventListener("click",e=>{
+              e.stopPropagation();
+              const ws=miProjectWorkspaces.find(w=>w.id===id);
+              if(ws){if(color)ws.tabColor=color;else delete ws.tabColor;miRenderProjectTabs();scheduleMiLocalDraftSave();}
+              menu.remove();
+            });
+            palette.append(sw);
+          });
+          item.append(palette);
+          item.addEventListener("mouseenter",()=>item.classList.add("mi-tab-color-open"));
+          item.addEventListener("mouseleave",()=>item.classList.remove("mi-tab-color-open"));
+        }
         if(entry.run)item.addEventListener("click",()=>{
           menu.remove();
           entry.run();
