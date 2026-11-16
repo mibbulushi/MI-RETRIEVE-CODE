@@ -4155,6 +4155,55 @@ img{max-width:100%}
 .mi-tab-more-colors{display:block!important;box-sizing:border-box!important;width:100%!important;height:29px!important;min-height:29px!important;margin:9px 0 0!important;padding:6px 5px!important;background:#fff!important;border:0!important;border-top:1px solid #c8c8c8!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
 .mi-tab-no-color:hover,.mi-tab-more-colors:hover{background:#e5f1fb!important;border-color:#8ab6d8!important}
 @media(max-width:520px){.mi-tab-color-submenu{left:auto!important;right:100%!important}}
+
+/* Mobile recovery: restore normal document flow instead of locking the whole app
+   to a clipped viewport. This prevents the workspace from being pushed off-screen. */
+@media(max-width:760px){
+  html{
+    height:auto!important;
+    min-height:100%!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+  }
+  body{
+    display:flex!important;
+    flex-direction:column!important;
+    height:auto!important;
+    min-height:100dvh!important;
+    overflow-x:hidden!important;
+    overflow-y:visible!important;
+    padding:0 14px 18px!important;
+  }
+  body:not(.student-chat-mode) .container,
+  body.student-chat-mode .container,
+  body.feedback-chat-mode .container{
+    display:flex!important;
+    flex:1 0 auto!important;
+    flex-direction:column!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    width:100%!important;
+  }
+  #appArea:not(.hidden){
+    display:block!important;
+    width:100%!important;
+    min-height:0!important;
+    overflow:visible!important;
+  }
+  .container>.page-panel:not(.page-hidden),
+  #appArea>.page-panel:not(.page-hidden){
+    display:block!important;
+    flex:0 0 auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .container>.workspace-bottom{
+    margin-top:18px!important;
+  }
+}
 </style>
 </head>
 <body>
