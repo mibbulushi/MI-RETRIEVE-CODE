@@ -4151,9 +4151,10 @@ img{max-width:100%}
 .mi-tab-color-swatch:hover,.mi-tab-color-swatch:focus-visible{outline:2px solid #111!important;outline-offset:1px!important;z-index:1!important}
 .mi-tab-color-standard-heading{margin-top:3px!important}
 .mi-tab-standard-row{grid-template-columns:repeat(10,21px)!important;gap:3px!important}
-.mi-tab-no-color,.mi-tab-more-colors{display:block!important;width:100%!important;height:24px!important;min-height:24px!important;margin:3px 0 0!important;padding:3px 5px!important;background:#fff!important;border:1px solid #bbb!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
+.mi-tab-no-color{display:block!important;width:100%!important;height:24px!important;min-height:24px!important;margin:4px 0 0!important;padding:3px 5px!important;background:#fff!important;border:1px solid #bbb!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
+.mi-tab-more-colors{display:flex!important;align-items:center!important;justify-content:space-between!important;box-sizing:border-box!important;width:100%!important;height:31px!important;min-height:31px!important;margin:9px 0 0!important;padding:7px 5px 2px!important;background:#fff!important;border:0!important;border-top:1px solid #c8c8c8!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
 .mi-tab-no-color:hover,.mi-tab-more-colors:hover{background:#e5f1fb!important;border-color:#8ab6d8!important}
-.mi-tab-more-colors input{float:right!important;width:24px!important;height:20px!important;min-height:20px!important;padding:0!important;margin:-1px 0 0!important;border:1px solid #888!important;border-radius:0!important;cursor:pointer!important}
+.mi-tab-more-colors input{width:24px!important;height:20px!important;min-height:20px!important;padding:0!important;margin:0!important;border:1px solid #888!important;border-radius:0!important;cursor:pointer!important}
 @media(max-width:520px){.mi-tab-color-submenu{left:auto!important;right:100%!important}}
 </style>
 </head>
@@ -6753,8 +6754,10 @@ img{max-width:100%}
           palette.style.setProperty("z-index","2147483000","important");
           palette.style.setProperty("width","264px","important");
           palette.style.setProperty("min-width","264px","important");
-          palette.style.setProperty("max-height","min(520px, calc(100vh - 16px))","important");
-          palette.style.setProperty("overflow-y","auto","important");
+          /* Keep the complete Excel-style color chooser visible without an inner scrollbar. */
+          palette.style.setProperty("max-height","none","important");
+          palette.style.setProperty("height","auto","important");
+          palette.style.setProperty("overflow","visible","important");
           palette.style.setProperty("background","#ffffff","important");
           palette.style.setProperty("border","1px solid #777777","important");
           palette.style.setProperty("box-shadow","1px 2px 5px rgba(0,0,0,.28)","important");
