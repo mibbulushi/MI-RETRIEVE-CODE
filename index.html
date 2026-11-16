@@ -3993,10 +3993,16 @@ img{max-width:100%}
         setMiWorkStatus("Format Painter applied. Save your project to store the change.","working");
       }
     });
-    // Text Effects: apply a visible Word-like typography shadow to the selected text.
-    $("miTextEffectsBtn").addEventListener("click",()=>{
+    // Text Effects and Typography: apply while the editor selection is still active.
+    // pointerdown runs before the toolbar takes focus, so the selected text range is preserved.
+    $("miTextEffectsBtn").addEventListener("pointerdown",event=>{
+      event.preventDefault();
+      const current=window.getSelection();
+      if(current&&current.rangeCount&&!current.isCollapsed&&miDocumentEditor.contains(current.anchorNode)){
+        miSavedEditorRange=current.getRangeAt(0).cloneRange();
+      }
       const applied=miWrapSelectedText({textShadow:"1px 1px 0 #8b9bb0, 2px 2px 3px rgba(35,55,80,.35)"});
-      setMiWorkStatus(applied?"Text Effect applied. Save your project to store the change.":"Select text first, then choose Text Effects and Typography.","working");
+      setMiWorkStatus(applied?"Text Effect applied. Save your project to store the change.":"Select text in the document first, then click Text Effects and Typography.","working");
     });
     // Highlight the saved selection, not the toolbar's current focus.
     $("miTextHighlightColor").addEventListener("change",event=>{
