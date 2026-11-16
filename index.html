@@ -3651,6 +3651,12 @@ img{max-width:100%}
 #miPictureRibbon .mi-ribbon-group{gap:2px!important;padding-right:4px!important}
 #miPictureRibbon button{height:26px!important;min-height:26px!important;padding:2px 4px!important;font-size:10px!important}
 @media(max-width:760px){#miEditorToolbar{height:40px!important;min-height:40px!important;max-height:40px!important;padding:3px 4px!important;gap:2px!important}#miEditorToolbar .mi-inline-alignment-controls{gap:1px!important;padding:0 2px!important}#miEditorToolbar .mi-inline-alignment-controls button{padding:3px!important;font-size:10px!important}#miEditorToolbar #miFontFamily{width:96px!important;min-width:96px!important}}
+
+/* Put grammar guidance and live document statistics on the same compact row. */
+#saveArea .mi-document-info-row{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;width:100%!important;min-width:0!important;margin:5px 0 7px!important;box-sizing:border-box!important}
+#saveArea .mi-document-info-row #miGrammarNotice{flex:1 1 auto!important;min-width:0!important;margin:0!important;padding:5px 9px!important;font-size:11px!important;line-height:1.25!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#saveArea .mi-document-info-row #miDocumentStats{display:flex!important;flex:0 0 auto!important;flex-wrap:nowrap!important;align-items:center!important;gap:10px!important;margin:0!important;padding:5px 9px!important;font-size:11px!important;line-height:1.25!important;white-space:nowrap!important}
+@media(max-width:600px){#saveArea .mi-document-info-row{gap:5px!important}#saveArea .mi-document-info-row #miGrammarNotice{font-size:10px!important;padding:5px 6px!important}#saveArea .mi-document-info-row #miDocumentStats{gap:5px!important;font-size:10px!important;padding:5px 6px!important}}
 </style>
 </head>
 <body>
@@ -3832,8 +3838,10 @@ img{max-width:100%}
             <div class="mi-ribbon-caption">Picture Format · Select a picture in the document to edit it</div>
             </div>
           </div>
-          <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
-          <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
+          <div class="mi-document-info-row">
+            <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
+            <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
+          </div>
           <div class="mi-main-textbox-frame">
             <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
           </div>
