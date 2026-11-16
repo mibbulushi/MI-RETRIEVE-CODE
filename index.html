@@ -6593,10 +6593,12 @@ img{max-width:100%}
     let miActiveWorkspaceId = "";
     let miWorkspaceCounter = 1;
     function miCaptureWorkspace() {
+      const existingWorkspace = miProjectWorkspaces.find(item => item.id === miActiveWorkspaceId);
       return {
         id: miActiveWorkspaceId || ("mi-project-" + Date.now()),
         name: $("title").value.trim() || ("Project " + miWorkspaceCounter),
-        tabName: miProjectWorkspaces.find(item => item.id === miActiveWorkspaceId)?.tabName || miProjectWorkspaces.find(item => item.id === miActiveWorkspaceId)?.name || ("Project " + miWorkspaceCounter),
+        tabName: existingWorkspace?.tabName || existingWorkspace?.name || ("Project " + miWorkspaceCounter),
+        tabColor: existingWorkspace?.tabColor || "",
         title: $("title").value,
         editorHtml: miDocumentEditor.innerHTML,
         projectStructure: $("projectStructure").value,
