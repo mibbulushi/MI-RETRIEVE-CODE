@@ -3959,13 +3959,29 @@ img{max-width:100%}
     const miEditorToolbar = $("miEditorToolbar");
     let miSavedEditorRange = null;
     function restoreMiEditorSelection() {
-      miDocumentEditor.focus();
-      if (miSavedEditorRange) {
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(miSavedEditorRange);
+      if (!miSavedEditorRange || !miDocumentEditor.contains(miSavedEditorRange.commonAncestorContainer)) {
+        setMiWorkStatus("Select text in the document first, then choose a formatting option.", "working");
+        return false;
       }
+      miDocumentEditor.focus();
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      try { selection.addRange(miSavedEditorRange); } catch(error) { return false; }
+      return !selection.isCollapsed;
     }
+    // Capture the editor selection before any toolbar control receives focus.
+    miEditorToolbar.addEventListener("pointerdown",event=>{
+      const current=window.getSelection();
+      if(current&&current.rangeCount&&!current.isCollapsed&&miDocumentEditor.contains(current.anchorNode)&&miDocumentEditor.contains(current.focusNode)){
+        miSavedEditorRange=current.getRangeAt(0).cloneRange();
+      }
+    },true);
+    miEditorToolbar.addEventListener("mousedown",event=>{
+      const current=window.getSelection();
+      if(current&&current.rangeCount&&!current.isCollapsed&&miDocumentEditor.contains(current.anchorNode)&&miDocumentEditor.contains(current.focusNode)){
+        miSavedEditorRange=current.getRangeAt(0).cloneRange();
+      }
+    },true);
     // Keep the document selection available while the user operates Home toolbar controls.
     document.addEventListener("selectionchange",()=>{
       const selection=window.getSelection();
@@ -3974,11 +3990,11 @@ img{max-width:100%}
       }
     });
     function miRestoreTextRange(){
-      if(!miSavedEditorRange)return null;
+      if(!miSavedEditorRange||!miDocumentEditor.contains(miSavedEditorRange.commonAncestorContainer))return null;
       miDocumentEditor.focus();
       const selection=window.getSelection();
       selection.removeAllRanges();
-      selection.addRange(miSavedEditorRange);
+      try{selection.addRange(miSavedEditorRange);}catch(error){return null;}
       return selection;
     }
     function miWrapSelectedText(styleObject){
