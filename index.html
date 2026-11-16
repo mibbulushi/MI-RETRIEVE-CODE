@@ -3534,7 +3534,7 @@ img{max-width:100%}
 .mi-word-stage[data-view-mode="read"] #miDocumentEditor{width:min(100%,900px)!important;max-width:900px!important;min-height:620px!important;margin:18px auto!important;padding:42px 54px!important;background:#fff!important;border:0!important;box-shadow:none!important;color:#30343b!important;font-size:16px!important;line-height:1.8!important;cursor:default}
 .mi-word-stage[data-view-mode="read"] .mi-document-viewbar{border-bottom:1px solid #d9dde3}
 @media(max-width:650px){#miProjectWorkStatus{align-items:flex-start!important;flex-direction:column!important}.mi-document-viewbar{justify-content:flex-start;flex-wrap:wrap;margin-left:0}.mi-word-stage[data-view-mode="print"] #miDocumentEditor,.mi-word-stage[data-view-mode="read"] #miDocumentEditor{padding:22px 16px!important;min-height:520px!important}.mi-word-stage[data-view-mode="web"] #miDocumentEditor{padding:18px 14px!important}}
-</style>
+\n.mi-document-tools{position:relative}.mi-video-options{position:absolute;z-index:10020;top:calc(100% + 7px);right:0;width:min(340px,calc(100vw - 36px));padding:13px;background:#fff;border:1px solid #d8e0ea;border-radius:7px;box-shadow:0 8px 24px rgba(24,43,66,.16);color:#26364a}.mi-video-options[hidden]{display:none}.mi-video-options-head,.mi-video-option-row,.mi-video-option-actions{display:flex;align-items:center;justify-content:space-between;gap:9px}.mi-video-options-head{margin-bottom:10px}.mi-video-options-head button{min-width:26px;width:26px;height:26px;padding:0;font-size:18px}.mi-video-options label{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;font-size:12px;color:#52647a;margin:7px 0}.mi-video-options input:not([type=checkbox]),.mi-video-options select{width:100%;min-width:0;padding:7px;border:1px solid #ccd6e2;border-radius:4px;background:#fff;color:#26364a}.mi-video-options .mi-video-crop-choice{flex-direction:row;align-items:center;justify-content:flex-start;padding-top:17px}.mi-video-option-actions{margin:8px 0}.mi-video-option-actions button{min-width:0;padding:7px 10px;font-size:12px}.mi-video-options small{display:block;color:#68788e;line-height:1.4}.mi-document-editor video{display:block;max-width:100%;margin:14px 0;background:#111}.mi-document-editor video.mi-video-cropped{object-fit:cover}\n</style>
 </head>
 <body>
   <div id="top"></div>
@@ -3647,7 +3647,7 @@ img{max-width:100%}
               <p class="small">Write your text and insert pictures anywhere in this document.</p>
             </div>
             <div class="mi-document-tools">
-              <button id="miInsertPictureBtn" class="secondary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Insert Picture</span></button>
+              <button id="miInsertPictureBtn" class="secondary" type="button" title="Add Picture"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add Picture</span></button><button id="miAddVideoBtn" class="secondary" type="button" title="Add Video"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3z"/></svg><span>Add Video</span></button><div id="miVideoOptions" class="mi-video-options" hidden><div class="mi-video-options-head"><strong>Add Video</strong><button type="button" id="miCloseVideoOptions" aria-label="Close">×</button></div><label>Video link<input id="miVideoUrl" type="url" placeholder="Paste a video URL"></label><div class="mi-video-option-row"><label>Width (px)<input id="miVideoWidth" type="number" min="120" max="1600" value="640"></label><label>Height (px)<input id="miVideoHeight" type="number" min="90" max="1200" value="360"></label></div><div class="mi-video-option-row"><label>Playback speed<select id="miVideoSpeed"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label><label class="mi-video-crop-choice"><input id="miVideoCrop" type="checkbox"> Crop</label></div><div class="mi-video-option-actions"><button type="button" id="miChooseVideoFile" class="secondary">Upload Video</button><button type="button" id="miInsertVideoUrl">Insert Video</button></div><small>Video entries are not limited by count. Upload size depends on available project storage.</small></div><input id="miVideoFileInput" type="file" accept="video/*" multiple hidden>
               <input id="miDocumentImageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden>
               <div class="mi-inline-attach">
                 <button id="miAttachFilesBtn" type="button" class="secondary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 12.5 7.2-7.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2"/></svg><span>Attach Files</span></button>
@@ -4152,6 +4152,48 @@ img{max-width:100%}
     });
     saveResultObserver.observe($("saveResult"), { childList: true, characterData: true, subtree: true });
     $("miInsertPictureBtn").addEventListener("click", () => $("miDocumentImageInput").click());
+    const miVideoOptions = $("miVideoOptions");
+    $("miAddVideoBtn").addEventListener("click", () => { miVideoOptions.hidden = !miVideoOptions.hidden; if (!miVideoOptions.hidden) $("miVideoUrl").focus(); });
+    $("miCloseVideoOptions").addEventListener("click", () => { miVideoOptions.hidden = true; });
+    $("miChooseVideoFile").addEventListener("click", () => $("miVideoFileInput").click());
+    $("miVideoFileInput").addEventListener("change", event => {
+      const chosen = Array.from(event.target.files || []);
+      if (!chosen.length) return;
+      const transfer = new DataTransfer();
+      Array.from($("projectFiles").files || []).forEach(file => transfer.items.add(file));
+      chosen.forEach(file => transfer.items.add(file));
+      $("projectFiles").files = transfer.files;
+      $("projectFiles").dispatchEvent(new Event("change"));
+      miVideoOptions.hidden = true;
+      event.target.value = "";
+    });
+    $("miInsertVideoUrl").addEventListener("click", () => {
+      const url = $("miVideoUrl").value.trim();
+      if (!url) { $("miVideoUrl").focus(); return; }
+      let parsed;
+      try { parsed = new URL(url); } catch { $("miVideoUrl").setCustomValidity("Enter a valid video URL."); $("miVideoUrl").reportValidity(); $("miVideoUrl").setCustomValidity(""); return; }
+      if (!["http:","https:"].includes(parsed.protocol)) return;
+      const video = document.createElement("video");
+      video.controls = true;
+      video.preload = "metadata";
+      video.src = parsed.href;
+      video.style.width = Math.max(120, Math.min(1600, Number($("miVideoWidth").value) || 640)) + "px";
+      video.style.height = Math.max(90, Math.min(1200, Number($("miVideoHeight").value) || 360)) + "px";
+      video.style.maxWidth = "100%";
+      video.dataset.miDocumentVideo = "true";
+      video.playbackRate = Number($("miVideoSpeed").value) || 1;
+      video.addEventListener("loadedmetadata", () => { video.playbackRate = Number($("miVideoSpeed").value) || 1; }, {once:true});
+      if ($("miVideoCrop").checked) video.classList.add("mi-video-cropped");
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount && miDocumentEditor.contains(selection.anchorNode)) {
+        const range = selection.getRangeAt(0); range.deleteContents(); range.insertNode(video);
+        const spacer = document.createElement("p"); spacer.append(document.createElement("br")); video.after(spacer);
+      } else { miDocumentEditor.append(video, document.createElement("p")); }
+      $("content").value = miDocumentEditor.innerHTML;
+      if (typeof scheduleMiLocalDraftSave === "function") scheduleMiLocalDraftSave();
+      $("miVideoUrl").value = "";
+      miVideoOptions.hidden = true;
+    });
     $("miDocumentImageInput").addEventListener("change", async event => {
       const files = Array.from(event.target.files || []);
       for (const file of files) {
