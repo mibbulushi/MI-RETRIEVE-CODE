@@ -5137,10 +5137,16 @@ img{max-width:100%}
       miWordContextMenu.style.top=y+"px";
     }
     miDocumentEditor.addEventListener("contextmenu",event=>{
-      const item=event.target instanceof Element?event.target.closest(miMovableSelector):null;
-      if(item&&miDocumentEditor.contains(item)){
-        openMiWordContextMenu(event,item);
-        // Stop the legacy single-picture menu below from clearing multi-selection.
+      const clickedItem=event.target instanceof Element?event.target.closest(miMovableSelector):null;
+      const validClickedItem=clickedItem&&miDocumentEditor.contains(clickedItem)?clickedItem:null;
+      const selected=getMiCommandSelection(validClickedItem);
+      // Right-clicking any member of a multi-selection keeps the whole group.
+      // Right-clicking the document background also opens commands for the
+      // currently selected group instead of losing its selection.
+      if(validClickedItem||selected.length){
+        const menuAnchor=validClickedItem||selected[selected.length-1];
+        openMiWordContextMenu(event,menuAnchor);
+        // Prevent the legacy picture-only menu from replacing the all-object menu.
         event.stopImmediatePropagation();
       }
     },true);
