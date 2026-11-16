@@ -3886,6 +3886,40 @@ img{max-width:100%}
 }
 
 
+
+/* Simple Microsoft Word-style Home buttons for lists and hyperlinks. */
+#miEditorToolbar .mi-word-ribbon-panel button[data-mi-command="insertUnorderedList"],
+#miEditorToolbar .mi-word-ribbon-panel button[data-mi-command="insertOrderedList"],
+#miEditorToolbar .mi-word-ribbon-panel #miInsertLinkBtn{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:5px!important;
+  min-width:78px!important;
+  width:auto!important;
+  height:30px!important;
+  min-height:30px!important;
+  margin:0!important;
+  padding:4px 9px!important;
+  border:1px solid #c8cdd3!important;
+  border-radius:3px!important;
+  background:#fff!important;
+  color:#27313b!important;
+  box-shadow:none!important;
+  font:12px "Segoe UI",Arial,sans-serif!important;
+  white-space:nowrap!important;
+  cursor:pointer!important;
+}
+#miEditorToolbar .mi-word-ribbon-panel button[data-mi-command="insertUnorderedList"]:hover,
+#miEditorToolbar .mi-word-ribbon-panel button[data-mi-command="insertOrderedList"]:hover,
+#miEditorToolbar .mi-word-ribbon-panel #miInsertLinkBtn:hover{
+  background:#eaf2fa!important;
+  border-color:#8daecc!important;
+  transform:none!important;
+  box-shadow:none!important;
+}
+
 /* Keep Paragraph alignment as one complete, clearly separated group in the Home ribbon. */
 #miEditorToolbar .mi-word-ribbon-panel #miMainAlignmentBar{
   display:inline-flex!important;
@@ -4063,9 +4097,9 @@ img{max-width:100%}
           <div class="mi-editor-toolbar" id="miEditorToolbar" role="toolbar" aria-label="Document formatting">
             <button type="button" class="secondary mi-format-icon" data-mi-command="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="redo" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button>
-            <button type="button" class="secondary mi-format-icon" data-mi-command="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list">• List</button>
-            <button type="button" class="secondary mi-format-icon" data-mi-command="insertOrderedList" title="Numbered list" aria-label="Numbered list">1. List</button>
-            <button type="button" class="secondary mi-format-icon" id="miInsertLinkBtn" title="Insert hyperlink (Ctrl+K)" aria-label="Insert hyperlink">Link</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list">• Bullets</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="insertOrderedList" title="Numbered list" aria-label="Numbered list">1. Numbering</button>
+            <button type="button" class="secondary mi-format-icon" id="miInsertLinkBtn" title="Insert link / hyperlink (Ctrl+K)" aria-label="Insert link or hyperlink">Link</button>
             <label class="mi-tool-label" title="Font family">Font <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
             <button type="button" class="secondary mi-format-icon" id="miChangeCaseBtn" title="Change selected text between UPPERCASE and lowercase" aria-label="Change letter case"><span aria-hidden="true">Aa</span></button>
             <label class="mi-tool-label mi-font-size-control" title="Font size">Size <span class="mi-font-size-row"><button type="button" class="mi-font-size-step" id="miFontSizeDecrease" title="Decrease font size" aria-label="Decrease font size">−</button><select id="miFontSize" aria-label="Font size"><option value="1">8</option><option value="2">10</option><option value="3" selected>12</option><option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option></select><button type="button" class="mi-font-size-step" id="miFontSizeIncrease" title="Increase font size" aria-label="Increase font size">+</button></span></label>
