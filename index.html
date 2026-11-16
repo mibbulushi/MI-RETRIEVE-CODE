@@ -3840,6 +3840,50 @@ img{max-width:100%}
   white-space:nowrap!important;
   box-sizing:border-box!important;
 }
+
+/* Restore the full-height Word-style Home/Insert ribbon; the compact toolbar rule must not clip it. */
+#miEditorToolbar.mi-word-ribbon{
+  display:block!important;
+  flex:none!important;
+  flex-wrap:initial!important;
+  align-items:initial!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  padding:0!important;
+  overflow:visible!important;
+  white-space:normal!important;
+  box-sizing:border-box!important;
+}
+#miEditorToolbar.mi-word-ribbon .mi-word-ribbon-tabs{
+  display:flex!important;
+  align-items:stretch!important;
+  min-height:33px!important;
+  height:33px!important;
+  padding:3px 10px 0!important;
+}
+#miEditorToolbar.mi-word-ribbon .mi-word-ribbon-panels{
+  display:block!important;
+  min-height:78px!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+#miEditorToolbar.mi-word-ribbon .mi-word-ribbon-panel{
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:wrap!important;
+  min-height:78px!important;
+  height:auto!important;
+  max-height:none!important;
+  padding:12px 12px!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+#miEditorToolbar.mi-word-ribbon .mi-word-ribbon-panel[hidden]{
+  display:none!important;
+}
 </style>
 </head>
 <body>
