@@ -2284,6 +2284,7 @@ body.feedback-chat-mode #feedbackArea:not(.page-hidden) .feedback-chat-heading{o
 #miEditorToolbar .mi-format-icon{width:29px;padding:3px;font-size:14px}
 #miEditorToolbar .mi-grammar-compact{padding:3px 8px;font-size:11px}
 .mi-grammar-notice{padding:9px 12px;margin:7px 0 10px;border-radius:9px;background:#fff8e8;border:1px solid #f0dfb4;color:#76520b;font-size:.85rem;line-height:1.5}
+.mi-document-stats{display:flex;gap:16px;flex-wrap:wrap;padding:6px 10px;margin:0 0 8px;background:#fff;border:1px solid #d8e0e9;border-radius:4px;color:#58677a;font-size:12px}
 @media(max-width:760px){.mi-editor-toolbar{grid-template-columns:minmax(0,1fr);gap:8px;padding:9px}.mi-tool-group{width:100%}.mi-tool-label{font-size:.8rem}#miEditorToolbar #miFontFamily{min-width:150px}.mi-editor-toolbar button{padding:7px 9px;font-size:.82rem}}
 /* Compact editor toolbar controls: override the site's large global form/button sizing. */
 #miEditorToolbar{gap:7px;padding:8px}
@@ -3701,6 +3702,10 @@ img{max-width:100%}
             <button type="button" class="secondary mi-format-icon" data-mi-command="bold" title="Bold" aria-label="Bold"><b>B</b></button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="italic" title="Italic" aria-label="Italic"><i>I</i></button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="underline" title="Underline" aria-label="Underline"><u>U</u></button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="strikeThrough" title="Strikethrough" aria-label="Strikethrough"><s>S</s></button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="superscript" title="Superscript" aria-label="Superscript">x²</button>
+            <button type="button" class="secondary mi-format-icon" data-mi-command="subscript" title="Subscript" aria-label="Subscript">x₂</button>
+            <label class="mi-tool-label" title="Paragraph style">Style <select id="miBlockFormat" aria-label="Paragraph style"><option value="p">Normal</option><option value="h1">Heading 1</option><option value="h2">Heading 2</option><option value="h3">Heading 3</option><option value="blockquote">Quote</option><option value="pre">Code</option></select></label>
             <button type="button" class="secondary mi-format-icon" data-mi-command="justifyLeft" title="Align left" aria-label="Align left">≡</button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="justifyCenter" title="Align centre" aria-label="Align centre">☷</button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="justifyRight" title="Align right" aria-label="Align right">≣</button>
@@ -3733,6 +3738,7 @@ img{max-width:100%}
             </div>
           </div>
           <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
+          <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
           <div class="mi-main-textbox-frame">
             <div id="miMainAlignmentBar" class="mi-main-alignment-bar" role="toolbar" aria-label="Text alignment">
               <span class="mi-main-alignment-label">Paragraph:</span>
@@ -4213,6 +4219,23 @@ img{max-width:100%}
       selection.removeAllRanges();
       miSavedEditorRange = null;
     });
+    // Paragraph style selector: apply a semantic block style to the selected paragraph.
+    $("miBlockFormat").addEventListener("change", event => {
+      if(!restoreMiEditorSelection()) return;
+      document.execCommand("formatBlock", false, event.target.value);
+      $("content").value = miDocumentEditor.innerHTML;
+      miUpdateDocumentStats();
+      setMiWorkStatus("Paragraph style applied — save your project to store it.");
+    });
+    function miUpdateDocumentStats(){
+      const plain=(miDocumentEditor.innerText||miDocumentEditor.textContent||"").replace(/\u00a0/g," ");
+      const words=(plain.match(/[\p{L}\p{N}]+(?:['’_-][\p{L}\p{N}]+)*/gu)||[]).length;
+      const characters=plain.length;
+      const paragraphs=Array.from(miDocumentEditor.querySelectorAll("p,div,li,h1,h2,h3,blockquote")).filter(node=>node.innerText.trim()).length || (plain.trim()?1:0);
+      $("miDocumentStats").textContent="Words: "+words+" · Characters: "+characters+" · Paragraphs: "+paragraphs;
+    }
+    miDocumentEditor.addEventListener("input",miUpdateDocumentStats);
+    miUpdateDocumentStats();
     $("miFontFamily").addEventListener("change", event => {
       restoreMiEditorSelection();
       document.execCommand("fontName", false, event.target.value);
