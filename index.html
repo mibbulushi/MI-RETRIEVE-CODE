@@ -6748,9 +6748,20 @@ img{max-width:100%}
           item.classList.add("mi-tab-color-trigger");
           const palette=document.createElement("div");
           palette.className="mi-tab-color-submenu";
+          palette.style.setProperty("position","fixed","important");
+          palette.style.setProperty("display","none","important");
+          palette.style.setProperty("z-index","2147483000","important");
+          palette.style.setProperty("width","264px","important");
+          palette.style.setProperty("min-width","264px","important");
+          palette.style.setProperty("max-height","min(520px, calc(100vh - 16px))","important");
+          palette.style.setProperty("overflow-y","auto","important");
+          palette.style.setProperty("background","#ffffff","important");
+          palette.style.setProperty("border","1px solid #777777","important");
+          palette.style.setProperty("box-shadow","1px 2px 5px rgba(0,0,0,.28)","important");
           const applyTabColor=color=>{
             const ws=miProjectWorkspaces.find(w=>w.id===id);
             if(ws){if(color)ws.tabColor=color;else delete ws.tabColor;miRenderProjectTabs();scheduleMiLocalDraftSave();}
+            palette.remove();
             menu.remove();
           };
           const addHeading=label=>{
@@ -6808,13 +6819,26 @@ img{max-width:100%}
           picker.addEventListener("change",e=>{e.stopPropagation();applyTabColor(picker.value);});
           more.append(picker);
           palette.append(more);
-          item.append(palette);
-          item.addEventListener("mouseenter",()=>item.classList.add("mi-tab-color-open"));
-          item.addEventListener("mouseleave",()=>item.classList.remove("mi-tab-color-open"));
+          document.body.append(palette);
           item.addEventListener("click",e=>{
-            if(e.target.closest(".mi-tab-color-submenu"))return;
             e.stopPropagation();
-            item.classList.toggle("mi-tab-color-open");
+            const rect=item.getBoundingClientRect();
+            const isOpen=palette.style.display==="grid";
+            if(isOpen){
+              palette.style.setProperty("display","none","important");
+              item.classList.remove("mi-tab-color-open");
+              return;
+            }
+            palette.style.setProperty("display","grid","important");
+            item.classList.add("mi-tab-color-open");
+            const panelWidth=264;
+            const panelHeight=Math.min(palette.scrollHeight||430,window.innerHeight-16);
+            let left=rect.right+3;
+            if(left+panelWidth>window.innerWidth-8)left=rect.left-panelWidth-3;
+            left=Math.max(8,Math.min(left,window.innerWidth-panelWidth-8));
+            const top=Math.max(8,Math.min(rect.top,window.innerHeight-panelHeight-8));
+            palette.style.setProperty("left",left+"px","important");
+            palette.style.setProperty("top",top+"px","important");
           });
         }
         if(entry.run)item.addEventListener("click",()=>{
@@ -6829,8 +6853,10 @@ img{max-width:100%}
       menu.style.left=Math.max(8,x)+"px";
       menu.style.top=Math.max(8,y)+"px";
       const closeMenu=e=>{
-        if(!menu.contains(e.target)){
+        const paletteOpen=Array.from(document.querySelectorAll("body > .mi-tab-color-submenu")).some(node=>node.contains(e.target));
+        if(!menu.contains(e.target)&&!paletteOpen){
           menu.remove();
+          document.querySelectorAll("body > .mi-tab-color-submenu").forEach(node=>node.remove());
           document.removeEventListener("pointerdown",closeMenu,true);
           document.removeEventListener("keydown",closeOnEscape);
         }
@@ -6838,6 +6864,7 @@ img{max-width:100%}
       const closeOnEscape=e=>{
         if(e.key==="Escape"){
           menu.remove();
+          document.querySelectorAll("body > .mi-tab-color-submenu").forEach(node=>node.remove());
           document.removeEventListener("pointerdown",closeMenu,true);
           document.removeEventListener("keydown",closeOnEscape);
         }
