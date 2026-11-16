@@ -4142,8 +4142,8 @@ img{max-width:100%}
   white-space:nowrap!important;
 }
 
-#miProjectTabContextMenu .mi-tab-color-trigger{position:relative!important}
-#miProjectTabContextMenu .mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:-4px!important;z-index:100002!important;width:264px!important;padding:9px!important;grid-template-columns:1fr!important;gap:0!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
+#miProjectTabContextMenu .mi-tab-color-trigger{position:relative!important;overflow:visible!important;cursor:default!important}
+#miProjectTabContextMenu .mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:0!important;z-index:100010!important;width:264px!important;min-width:264px!important;padding:9px!important;grid-template-columns:1fr!important;gap:0!important;overflow:visible!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
 #miProjectTabContextMenu .mi-tab-color-trigger.mi-tab-color-open .mi-tab-color-submenu,#miProjectTabContextMenu .mi-tab-color-trigger:hover .mi-tab-color-submenu{display:grid!important}
 #miProjectTabContextMenu .mi-tab-color-heading{display:block!important;height:21px!important;padding:2px 1px 3px!important;border-bottom:1px solid #d4d4d4!important;margin:0 0 5px!important;color:#333!important;font:600 11px/15px "Segoe UI",Arial,sans-serif!important}
 #miProjectTabContextMenu .mi-tab-color-row{display:grid!important;grid-template-columns:repeat(10,21px)!important;gap:3px!important;margin:0 0 5px!important;padding:0!important}
@@ -6737,10 +6737,11 @@ img{max-width:100%}
           menu.append(divider);
           return;
         }
-        const item=document.createElement("button");
-        item.type="button";
+        const item=document.createElement(entry.label==="Tab Color"?"div":"button");
+        if(entry.label!=="Tab Color")item.type="button";
         item.className="mi-project-tab-menu-item";
-        item.disabled=!!entry.disabled;
+        if(entry.label!=="Tab Color")item.disabled=!!entry.disabled;
+        else item.setAttribute("role","menuitem");
         item.innerHTML=entry.svg+'<span class="mi-project-tab-menu-label"></span>'+(entry.arrow?'<span class="mi-project-tab-menu-arrow">›</span>':"");
         item.querySelector(".mi-project-tab-menu-label").textContent=entry.label;
         if(entry.label==="Tab Color"){
@@ -6773,7 +6774,7 @@ img{max-width:100%}
             row.forEach((color,colIndex)=>{
               const sw=document.createElement("button");
               sw.type="button";sw.className="mi-tab-color-swatch";
-              sw.style.backgroundColor=color;
+              sw.style.setProperty("background-color",color,"important");
               sw.title="Theme color "+(colIndex+1)+", shade "+(rowIndex+1)+": "+color;
               sw.setAttribute("aria-label",sw.title);
               sw.addEventListener("click",e=>{e.stopPropagation();applyTabColor(color);});
@@ -6787,7 +6788,7 @@ img{max-width:100%}
           ["#c00000","#ff0000","#ffc000","#ffff00","#92d050","#00b050","#00b0f0","#0070c0","#002060","#7030a0"].forEach(color=>{
             const sw=document.createElement("button");
             sw.type="button";sw.className="mi-tab-color-swatch";
-            sw.style.backgroundColor=color;sw.title="Standard color: "+color;
+            sw.style.setProperty("background-color",color,"important");sw.title="Standard color: "+color;
             sw.setAttribute("aria-label",sw.title);
             sw.addEventListener("click",e=>{e.stopPropagation();applyTabColor(color);});
             standard.append(sw);
@@ -6810,6 +6811,11 @@ img{max-width:100%}
           item.append(palette);
           item.addEventListener("mouseenter",()=>item.classList.add("mi-tab-color-open"));
           item.addEventListener("mouseleave",()=>item.classList.remove("mi-tab-color-open"));
+          item.addEventListener("click",e=>{
+            if(e.target.closest(".mi-tab-color-submenu"))return;
+            e.stopPropagation();
+            item.classList.toggle("mi-tab-color-open");
+          });
         }
         if(entry.run)item.addEventListener("click",()=>{
           menu.remove();
