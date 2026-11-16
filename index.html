@@ -3989,6 +3989,53 @@ img{max-width:100%}
     border-left:0!important;
   }
 }
+
+/* Microsoft Word-inspired paragraph alignment icon group. */
+#miEditorToolbar #miMainAlignmentBar{
+  gap:2px!important;
+  padding-left:8px!important;
+}
+#miEditorToolbar #miMainAlignmentBar button[data-mi-align]{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 34px!important;
+  width:34px!important;
+  min-width:34px!important;
+  height:32px!important;
+  min-height:32px!important;
+  margin:0!important;
+  padding:6px!important;
+  border:1px solid transparent!important;
+  border-radius:2px!important;
+  background:transparent!important;
+  color:#333!important;
+  box-shadow:none!important;
+  font-size:0!important;
+}
+#miEditorToolbar #miMainAlignmentBar button[data-mi-align] svg{
+  display:block!important;
+  width:20px!important;
+  height:20px!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:1.8!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  pointer-events:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button[data-mi-align]:hover{
+  background:#e9e9e9!important;
+  border-color:#c8c8c8!important;
+}
+#miEditorToolbar #miMainAlignmentBar button[data-mi-align]:active,
+#miEditorToolbar #miMainAlignmentBar button[data-mi-align].active{
+  background:#dce6f1!important;
+  border-color:#9bb8d5!important;
+}
+
 </style>
 </head>
 <body>
@@ -4146,10 +4193,10 @@ img{max-width:100%}
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
             <div id="miMainAlignmentBar" class="mi-main-alignment-bar mi-inline-alignment-controls" role="toolbar" aria-label="Paragraph alignment">
               <span class="mi-main-alignment-label">Paragraph:</span>
-              <button type="button" data-mi-align="justifyLeft" title="Align left (Ctrl+L)" aria-label="Align left">☰ Left</button>
-              <button type="button" data-mi-align="justifyCenter" title="Centre (Ctrl+E)" aria-label="Centre">≡ Centre</button>
-              <button type="button" data-mi-align="justifyRight" title="Align right (Ctrl+R)" aria-label="Align right">☷ Right</button>
-              <button type="button" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify">▤ Justify</button>
+              <button type="button" data-mi-align="justifyLeft" title="Align Left (Ctrl+L)" aria-label="Align Left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h11M4 13h16M4 17h11M4 21h16"/></svg></button>
+              <button type="button" data-mi-align="justifyCenter" title="Center (Ctrl+E)" aria-label="Center"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 9h10M4 13h16M7 17h10M4 21h16"/></svg></button>
+              <button type="button" data-mi-align="justifyRight" title="Align Right (Ctrl+R)" aria-label="Align Right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M9 9h11M4 13h16M9 17h11M4 21h16"/></svg></button>
+              <button type="button" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h16M4 13h16M4 17h16M4 21h16"/></svg></button>
             </div>
             <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
             <div class="mi-ribbon-group">
