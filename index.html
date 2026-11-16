@@ -4555,6 +4555,11 @@ img{max-width:100%}
       if (signedIn) {
         showStatus("authStatus", "You are signed in. Your saved content is private to this account.", "success");
         restoreMiLocalDraft(session.user.id);
+      } else {
+        // Never leave users on a protected page with its content hidden.
+        // This can happen when a mobile browser has no saved Supabase session.
+        if (typeof openPage === "function") openPage("account");
+        showStatus("authStatus", "Please sign in to open your saved workspace.", "info");
       }
     }
 
