@@ -6927,20 +6927,72 @@ img{max-width:100%}
       else closeMiPictureContextMenu();
     });
     document.addEventListener("pointerdown",event=>{if(!miPictureContextMenu.contains(event.target))closeMiPictureContextMenu();});
+    let miClipboardDocumentItems = [];
+    function getMiSelectedObjects(){
+      return Array.from(miSelectedDocumentItems).filter(node=>node&&miDocumentEditor.contains(node));
+    }
+    function cloneMiObjectsForClipboard(nodes){
+      return nodes.map(node=>{
+        const clone=node.cloneNode(true);
+        clone.classList.remove("mi-image-selected","mi-file-selected","mi-multi-selected");
+        clone.querySelectorAll?.(".mi-image-selected,.mi-file-selected,.mi-multi-selected")
+          .forEach(child=>child.classList.remove("mi-image-selected","mi-file-selected","mi-multi-selected"));
+        return clone;
+      });
+    }
+    function removeMiSelectedObjects(nodes){
+      nodes.forEach(node=>node.remove());
+      miSelectedDocumentItems.clear();
+      miMultiSelectionAnchor=null;
+      selectMiDocumentItem(null);
+      syncMiDocumentHtml();
+    }
     document.addEventListener("keydown",event=>{
       if(event.key==="Escape"){closeMiPictureContextMenu();return;}
-      const item=miSelectedDocumentItem;
-      if(!item||!miDocumentEditor.contains(item)||event.altKey||!(event.ctrlKey||event.metaKey)&&!["Delete","Backspace"].includes(event.key))return;
+      if(event.altKey)return;
+      const mod=event.ctrlKey||event.metaKey;
       const key=event.key.toLowerCase();
-      if((event.ctrlKey||event.metaKey)&&key==="c"){
-        event.preventDefault();miClipboardDocumentItem=item.cloneNode(true);setMiWorkStatus("Picture copied. Use Ctrl + V to paste."); 
-      }else if((event.ctrlKey||event.metaKey)&&key==="x"){
-        event.preventDefault();miClipboardDocumentItem=item.cloneNode(true);miRemoveItemButton.click();
-      }else if((event.ctrlKey||event.metaKey)&&key==="v"){
-        if(!miClipboardDocumentItem)return;
-        event.preventDefault();const copy=miClipboardDocumentItem.cloneNode(true);item.after(copy);selectMiDocumentItem(copy);syncMiDocumentHtml();setMiWorkStatus("Picture pasted. Save your project to store the change.");
-      }else if(key==="delete"||key==="backspace"){
-        event.preventDefault();miRemoveItemButton.click();
+      const selected=getMiSelectedObjects();
+      if(!selected.length)return;
+      if(mod&&["c","x","v"].includes(key)){
+        // Keep the browser's native text-editing shortcuts untouched when focus
+        // is inside a form field rather than on a selected document object.
+        const active=document.activeElement;
+        if(active&&active.matches("input,textarea,select")&&!miDocumentEditor.contains(active))return;
+        if(key==="c"||key==="x"){
+          miClipboardDocumentItems=cloneMiObjectsForClipboard(selected);
+          miClipboardDocumentItem=miClipboardDocumentItems[0]||null;
+          if(key==="x")removeMiSelectedObjects(selected);
+          event.preventDefault();
+          setMiWorkStatus(key==="c"?"Selected objects copied. Use Ctrl + V to paste.":"Selected objects cut. Use Ctrl + V to paste.");
+          return;
+        }
+        if(!miClipboardDocumentItems.length&&miClipboardDocumentItem)
+          miClipboardDocumentItems=[miClipboardDocumentItem.cloneNode(true)];
+        if(!miClipboardDocumentItems.length)return;
+        event.preventDefault();
+        const anchor=selected[selected.length-1];
+        let insertionPoint=anchor;
+        const pasted=[];
+        miClipboardDocumentItems.forEach(source=>{
+          const copy=source.cloneNode(true);
+          copy.classList.remove("mi-image-selected","mi-file-selected","mi-multi-selected");
+          insertionPoint.after(copy);
+          insertionPoint=copy;
+          pasted.push(copy);
+        });
+        miSelectedDocumentItems.clear();
+        pasted.forEach(node=>miSelectedDocumentItems.add(node));
+        miMultiSelectionAnchor=pasted[0]||null;
+        paintMiMultiSelection();
+        syncMiDocumentHtml();
+        setMiWorkStatus(pasted.length+" object(s) pasted. Save your project to store the change.");
+        return;
+      }
+      if(!mod&&(key==="delete"||key==="backspace")){
+        event.preventDefault();
+        removeMiSelectedObjects(selected);
+        setMiWorkStatus(selected.length+" object(s) removed. Save your project to store the change.");
       }
     });
     window.addEventListener("scroll",()=>{updateMiSelectionUI();syncMiPictureRibbon();},true);
