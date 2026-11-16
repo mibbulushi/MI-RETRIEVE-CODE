@@ -5178,6 +5178,25 @@ img{max-width:100%}
       syncMiDocumentHtml();
       setMiWorkStatus("Picture restored to the document — you can now move or resize it. Save your project to keep the change.","working");
     },true);
+    // Clear every active object selection as soon as the user presses on the
+    // document surface (including the background/padding of a text box).
+    // Window capture runs before editor-level handlers that may stop bubbling.
+    window.addEventListener("pointerdown",event=>{
+      if(event.button!==0)return;
+      const path=typeof event.composedPath==="function"?event.composedPath():[];
+      const inEditor=path.includes(miDocumentEditor)||(event.target instanceof Node&&miDocumentEditor.contains(event.target));
+      if(!inEditor)return;
+      const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
+      if(target&&miDocumentEditor.contains(target))return;
+      if(event.target instanceof Element&&event.target.closest(".mi-word-selection-ui"))return;
+      miSelectedDocumentItems.clear();
+      miMultiSelectionAnchor=null;
+      miDocumentEditor.querySelectorAll(".mi-image-selected,.mi-file-selected,.mi-multi-selected")
+        .forEach(node=>node.classList.remove("mi-image-selected","mi-file-selected","mi-multi-selected"));
+      selectMiDocumentItem(null);
+      closeMiWordContextMenu();
+      closeMiPictureContextMenu();
+    },true);
     miDocumentEditor.addEventListener("pointerdown",event=>{
       if(event.button!==0 || event.target.closest?.(".mi-word-selection-ui"))return;
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
