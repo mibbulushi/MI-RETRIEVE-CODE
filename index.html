@@ -3552,8 +3552,11 @@ img{max-width:100%}
 #saveArea .mi-project-tab{display:inline-flex;align-items:center;gap:8px;max-width:220px;min-width:100px;min-height:32px;height:32px;padding:6px 12px;border:1px solid #cbd6e4;border-radius:6px;background:#e9eef5;color:#29415f;font:600 13px/1.2 "Segoe UI",Arial,sans-serif;cursor:pointer;white-space:nowrap;box-shadow:none}
 #saveArea .mi-project-tab[aria-selected="true"]{background:#fff;color:#155ca5;border-color:#9bb6d4;box-shadow:0 -2px 0 #2878c7 inset}
 #saveArea .mi-project-tab-name{overflow:hidden;text-overflow:ellipsis}
-#saveArea .mi-project-tab-close{display:inline-grid;place-items:center;width:19px;height:19px;border:0;border-radius:50%;padding:0;background:transparent;color:#65758a;font-size:16px;line-height:1;cursor:pointer}
-#saveArea .mi-project-tab-close:hover{background:#fce4e4;color:#b42318}
+#saveArea .mi-project-tab-context-menu{position:fixed;z-index:100000;min-width:160px;padding:4px;background:#fff;border:1px solid #c8c8c8;border-radius:3px;box-shadow:0 3px 12px rgba(0,0,0,.16);font:13px "Segoe UI",Arial,sans-serif}
+#saveArea .mi-project-tab-context-menu button{display:block;width:100%;min-height:30px;padding:6px 10px;border:0;border-radius:2px;background:#fff;color:#222;text-align:left;font:inherit;cursor:pointer;box-shadow:none}
+#saveArea .mi-project-tab-context-menu button:hover{background:#e8f1fb;color:#111}
+#saveArea .mi-project-tab-menu-divider{height:1px;margin:4px 2px;background:#ddd}
+
 #saveArea .mi-project-add-tab{min-height:32px!important;height:32px!important;margin:0 0 4px!important;padding:6px 12px!important;white-space:nowrap;align-self:flex-end;font:600 13px/1.2 "Segoe UI",Arial,sans-serif!important;border-radius:6px!important;box-shadow:0 1px 2px rgba(30,55,82,.06)!important}
 #saveArea .mi-project-tab{cursor:grab;user-select:none}
 #saveArea .mi-project-tab:active{cursor:grabbing}
@@ -6563,16 +6566,6 @@ img{max-width:100%}
         const name = document.createElement("span");
         name.className = "mi-project-tab-name";
         name.textContent = workspace.tabName;
-        const close = document.createElement("button");
-        close.type = "button";
-        close.className = "mi-project-tab-close";
-        close.textContent = "×";
-        close.title = "Remove this project tab";
-        close.setAttribute("aria-label", "Remove " + name.textContent);
-        close.addEventListener("click", event => {
-          event.stopPropagation();
-          miRemoveProjectTab(workspace.id);
-        });
         tab.addEventListener("click", () => miSwitchProjectTab(workspace.id));
         name.addEventListener("dblclick", event => {
           event.stopPropagation();
@@ -6580,9 +6573,9 @@ img{max-width:100%}
         });
         tab.addEventListener("contextmenu", event => {
           event.preventDefault();
-          miRenameProjectTab(workspace.id);
+          miShowProjectTabMenu(event, workspace.id);
         });
-        tab.append(name, close);
+        tab.append(name);
         host.append(tab);
       });
     }
@@ -6592,6 +6585,66 @@ img{max-width:100%}
       const snapshot = miCaptureWorkspace();
       if (index >= 0) miProjectWorkspaces[index] = snapshot;
       else miProjectWorkspaces.push(snapshot);
+    }
+    function miShowProjectTabMenu(event, id) {
+      document.getElementById("miProjectTabContextMenu")?.remove();
+      const menu = document.createElement("div");
+      menu.id = "miProjectTabContextMenu";
+      menu.className = "mi-project-tab-context-menu";
+      const actions = [
+        ["New Sheet", () => miAddProjectTab()],
+        ["Rename", () => miRenameProjectTab(id)],
+        ["Move Left", () => miMoveProjectTab(id, -1)],
+        ["Move Right", () => miMoveProjectTab(id, 1)],
+        ["Delete Sheet", () => miRemoveProjectTab(id)]
+      ];
+      actions.forEach(([label, action], index) => {
+        if (index === 4) {
+          const divider = document.createElement("div");
+          divider.className = "mi-project-tab-menu-divider";
+          menu.append(divider);
+        }
+        const item = document.createElement("button");
+        item.type = "button";
+        item.textContent = label;
+        item.addEventListener("click", () => {
+          menu.remove();
+          action();
+        });
+        menu.append(item);
+      });
+      document.body.append(menu);
+      const x = Math.min(event.clientX, window.innerWidth - menu.offsetWidth - 8);
+      const y = Math.min(event.clientY, window.innerHeight - menu.offsetHeight - 8);
+      menu.style.left = Math.max(8, x) + "px";
+      menu.style.top = Math.max(8, y) + "px";
+      const closeMenu = e => {
+        if (!menu.contains(e.target)) {
+          menu.remove();
+          document.removeEventListener("pointerdown", closeMenu, true);
+          document.removeEventListener("keydown", closeOnEscape);
+        }
+      };
+      const closeOnEscape = e => {
+        if (e.key === "Escape") {
+          menu.remove();
+          document.removeEventListener("pointerdown", closeMenu, true);
+          document.removeEventListener("keydown", closeOnEscape);
+        }
+      };
+      setTimeout(() => {
+        document.addEventListener("pointerdown", closeMenu, true);
+        document.addEventListener("keydown", closeOnEscape);
+      }, 0);
+    }
+    function miMoveProjectTab(id, direction) {
+      const index = miProjectWorkspaces.findIndex(item => item.id === id);
+      const nextIndex = index + direction;
+      if (index < 0 || nextIndex < 0 || nextIndex >= miProjectWorkspaces.length) return;
+      const [item] = miProjectWorkspaces.splice(index, 1);
+      miProjectWorkspaces.splice(nextIndex, 0, item);
+      miRenderProjectTabs();
+      scheduleMiLocalDraftSave();
     }
     function miRenameProjectTab(id) {
       const workspace = miProjectWorkspaces.find(item => item.id === id);
