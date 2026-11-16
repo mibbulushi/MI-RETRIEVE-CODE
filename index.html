@@ -3708,6 +3708,56 @@ img{max-width:100%}
   #saveArea .mi-document-info-row #miGrammarNotice{font-size:10px!important;padding-left:6px!important;padding-right:6px!important}
   #saveArea .mi-document-info-row #miDocumentStats{gap:4px!important;font-size:10px!important;padding-left:5px!important;padding-right:5px!important}
 }
+
+/* Force the two information panels to remain side-by-side. */
+#saveArea .mi-document-info-row,
+#saveArea div.mi-document-info-row{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+#saveArea .mi-document-info-row > #miGrammarNotice{
+  display:block!important;
+  flex:1 1 0%!important;
+  width:0!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  margin:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-overflow:ellipsis!important;
+  box-sizing:border-box!important;
+}
+#saveArea .mi-document-info-row > #miDocumentStats{
+  display:flex!important;
+  flex:0 0 auto!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  width:max-content!important;
+  min-width:max-content!important;
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  margin:0!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:600px){
+  #saveArea .mi-document-info-row{gap:4px!important}
+  #saveArea .mi-document-info-row > #miGrammarNotice{font-size:9px!important;padding:4px 5px!important}
+  #saveArea .mi-document-info-row > #miDocumentStats{font-size:9px!important;gap:3px!important;padding:4px 5px!important}
+}
 </style>
 </head>
 <body>
