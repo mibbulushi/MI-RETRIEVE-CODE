@@ -3628,6 +3628,29 @@ img{max-width:100%}
   border-color:#9ca8b5!important;
   box-shadow:none!important;
 }
+
+/* Keep every text and paragraph command in one compact, single-height ribbon row. */
+#miEditorToolbar{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:3px!important;min-height:40px!important;height:42px!important;max-height:42px!important;padding:4px 6px!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;box-sizing:border-box!important}
+#miEditorToolbar>*{flex:0 0 auto!important}
+#miEditorToolbar .mi-inline-alignment-controls{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;flex-wrap:nowrap!important;gap:2px!important;width:auto!important;min-width:0!important;height:30px!important;min-height:30px!important;margin:0!important;padding:0 4px!important;border:0!important;border-left:1px solid #d5dbe2!important;border-radius:0!important;background:transparent!important;white-space:nowrap!important}
+#miEditorToolbar .mi-inline-alignment-controls .mi-main-alignment-label{display:inline-flex!important;align-items:center!important;width:auto!important;margin:0 2px!important;font:600 10px/1 "Segoe UI",Arial,sans-serif!important;white-space:nowrap!important}
+#miEditorToolbar .mi-inline-alignment-controls button{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:0!important;height:27px!important;min-height:27px!important;margin:0!important;padding:3px 5px!important;border:1px solid #d2d7dd!important;border-radius:2px!important;background:#fff!important;box-shadow:none!important;font:11px/1 "Segoe UI",Arial,sans-serif!important;white-space:nowrap!important}
+#miEditorToolbar .mi-inline-alignment-controls button:hover{background:#edf2f7!important;transform:none!important;box-shadow:none!important}
+#miEditorToolbar .mi-tool-label{gap:3px!important;font-size:10px!important}
+#miEditorToolbar .mi-tool-label select{height:27px!important;min-height:27px!important;padding:2px 4px!important;font-size:11px!important}
+#miEditorToolbar #miFontFamily{width:108px!important;min-width:108px!important;max-width:108px!important}
+#miEditorToolbar #miFontSize{width:39px!important;min-width:39px!important;max-width:39px!important}
+#miEditorToolbar .mi-font-size-row{display:inline-flex!important;align-items:center!important;gap:2px!important;white-space:nowrap!important}
+#miEditorToolbar .mi-font-size-step{width:21px!important;min-width:21px!important;height:25px!important;min-height:25px!important;padding:2px!important;font-size:12px!important}
+#miEditorToolbar button{height:27px!important;min-height:27px!important;min-width:25px!important;padding:3px 5px!important;font-size:11px!important;border-radius:2px!important}
+#miEditorToolbar .mi-format-icon{width:25px!important;min-width:25px!important;padding:2px!important}
+#miEditorToolbar .mi-grammar-compact{padding:3px 5px!important;font-size:10px!important}
+#miEditorToolbar #miTextHighlightColor{width:25px!important;height:25px!important;min-height:25px!important;padding:1px!important}
+#miEditorToolbar .mi-color-label input[type=color]{width:25px!important;height:25px!important;min-height:25px!important}
+#miPictureRibbon.is-active{height:29px!important;min-height:29px!important;max-height:29px!important;gap:3px!important}
+#miPictureRibbon .mi-ribbon-group{gap:2px!important;padding-right:4px!important}
+#miPictureRibbon button{height:26px!important;min-height:26px!important;padding:2px 4px!important;font-size:10px!important}
+@media(max-width:760px){#miEditorToolbar{height:40px!important;min-height:40px!important;max-height:40px!important;padding:3px 4px!important;gap:2px!important}#miEditorToolbar .mi-inline-alignment-controls{gap:1px!important;padding:0 2px!important}#miEditorToolbar .mi-inline-alignment-controls button{padding:3px!important;font-size:10px!important}#miEditorToolbar #miFontFamily{width:96px!important;min-width:96px!important}}
 </style>
 </head>
 <body>
@@ -3783,6 +3806,13 @@ img{max-width:100%}
             <label class="mi-tool-label mi-color-label" title="Text highlight colour">Highlight <input id="miTextHighlightColor" type="color" value="#ffff00" aria-label="Text highlight colour"></label>
             <button type="button" class="secondary mi-grammar-compact" id="miClearFormattingBtn" title="Clear All Formatting" aria-label="Clear All Formatting">Clear Formatting</button>
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
+            <div id="miMainAlignmentBar" class="mi-main-alignment-bar mi-inline-alignment-controls" role="toolbar" aria-label="Paragraph alignment">
+              <span class="mi-main-alignment-label">Paragraph:</span>
+              <button type="button" data-mi-align="justifyLeft" title="Align left (Ctrl+L)" aria-label="Align left">☰ Left</button>
+              <button type="button" data-mi-align="justifyCenter" title="Centre (Ctrl+E)" aria-label="Centre">≡ Centre</button>
+              <button type="button" data-mi-align="justifyRight" title="Align right (Ctrl+R)" aria-label="Align right">☷ Right</button>
+              <button type="button" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify">▤ Justify</button>
+            </div>
             <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
             <div class="mi-ribbon-group">
               <button type="button" data-mi-ribbon="crop" title="Crop picture"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2v12a2 2 0 0 0 2 2h10M2 6h12a2 2 0 0 1 2 2v10"/><path d="M6 6h8v8"/></svg><span>Crop</span></button>
@@ -3805,13 +3835,6 @@ img{max-width:100%}
           <div id="miGrammarNotice" class="mi-grammar-notice" role="status" aria-live="polite">Grammar checking is optional. Review suggestions before applying any changes.</div>
           <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
           <div class="mi-main-textbox-frame">
-            <div id="miMainAlignmentBar" class="mi-main-alignment-bar" role="toolbar" aria-label="Text alignment">
-              <span class="mi-main-alignment-label">Paragraph:</span>
-              <button type="button" data-mi-align="justifyLeft" title="Align left (Ctrl+L)" aria-label="Align left">☰ <span>Left</span></button>
-              <button type="button" data-mi-align="justifyCenter" title="Centre (Ctrl+E)" aria-label="Centre">≡ <span>Centre</span></button>
-              <button type="button" data-mi-align="justifyRight" title="Align right (Ctrl+R)" aria-label="Align right">☷ <span>Right</span></button>
-              <button type="button" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify">▤ <span>Justify</span></button>
-            </div>
             <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
           </div>
           <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
