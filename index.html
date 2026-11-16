@@ -3552,10 +3552,37 @@ img{max-width:100%}
 #saveArea .mi-project-tab{display:inline-flex;align-items:center;gap:8px;max-width:220px;min-width:100px;min-height:32px;height:32px;padding:6px 12px;border:1px solid #cbd6e4;border-radius:6px;background:#e9eef5;color:#29415f;font:600 13px/1.2 "Segoe UI",Arial,sans-serif;cursor:pointer;white-space:nowrap;box-shadow:none}
 #saveArea .mi-project-tab[aria-selected="true"]{background:#fff;color:#155ca5;border-color:#9bb6d4;box-shadow:0 -2px 0 #2878c7 inset}
 #saveArea .mi-project-tab-name{overflow:hidden;text-overflow:ellipsis}
-#miProjectTabContextMenu{position:fixed;z-index:100000;min-width:160px;padding:4px;background:#fff;border:1px solid #c8c8c8;border-radius:3px;box-shadow:0 3px 12px rgba(0,0,0,.16);font:13px "Segoe UI",Arial,sans-serif}
-#miProjectTabContextMenu button{display:block;width:100%;min-height:30px;padding:6px 10px;border:0;border-radius:2px;background:#fff;color:#222;text-align:left;font:inherit;cursor:pointer;box-shadow:none}
-#miProjectTabContextMenu button:hover{background:#e8f1fb;color:#111}
-#miProjectTabContextMenu .mi-project-tab-menu-divider{height:1px;margin:4px 2px;background:#ddd}
+/* Flat Microsoft Excel-style sheet context menu: crisp edges, compact rows, no rounded UI. */
+#miProjectTabContextMenu{
+  position:fixed!important;z-index:100000!important;
+  display:block!important;min-width:176px!important;width:176px!important;
+  padding:3px!important;margin:0!important;
+  background:#fff!important;color:#222!important;
+  border:1px solid #888!important;border-radius:0!important;
+  box-shadow:1px 2px 4px rgba(0,0,0,.18)!important;
+  font:12px/1.25 "Segoe UI",Arial,sans-serif!important;
+}
+#miProjectTabContextMenu button{
+  appearance:none!important;-webkit-appearance:none!important;
+  display:block!important;width:100%!important;height:26px!important;min-height:26px!important;
+  margin:0!important;padding:4px 9px!important;
+  border:1px solid transparent!important;border-radius:0!important;
+  background:#fff!important;color:#222!important;
+  text-align:left!important;white-space:nowrap!important;
+  font:12px/16px "Segoe UI",Arial,sans-serif!important;
+  font-weight:400!important;letter-spacing:0!important;
+  box-shadow:none!important;transform:none!important;cursor:default!important;
+}
+#miProjectTabContextMenu button:hover,
+#miProjectTabContextMenu button:focus{
+  background:#e5f1fb!important;color:#111!important;
+  border:1px solid #8ab6d8!important;border-radius:0!important;
+  outline:none!important;box-shadow:none!important;
+}
+#miProjectTabContextMenu .mi-project-tab-menu-divider{
+  display:block!important;height:1px!important;min-height:1px!important;
+  margin:3px 2px!important;padding:0!important;background:#c9c9c9!important;
+}
 
 #saveArea .mi-project-add-tab{min-height:32px!important;height:32px!important;margin:0 0 4px!important;padding:6px 12px!important;white-space:nowrap;align-self:flex-end;font:600 13px/1.2 "Segoe UI",Arial,sans-serif!important;border-radius:6px!important;box-shadow:0 1px 2px rgba(30,55,82,.06)!important}
 #saveArea .mi-project-tab{cursor:grab;user-select:none}
