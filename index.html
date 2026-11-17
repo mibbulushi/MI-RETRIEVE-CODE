@@ -8420,6 +8420,7 @@ img{max-width:100%}
     const box=document.getElementById("miFontSize");
     if(!box||box.dataset.autoWidthBound==="1")return;
     box.dataset.autoWidthBound="1";
+    const custom=document.getElementById("miCustomFontSize");
     function fit(){
       const shown=box.selectedOptions&&box.selectedOptions[0]?box.selectedOptions[0].text:String(box.value||"");
       const digits=String(shown).trim().length;
@@ -8428,9 +8429,18 @@ img{max-width:100%}
       box.style.width=width+"px";
       box.style.minWidth=width+"px";
       box.style.maxWidth=width+"px";
+      if(custom){
+        const customDigits=String(custom.value||"12").length;
+        const customWidth=Math.max(44,Math.min(64,38+customDigits*8));
+        custom.style.width=customWidth+"px";
+        custom.style.minWidth=customWidth+"px";
+        custom.style.maxWidth=customWidth+"px";
+      }
     }
     box.addEventListener("change",fit);
     box.addEventListener("input",fit);
+    custom?.addEventListener("input",fit);
+    custom?.addEventListener("change",fit);
     document.getElementById("miFontSizeDecrease")?.addEventListener("click",()=>requestAnimationFrame(fit));
     document.getElementById("miFontSizeIncrease")?.addEventListener("click",()=>requestAnimationFrame(fit));
     new MutationObserver(fit).observe(box,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:["value","selected"]});
