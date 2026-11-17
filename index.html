@@ -5864,8 +5864,37 @@ img{max-width:100%}
       event.preventDefault();event.stopPropagation();
       if(!miSelectedDocumentItem||miSelectedDocumentItem.dataset.miDocumentImage!=="true")return;
       if(miDirectCropMode){
+        const image=miSelectedDocumentItem;
+        const crop=miReadDirectCrop();
+        const naturalWidth=image.naturalWidth,naturalHeight=image.naturalHeight;
+        if(naturalWidth>0&&naturalHeight>0&&(crop.top||crop.right||crop.bottom||crop.left)){
+          try{
+            // Bake the visible crop into a new image so later resizing cannot reveal hidden areas.
+            const sx=Math.round(naturalWidth*crop.left/100);
+            const sy=Math.round(naturalHeight*crop.top/100);
+            const sw=Math.max(1,Math.round(naturalWidth*(1-(crop.left+crop.right)/100)));
+            const sh=Math.max(1,Math.round(naturalHeight*(1-(crop.top+crop.bottom)/100)));
+            const canvas=document.createElement("canvas");
+            canvas.width=sw;canvas.height=sh;
+            const ctx=canvas.getContext("2d");
+            if(!ctx)throw new Error("Canvas unavailable");
+            ctx.drawImage(image,sx,sy,sw,sh,0,0,sw,sh);
+            const croppedSource=canvas.toDataURL("image/png");
+            const rect=image.getBoundingClientRect();
+            const displayWidth=Math.max(1,rect.width*(1-(crop.left+crop.right)/100));
+            const displayHeight=Math.max(1,rect.height*(1-(crop.top+crop.bottom)/100));
+            image.src=croppedSource;
+            image.style.width=Math.round(displayWidth)+"px";
+            image.style.height=Math.round(displayHeight)+"px";
+            image.style.clipPath="none";
+            image.style.objectFit="contain";
+          }catch(error){
+            setMiWorkStatus("This picture could not be permanently cropped. Try using an uploaded picture file.");
+            return;
+          }
+        }
         miSetDirectCropMode(false);syncMiDocumentHtml();
-        setMiWorkStatus("Picture crop applied — save your project to store it.");
+        setMiWorkStatus("Crop applied permanently. Resizing will keep only the cropped picture — save your project.");
       }else{
         miSetDirectCropMode(true);
       }
