@@ -7568,8 +7568,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       beforeLabel.textContent="Before sheet:";
       beforeLabel.style.cssText="padding-top:3px;font-weight:400;";
       const before=document.createElement("select");
-      before.size=1;
-      before.style.cssText="display:block;width:280px!important;min-width:280px;height:14px!important;min-height:14px;max-height:14px;line-height:12px;box-sizing:border-box;padding:0 3px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
+      before.size=3;
+      before.style.cssText="display:block;width:280px!important;min-width:280px;height:42px!important;min-height:42px;max-height:42px;line-height:13px;box-sizing:border-box;padding:0 3px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;overflow-y:auto;";
       miProjectWorkspaces.forEach(workspace=>{
         const option=document.createElement("option");
         option.value=workspace.id;
