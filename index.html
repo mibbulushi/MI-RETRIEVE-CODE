@@ -7528,10 +7528,10 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       dialog.setAttribute("role","dialog");
       dialog.setAttribute("aria-modal","true");
       dialog.setAttribute("aria-label","Move or Copy");
-      dialog.style.cssText="width:560px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:0;background:#f5f5f5;border:1px solid #b5b5b5;border-radius:2px;box-shadow:0 2px 9px rgba(0,0,0,.16);font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
+      dialog.style.cssText="width:560px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:0;background:#f8faff;border:1px solid #8fa9c2;border-radius:4px;box-shadow:0 8px 24px rgba(20,45,75,.22),0 1px 3px rgba(0,0,0,.16);font:12px 'Segoe UI',Arial,sans-serif;color:#172b40;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;";
 
       const titleBar=document.createElement("div");
-      titleBar.style.cssText="height:25px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:0 7px 0 9px;background:#f7f7f7;border-bottom:1px solid #dedede;font-size:12px;font-weight:600;";
+      titleBar.style.cssText="height:25px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:0 7px 0 9px;background:linear-gradient(180deg,#ffffff 0%,#eaf2fb 100%);border-bottom:1px solid #c5d5e5;font-size:12px;font-weight:600;color:#183b5b;";
       const title=document.createElement("span");
       title.textContent="Move or Copy";
       const close= document.createElement("button");
@@ -7570,7 +7570,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       titleBar.addEventListener("pointercancel",stopDialogDrag);
 
       const body=document.createElement("div");
-      body.style.cssText="padding:7px 9px 6px;background:#f5f5f5;";
+      body.style.cssText="padding:7px 9px 6px;background:linear-gradient(180deg,#fbfdff 0%,#f1f6fc 100%);";
       const instruction=document.createElement("div");
       instruction.textContent="Move selected sheets";
       instruction.style.cssText="margin:0 0 6px;font-size:14px;font-weight:400;color:#333;";
@@ -7578,7 +7578,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       const controlStyle="width:100%;height:17px;box-sizing:border-box;padding:0 2px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
       const book=document.createElement("select");
       book.size=1;
-      book.style.cssText="display:block;appearance:auto!important;-webkit-appearance:menulist!important;width:100%!important;min-width:0!important;max-width:none!important;height:42px!important;min-height:42px!important;max-height:42px!important;line-height:normal!important;font-size:11px!important;padding:0 22px 0 6px!important;box-sizing:border-box!important;overflow:visible!important;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font-family:'Segoe UI',Arial,sans-serif;outline:none;cursor:pointer;";
+      book.style.cssText="display:block;appearance:auto!important;-webkit-appearance:menulist!important;width:100%!important;min-width:0!important;max-width:none!important;height:42px!important;min-height:42px!important;max-height:42px!important;line-height:normal!important;font-size:11px!important;padding:0 22px 0 6px!important;box-sizing:border-box!important;overflow:visible!important;border:1px solid #91a8bf;border-radius:3px;background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);color:#172b40;font-family:'Segoe UI',Arial,sans-serif;outline:none;cursor:pointer;box-shadow:inset 0 1px 2px rgba(25,55,85,.08);";
       const bookOption=document.createElement("option");
       bookOption.textContent="This project";
       book.append(bookOption);
@@ -7597,7 +7597,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       beforeLabel.style.cssText="display:block;margin:0;padding:0;font-weight:400;line-height:14px;";
       const before=document.createElement("select");
       before.size=12;
-      before.style.cssText="display:block;width:100%!important;min-width:0;height:180px!important;min-height:180px;max-height:180px;line-height:13px;box-sizing:border-box;padding:0 3px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;overflow-y:auto;";
+      before.style.cssText="display:block;width:100%!important;min-width:0;height:180px!important;min-height:180px;max-height:180px;line-height:13px;box-sizing:border-box;padding:0 3px;border:1px solid #91a8bf;border-radius:3px;background:#fff;color:#172b40;font:11px 'Segoe UI',Arial,sans-serif;outline:none;overflow-y:auto;box-shadow:inset 0 1px 3px rgba(25,55,85,.10);";
       miProjectWorkspaces.forEach(workspace=>{
         const option=document.createElement("option");
         option.value=workspace.id;
@@ -7623,14 +7623,14 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       copyRow.append(copy,copyText);
 
       const footer=document.createElement("div");
-      footer.style.cssText="display:flex;justify-content:flex-end;gap:6px;padding:6px 9px 7px;background:#f5f5f5;border-top:1px solid #e1e1e1;";
+      footer.style.cssText="display:flex;justify-content:flex-end;gap:6px;padding:6px 9px 7px;background:linear-gradient(180deg,#f7faff 0%,#eaf1f8 100%);border-top:1px solid #cbd9e7;";
       const makeButton=(label,primary=false)=>{
         const button=document.createElement("button");
         button.type="button";
         button.textContent=label;
-        button.style.cssText="appearance:none;min-width:58px;height:20px;min-height:20px;max-height:20px;padding:0 8px;border:1px solid "+(primary?"#3978a8":"#888")+";border-radius:2px;background:"+(primary?"#e5f1fb":"#f7f7f7")+";color:#222;box-shadow:none;font:13px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
-        button.addEventListener("mouseenter",()=>{button.style.background="#dcecf8";button.style.borderColor="#4b91c5";});
-        button.addEventListener("mouseleave",()=>{button.style.background=primary?"#e5f1fb":"#f7f7f7";button.style.borderColor=primary?"#3978a8":"#888";});
+        button.style.cssText="appearance:none;min-width:58px;height:20px;min-height:20px;max-height:20px;padding:0 8px;border:1px solid "+(primary?"#3978a8":"#9aaabd")+";border-radius:3px;background:"+(primary?"linear-gradient(180deg,#ffffff 0%,#dcecfb 100%)":"linear-gradient(180deg,#ffffff 0%,#eaf0f6 100%)")+";color:#18324a;box-shadow:0 1px 2px rgba(20,45,75,.16),inset 0 1px 0 rgba(255,255,255,.95);font:13px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
+        button.addEventListener("mouseenter",()=>{button.style.background="linear-gradient(180deg,#ffffff 0%,#cfe5f8 100%)";button.style.borderColor="#3978a8";});
+        button.addEventListener("mouseleave",()=>{button.style.background=primary?"linear-gradient(180deg,#ffffff 0%,#dcecfb 100%)":"linear-gradient(180deg,#ffffff 0%,#eaf0f6 100%)";button.style.borderColor=primary?"#3978a8":"#9aaabd";});
         button.addEventListener("focus",()=>button.style.outline="1px solid #5b9bd5");
         button.addEventListener("blur",()=>button.style.outline="none");
         return button;
