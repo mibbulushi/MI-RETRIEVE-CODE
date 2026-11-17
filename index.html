@@ -4379,9 +4379,9 @@ img{max-width:100%}
 
 /* Custom font size input: compact, crisp Office-style numeric field. */
 #miEditorToolbar #miCustomFontSize{
-  width:54px;min-width:54px;max-width:72px;
+  width:34px;min-width:34px;max-width:62px;flex:0 0 auto!important;
   height:32px!important;min-height:32px!important;box-sizing:border-box!important;
-  padding:3px 4px!important;font-size:12px!important;text-align:center!important;
+  padding:3px 3px!important;font-size:12px!important;text-align:center!important;
   border:1px solid #9fb2ca!important;border-radius:3px!important;background:#fff!important;color:#172b45!important;
 }
 #miEditorToolbar .mi-font-size-row{gap:3px!important}
@@ -8430,8 +8430,8 @@ img{max-width:100%}
     if(!input||input.dataset.autoWidthBound==="1")return;
     input.dataset.autoWidthBound="1";
     function fit(){
-      const digits=String(input.value||"12").length;
-      const width=Math.max(54,Math.min(72,42+digits*10));
+      const digits=String(input.value||"12").replace(/^-/,"").length;
+      const width=Math.max(34,Math.min(62,25+digits*9));
       input.style.width=width+"px";
       input.style.minWidth=width+"px";
       input.style.maxWidth=width+"px";
