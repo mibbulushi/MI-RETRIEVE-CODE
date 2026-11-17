@@ -4205,6 +4205,39 @@ img{max-width:100%}
   }
 }
 </style>
+
+<style id="mi-all-popup-standard-sharpness">
+/* Consistent standard sizing and crisp typography for all dialog-style popups. */
+[role="dialog"],
+[class*="dialog"]:not([class*="overlay"]),
+.mi-word-size-dialog,
+.mi-modal{
+  box-sizing:border-box!important;
+  width:min(420px,calc(100vw - 32px))!important;
+  max-width:calc(100vw - 32px)!important;
+  max-height:calc(100vh - 32px)!important;
+  overflow:auto!important;
+  font-family:"Segoe UI",Arial,sans-serif!important;
+  font-size:13px!important;
+  line-height:1.4!important;
+  color:#222!important;
+  border:1px solid #888!important;
+  border-radius:0!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.16)!important;
+  text-shadow:none!important;
+  filter:none!important;
+  -webkit-font-smoothing:antialiased!important;
+  text-rendering:optimizeLegibility!important;
+}
+[role="dialog"] *,
+[class*="dialog"]:not([class*="overlay"]) *,
+.mi-word-size-dialog *,
+.mi-modal *{
+  text-shadow:none!important;
+  filter:none!important;
+  font-family:"Segoe UI",Arial,sans-serif;
+}
+</style>
 <style id="mi-all-popup-buttons-flat">
 /* All popup buttons: plain, flat, and without embossed effects. */
 #miProjectTabContextMenu button,.mi-tab-color-submenu button,
