@@ -7528,10 +7528,10 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       dialog.setAttribute("role","dialog");
       dialog.setAttribute("aria-modal","true");
       dialog.setAttribute("aria-label","Move or Copy");
-      dialog.style.cssText="width:430px;max-width:100%;box-sizing:border-box;padding:0;background:#f0f0f0;border:1px solid #777;border-radius:3px;box-shadow:0 5px 18px rgba(0,0,0,.28);font:13px 'Segoe UI',Arial,sans-serif;color:#222;";
+      dialog.style.cssText="width:350px;max-width:100%;box-sizing:border-box;padding:0;background:#f0f0f0;border:1px solid #777;border-radius:3px;box-shadow:0 5px 18px rgba(0,0,0,.28);font:13px 'Segoe UI',Arial,sans-serif;color:#222;";
 
       const titleBar=document.createElement("div");
-      titleBar.style.cssText="height:32px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 12px;background:#f3f3f3;border-bottom:1px solid #c9c9c9;font-size:13px;font-weight:600;";
+      titleBar.style.cssText="height:29px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 12px;background:#f3f3f3;border-bottom:1px solid #c9c9c9;font-size:13px;font-weight:600;";
       const title=document.createElement("span");
       title.textContent="Move or Copy";
       const close= document.createElement("button");
@@ -7543,12 +7543,12 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       titleBar.append(title,close);
 
       const body=document.createElement("div");
-      body.style.cssText="padding:15px 20px 14px;background:#f0f0f0;";
+      body.style.cssText="padding:10px 14px 9px;background:#f0f0f0;";
       const instruction=document.createElement("div");
       instruction.textContent="Move selected sheets";
-      instruction.style.cssText="margin:0 0 13px;font-size:13px;font-weight:400;color:#222;";
+      instruction.style.cssText="margin:0 0 8px;font-size:12px;font-weight:400;color:#222;";
 
-      const controlStyle="width:100%;height:25px;box-sizing:border-box;padding:2px 6px;border:1px solid #888;border-radius:0;background:#fff;color:#222;font:13px 'Segoe UI',Arial,sans-serif;outline:none;";
+      const controlStyle="width:100%;height:24px;box-sizing:border-box;padding:2px 5px;border:1px solid #888;border-radius:0;background:#fff;color:#222;font:13px 'Segoe UI',Arial,sans-serif;outline:none;";
       const book=document.createElement("select");
       book.style.cssText=controlStyle;
       const bookOption=document.createElement("option");
@@ -7556,20 +7556,20 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       book.append(bookOption);
 
       const bookRow=document.createElement("div");
-      bookRow.style.cssText="display:grid;grid-template-columns:94px minmax(0,1fr);align-items:center;gap:8px;margin:0 0 13px;";
+      bookRow.style.cssText="display:grid;grid-template-columns:82px minmax(0,1fr);align-items:center;gap:7px;margin:0 0 8px;";
       const bookLabel=document.createElement("label");
       bookLabel.textContent="To book:";
       bookLabel.style.cssText="font-weight:400;";
       bookRow.append(bookLabel,book);
 
       const beforeRow=document.createElement("div");
-      beforeRow.style.cssText="display:grid;grid-template-columns:94px minmax(0,1fr);align-items:start;gap:8px;margin:0 0 12px;";
+      beforeRow.style.cssText="display:grid;grid-template-columns:82px minmax(0,1fr);align-items:start;gap:7px;margin:0 0 8px;";
       const beforeLabel=document.createElement("label");
       beforeLabel.textContent="Before sheet:";
       beforeLabel.style.cssText="padding-top:3px;font-weight:400;";
       const before=document.createElement("select");
       before.size=Math.min(7,Math.max(4,miProjectWorkspaces.length+1));
-      before.style.cssText="display:block;width:100%;height:150px;box-sizing:border-box;padding:2px 3px;border:1px solid #888;border-radius:0;background:#fff;color:#222;font:13px 'Segoe UI',Arial,sans-serif;outline:none;";
+      before.style.cssText="display:block;width:100%;height:112px;box-sizing:border-box;padding:2px 3px;border:1px solid #888;border-radius:0;background:#fff;color:#222;font:13px 'Segoe UI',Arial,sans-serif;outline:none;";
       miProjectWorkspaces.forEach(workspace=>{
         const option=document.createElement("option");
         option.value=workspace.id;
@@ -7585,7 +7585,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       beforeRow.append(beforeLabel,before);
 
       const copyRow=document.createElement("label");
-      copyRow.style.cssText="display:flex;align-items:center;gap:7px;margin:0 0 1px 102px;cursor:pointer;user-select:none;font-weight:400;";
+      copyRow.style.cssText="display:flex;align-items:center;gap:7px;margin:0 0 0 89px;cursor:pointer;user-select:none;font-weight:400;";
       const copy=document.createElement("input");
       copy.type="checkbox";
       copy.checked=!!copyInitially;
@@ -7595,12 +7595,12 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       copyRow.append(copy,copyText);
 
       const footer=document.createElement("div");
-      footer.style.cssText="display:flex;justify-content:flex-end;gap:8px;padding:10px 20px 12px;background:#f0f0f0;border-top:1px solid #d0d0d0;";
+      footer.style.cssText="display:flex;justify-content:flex-end;gap:8px;padding:8px 14px 9px;background:#f0f0f0;border-top:1px solid #d0d0d0;";
       const makeButton=(label,primary=false)=>{
         const button=document.createElement("button");
         button.type="button";
         button.textContent=label;
-        button.style.cssText="appearance:none;min-width:76px;height:27px;padding:3px 13px;border:1px solid "+(primary?"#3978a8":"#888")+";border-radius:2px;background:"+(primary?"#e5f1fb":"#f7f7f7")+";color:#222;box-shadow:none;font:13px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
+        button.style.cssText="appearance:none;min-width:68px;height:25px;padding:2px 10px;border:1px solid "+(primary?"#3978a8":"#888")+";border-radius:2px;background:"+(primary?"#e5f1fb":"#f7f7f7")+";color:#222;box-shadow:none;font:13px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
         button.addEventListener("mouseenter",()=>{button.style.background="#dcecf8";button.style.borderColor="#4b91c5";});
         button.addEventListener("mouseleave",()=>{button.style.background=primary?"#e5f1fb":"#f7f7f7";button.style.borderColor=primary?"#3978a8":"#888";});
         button.addEventListener("focus",()=>button.style.outline="1px solid #5b9bd5");
