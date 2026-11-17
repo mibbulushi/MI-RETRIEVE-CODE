@@ -4367,7 +4367,7 @@ img{max-width:100%}
 
 /* Custom font size input: compact, crisp Office-style numeric field. */
 #miEditorToolbar #miCustomFontSize{
-  width:48px!important;min-width:48px!important;max-width:48px!important;
+  width:54px;min-width:54px;max-width:72px;
   height:32px!important;min-height:32px!important;box-sizing:border-box!important;
   padding:3px 4px!important;font-size:12px!important;text-align:center!important;
   border:1px solid #9fb2ca!important;border-radius:3px!important;background:#fff!important;color:#172b45!important;
@@ -4514,7 +4514,7 @@ img{max-width:100%}
             <button type="button" class="secondary mi-format-icon mi-word-quick-button" id="miInsertLinkBtn" title="Link (Ctrl+K)" aria-label="Link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.8 14.2 8 16a3.2 3.2 0 0 1-4.5-4.5l3.2-3.2a3.2 3.2 0 0 1 4.5 0M14.2 9.8 16 8a3.2 3.2 0 0 1 4.5 4.5l-3.2 3.2a3.2 3.2 0 0 1-4.5 0M8.5 15.5l7-7"/></svg></button>
             <label class="mi-tool-label" title="Font family">Font <select id="miFontFamily" aria-label="Font family"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Courier New">Courier New</option></select></label>
             <button type="button" class="secondary mi-format-icon" id="miChangeCaseBtn" title="Change selected text between UPPERCASE and lowercase" aria-label="Change letter case"><span aria-hidden="true">Aa</span></button>
-            <label class="mi-tool-label mi-font-size-control" title="Font size">Size <span class="mi-font-size-row"><button type="button" class="mi-font-size-step" id="miFontSizeDecrease" title="Decrease font size" aria-label="Decrease font size">−</button><select id="miFontSize" aria-label="Font size"><option value="8">8</option><option value="10">10</option><option value="12" selected>12</option><option value="14">14</option><option value="18">18</option><option value="24">24</option><option value="36">36</option><option value="48">48</option><option value="60">60</option><option value="72">72</option><option value="96">96</option></select><input id="miCustomFontSize" type="number" min="1" max="300" step="1" value="12" aria-label="Custom font size in pixels" title="Custom font size (1–300 px)"><button type="button" class="mi-font-size-step" id="miFontSizeIncrease" title="Increase font size" aria-label="Increase font size">+</button></span></label>
+            <label class="mi-tool-label mi-font-size-control" title="Font size">Size <span class="mi-font-size-row"><button type="button" class="mi-font-size-step" id="miFontSizeDecrease" title="Decrease font size" aria-label="Decrease font size">−</button><input id="miCustomFontSize" type="number" min="1" max="300" step="1" value="12" aria-label="Font size in pixels" title="Enter font size (1–300)"><button type="button" class="mi-font-size-step" id="miFontSizeIncrease" title="Increase font size" aria-label="Increase font size">+</button></span></label>
             <label class="mi-tool-label mi-color-label" title="Text colour">Colour <input id="miFontColor" type="color" value="#26364a" aria-label="Text colour"></label>
             <button type="button" class="secondary mi-format-icon" data-mi-command="bold" title="Bold" aria-label="Bold"><b>B</b></button>
             <button type="button" class="secondary mi-format-icon" data-mi-command="italic" title="Italic" aria-label="Italic"><i>I</i></button>
@@ -5066,7 +5066,8 @@ img{max-width:100%}
       $("content").value = miDocumentEditor.innerHTML;
     });
     function miApplyCustomFontSize(rawSize){
-      const size=Math.max(1,Math.min(300,Number(rawSize)||12));
+      const parsed=Number(rawSize);
+      const size=Math.max(1,Math.min(300,Number.isFinite(parsed)&&parsed>0?parsed:12));
       const customInput=$("miCustomFontSize");
       customInput.value=String(size);
       restoreMiEditorSelection();
@@ -5077,13 +5078,11 @@ img{max-width:100%}
       });
       $("content").value=miDocumentEditor.innerHTML;
     }
-    $("miFontSize").addEventListener("change",event=>{
-      const size=Number(event.target.value)||12;
-      $("miCustomFontSize").value=String(size);
-      miApplyCustomFontSize(size);
-    });
     $("miCustomFontSize").addEventListener("change",event=>{
       miApplyCustomFontSize(event.target.value);
+    });
+    $("miCustomFontSize").addEventListener("keydown",event=>{
+      if(event.key==="Enter"){event.preventDefault();miApplyCustomFontSize(event.target.value);}
     });
     function miStepFontSize(direction){
       const input=$("miCustomFontSize");
@@ -5091,8 +5090,6 @@ img{max-width:100%}
       const next=Math.max(1,Math.min(300,current+direction));
       input.value=String(next);
       miApplyCustomFontSize(next);
-      const match=[...$("miFontSize").options].find(option=>Number(option.value)===next);
-      if(match)$("miFontSize").value=String(next);
     }
     ["miFontSizeDecrease","miFontSizeIncrease"].forEach(id=>{
       const button=$(id);
@@ -8417,33 +8414,20 @@ img{max-width:100%}
 <script>
 (function(){
   function initMiFontSizeAutoWidth(){
-    const box=document.getElementById("miFontSize");
-    if(!box||box.dataset.autoWidthBound==="1")return;
-    box.dataset.autoWidthBound="1";
-    const custom=document.getElementById("miCustomFontSize");
+    const input=document.getElementById("miCustomFontSize");
+    if(!input||input.dataset.autoWidthBound==="1")return;
+    input.dataset.autoWidthBound="1";
     function fit(){
-      const shown=box.selectedOptions&&box.selectedOptions[0]?box.selectedOptions[0].text:String(box.value||"");
-      const digits=String(shown).trim().length;
-      const width=Math.max(42,Math.min(62,42+(Math.max(1,digits)-1)*8));
-      box.style.setProperty("--mi-font-size-width",width+"px");
-      box.style.width=width+"px";
-      box.style.minWidth=width+"px";
-      box.style.maxWidth=width+"px";
-      if(custom){
-        const customDigits=String(custom.value||"12").length;
-        const customWidth=Math.max(44,Math.min(64,38+customDigits*8));
-        custom.style.width=customWidth+"px";
-        custom.style.minWidth=customWidth+"px";
-        custom.style.maxWidth=customWidth+"px";
-      }
+      const digits=String(input.value||"12").length;
+      const width=Math.max(54,Math.min(72,42+digits*10));
+      input.style.width=width+"px";
+      input.style.minWidth=width+"px";
+      input.style.maxWidth=width+"px";
     }
-    box.addEventListener("change",fit);
-    box.addEventListener("input",fit);
-    custom?.addEventListener("input",fit);
-    custom?.addEventListener("change",fit);
+    input.addEventListener("input",fit);
+    input.addEventListener("change",fit);
     document.getElementById("miFontSizeDecrease")?.addEventListener("click",()=>requestAnimationFrame(fit));
     document.getElementById("miFontSizeIncrease")?.addEventListener("click",()=>requestAnimationFrame(fit));
-    new MutationObserver(fit).observe(box,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:["value","selected"]});
     fit();
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initMiFontSizeAutoWidth,{once:true});
