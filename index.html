@@ -4515,6 +4515,24 @@ img{max-width:100%}
   }
 }
 
+
+/* Font-size +/- buttons: simple flat Office-style controls, never embossed. */
+#miEditorToolbar .mi-font-size-row .mi-font-size-step{
+  appearance:none!important;-webkit-appearance:none!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:22px!important;min-width:22px!important;max-width:22px!important;
+  height:25px!important;min-height:25px!important;margin:0!important;padding:0!important;
+  border:1px solid #bfc9d4!important;border-radius:2px!important;
+  background:#fff!important;background-image:none!important;color:#26364a!important;
+  box-shadow:none!important;text-shadow:none!important;filter:none!important;transform:none!important;
+  font:13px/1 "Segoe UI",Arial,sans-serif!important;font-weight:400!important;cursor:pointer!important;
+}
+#miEditorToolbar .mi-font-size-row .mi-font-size-step:hover{
+  background:#f0f2f5!important;border-color:#aeb9c5!important;box-shadow:none!important;transform:none!important;
+}
+#miEditorToolbar .mi-font-size-row .mi-font-size-step:active{
+  background:#e8ebef!important;box-shadow:none!important;transform:none!important;
+}
 </style>
 </head>
 <body>
@@ -8507,13 +8525,22 @@ img{max-width:100%}
         zoomSlider.className="mi-zoom-slider";zoomSlider.setAttribute("aria-label","Zoom level");
         const zoomValue=document.createElement("span");
         zoomValue.className="mi-zoom-value";zoomValue.textContent="100%";
+        const zoomIn=document.createElement("button");
+        zoomIn.type="button";zoomIn.className="mi-zoom-step";zoomIn.textContent="+";
+        zoomIn.setAttribute("aria-label","Zoom in");zoomIn.title="Zoom in";
+        const zoomOut=document.createElement("button");
+        zoomOut.type="button";zoomOut.className="mi-zoom-step";zoomOut.textContent="−";
+        zoomOut.setAttribute("aria-label","Zoom out");zoomOut.title="Zoom out";
         function setDocumentZoom(value){
           const next=Math.max(50,Math.min(200,Math.round(Number(value)/10)*10));
           zoomSlider.value=String(next);zoomValue.textContent=next+"%";
           editor.style.zoom=(next/100).toString();
+          zoomOut.disabled=next===50;zoomIn.disabled=next===200;
         }
+        zoomOut.addEventListener("click",()=>setDocumentZoom(Number(zoomSlider.value)-10));
+        zoomIn.addEventListener("click",()=>setDocumentZoom(Number(zoomSlider.value)+10));
         zoomSlider.addEventListener("input",()=>setDocumentZoom(zoomSlider.value));
-        zoomBar.append(zoomSlider,zoomValue);
+        zoomBar.append(zoomOut,zoomSlider,zoomIn,zoomValue);
         viewbar.append(zoomBar);
         setDocumentZoom(100);
         const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);statusRow.style.display="flex";statusRow.style.alignItems="center";statusRow.style.justifyContent="space-between";statusRow.style.flexWrap="nowrap";statusRow.style.gap="8px";}else stage.insertBefore(viewbar,editor);
