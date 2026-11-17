@@ -4711,6 +4711,25 @@ img{max-width:100%}
   white-space:nowrap!important;
 }
 
+
+/* Picture selection and resizing: use one accurate frame and the eight custom handles. */
+.mi-document-editor img,
+.mi-document-editor [data-mi-document-image="true"]{
+  resize:none!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+.mi-word-selection-ui{
+  box-sizing:border-box!important;
+  transform:none!important;
+  transform-origin:top left!important;
+}
+.mi-word-selection-ui .mi-word-resize-handle{
+  position:absolute!important;
+  z-index:3!important;
+  pointer-events:auto!important;
+  touch-action:none!important;
+}
 </style>
 </head>
 <body>
@@ -5950,28 +5969,21 @@ img{max-width:100%}
         return;
       }
       const r=item.getBoundingClientRect();
-      // clip-path does not change getBoundingClientRect(); calculate the visible
-      // cropped picture bounds so the four selection lines follow the crop.
-      const crop=item.dataset.miDocumentImage==="true"?miReadDirectCrop():{top:0,right:0,bottom:0,left:0};
-      const cropLeft=r.left+r.width*crop.left/100;
-      const cropTop=r.top+r.height*crop.top/100;
-      const cropRight=r.right-r.width*crop.right/100;
-      const cropBottom=r.bottom-r.height*crop.bottom/100;
+      // Match the selection frame to the picture's REAL rendered bounds.
+      // Do not clip the frame to the editor or to the crop preview: doing so
+      // offsets the resize handles whenever a picture touches the editor edge.
       const editorRect=miDocumentEditor.getBoundingClientRect();
       const editorLeft=editorRect.left+miDocumentEditor.clientLeft;
       const editorTop=editorRect.top+miDocumentEditor.clientTop;
       const editorRight=editorLeft+miDocumentEditor.clientWidth;
       const editorBottom=editorTop+miDocumentEditor.clientHeight;
-      // Keep the selection frame inside the editor's visible viewport.
-      // Recalculate from the picture's live rectangle on every scroll/resize,
-      // so the frame and its controls travel with the selected picture.
-      const visibleLeft=Math.max(cropLeft,editorLeft);
-      const visibleTop=Math.max(cropTop,editorTop);
-      const visibleRight=Math.min(cropRight,editorRight);
-      const visibleBottom=Math.min(cropBottom,editorBottom);
-      const visibleWidth=visibleRight-visibleLeft;
-      const visibleHeight=visibleBottom-visibleTop;
-      if(r.width<=0||r.height<=0||visibleWidth<=0||visibleHeight<=0){
+      const visibleLeft=r.left;
+      const visibleTop=r.top;
+      const visibleRight=r.right;
+      const visibleBottom=r.bottom;
+      const visibleWidth=r.width;
+      const visibleHeight=r.height;
+      if(r.width<=0||r.height<=0){
         miSelectionUI.style.display="none";
         return;
       }
