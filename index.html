@@ -4919,6 +4919,71 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 }
 
 </style>
+
+<style id="mi-unified-sharp-popup-finish">
+/* Apply the crisp Move or Copy visual finish to every popup and submenu.
+   Deliberately preserve each popup's existing width, height and position. */
+[role="dialog"],[role="menu"],[role="listbox"],
+.mi-modal,.mi-popup,.mi-word-size-dialog,.mi-word-context-menu,
+.mi-word-text-effects-menu,.mi-tab-color-submenu,.mi-excel-delete-dialog,
+#miProjectTabContextMenu,[class*="popup"]:not(button),
+[class*="submenu"],[class*="context-menu"]{
+  box-sizing:border-box!important;
+  font-family:"Segoe UI",Arial,sans-serif!important;
+  color:#172b40!important;
+  text-shadow:none!important;
+  filter:none!important;
+  -webkit-font-smoothing:antialiased!important;
+  text-rendering:optimizeLegibility!important;
+  border-color:#9aafc4!important;
+  border-radius:3px!important;
+  box-shadow:0 5px 16px rgba(20,45,75,.18),0 1px 3px rgba(0,0,0,.12)!important;
+}
+[role="dialog"] button,[role="menu"] button,[role="listbox"] button,
+.mi-modal button,.mi-popup button,.mi-word-size-dialog button,
+.mi-word-context-menu button,.mi-word-text-effects-menu button,
+.mi-tab-color-submenu button,.mi-excel-delete-dialog button,
+#miProjectTabContextMenu button,[class*="popup"] button,
+[class*="submenu"] button,[class*="context-menu"] button{
+  appearance:none!important;-webkit-appearance:none!important;
+  box-sizing:border-box!important;
+  font-family:"Segoe UI",Arial,sans-serif!important;
+  color:#20364d!important;
+  background:linear-gradient(180deg,#fff 0%,#edf3fa 100%)!important;
+  border:1px solid #b2c3d4!important;
+  border-radius:2px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 1px 1px rgba(20,45,75,.06)!important;
+  text-shadow:none!important;filter:none!important;transform:none!important;
+  font-weight:500!important;
+}
+[role="dialog"] button:hover,[role="menu"] button:hover,[role="listbox"] button:hover,
+.mi-modal button:hover,.mi-popup button:hover,.mi-word-size-dialog button:hover,
+.mi-word-context-menu button:hover,.mi-word-text-effects-menu button:hover,
+.mi-tab-color-submenu button:hover,.mi-excel-delete-dialog button:hover,
+#miProjectTabContextMenu button:hover,[class*="popup"] button:hover,
+[class*="submenu"] button:hover,[class*="context-menu"] button:hover{
+  background:linear-gradient(180deg,#f7fbff 0%,#dceafa 100%)!important;
+  border-color:#7fa4ca!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 1px 2px rgba(20,45,75,.10)!important;
+}
+[role="dialog"] button:active,[role="menu"] button:active,[role="listbox"] button:active,
+.mi-modal button:active,.mi-popup button:active,.mi-word-size-dialog button:active,
+.mi-word-context-menu button:active,.mi-word-text-effects-menu button:active,
+.mi-tab-color-submenu button:active,.mi-excel-delete-dialog button:active,
+#miProjectTabContextMenu button:active,[class*="popup"] button:active,
+[class*="submenu"] button:active,[class*="context-menu"] button:active{
+  background:#dce9f7!important;
+  box-shadow:inset 0 1px 2px rgba(35,65,95,.16)!important;
+}
+[role="dialog"] input,[role="dialog"] select,[role="dialog"] textarea,
+.mi-modal input,.mi-modal select,.mi-modal textarea,
+.mi-popup input,.mi-popup select,.mi-popup textarea{
+  font-family:"Segoe UI",Arial,sans-serif!important;
+  border-color:#a9bacb!important;
+  border-radius:2px!important;
+  box-shadow:inset 0 1px 2px rgba(20,45,75,.07)!important;
+}
+</style>
 </head>
 <body>
   <div id="top"></div>
