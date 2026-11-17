@@ -4402,6 +4402,39 @@ img{max-width:100%}
   flex:0 0 21px!important;width:21px!important;min-width:21px!important;
   height:25px!important;min-height:25px!important;margin:0!important;padding:0!important;
 }
+
+/* Restore the crisp Microsoft Office-style alignment buttons in their current toolbar position. */
+#miEditorToolbar #miMainAlignmentBar{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  gap:3px!important;height:30px!important;min-height:30px!important;padding:0 5px 0 7px!important;
+  margin:0 0 0 2px!important;border:0!important;border-left:1px solid #c7d2df!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 29px!important;width:29px!important;min-width:29px!important;max-width:29px!important;
+  height:28px!important;min-height:28px!important;margin:0!important;padding:4px!important;
+  border:1px solid #b9c8d8!important;border-radius:3px!important;
+  background:#fdfefe!important;color:#34465a!important;box-shadow:none!important;
+  transform:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button:hover{
+  background:#eaf2fb!important;border-color:#7fa6d2!important;color:#174f86!important;
+  box-shadow:none!important;transform:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button:active{
+  background:#dce9f7!important;border-color:#7298c2!important;box-shadow:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button svg{
+  display:block!important;width:16px!important;height:16px!important;overflow:visible!important;
+  fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+@media(max-width:760px){
+  #miEditorToolbar #miMainAlignmentBar{gap:2px!important;padding-left:5px!important}
+  #miEditorToolbar #miMainAlignmentBar button{flex-basis:27px!important;width:27px!important;min-width:27px!important;max-width:27px!important}
+}
+
 </style>
 </head>
 <body>
