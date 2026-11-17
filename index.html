@@ -7557,10 +7557,10 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       book.append(bookOption);
 
       const bookRow=document.createElement("div");
-      bookRow.style.cssText="display:grid;grid-template-columns:56px 280px;align-items:center;gap:4px;margin:0 0 4px;";
+      bookRow.style.cssText="display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin:0 0 6px;";
       const bookLabel=document.createElement("label");
       bookLabel.textContent="To book:";
-      bookLabel.style.cssText="font-weight:400;";
+      bookLabel.style.cssText="display:block;margin:0;padding:0;font-weight:400;line-height:14px;";
       bookRow.append(bookLabel,book);
 
       const beforeRow=document.createElement("div");
