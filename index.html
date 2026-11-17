@@ -7528,7 +7528,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       dialog.setAttribute("role","dialog");
       dialog.setAttribute("aria-modal","true");
       dialog.setAttribute("aria-label","Move or Copy");
-      dialog.style.cssText="width:278px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:0;background:#f5f5f5;border:1px solid #b5b5b5;border-radius:2px;box-shadow:0 2px 9px rgba(0,0,0,.16);font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
+      dialog.style.cssText="width:248px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:0;background:#f5f5f5;border:1px solid #b5b5b5;border-radius:2px;box-shadow:0 2px 9px rgba(0,0,0,.16);font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
 
       const titleBar=document.createElement("div");
       titleBar.style.cssText="height:25px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:0 7px 0 9px;background:#f7f7f7;border-bottom:1px solid #dedede;font-size:12px;font-weight:600;";
@@ -7548,7 +7548,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       instruction.textContent="Move selected sheets";
       instruction.style.cssText="margin:0 0 6px;font-size:11px;font-weight:400;color:#333;";
 
-      const controlStyle="width:100%;height:19px;box-sizing:border-box;padding:0 3px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
+      const controlStyle="width:100%;height:17px;box-sizing:border-box;padding:0 2px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
       const book=document.createElement("select");
       book.style.cssText=controlStyle;
       const bookOption=document.createElement("option");
@@ -7556,20 +7556,20 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       book.append(bookOption);
 
       const bookRow=document.createElement("div");
-      bookRow.style.cssText="display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;gap:4px;margin:0 0 5px;";
+      bookRow.style.cssText="display:grid;grid-template-columns:56px minmax(0,1fr);align-items:center;gap:4px;margin:0 0 4px;";
       const bookLabel=document.createElement("label");
       bookLabel.textContent="To book:";
       bookLabel.style.cssText="font-weight:400;";
       bookRow.append(bookLabel,book);
 
       const beforeRow=document.createElement("div");
-      beforeRow.style.cssText="display:grid;grid-template-columns:62px minmax(0,1fr);align-items:start;gap:4px;margin:0 0 5px;";
+      beforeRow.style.cssText="display:grid;grid-template-columns:56px minmax(0,1fr);align-items:start;gap:4px;margin:0 0 4px;";
       const beforeLabel=document.createElement("label");
       beforeLabel.textContent="Before sheet:";
       beforeLabel.style.cssText="padding-top:3px;font-weight:400;";
       const before=document.createElement("select");
-      before.size=Math.min(4,Math.max(3,miProjectWorkspaces.length+1));
-      before.style.cssText="display:block;width:100%;height:58px;box-sizing:border-box;padding:0 2px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
+      before.size=Math.min(3,Math.max(2,miProjectWorkspaces.length+1));
+      before.style.cssText="display:block;width:100%;height:48px;box-sizing:border-box;padding:0 1px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
       miProjectWorkspaces.forEach(workspace=>{
         const option=document.createElement("option");
         option.value=workspace.id;
@@ -7585,11 +7585,11 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       beforeRow.append(beforeLabel,before);
 
       const copyRow=document.createElement("label");
-      copyRow.style.cssText="display:flex;align-items:center;gap:7px;margin:0 0 0 66px;cursor:pointer;user-select:none;font-weight:400;";
+      copyRow.style.cssText="display:flex;align-items:center;gap:7px;margin:0 0 0 60px;cursor:pointer;user-select:none;font-weight:400;";
       const copy=document.createElement("input");
       copy.type="checkbox";
       copy.checked=!!copyInitially;
-      copy.style.cssText="width:12px;height:12px;margin:0;accent-color:#2176c7;cursor:pointer;";
+      copy.style.cssText="width:11px;height:11px;margin:0;accent-color:#2176c7;cursor:pointer;";
       const copyText=document.createElement("span");
       copyText.textContent="Create a copy";
       copyRow.append(copy,copyText);
