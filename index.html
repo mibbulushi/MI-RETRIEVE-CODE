@@ -7515,7 +7515,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       if (index >= 0) miProjectWorkspaces[index] = snapshot;
       else miProjectWorkspaces.push(snapshot);
     }
-    function miShowMoveCopyDialog(id) {
+    function miShowMoveCopyDialog(id, copyInitially=false) {
       const source=miProjectWorkspaces.find(item=>item.id===id);if(!source)return;
       document.getElementById("miMoveCopyOverlay")?.remove();
       const overlay=document.createElement("div");overlay.id="miMoveCopyOverlay";
@@ -7533,7 +7533,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       const end=document.createElement("option");end.value="__end__";end.textContent="(move to end)";before.append(end);
       const currentIndex=ordered.findIndex(w=>w.id===id);before.value=ordered[currentIndex+1]?.id||"__end__";
       const copyRow=document.createElement("label");copyRow.style.cssText="display:flex;align-items:center;gap:7px;margin:5px 0 17px 105px;cursor:pointer;";
-      const copy=document.createElement("input");copy.type="checkbox";copy.style.cssText="margin:0;";
+      const copy=document.createElement("input");copy.type="checkbox";copy.style.cssText="margin:0;";copy.checked=!!copyInitially;
       const copyText=document.createElement("span");copyText.textContent="Create a copy";copyRow.append(copy,copyText);
       const footer=document.createElement("div");footer.style.cssText="display:flex;justify-content:flex-end;gap:8px;padding-top:12px;border-top:1px solid #ccc;";
       const makeButton=label=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.style.cssText="appearance:none;min-width:76px;height:27px;padding:3px 14px;border:1px solid #999;border-radius:0;background:#f7f7f7;color:#222;box-shadow:none;text-shadow:none;font:12px 'Segoe UI',Arial,sans-serif;cursor:pointer;";b.addEventListener("mouseenter",()=>b.style.setProperty("background-color","#e8e8e8","important"));b.addEventListener("mouseleave",()=>b.style.setProperty("background-color","#f7f7f7","important"));return b;};
@@ -7561,7 +7561,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         {label:"Delete", svg:icon('<path d="M3 4.5h10M6 4.5V3h4v1.5M5 5.5l.5 7h5l.5-7"/>'), run:()=>miRemoveProjectTab(id)},
         {label:"Rename", svg:icon('<path d="M3 12.5l.7-2.8L10.8 2.6a1.4 1.4 0 012 2l-7.1 7.1L3 12.5zM9.8 3.6l2.6 2.6"/>'), run:()=>miRenameProjectTab(id)},
         {divider:true},
-        {label:"Move or Copy...", svg:icon('<rect x="2.5" y="3" width="8" height="10" rx=".7"/><path d="M5 6h3.5M5 8.5h3.5M8.5 2h5v9"/>'), run:()=>miShowMoveCopyDialog(id)},
+        {label:"Move or Copy", arrow:true, svg:icon('<rect x="2.5" y="3" width="8" height="10" rx=".7"/><path d="M5 6h3.5M5 8.5h3.5M8.5 2h5v9"/>')},
         {label:"View Code", disabled:true, svg:icon('<path d="M5.5 4L2 8l3.5 4M10.5 4L14 8l-3.5 4"/>')},
         {label:"Protect Sheet...", disabled:true, svg:icon('<rect x="3" y="7" width="10" height="7" rx="1"/><path d="M5 7V5a3 3 0 016 0v2"/>')},
         {divider:true},
@@ -7585,6 +7585,34 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         else item.setAttribute("role","menuitem");
         item.innerHTML=entry.svg+'<span class="mi-project-tab-menu-label"></span>'+(entry.arrow?'<span class="mi-project-tab-menu-arrow">›</span>':"");
         item.querySelector(".mi-project-tab-menu-label").textContent=entry.label;
+        if(entry.label==="Move or Copy"){
+          item.classList.add("mi-move-copy-trigger");
+          const submenu=document.createElement("div");
+          submenu.className="mi-move-copy-submenu";
+          submenu.style.cssText="position:fixed;display:none;z-index:2147483001;min-width:132px;padding:3px;background:#fff;border:1px solid #8a8a8a;box-shadow:1px 2px 4px rgba(0,0,0,.18);font:12px 'Segoe UI',Arial,sans-serif;";
+          [["Move...",false],["Copy...",true]].forEach(([label,isCopy])=>{
+            const option=document.createElement("button");
+            option.type="button";option.textContent=label;
+            option.style.cssText="display:block;width:100%;height:27px;min-height:27px;padding:4px 9px;border:1px solid transparent;border-radius:0;background:#fff;color:#222;text-align:left;font:12px 'Segoe UI',Arial,sans-serif;box-shadow:none;transform:none;cursor:default;";
+            option.addEventListener("mouseenter",()=>option.style.setProperty("background-color","#e5f1fb","important"));
+            option.addEventListener("mouseleave",()=>option.style.setProperty("background-color","#fff","important"));
+            option.addEventListener("click",e=>{e.stopPropagation();submenu.remove();menu.remove();miShowMoveCopyDialog(id,isCopy);});
+            submenu.append(option);
+          });
+          document.body.append(submenu);
+          const showSubmenu=()=>{
+            const r=item.getBoundingClientRect(),w=submenu.offsetWidth;
+            const left=r.right+w+4<=window.innerWidth?r.right+2:Math.max(8,r.left-w-2);
+            submenu.style.left=left+"px";
+            submenu.style.top=Math.max(8,Math.min(r.top,window.innerHeight-submenu.offsetHeight-8))+"px";
+            submenu.style.display="block";
+          };
+          const hideSubmenu=()=>{submenu.style.display="none";};
+          item.addEventListener("mouseenter",showSubmenu);
+          item.addEventListener("mouseleave",()=>{setTimeout(()=>{if(!submenu.matches(":hover"))hideSubmenu();},100);});
+          submenu.addEventListener("mouseenter",showSubmenu);
+          submenu.addEventListener("mouseleave",hideSubmenu);
+        }
         if(entry.label==="Tab Color"){
           item.classList.add("mi-tab-color-trigger");
           const palette=document.createElement("div");
