@@ -6056,7 +6056,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
     document.addEventListener("pointerup",()=>{miDirectCropDrag=null;});
     const miLayoutMenu = document.createElement("div");
     miLayoutMenu.setAttribute("aria-label","Picture layout options");
-    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:236px;padding:4px;background:#fff;border:1px solid #c8c8c8;border-radius:2px;box-shadow:0 2px 5px rgba(0,0,0,.12);pointer-events:auto;color:#242424;font:12px Arial,sans-serif;box-sizing:border-box;";
+    miLayoutMenu.style.cssText = "position:absolute;left:calc(100% + 8px);top:34px;display:none;width:190px;padding:5px;background:#fff;border:1px solid #d6d9de;border-radius:4px;box-shadow:0 2px 7px rgba(0,0,0,.10);pointer-events:auto;color:#242424;font:12px Arial,sans-serif;box-sizing:border-box;";
     const miLayouts = [["inline","In Line with Text"],["square","Square"],["tight","Tight"],["top-bottom","Top and Bottom"],["behind","Behind Text"],["front","In Front of Text"]];
     function miLayoutIcon(kind){
       const blue="#2878c8",gray="#6b7785";
@@ -6072,18 +6072,18 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       return '<svg viewBox="0 0 34 25" width="38" height="29" aria-hidden="true">'+lines+img+extra+'</svg>';
     }
     const layoutHeading=document.createElement("div");
-    layoutHeading.textContent="With Text Wrapping";
-    layoutHeading.style.cssText="font-size:13px;font-weight:600;color:#242424;padding:2px 7px 9px;border-bottom:1px solid #e5e7eb;margin-bottom:5px;";
+    layoutHeading.textContent="Wrap Text";
+    layoutHeading.style.cssText="font-size:12px;font-weight:600;color:#333;padding:3px 7px 7px;border-bottom:1px solid #e5e7eb;margin-bottom:4px;";
     miLayoutMenu.append(layoutHeading);
     const layoutGrid=document.createElement("div");
     layoutGrid.style.cssText="display:flex;flex-direction:column;gap:1px;";
     miLayouts.forEach(([value,label]) => {
       const option=document.createElement("button");
       option.type="button"; option.dataset.layout=value; option.title=label;
-      option.innerHTML='<span style="display:flex;align-items:center;justify-content:center;width:34px;height:28px;flex:0 0 34px;">'+miLayoutIcon(value)+'</span><span style="display:block;flex:1;text-align:left;white-space:normal;line-height:1.25;">'+label+'</span><span aria-hidden="true" style="width:12px;color:#217346;font-size:15px;">›</span>';
-      option.style.cssText="display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:9px;width:100%;min-height:42px;padding:5px 7px;margin:0;border:1px solid transparent;border-radius:2px;background:#fff;color:#242424;text-align:left;font-size:12px;cursor:pointer;box-sizing:border-box;";
-      option.addEventListener("mouseenter",()=>{option.style.background="#f1f5f9";option.style.borderColor="transparent";});
-      option.addEventListener("mouseleave",()=>{option.style.background="#fff";option.style.borderColor="transparent";});
+      option.textContent=label;
+      option.style.cssText="display:block;width:100%;min-height:32px;padding:6px 9px;margin:0;border:0;border-radius:3px;background:transparent;box-shadow:none;color:#242424;text-align:left;font:12px Arial,sans-serif;cursor:pointer;box-sizing:border-box;";
+      option.addEventListener("mouseenter",()=>{option.style.background="#f1f3f5";option.style.boxShadow="none";});
+      option.addEventListener("mouseleave",()=>{option.style.background="transparent";option.style.boxShadow="none";});
       option.addEventListener("click",()=>applyMiPictureLayout(value));
       layoutGrid.append(option);
     });
