@@ -4870,6 +4870,54 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 }
 #miEditorToolbar #miMainAlignmentBar button[data-mi-paragraph] svg{width:20px!important;height:20px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.5!important;pointer-events:none!important}
 #miEditorToolbar #miMainAlignmentBar button[data-mi-paragraph]:hover{background:#e9e9e9!important;border-color:#c8c8c8!important}
+
+/* Match paragraph alignment icons to the compact B/I/U/S toolbar buttons. */
+#miEditorToolbar #miMainAlignmentBar{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:0;
+  margin:0;
+  border:0;
+  background:transparent;
+}
+#miEditorToolbar #miMainAlignmentBar button{
+  display:inline-flex;
+  flex:0 0 29px;
+  align-items:center;
+  justify-content:center;
+  width:29px;
+  min-width:29px;
+  max-width:29px;
+  height:29px;
+  min-height:29px;
+  padding:3px;
+  margin:0;
+  border:1px solid #cbd5e1;
+  border-radius:6px;
+  background:#fff;
+  color:#26364a;
+  box-shadow:none;
+  transform:none;
+  font:13px/1 Arial,sans-serif;
+}
+#miEditorToolbar #miMainAlignmentBar button:hover{
+  background:#f1f5f9;
+  border-color:#aebdce;
+  box-shadow:none;
+  transform:none;
+}
+#miEditorToolbar #miMainAlignmentBar button svg{
+  display:block;
+  width:15px;
+  height:15px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
 </style>
 </head>
 <body>
