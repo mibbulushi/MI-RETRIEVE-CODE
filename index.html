@@ -6804,6 +6804,41 @@ img{max-width:100%}
       if (index >= 0) miProjectWorkspaces[index] = snapshot;
       else miProjectWorkspaces.push(snapshot);
     }
+    function miShowMoveCopyDialog(id) {
+      const source=miProjectWorkspaces.find(item=>item.id===id);if(!source)return;
+      document.getElementById("miMoveCopyOverlay")?.remove();
+      const overlay=document.createElement("div");overlay.id="miMoveCopyOverlay";
+      overlay.style.cssText="position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;background:rgba(0,0,0,.24);";
+      const dialog=document.createElement("div");dialog.setAttribute("role","dialog");dialog.setAttribute("aria-modal","true");dialog.setAttribute("aria-label","Move or Copy");
+      dialog.style.cssText="width:390px;max-width:100%;box-sizing:border-box;padding:16px;background:#f3f3f3;border:1px solid #888;border-radius:0;box-shadow:0 3px 12px rgba(0,0,0,.22);font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
+      const heading=document.createElement("div");heading.textContent="Move or Copy";heading.style.cssText="font-size:14px;font-weight:600;margin:0 0 16px;";
+      const intro=document.createElement("div");intro.textContent="Move selected sheet";intro.style.cssText="margin-bottom:13px;";
+      const field=(labelText,control)=>{const row=document.createElement("label");row.style.cssText="display:grid;grid-template-columns:105px 1fr;align-items:center;gap:10px;margin:0 0 12px;";const label=document.createElement("span");label.textContent=labelText;row.append(label,control);return row;};
+      const selectStyle="box-sizing:border-box;width:100%;height:27px;padding:3px 6px;border:1px solid #999;border-radius:0;background:#fff;color:#222;font:12px 'Segoe UI',Arial,sans-serif;";
+      const book=document.createElement("select");book.style.cssText=selectStyle;const bookOption=document.createElement("option");bookOption.textContent="This project";book.append(bookOption);book.disabled=true;
+      const before=document.createElement("select");before.style.cssText=selectStyle;
+      const ordered=miProjectWorkspaces.slice();
+      ordered.filter(w=>w.id!==id).forEach(w=>{const o=document.createElement("option");o.value=w.id;o.textContent=w.tabName||w.name||"Project";before.append(o);});
+      const end=document.createElement("option");end.value="__end__";end.textContent="(move to end)";before.append(end);
+      const currentIndex=ordered.findIndex(w=>w.id===id);before.value=ordered[currentIndex+1]?.id||"__end__";
+      const copyRow=document.createElement("label");copyRow.style.cssText="display:flex;align-items:center;gap:7px;margin:5px 0 17px 105px;cursor:pointer;";
+      const copy=document.createElement("input");copy.type="checkbox";copy.style.cssText="margin:0;";
+      const copyText=document.createElement("span");copyText.textContent="Create a copy";copyRow.append(copy,copyText);
+      const footer=document.createElement("div");footer.style.cssText="display:flex;justify-content:flex-end;gap:8px;padding-top:12px;border-top:1px solid #ccc;";
+      const makeButton=label=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.style.cssText="appearance:none;min-width:76px;height:27px;padding:3px 14px;border:1px solid #999;border-radius:0;background:#f7f7f7;color:#222;box-shadow:none;text-shadow:none;font:12px 'Segoe UI',Arial,sans-serif;cursor:pointer;";b.addEventListener("mouseenter",()=>b.style.setProperty("background-color","#e8e8e8","important"));b.addEventListener("mouseleave",()=>b.style.setProperty("background-color","#f7f7f7","important"));return b;};
+      const cancel=makeButton("Cancel"),ok=makeButton("OK");
+      cancel.addEventListener("click",()=>overlay.remove());
+      ok.addEventListener("click",()=>{
+        const current=miProjectWorkspaces.findIndex(w=>w.id===id);if(current<0){overlay.remove();return;}
+        const targetId=before.value;let target=targetId==="__end__"?miProjectWorkspaces.length:miProjectWorkspaces.findIndex(w=>w.id===targetId);
+        const item=miProjectWorkspaces[current];
+        if(copy.checked){const duplicate=JSON.parse(JSON.stringify(item));duplicate.id="mi-tab-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);duplicate.tabName=((item.tabName||item.name||"Sheet")+" Copy").slice(0,40);if(target>current)target--;miProjectWorkspaces.splice(Math.max(0,target),0,duplicate);miActiveWorkspaceId=duplicate.id;}
+        else{miProjectWorkspaces.splice(current,1);if(target>current)target--;miProjectWorkspaces.splice(Math.max(0,target),0,item);}
+        miRenderProjectTabs();scheduleMiLocalDraftSave();overlay.remove();
+      });
+      footer.append(cancel,ok);dialog.append(heading,intro,field("To book:",book),field("Before sheet:",before),copyRow,footer);
+      overlay.append(dialog);overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.remove();});document.body.append(overlay);
+    }
     function miShowProjectTabMenu(event, id) {
       document.getElementById("miProjectTabContextMenu")?.remove();
       const menu = document.createElement("div");
@@ -6815,13 +6850,7 @@ img{max-width:100%}
         {label:"Delete", svg:icon('<path d="M3 4.5h10M6 4.5V3h4v1.5M5 5.5l.5 7h5l.5-7"/>'), run:()=>miRemoveProjectTab(id)},
         {label:"Rename", svg:icon('<path d="M3 12.5l.7-2.8L10.8 2.6a1.4 1.4 0 012 2l-7.1 7.1L3 12.5zM9.8 3.6l2.6 2.6"/>'), run:()=>miRenameProjectTab(id)},
         {divider:true},
-        {label:"Move or Copy...", svg:icon('<rect x="2.5" y="3" width="8" height="10" rx=".7"/><path d="M5 6h3.5M5 8.5h3.5M8.5 2h5v9"/>'), run:()=>{
-          const choice=prompt("Move sheet: enter L for left or R for right. Enter C to create a copy.","L");
-          if(choice===null)return;
-          if(choice.trim().toUpperCase()==="L")miMoveProjectTab(id,-1);
-          else if(choice.trim().toUpperCase()==="R")miMoveProjectTab(id,1);
-          else if(choice.trim().toUpperCase()==="C")miCopyProjectTab(id);
-        }},
+        {label:"Move or Copy...", svg:icon('<rect x="2.5" y="3" width="8" height="10" rx=".7"/><path d="M5 6h3.5M5 8.5h3.5M8.5 2h5v9"/>'), run:()=>miShowMoveCopyDialog(id)},
         {label:"View Code", disabled:true, svg:icon('<path d="M5.5 4L2 8l3.5 4M10.5 4L14 8l-3.5 4"/>')},
         {label:"Protect Sheet...", disabled:true, svg:icon('<rect x="3" y="7" width="10" height="7" rx="1"/><path d="M5 7V5a3 3 0 016 0v2"/>')},
         {divider:true},
