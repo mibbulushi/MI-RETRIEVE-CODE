@@ -8525,7 +8525,7 @@ img{max-width:100%}
         zoomBar.append(zoomOut,zoomSlider,zoomIn,zoomValue);
         viewbar.append(zoomBar);
         setDocumentZoom(100);
-        const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);statusRow.style.display="flex";statusRow.style.alignItems="center";statusRow.style.justifyContent="space-between";statusRow.style.flexWrap="nowrap";statusRow.style.gap="8px";}else stage.insertBefore(viewbar,editor);
+        const infoRow=document.querySelector("#saveArea .mi-document-info-row");if(infoRow){infoRow.append(viewbar);infoRow.style.setProperty("display","flex","important");infoRow.style.setProperty("flex-direction","row","important");infoRow.style.setProperty("flex-wrap","nowrap","important");infoRow.style.setProperty("align-items","center","important");infoRow.style.setProperty("justify-content","space-between","important");infoRow.style.setProperty("gap","8px","important");}else stage.insertBefore(viewbar,editor);
         viewButtons.print.click();
       }
       function updatePictureTab(){
@@ -8567,3 +8567,11 @@ img{max-width:100%}
 </script>
 </body>
 </html>
+
+<style id="mi-document-stats-options-same-row">
+#saveArea .mi-document-info-row{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;min-width:0!important;width:100%!important}
+#saveArea .mi-document-info-row #miDocumentStats{flex:0 1 auto!important;min-width:0!important;white-space:nowrap!important;margin:0!important}
+#saveArea .mi-document-info-row .mi-document-viewbar{display:flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:flex-end!important;gap:3px!important;margin:0!important;padding:0!important;white-space:nowrap!important}
+#saveArea .mi-document-info-row .mi-document-zoom{display:flex!important;align-items:center!important;gap:3px!important}
+@media(max-width:760px){#saveArea .mi-document-info-row{gap:3px!important}#saveArea .mi-document-info-row #miDocumentStats{font-size:10px!important;gap:3px!important;padding:4px!important}#saveArea .mi-document-info-row .mi-document-viewbar{gap:1px!important;transform:scale(.92);transform-origin:right center}}
+</style>
