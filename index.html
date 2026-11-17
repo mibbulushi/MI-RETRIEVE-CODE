@@ -7589,7 +7589,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       const copy=document.createElement("input");
       copy.type="checkbox";
       copy.checked=!!copyInitially;
-      copy.style.cssText="appearance:none;box-sizing:border-box;width:11px;height:7px;min-width:11px;min-height:7px;max-height:7px;flex:0 0 7px;transform:none;margin:0;border:1px solid #777;border-radius:1px;background:#fff;accent-color:#2176c7;cursor:pointer;";
+      copy.style.cssText="appearance:none!important;box-sizing:border-box!important;display:inline-block!important;width:11px!important;height:7px!important;min-width:11px!important;max-width:11px!important;min-height:7px!important;max-height:7px!important;flex:0 0 11px!important;padding:0!important;margin:0!important;border:1px solid #777;border-radius:1px;background:#fff;accent-color:#2176c7;cursor:pointer;vertical-align:middle;";
       copy.addEventListener("change",()=>{copy.style.background=copy.checked?"#2176c7":"#fff";copy.style.borderColor=copy.checked?"#2176c7":"#777";copy.style.boxShadow=copy.checked?"inset 0 0 0 2px #fff":"none";});
       const copyText=document.createElement("span");
       copyText.textContent="Create a copy";
