@@ -7550,7 +7550,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 
       const controlStyle="width:100%;height:17px;box-sizing:border-box;padding:0 2px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
       const book=document.createElement("select");
-      book.style.cssText=controlStyle+"width:280px!important;min-width:280px!important;max-width:280px!important;height:17px!important;min-height:17px!important;max-height:17px!important;line-height:17px!important;padding:0 3px!important;box-sizing:border-box!important;transform:scaleY(.59)!important;transform-origin:center center!important;";
+      book.style.cssText=controlStyle+"appearance:none!important;-webkit-appearance:none!important;width:280px!important;min-width:280px!important;max-width:280px!important;height:10px!important;min-height:10px!important;max-height:10px!important;line-height:8px!important;font-size:8px!important;padding:0 14px 0 3px!important;box-sizing:border-box!important;transform:none!important;background-color:#fff;background-image:linear-gradient(45deg,transparent 50%,#555 50%),linear-gradient(135deg,#555 50%,transparent 50%);background-position:calc(100% - 7px) 3px,calc(100% - 4px) 3px;background-size:3px 3px,3px 3px;background-repeat:no-repeat;";
       const bookOption=document.createElement("option");
       bookOption.textContent="This project";
       book.append(bookOption);
