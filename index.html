@@ -5968,12 +5968,15 @@ img{max-width:100%}
       const editorTop=editorRect.top+miDocumentEditor.clientTop;
       const editorRight=editorLeft+miDocumentEditor.clientWidth;
       const editorBottom=editorTop+miDocumentEditor.clientHeight;
-      const visibleLeft=r.left;
-      const visibleTop=r.top;
-      const visibleRight=r.right;
-      const visibleBottom=r.bottom;
-      const visibleWidth=r.width;
-      const visibleHeight=r.height;
+      // During crop mode, align the frame with the visible portion of the image.
+      // In normal mode, retain the full-image selection frame.
+      const crop=miDirectCropMode?miReadDirectCrop():{top:0,right:0,bottom:0,left:0};
+      const visibleLeft=r.left+r.width*crop.left/100;
+      const visibleTop=r.top+r.height*crop.top/100;
+      const visibleRight=r.right-r.width*crop.right/100;
+      const visibleBottom=r.bottom-r.height*crop.bottom/100;
+      const visibleWidth=Math.max(1,visibleRight-visibleLeft);
+      const visibleHeight=Math.max(1,visibleBottom-visibleTop);
       if(r.width<=0||r.height<=0){
         miSelectionUI.style.display="none";
         return;
