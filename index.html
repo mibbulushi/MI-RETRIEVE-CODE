@@ -4654,6 +4654,63 @@ img{max-width:100%}
   #saveArea .mi-document-info-row .mi-sharing-privacy-notice{flex:0 0 620px!important;font-size:10px!important}
   #saveArea .mi-document-info-row #miDocumentStats{font-size:10px!important;gap:4px!important}
 }
+
+/* Keep Project Document title, helper sentence, and Home/Insert tabs in one row. */
+.mi-builder-panel .mi-builder-heading{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:14px!important;
+  width:100%!important;
+  min-width:0!important;
+  overflow-x:auto!important;
+}
+.mi-builder-panel .mi-builder-heading>div:first-child{
+  display:flex!important;
+  flex:0 0 auto!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:baseline!important;
+  gap:9px!important;
+  min-width:0!important;
+  max-width:none!important;
+  white-space:nowrap!important;
+}
+.mi-builder-panel .mi-builder-heading h3{
+  flex:0 0 auto!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+.mi-builder-panel .mi-builder-heading>div:first-child p{
+  flex:0 0 auto!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+.mi-builder-panel .mi-builder-heading .mi-word-ribbon-tabs{
+  display:flex!important;
+  flex:0 0 auto!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  gap:4px!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+.mi-builder-panel .mi-builder-heading .mi-document-tools{
+  display:flex!important;
+  flex:0 0 auto!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  margin-left:auto!important;
+  white-space:nowrap!important;
+}
+.mi-builder-panel .mi-builder-heading .mi-word-ribbon-tab{
+  flex:0 0 auto!important;
+  white-space:nowrap!important;
+}
+
 </style>
 </head>
 <body>
@@ -8599,7 +8656,12 @@ img{max-width:100%}
       homeItems.forEach(node=>panelMap.home.append(node));
       if(insertTools)panelMap.insert.append(insertTools);
       panelMap.picture.append(pictureRibbon);
-      toolbar.replaceChildren(tabs,panels);
+      /* Place Home/Insert tabs beside the Project Document title and helper text. */
+      const builderHeading=document.querySelector(".mi-builder-panel .mi-builder-heading");
+      const headingTools=builderHeading?.querySelector(".mi-document-tools");
+      if(builderHeading&&headingTools)builderHeading.insertBefore(tabs,headingTools);
+      else if(builderHeading)builderHeading.append(tabs);
+      toolbar.replaceChildren(panels);
       if(editor&&!editor.parentElement.classList.contains("mi-word-stage")){
         const stage=document.createElement("div");
         stage.className="mi-word-stage";
