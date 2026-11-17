@@ -7563,13 +7563,13 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       bookRow.append(bookLabel,book);
 
       const beforeRow=document.createElement("div");
-      beforeRow.style.cssText="display:grid;grid-template-columns:56px 128px;align-items:start;gap:4px;margin:0 0 4px;";
+      beforeRow.style.cssText="display:grid;grid-template-columns:56px 280px;align-items:center;gap:4px;margin:0 0 4px;";
       const beforeLabel=document.createElement("label");
       beforeLabel.textContent="Before sheet:";
       beforeLabel.style.cssText="padding-top:3px;font-weight:400;";
       const before=document.createElement("select");
-      before.size=Math.min(3,Math.max(2,miProjectWorkspaces.length+1));
-      before.style.cssText="display:block;width:128px;max-width:100%;height:48px;box-sizing:border-box;padding:0 1px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
+      before.size=1;
+      before.style.cssText="display:block;width:280px!important;min-width:280px;height:14px!important;min-height:14px;max-height:14px;line-height:12px;box-sizing:border-box;padding:0 3px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
       miProjectWorkspaces.forEach(workspace=>{
         const option=document.createElement("option");
         option.value=workspace.id;
