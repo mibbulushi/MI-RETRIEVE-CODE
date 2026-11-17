@@ -5428,18 +5428,6 @@ img{max-width:100%}
     $("miCustomFontSize").addEventListener("keydown",event=>{
       if(event.key==="Enter"){event.preventDefault();miApplyCustomFontSize(event.target.value);}
     });
-    function miStepFontSize(direction){
-      const input=$("miCustomFontSize");
-      const current=Math.max(1,Math.min(300,Number(input.value)||12));
-      const next=Math.max(1,Math.min(300,current+direction));
-      input.value=String(next);
-      miApplyCustomFontSize(next);
-    }
-    ["miFontSizeDecrease","miFontSizeIncrease"].forEach(id=>{
-      const button=$(id);
-      button.addEventListener("pointerdown",event=>event.preventDefault());
-      button.addEventListener("click",()=>miStepFontSize(id==="miFontSizeIncrease"?1:-1));
-    });
     $("miFontColor").addEventListener("input", event => {
       restoreMiEditorSelection();
       document.execCommand("foreColor", false, event.target.value);
