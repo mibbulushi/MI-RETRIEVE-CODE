@@ -4553,13 +4553,6 @@ img{max-width:100%}
             <label class="mi-tool-label mi-color-label" title="Text highlight colour">Highlight <input id="miTextHighlightColor" type="color" value="#ffff00" aria-label="Text highlight colour"></label>
             <button type="button" class="secondary mi-grammar-compact" id="miClearFormattingBtn" title="Clear All Formatting" aria-label="Clear All Formatting">Clear Formatting</button>
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
-            <div id="miMainAlignmentBar" class="mi-main-alignment-bar mi-inline-alignment-controls" role="toolbar" aria-label="Paragraph alignment">
-              
-              <button type="button" data-mi-align="justifyLeft" title="Align Left (Ctrl+L)" aria-label="Align Left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h11M4 13h16M4 17h11M4 21h16"/></svg></button>
-              <button type="button" data-mi-align="justifyRight" title="Align Right (Ctrl+R)" aria-label="Align Right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M9 9h11M4 13h16M9 17h11M4 21h16"/></svg></button>
-              <button type="button" data-mi-align="justifyCenter" title="Center (Ctrl+E)" aria-label="Center"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 9h10M4 13h16M7 17h10M4 21h16"/></svg></button>
-              <button type="button" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h16M4 13h16M4 17h16M4 21h16"/></svg></button>
-            </div>
             <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
             <div class="mi-ribbon-group">
               <button type="button" data-mi-ribbon="crop" title="Crop picture"><svg class="mi-ribbon-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2v12a2 2 0 0 0 2 2h10M2 6h12a2 2 0 0 1 2 2v10"/><path d="M6 6h8v8"/></svg><span>Crop</span></button>
@@ -4854,20 +4847,6 @@ img{max-width:100%}
         miSavedEditorRange=current.getRangeAt(0).cloneRange();
       }
     },true);
-    const miMainAlignmentBar=$("miMainAlignmentBar");
-    miMainAlignmentBar.addEventListener("pointerdown",event=>{
-      const selection=window.getSelection();
-      if(selection&&selection.rangeCount&&!selection.isCollapsed&&miDocumentEditor.contains(selection.anchorNode)&&miDocumentEditor.contains(selection.focusNode)){
-        miSavedEditorRange=selection.getRangeAt(0).cloneRange();
-      }
-      const button=event.target.closest("button[data-mi-align]");
-      if(!button)return;
-      event.preventDefault();
-      restoreMiEditorSelection();
-      document.execCommand(button.dataset.miAlign,false,null);
-      $("content").value=miDocumentEditor.innerHTML;
-      setMiWorkStatus("Paragraph alignment changed — save your project to store it.");
-    });
     // Keep the document selection available while the user operates Home toolbar controls.
     document.addEventListener("selectionchange",()=>{
       const selection=window.getSelection();
