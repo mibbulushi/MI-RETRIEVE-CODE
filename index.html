@@ -4772,6 +4772,35 @@ img{max-width:100%}
   opacity:.55;
   cursor:not-allowed;
 }
+
+/* Strong New Project-only glass override, after all legacy button themes */
+body #appArea #saveArea button,
+body #appArea #saveArea button.secondary,
+body #appArea #saveArea .mi-save-actions #saveBtn{
+  color:#174477!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.68),rgba(222,240,255,.28))!important;
+  border:1px solid rgba(255,255,255,.94)!important;
+  border-top:1px solid rgba(255,255,255,1)!important;
+  border-bottom:1px solid rgba(95,151,211,.42)!important;
+  border-radius:10px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(120,174,224,.18),0 3px 12px rgba(45,105,170,.13)!important;
+  backdrop-filter:blur(14px) saturate(150%)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(150%)!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.85)!important;
+}
+body #appArea #saveArea button:hover:not(:disabled),
+body #appArea #saveArea button.secondary:hover:not(:disabled),
+body #appArea #saveArea .mi-save-actions #saveBtn:hover:not(:disabled){
+  color:#123f70!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(202,229,255,.48))!important;
+  border-color:rgba(73,146,220,.72)!important;
+  box-shadow:inset 0 1px 0 #fff,0 5px 15px rgba(45,105,170,.2)!important;
+}
+body #appArea #saveArea button:active:not(:disabled),
+body #appArea #saveArea button.secondary:active:not(:disabled){
+  transform:translateY(0)!important;
+  box-shadow:inset 0 2px 5px rgba(54,105,157,.16)!important;
+}
 </style>
 </head>
 <body>
