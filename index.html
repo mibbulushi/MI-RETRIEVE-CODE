@@ -4984,6 +4984,63 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
   box-shadow:inset 0 1px 2px rgba(20,45,75,.07)!important;
 }
 </style>
+
+<style id="mi-force-subpopup-sharp-finish">
+/* Explicit submenu pass: these nested panels do not use role=dialog. */
+.mi-word-submenu,
+.mi-word-submenu[hidden],
+.mi-tab-color-submenu,
+.mi-word-text-effects-menu,
+.mi-word-context-menu .mi-word-submenu,
+[class*="submenu"]:not(.mi-tab-color-swatch),
+[role="menu"] [role="menu"],
+[role="listbox"]{
+  box-sizing:border-box!important;
+  font-family:"Segoe UI",Arial,sans-serif!important;
+  color:#172b40!important;
+  text-shadow:none!important;
+  filter:none!important;
+  -webkit-font-smoothing:antialiased!important;
+  text-rendering:geometricPrecision!important;
+  border:1px solid #9aafc4!important;
+  border-radius:3px!important;
+  box-shadow:0 5px 16px rgba(20,45,75,.18),0 1px 3px rgba(0,0,0,.12)!important;
+}
+.mi-word-submenu{
+  background:linear-gradient(180deg,#fff 0%,#f5f8fc 100%)!important;
+  border-left:1px solid #9aafc4!important;
+  padding:5px!important;
+}
+.mi-word-submenu-item,
+.mi-word-context-menu .mi-word-submenu-item,
+.mi-word-text-effects-menu button:not(.mi-tab-color-swatch),
+.mi-tab-color-submenu .mi-tab-no-color{
+  box-sizing:border-box!important;
+  font-family:"Segoe UI",Arial,sans-serif!important;
+  color:#20364d!important;
+  background:linear-gradient(180deg,#fff 0%,#edf3fa 100%)!important;
+  border:1px solid #b2c3d4!important;
+  border-radius:2px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 1px 1px rgba(20,45,75,.06)!important;
+  text-shadow:none!important;filter:none!important;transform:none!important;
+}
+.mi-word-submenu-item:hover,.mi-word-submenu-item:focus-visible,
+.mi-word-text-effects-menu button:hover,
+.mi-tab-color-submenu .mi-tab-no-color:hover{
+  background:linear-gradient(180deg,#f7fbff 0%,#dceafa 100%)!important;
+  border-color:#7fa4ca!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 1px 2px rgba(20,45,75,.10)!important;
+}
+.mi-word-submenu-item:active,.mi-word-text-effects-menu button:active,
+.mi-tab-color-submenu .mi-tab-no-color:active{
+  background:#dce9f7!important;
+  box-shadow:inset 0 1px 2px rgba(35,65,95,.16)!important;
+}
+.mi-word-submenu-item *,
+.mi-word-text-effects-menu *{
+  text-shadow:none!important;filter:none!important;
+}
+</style>
 </head>
 <body>
   <div id="top"></div>
