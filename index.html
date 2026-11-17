@@ -7628,7 +7628,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         const button=document.createElement("button");
         button.type="button";
         button.textContent=label;
-        button.style.cssText="appearance:none;min-width:58px;height:22px;padding:1px 8px;border:1px solid "+(primary?"#3978a8":"#888")+";border-radius:2px;background:"+(primary?"#e5f1fb":"#f7f7f7")+";color:#222;box-shadow:none;font:13px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
+        button.style.cssText="appearance:none;min-width:58px;height:16px;min-height:16px;max-height:16px;padding:0 8px;border:1px solid "+(primary?"#3978a8":"#888")+";border-radius:2px;background:"+(primary?"#e5f1fb":"#f7f7f7")+";color:#222;box-shadow:none;font:13px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
         button.addEventListener("mouseenter",()=>{button.style.background="#dcecf8";button.style.borderColor="#4b91c5";});
         button.addEventListener("mouseleave",()=>{button.style.background=primary?"#e5f1fb":"#f7f7f7";button.style.borderColor=primary?"#3978a8":"#888";});
         button.addEventListener("focus",()=>button.style.outline="1px solid #5b9bd5");
