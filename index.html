@@ -7602,7 +7602,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           document.body.append(submenu);
           const showSubmenu=()=>{
             const r=item.getBoundingClientRect(),w=submenu.offsetWidth;
-            const left=r.right+w+4<=window.innerWidth?r.right+2:Math.max(8,r.left-w-2);
+            const left=r.right+w<=window.innerWidth?r.right:Math.max(8,r.left-w);
             submenu.style.left=left+"px";
             submenu.style.top=Math.max(8,Math.min(r.top,window.innerHeight-submenu.offsetHeight-8))+"px";
             submenu.style.display="block";
@@ -7801,7 +7801,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         const paletteOpen=Array.from(document.querySelectorAll("body > .mi-tab-color-submenu")).some(node=>node.contains(e.target));
         if(!menu.contains(e.target)&&!paletteOpen){
           menu.remove();
-          document.querySelectorAll("body > .mi-tab-color-submenu").forEach(node=>node.remove());
+          document.querySelectorAll("body > .mi-tab-color-submenu,body > .mi-move-copy-submenu").forEach(node=>node.remove());
           document.removeEventListener("pointerdown",closeMenu,true);
           document.removeEventListener("keydown",closeOnEscape);
         }
@@ -7809,7 +7809,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       const closeOnEscape=e=>{
         if(e.key==="Escape"){
           menu.remove();
-          document.querySelectorAll("body > .mi-tab-color-submenu").forEach(node=>node.remove());
+          document.querySelectorAll("body > .mi-tab-color-submenu,body > .mi-move-copy-submenu").forEach(node=>node.remove());
           document.removeEventListener("pointerdown",closeMenu,true);
           document.removeEventListener("keydown",closeOnEscape);
         }
