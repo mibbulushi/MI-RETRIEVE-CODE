@@ -4216,6 +4216,52 @@ img{max-width:100%}
   opacity:1!important;
 }
 
+
+/* High-clarity alignment controls: stronger icons, crisp edges, and precise Office-style sizing. */
+#miEditorToolbar #miMainAlignmentBar{
+  gap:3px!important;height:32px!important;min-height:32px!important;
+  padding:0 6px 0 8px!important;margin:0 0 0 3px!important;
+  border-left:1px solid #aebdce!important;
+  background:transparent!important;box-shadow:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button{
+  appearance:none!important;-webkit-appearance:none!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 30px!important;width:30px!important;min-width:30px!important;max-width:30px!important;
+  height:30px!important;min-height:30px!important;margin:0!important;padding:4px!important;
+  border:1px solid #879bb2!important;border-radius:2px!important;
+  background:#ffffff!important;color:#20364f!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.9)!important;
+  text-shadow:none!important;transform:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button:hover{
+  background:#e8f1fc!important;border-color:#477db8!important;color:#123f70!important;
+  box-shadow:inset 0 0 0 1px #fff!important;transform:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button:focus-visible{
+  outline:2px solid #2878c8!important;outline-offset:1px!important;
+}
+#miEditorToolbar #miMainAlignmentBar button:active,
+#miEditorToolbar #miMainAlignmentBar button[aria-pressed="true"]{
+  background:#d8e7f8!important;border-color:#376fa9!important;
+  box-shadow:inset 0 1px 2px rgba(24,58,96,.18)!important;
+}
+#miEditorToolbar #miMainAlignmentBar button svg{
+  display:block!important;flex:0 0 18px!important;width:18px!important;height:18px!important;
+  overflow:visible!important;shape-rendering:geometricPrecision!important;
+  fill:none!important;stroke:currentColor!important;stroke-width:2.25!important;
+  stroke-linecap:square!important;stroke-linejoin:miter!important;
+}
+#miEditorToolbar #miMainAlignmentBar button svg path{
+  vector-effect:non-scaling-stroke!important;
+}
+@media(max-width:760px){
+  #miEditorToolbar #miMainAlignmentBar{gap:2px!important;padding-left:5px!important}
+  #miEditorToolbar #miMainAlignmentBar button{
+    flex-basis:29px!important;width:29px!important;min-width:29px!important;max-width:29px!important;
+  }
+}
+
 </style>
 
 <style id="mi-all-popup-standard-sharpness">
