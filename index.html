@@ -7528,7 +7528,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       dialog.setAttribute("role","dialog");
       dialog.setAttribute("aria-modal","true");
       dialog.setAttribute("aria-label","Move or Copy");
-      dialog.style.cssText="width:300px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:0;background:#f5f5f5;border:1px solid #b5b5b5;border-radius:2px;box-shadow:0 2px 9px rgba(0,0,0,.16);font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
+      dialog.style.cssText="width:340px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:0;background:#f5f5f5;border:1px solid #b5b5b5;border-radius:2px;box-shadow:0 2px 9px rgba(0,0,0,.16);font:12px 'Segoe UI',Arial,sans-serif;color:#222;";
 
       const titleBar=document.createElement("div");
       titleBar.style.cssText="height:25px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:0 7px 0 9px;background:#f7f7f7;border-bottom:1px solid #dedede;font-size:12px;font-weight:600;";
@@ -7550,13 +7550,13 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 
       const controlStyle="width:100%;height:17px;box-sizing:border-box;padding:0 2px;border:1px solid #b8b8b8;border-radius:1px;background:#fff;color:#222;font:11px 'Segoe UI',Arial,sans-serif;outline:none;";
       const book=document.createElement("select");
-      book.style.cssText=controlStyle+"width:180px;height:12px;max-width:100%;";
+      book.style.cssText=controlStyle+"width:220px!important;min-width:220px;height:20px!important;min-height:20px;max-height:20px;line-height:16px;padding:0 4px;box-sizing:border-box;";
       const bookOption=document.createElement("option");
       bookOption.textContent="This project";
       book.append(bookOption);
 
       const bookRow=document.createElement("div");
-      bookRow.style.cssText="display:grid;grid-template-columns:56px 180px;align-items:center;gap:4px;margin:0 0 4px;";
+      bookRow.style.cssText="display:grid;grid-template-columns:56px 220px;align-items:center;gap:4px;margin:0 0 4px;";
       const bookLabel=document.createElement("label");
       bookLabel.textContent="To book:";
       bookLabel.style.cssText="font-weight:400;";
