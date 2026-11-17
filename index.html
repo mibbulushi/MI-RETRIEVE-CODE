@@ -4364,6 +4364,14 @@ img{max-width:100%}
   padding-left:5px!important;
   padding-right:5px!important;
 }
+
+/* Font-size selector grows and shrinks with the displayed number of digits. */
+#miEditorToolbar #miFontSize{
+  width:var(--mi-font-size-width,54px)!important;
+  min-width:var(--mi-font-size-width,54px)!important;
+  max-width:var(--mi-font-size-width,54px)!important;
+  transition:width .12s ease,min-width .12s ease,max-width .12s ease;
+}
 </style>
 </head>
 <body>
@@ -8379,6 +8387,27 @@ img{max-width:100%}
       updatePictureTab();
       activate("home");
     })();
+</script>
+
+<script>
+(function(){
+  function fitFontSizeBox(){
+    const box=document.getElementById("miFontSize");
+    if(!box)return;
+    const shown=box.selectedOptions&&box.selectedOptions[0]?box.selectedOptions[0].text:String(box.value||"");
+    const digits=String(shown).length;
+    const width=Math.max(34,Math.min(62,digits*9+18));
+    box.style.setProperty("--mi-font-size-width",width+"px");
+  }
+  document.addEventListener("DOMContentLoaded",function(){
+    const box=document.getElementById("miFontSize");
+    if(!box)return;
+    fitFontSizeBox();
+    box.addEventListener("change",fitFontSizeBox);
+    new MutationObserver(fitFontSizeBox).observe(box,{childList:true,subtree:true,characterData:true});
+  });
+  if(document.readyState!=="loading")fitFontSizeBox();
+})();
 </script>
 </body>
 </html>
