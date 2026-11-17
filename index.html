@@ -4391,7 +4391,7 @@ img{max-width:100%}
 /* Compact numeric field; JavaScript adjusts its width to the number of digits. */
 #miEditorToolbar .mi-font-size-row #miCustomFontSize{
   display:inline-block!important;flex:0 0 auto!important;
-  width:34px!important;min-width:34px!important;max-width:54px!important;
+  width:40px!important;min-width:40px!important;max-width:62px!important;
   height:27px!important;min-height:27px!important;box-sizing:border-box!important;
   margin:0!important;padding:2px 3px!important;font:12px/1.2 "Segoe UI",Arial,sans-serif!important;
   text-align:center!important;border:1px solid #9fb2ca!important;border-radius:2px!important;
@@ -8441,7 +8441,7 @@ img{max-width:100%}
     input.dataset.autoWidthBound="1";
     function fit(){
       const digits=String(input.value||"12").replace(/\D/g,"").length||1;
-      const width=digits<=2?34:digits===3?43:52;
+      const width=digits<=2?40:digits===3?52:62;
       ["width","min-width","max-width"].forEach(property=>{
         input.style.setProperty(property,width+"px","important");
       });
