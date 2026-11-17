@@ -4718,6 +4718,9 @@ img{max-width:100%}
   resize:none!important;
   overflow:visible!important;
   box-sizing:border-box!important;
+  -webkit-user-drag:none!important;
+  user-select:none!important;
+  touch-action:none!important;
 }
 .mi-word-selection-ui{
   box-sizing:border-box!important;
@@ -6427,6 +6430,10 @@ img{max-width:100%}
       closeMiWordContextMenu();
       closeMiPictureContextMenu();
     },true);
+    // Prevent native browser image dragging from interrupting custom mouse movement.
+    miDocumentEditor.addEventListener("dragstart",event=>{
+      if(event.target instanceof Element && event.target.closest(miMovableSelector))event.preventDefault();
+    },true);
     miDocumentEditor.addEventListener("pointerdown",event=>{
       if(event.button!==0 || event.target.closest?.(".mi-word-selection-ui"))return;
       const target=event.target instanceof Element?event.target.closest(miMovableSelector):null;
@@ -6489,9 +6496,11 @@ img{max-width:100%}
         const isVideo=item.dataset.miDocumentVideo==="true"||item.tagName==="VIDEO"||item.tagName==="IFRAME";
         if(dir.includes("e"))w=st.w+dx;if(dir.includes("w"))w=st.w-dx;
         if(dir.includes("s"))h=st.h+dy;if(dir.includes("n"))h=st.h-dy;
-        if((isImage||isVideo) && dir.length===2){
+        if(isImage||isVideo){
+          // Preserve original proportions from every handle, including side handles.
           const ratio=st.w/Math.max(1,st.h);
-          if(Math.abs(dx)>=Math.abs(dy))h=w/ratio;else w=h*ratio;
+          if(dir.includes("e")||dir.includes("w"))h=w/ratio;
+          else if(dir.includes("n")||dir.includes("s"))w=h*ratio;
         }
         const editorStyle=getComputedStyle(miDocumentEditor);const contentWidth=miDocumentEditor.clientWidth-parseFloat(editorStyle.paddingLeft)-parseFloat(editorStyle.paddingRight)-2;w=Math.max(50,Math.min(contentWidth,w));
         h=Math.max(35,Math.min(1200,h));
