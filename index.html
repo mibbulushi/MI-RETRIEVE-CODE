@@ -4860,6 +4860,16 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
     flex:1 1 142px!important;width:142px!important;max-width:100%!important;
   }
 }
+
+/* Compact Word-style paragraph controls */
+#miEditorToolbar #miMainAlignmentBar button[data-mi-paragraph]{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ flex:0 0 30px!important;width:30px!important;min-width:30px!important;height:30px!important;min-height:30px!important;
+ margin:0 0 0 2px!important;padding:5px!important;border:1px solid transparent!important;border-radius:2px!important;
+ background:transparent!important;color:#333!important;box-shadow:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button[data-mi-paragraph] svg{width:20px!important;height:20px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.5!important;pointer-events:none!important}
+#miEditorToolbar #miMainAlignmentBar button[data-mi-paragraph]:hover{background:#e9e9e9!important;border-color:#c8c8c8!important}
 </style>
 </head>
 <body>
@@ -5016,6 +5026,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
               <button type="button" class="secondary mi-format-icon" data-mi-align="justifyRight" title="Align Right (Ctrl+R)" aria-label="Align Right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M9 9h11M4 13h16M9 17h11M4 21h16"/></svg></button>
               <button type="button" class="secondary mi-format-icon" data-mi-align="justifyCenter" title="Center (Ctrl+E)" aria-label="Center"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 9h10M4 13h16M7 17h10M4 21h16"/></svg></button>
               <button type="button" class="secondary mi-format-icon" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h16M4 13h16M4 17h16M4 21h16"/></svg></button>
+              <button type="button" class="secondary mi-format-icon" data-mi-paragraph="outdent" title="Decrease Indent" aria-label="Decrease Indent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h11M4 13h16M4 17h11M4 21h16M9 7l-4 5 4 5"/></svg></button>
+              <button type="button" class="secondary mi-format-icon" data-mi-paragraph="indent" title="Increase Indent" aria-label="Increase Indent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M9 9h11M4 13h16M9 17h11M4 21h16M5 7l4 5-4 5"/></svg></button>
             </div>
             <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
             <div class="mi-ribbon-group">
@@ -5316,13 +5328,18 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       if(selection&&selection.rangeCount&&!selection.isCollapsed&&miDocumentEditor.contains(selection.anchorNode)&&miDocumentEditor.contains(selection.focusNode)){
         miSavedEditorRange=selection.getRangeAt(0).cloneRange();
       }
-      const button=event.target.closest("button[data-mi-align]");
+      const button=event.target.closest("button[data-mi-align],button[data-mi-paragraph]");
       if(!button)return;
       event.preventDefault();
       restoreMiEditorSelection();
-      document.execCommand(button.dataset.miAlign,false,null);
+      if(button.dataset.miAlign){
+        document.execCommand(button.dataset.miAlign,false,null);
+        setMiWorkStatus("Paragraph alignment changed — save your project to store it.");
+      }else{
+        document.execCommand(button.dataset.miParagraph,false,null);
+        setMiWorkStatus((button.dataset.miParagraph==="indent"?"Indent increased":"Indent decreased")+" — save your project to store it.");
+      }
       $("content").value=miDocumentEditor.innerHTML;
-      setMiWorkStatus("Paragraph alignment changed — save your project to store it.");
     });
     // Keep the document selection available while the user operates Home toolbar controls.
     document.addEventListener("selectionchange",()=>{
