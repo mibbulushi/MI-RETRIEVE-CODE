@@ -7541,6 +7541,33 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       close.style.cssText="display:flex;align-items:center;justify-content:center;flex:0 0 22px;width:22px;min-width:22px;max-width:22px;height:22px;min-height:22px;max-height:22px;box-sizing:border-box;margin:0;padding:0;line-height:22px;overflow:hidden;border:0;border-radius:2px;background:transparent;color:#444;font:18px/22px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
       close.addEventListener("click",()=>overlay.remove());
       titleBar.append(title,close);
+      titleBar.style.cursor="move";
+      titleBar.style.userSelect="none";
+      titleBar.title="Drag to move this dialog";
+      let dragState=null;
+      titleBar.addEventListener("pointerdown",event=>{
+        if(event.target===close||close.contains(event.target)||event.button!==0)return;
+        const rect=dialog.getBoundingClientRect();
+        dragState={x:event.clientX,y:event.clientY,left:rect.left,top:rect.top};
+        dialog.style.position="fixed";
+        dialog.style.margin="0";
+        dialog.style.left=rect.left+"px";
+        dialog.style.top=rect.top+"px";
+        dialog.style.maxWidth="calc(100vw - 24px)";
+        titleBar.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      });
+      titleBar.addEventListener("pointermove",event=>{
+        if(!dragState)return;
+        const rect=dialog.getBoundingClientRect();
+        const left=Math.max(0,Math.min(window.innerWidth-rect.width,dragState.left+event.clientX-dragState.x));
+        const top=Math.max(0,Math.min(window.innerHeight-rect.height,dragState.top+event.clientY-dragState.y));
+        dialog.style.left=left+"px";
+        dialog.style.top=top+"px";
+      });
+      const stopDialogDrag=()=>{dragState=null;};
+      titleBar.addEventListener("pointerup",stopDialogDrag);
+      titleBar.addEventListener("pointercancel",stopDialogDrag);
 
       const body=document.createElement("div");
       body.style.cssText="padding:7px 9px 6px;background:#f5f5f5;";
