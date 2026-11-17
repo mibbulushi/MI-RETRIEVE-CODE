@@ -7538,7 +7538,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       close.type="button";
       close.textContent="×";
       close.setAttribute("aria-label","Close");
-      close.style.cssText="width:22px;height:22px;padding:0;border:0;background:transparent;color:#444;font:18px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
+      close.style.cssText="display:flex;align-items:center;justify-content:center;flex:0 0 22px;width:22px;min-width:22px;max-width:22px;height:22px;min-height:22px;max-height:22px;box-sizing:border-box;margin:0;padding:0;line-height:22px;overflow:hidden;border:0;border-radius:2px;background:transparent;color:#444;font:18px/22px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
       close.addEventListener("click",()=>overlay.remove());
       titleBar.append(title,close);
 
