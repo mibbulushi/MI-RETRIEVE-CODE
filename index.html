@@ -4754,7 +4754,9 @@ img{max-width:100%}
             </div>
           </div>
           <div class="mi-document-info-row">
-            
+            <div class="notice mi-sharing-privacy-notice">
+              <strong>Sharing and privacy:</strong> Your saved information remains private unless you create a student share code for it. Anyone who has that share code can view the shared information, so only share codes for content you intend to distribute. Never put a Supabase secret key in this website.
+            </div>
             <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
           </div>
           <div class="mi-main-textbox-frame">
@@ -4839,9 +4841,6 @@ img{max-width:100%}
     </section>
 
     <div class="workspace-bottom">
-      <div class="notice">
-        <strong>Sharing and privacy:</strong> Your saved information remains private unless you create a student share code for it. Anyone who has that share code can view the shared information, so only share codes for content you intend to distribute. Never put a Supabase secret key in this website.
-      </div>
       <footer>MI-RETRIEVE-CODE · Early development version</footer>
     </div>
   </main>
@@ -8669,5 +8668,37 @@ img{max-width:100%}
 @media(max-width:760px){
   .mi-builder-panel .mi-builder-heading{overflow-x:auto!important}
   .mi-builder-panel .mi-builder-heading>div:first-child{flex:0 0 auto!important}
+}
+
+/* Keep Sharing and privacy notice beside the live word-count on the same row. */
+#saveArea .mi-document-info-row{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#saveArea .mi-document-info-row .mi-sharing-privacy-notice{
+  display:block!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:6px 10px!important;
+  box-sizing:border-box!important;
+  font-size:11px!important;
+  line-height:1.35!important;
+}
+#saveArea .mi-document-info-row #miDocumentStats{
+  flex:0 0 auto!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+@media(max-width:760px){
+  #saveArea .mi-document-info-row{overflow-x:auto!important;justify-content:flex-start!important;gap:6px!important}
+  #saveArea .mi-document-info-row .mi-sharing-privacy-notice{flex:0 0 620px!important;font-size:10px!important}
+  #saveArea .mi-document-info-row #miDocumentStats{font-size:10px!important;gap:4px!important}
 }
 
