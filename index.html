@@ -8502,27 +8502,18 @@ img{max-width:100%}
         zoomBar.className="mi-document-zoom";
         zoomBar.setAttribute("role","group");
         zoomBar.setAttribute("aria-label","Document zoom");
-        const zoomOut=document.createElement("button");
-        zoomOut.type="button";zoomOut.className="mi-zoom-step";zoomOut.textContent="−";
-        zoomOut.setAttribute("aria-label","Zoom out");zoomOut.title="Zoom out";
         const zoomSlider=document.createElement("input");
         zoomSlider.type="range";zoomSlider.min="50";zoomSlider.max="200";zoomSlider.step="10";zoomSlider.value="100";
         zoomSlider.className="mi-zoom-slider";zoomSlider.setAttribute("aria-label","Zoom level");
         const zoomValue=document.createElement("span");
         zoomValue.className="mi-zoom-value";zoomValue.textContent="100%";
-        const zoomIn=document.createElement("button");
-        zoomIn.type="button";zoomIn.className="mi-zoom-step";zoomIn.textContent="+";
-        zoomIn.setAttribute("aria-label","Zoom in");zoomIn.title="Zoom in";
         function setDocumentZoom(value){
           const next=Math.max(50,Math.min(200,Math.round(Number(value)/10)*10));
           zoomSlider.value=String(next);zoomValue.textContent=next+"%";
           editor.style.zoom=(next/100).toString();
-          zoomOut.disabled=next===50;zoomIn.disabled=next===200;
         }
-        zoomOut.addEventListener("click",()=>setDocumentZoom(Number(zoomSlider.value)-10));
-        zoomIn.addEventListener("click",()=>setDocumentZoom(Number(zoomSlider.value)+10));
         zoomSlider.addEventListener("input",()=>setDocumentZoom(zoomSlider.value));
-        zoomBar.append(zoomOut,zoomSlider,zoomIn,zoomValue);
+        zoomBar.append(zoomSlider,zoomValue);
         viewbar.append(zoomBar);
         setDocumentZoom(100);
         const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);statusRow.style.display="flex";statusRow.style.alignItems="center";statusRow.style.justifyContent="space-between";statusRow.style.flexWrap="nowrap";statusRow.style.gap="8px";}else stage.insertBefore(viewbar,editor);
