@@ -5970,7 +5970,8 @@ img{max-width:100%}
       const editorBottom=editorTop+miDocumentEditor.clientHeight;
       // During crop mode, align the frame with the visible portion of the image.
       // In normal mode, retain the full-image selection frame.
-      const crop=miDirectCropMode?miReadDirectCrop():{top:0,right:0,bottom:0,left:0};
+      // Keep the selection frame on the visible cropped picture even after Apply exits crop mode.
+      const crop=miReadDirectCrop();
       const visibleLeft=r.left+r.width*crop.left/100;
       const visibleTop=r.top+r.height*crop.top/100;
       const visibleRight=r.right-r.width*crop.right/100;
