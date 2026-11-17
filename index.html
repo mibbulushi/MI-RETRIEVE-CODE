@@ -4801,6 +4801,65 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
   transform:translateY(0)!important;
   box-shadow:inset 0 2px 5px rgba(54,105,157,.16)!important;
 }
+
+
+/* New Project: three matching-size tinted glass action buttons */
+#saveArea .mi-document-tools{
+  display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;
+}
+#saveArea .mi-document-tools #miInsertPictureBtn,
+#saveArea .mi-document-tools #miAddVideoBtn,
+#saveArea .mi-document-tools .mi-inline-attach{
+  box-sizing:border-box!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 142px!important;width:142px!important;min-width:142px!important;max-width:142px!important;
+  height:40px!important;min-height:40px!important;max-height:40px!important;
+  margin:0!important;padding:0 10px!important;gap:8px!important;
+  border:1px solid rgba(104,157,211,.5)!important;border-radius:9px!important;
+  color:#174477!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(207,231,255,.52))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 3px 9px rgba(48,105,164,.12)!important;
+  backdrop-filter:blur(12px) saturate(145%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(145%)!important;
+  font-size:.82rem!important;font-weight:650!important;line-height:1!important;
+}
+#saveArea .mi-document-tools #miAddVideoBtn{
+  color:#12665d!important;
+  border-color:rgba(77,170,151,.52)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.84),rgba(199,242,230,.56))!important;
+}
+#saveArea .mi-document-tools .mi-inline-attach{
+  color:#56358e!important;
+  border-color:rgba(150,117,204,.5)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.84),rgba(229,214,255,.56))!important;
+}
+#saveArea .mi-document-tools .mi-inline-attach button{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:0!important;
+  border:0!important;border-radius:8px!important;background:transparent!important;color:inherit!important;
+  box-shadow:none!important;font:inherit!important;
+}
+#saveArea .mi-document-tools #miInsertPictureBtn svg,
+#saveArea .mi-document-tools #miAddVideoBtn svg,
+#saveArea .mi-document-tools .mi-inline-attach button svg{
+  width:17px!important;height:17px!important;min-width:17px!important;flex:0 0 17px!important;
+  fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+#saveArea .mi-document-tools #miInsertPictureBtn:hover,
+#saveArea .mi-document-tools #miAddVideoBtn:hover,
+#saveArea .mi-document-tools .mi-inline-attach:hover{
+  filter:brightness(1.035)!important;
+  box-shadow:inset 0 1px 0 #fff,0 5px 12px rgba(48,105,164,.18)!important;
+  transform:translateY(-1px);
+}
+@media(max-width:650px){
+  #saveArea .mi-document-tools #miInsertPictureBtn,
+  #saveArea .mi-document-tools #miAddVideoBtn,
+  #saveArea .mi-document-tools .mi-inline-attach{
+    flex:1 1 142px!important;width:142px!important;max-width:100%!important;
+  }
+}
 </style>
 </head>
 <body>
