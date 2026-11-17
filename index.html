@@ -4204,6 +4204,18 @@ img{max-width:100%}
     margin-top:18px!important;
   }
 }
+
+/* Keep only the final custom font-size box; hide any legacy dropdown. */
+#miEditorToolbar .mi-font-size-row select,
+#miEditorToolbar #miFontSize{
+  display:none!important;
+}
+#miEditorToolbar .mi-font-size-row #miCustomFontSize{
+  display:inline-block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
 </style>
 
 <style id="mi-all-popup-standard-sharpness">
