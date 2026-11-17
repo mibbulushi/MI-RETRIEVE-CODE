@@ -7020,13 +7020,13 @@ img{max-width:100%}
             const customPanel=document.createElement("div");customPanel.style.cssText="display:none;min-height:205px;";
             const customLabel=document.createElement("div");customLabel.textContent="Custom color";customLabel.style.cssText="font-weight:600;margin:2px 0 10px;";
             const customLayout=document.createElement("div");customLayout.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 126px;gap:12px;align-items:start;";
-            const pickerArea=document.createElement("div");pickerArea.style.cssText="display:grid;grid-template-columns:1fr;gap:8px;";
-            const spectrum=document.createElement("div");spectrum.setAttribute("role","application");spectrum.setAttribute("aria-label","Color spectrum");spectrum.tabIndex=0;spectrum.style.cssText="height:142px;position:relative;border:1px solid #777;box-sizing:border-box;cursor:crosshair;background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),hsl(215,100%,50%);";
+            const pickerArea=document.createElement("div");pickerArea.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 18px;gap:8px;align-items:stretch;";
+            const spectrum=document.createElement("div");spectrum.setAttribute("role","application");spectrum.setAttribute("aria-label","Color spectrum");spectrum.tabIndex=0;spectrum.style.cssText="height:142px;min-width:0;position:relative;border:1px solid #777;box-sizing:border-box;cursor:crosshair;background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),hsl(215,100%,50%);";
             const marker=document.createElement("div");marker.style.cssText="position:absolute;left:65%;top:35%;width:10px;height:10px;border:1px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #111;transform:translate(-50%,-50%);pointer-events:none;";
             spectrum.append(marker);
-            const hue=document.createElement("input");hue.type="range";hue.min="0";hue.max="360";hue.value="215";hue.setAttribute("aria-label","Hue");hue.style.cssText="width:100%;height:18px;margin:0;accent-color:#666;cursor:pointer;";
+            const hue=document.createElement("input");hue.type="range";hue.min="0";hue.max="360";hue.value="215";hue.setAttribute("aria-label","Hue");hue.style.cssText="appearance:none;-webkit-appearance:none;writing-mode:vertical-lr;direction:rtl;width:18px;height:142px;margin:0;accent-color:#666;cursor:pointer;";
             pickerArea.append(spectrum,hue);
-            const fields=document.createElement("div");fields.style.cssText="display:grid;grid-template-columns:42px 1fr;align-items:center;gap:8px 7px;";
+            const fields=document.createElement("div");fields.style.cssText="display:grid;grid-template-columns:42px minmax(0,1fr);align-content:start;align-items:center;gap:8px 7px;padding-top:1px;";
             const makeField=(label,value)=>{const l=document.createElement("label");l.textContent=label;const input=document.createElement("input");input.type="text";input.value=value;input.style.cssText="box-sizing:border-box;width:100%;height:27px;padding:4px 6px;border:1px solid #999;border-radius:0;background:#fff;color:#222;font:12px 'Segoe UI',Arial,sans-serif;";fields.append(l,input);return input;};
             const hexInput=makeField("Hex",selected.toUpperCase()),redInput=makeField("Red","68"),greenInput=makeField("Green","114"),blueInput=makeField("Blue","196");
             customLayout.append(pickerArea,fields);customPanel.append(customLabel,customLayout);
