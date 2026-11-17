@@ -7585,11 +7585,12 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       beforeRow.append(beforeLabel,before);
 
       const copyRow=document.createElement("label");
-      copyRow.style.cssText="display:flex;align-items:center;gap:7px;margin:0 0 0 60px;cursor:pointer;user-select:none;font-weight:400;";
+      copyRow.style.cssText="display:flex;align-items:center;gap:5px;margin:0 0 0 60px;cursor:pointer;user-select:none;font-weight:400;font-size:10px;line-height:14px;";
       const copy=document.createElement("input");
       copy.type="checkbox";
       copy.checked=!!copyInitially;
-      copy.style.cssText="width:11px;height:11px;margin:0;accent-color:#2176c7;cursor:pointer;";
+      copy.style.cssText="appearance:none;width:9px;height:9px;min-width:9px;min-height:9px;margin:0;border:1px solid #777;border-radius:1px;background:#fff;accent-color:#2176c7;cursor:pointer;";
+      copy.addEventListener("change",()=>{copy.style.background=copy.checked?"#2176c7":"#fff";copy.style.borderColor=copy.checked?"#2176c7":"#777";copy.style.boxShadow=copy.checked?"inset 0 0 0 2px #fff":"none";});
       const copyText=document.createElement("span");
       copyText.textContent="Create a copy";
       copyRow.append(copy,copyText);
