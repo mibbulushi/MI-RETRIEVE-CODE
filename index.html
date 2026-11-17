@@ -8630,4 +8630,44 @@ img{max-width:100%}
 </body>
 </html>
 
+/* FINAL FIX: keep Project Document heading and helper text on one row at every width. */
+.mi-builder-panel .mi-builder-heading{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  min-width:0!important;
+}
+.mi-builder-panel .mi-builder-heading>div:first-child{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:baseline!important;
+  gap:9px!important;
+  min-width:0!important;
+  max-width:none!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+}
+.mi-builder-panel .mi-builder-heading h3{
+  flex:0 0 auto!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+.mi-builder-panel .mi-builder-heading>div:first-child p{
+  flex:0 1 auto!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+.mi-builder-panel .mi-builder-heading .mi-document-tools{
+  flex:0 0 auto!important;
+  margin-left:auto!important;
+}
+@media(max-width:760px){
+  .mi-builder-panel .mi-builder-heading{overflow-x:auto!important}
+  .mi-builder-panel .mi-builder-heading>div:first-child{flex:0 0 auto!important}
+}
 
