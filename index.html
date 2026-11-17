@@ -4481,6 +4481,40 @@ img{max-width:100%}
   #miEditorToolbar #miMainAlignmentBar button{flex-basis:27px!important;width:27px!important;min-width:27px!important;max-width:27px!important}
 }
 
+
+/* Match paragraph alignment controls to the compact Bold / Italic / Underline toolbar buttons. */
+#miEditorToolbar #miMainAlignmentBar{
+  display:inline-flex!important;align-items:center!important;gap:3px!important;
+  height:27px!important;min-height:27px!important;padding:0!important;margin:0!important;
+  border:0!important;background:transparent!important;box-shadow:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button{
+  appearance:none!important;-webkit-appearance:none!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 25px!important;width:25px!important;min-width:25px!important;max-width:25px!important;
+  height:25px!important;min-height:25px!important;margin:0!important;padding:2px!important;
+  border-radius:2px!important;font-size:14px!important;line-height:1!important;
+  box-shadow:none!important;text-shadow:none!important;transform:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button svg{
+  display:block!important;width:16px!important;height:16px!important;overflow:visible!important;
+  fill:none!important;stroke:currentColor!important;stroke-width:2!important;
+  stroke-linecap:square!important;stroke-linejoin:miter!important;
+  shape-rendering:geometricPrecision!important;
+}
+#miEditorToolbar #miMainAlignmentBar button:hover{
+  transform:none!important;box-shadow:none!important;
+}
+#miEditorToolbar #miMainAlignmentBar button:focus-visible{
+  outline:2px solid #2878c8!important;outline-offset:1px!important;
+}
+@media(max-width:760px){
+  #miEditorToolbar #miMainAlignmentBar{gap:2px!important;padding:0!important}
+  #miEditorToolbar #miMainAlignmentBar button{
+    flex-basis:25px!important;width:25px!important;min-width:25px!important;max-width:25px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4633,10 +4667,10 @@ img{max-width:100%}
             <button type="button" class="secondary mi-grammar-compact" id="miClearFormattingBtn" title="Clear All Formatting" aria-label="Clear All Formatting">Clear Formatting</button>
             <button type="button" class="secondary mi-grammar-compact" id="miGrammarCheckBtn" title="Optional Grammar Check">✓ Grammar</button>
             <div id="miMainAlignmentBar" class="mi-main-alignment-bar mi-inline-alignment-controls" role="toolbar" aria-label="Paragraph alignment">
-              <button type="button" data-mi-align="justifyLeft" title="Align Left (Ctrl+L)" aria-label="Align Left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h11M4 13h16M4 17h11M4 21h16"/></svg></button>
-              <button type="button" data-mi-align="justifyRight" title="Align Right (Ctrl+R)" aria-label="Align Right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M9 9h11M4 13h16M9 17h11M4 21h16"/></svg></button>
-              <button type="button" data-mi-align="justifyCenter" title="Center (Ctrl+E)" aria-label="Center"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 9h10M4 13h16M7 17h10M4 21h16"/></svg></button>
-              <button type="button" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h16M4 13h16M4 17h16M4 21h16"/></svg></button>
+              <button type="button" class="secondary mi-format-icon" data-mi-align="justifyLeft" title="Align Left (Ctrl+L)" aria-label="Align Left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h11M4 13h16M4 17h11M4 21h16"/></svg></button>
+              <button type="button" class="secondary mi-format-icon" data-mi-align="justifyRight" title="Align Right (Ctrl+R)" aria-label="Align Right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M9 9h11M4 13h16M9 17h11M4 21h16"/></svg></button>
+              <button type="button" class="secondary mi-format-icon" data-mi-align="justifyCenter" title="Center (Ctrl+E)" aria-label="Center"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 9h10M4 13h16M7 17h10M4 21h16"/></svg></button>
+              <button type="button" class="secondary mi-format-icon" data-mi-align="justifyFull" title="Justify (Ctrl+J)" aria-label="Justify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h16M4 13h16M4 17h16M4 21h16"/></svg></button>
             </div>
             <div id="miPictureRibbon" class="mi-picture-ribbon" aria-label="Picture Format tools">
             <div class="mi-ribbon-group">
