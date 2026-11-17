@@ -6930,9 +6930,8 @@ img{max-width:100%}
             const fromRgb=(r,g,b)=>"#"+[r,g,b].map(n=>Math.max(0,Math.min(255,Number(n)||0)).toString(16).padStart(2,"0")).join("");
             const updateColor=value=>{selected=value.toLowerCase();newBox.style.background=selected;picker.value=selected;hexInput.value=selected.toUpperCase();const rgb=toRgb(selected);redInput.value=rgb.r;greenInput.value=rgb.g;blueInput.value=rgb.b;ok.disabled=false;Array.from(swatches.children).forEach(b=>{b.style.outline=b.dataset.color===selected?"2px solid #111":"none";b.style.outlineOffset="1px";});};
             standardColors.forEach(color=>{const sw=document.createElement("button");sw.type="button";sw.dataset.color=color.toLowerCase();sw.title=color;sw.setAttribute("aria-label","Color "+color);sw.style.cssText="height:23px;min-width:0;padding:0;border:1px solid #999;border-radius:0;background:"+color+";cursor:pointer;";sw.addEventListener("click",()=>updateColor(color));swatches.append(sw);});
-            standardPanel.append(standardLabel,swatches,previewTitle,previewRow);
-            const customPreviewTitle=document.createElement("div");customPreviewTitle.textContent="Preview";customPreviewTitle.style.cssText="font-weight:600;margin:10px 0 6px;";
-            customPanel.append(customPreviewTitle,previewRow);
+            standardPanel.append(standardLabel,swatches);
+            customPanel.append(customLabel,customLayout);
             const setTab=which=>{const isStandard=which==="standard";standardPanel.style.display=isStandard?"block":"none";customPanel.style.display=isStandard?"none":"block";standardTab.style.background=isStandard?"#fff":"#e7e7e7";customTab.style.background=isStandard?"#e7e7e7":"#fff";standardTab.style.borderColor=isStandard?"#777":"#aaa";customTab.style.borderColor=isStandard?"#aaa":"#777";};
             standardTab.addEventListener("click",()=>setTab("standard"));customTab.addEventListener("click",()=>setTab("custom"));
             picker.addEventListener("input",()=>updateColor(picker.value));
@@ -6943,7 +6942,7 @@ img{max-width:100%}
             [cancel,ok].forEach(b=>b.style.cssText="min-width:76px;height:28px;padding:4px 14px;border:1px solid #888;border-radius:2px;background:#f7f7f7;color:#222;font:12px 'Segoe UI',Arial,sans-serif;cursor:pointer;");
             const close=()=>overlay.remove();cancel.addEventListener("click",close);ok.addEventListener("click",()=>{if(/^#[0-9a-f]{6}$/i.test(selected)){close();applyTabColor(selected);}});
             overlay.addEventListener("click",ev=>{if(ev.target===overlay)close();});dialog.addEventListener("click",ev=>ev.stopPropagation());
-            buttons.append(cancel,ok);dialog.append(heading,tabs,standardPanel,customPanel,buttons);overlay.append(dialog);document.body.append(overlay);setTab("standard");updateColor(selected);
+            buttons.append(cancel,ok);dialog.append(heading,tabs,standardPanel,customPanel,previewTitle,previewRow,buttons);overlay.append(dialog);document.body.append(overlay);setTab("standard");updateColor(selected);
           });
           palette.append(more);
           document.body.append(palette);
