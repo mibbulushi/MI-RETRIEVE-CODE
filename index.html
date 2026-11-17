@@ -5041,6 +5041,49 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
   text-shadow:none!important;filter:none!important;
 }
 </style>
+<style id="mi-subpopup-movecopy-finish">
+/* Match submenu finish to the polished Move or Copy popup. */
+.mi-word-submenu,.mi-tab-color-submenu,.mi-word-text-effects-menu,
+.mi-word-context-menu [class*="submenu"],[class*="submenu-panel"],[role="menu"] [role="menu"]{
+ box-sizing:border-box!important;
+ background:linear-gradient(180deg,#fff 0%,#f5f8fc 100%)!important;
+ border:1px solid #9aafc4!important;border-radius:4px!important;
+ box-shadow:0 8px 24px rgba(20,45,75,.18),0 1px 3px rgba(0,0,0,.14)!important;
+ color:#172b40!important;font-family:"Segoe UI",Arial,sans-serif!important;
+ -webkit-font-smoothing:antialiased!important;text-rendering:optimizeLegibility!important;
+ text-shadow:none!important;filter:none!important;
+}
+.mi-tab-color-heading,.mi-word-submenu-heading,.mi-word-text-effects-menu .menu-heading,[class*="submenu"] .popup-heading{
+ box-sizing:border-box!important;background:linear-gradient(180deg,#fff 0%,#eaf2fb 100%)!important;
+ border-bottom:1px solid #c5d5e5!important;color:#183b5b!important;
+ font-family:"Segoe UI",Arial,sans-serif!important;font-weight:600!important;text-shadow:none!important;
+}
+.mi-word-submenu-item,.mi-word-context-menu .mi-word-submenu-item,
+.mi-tab-color-submenu .mi-tab-no-color,.mi-tab-color-submenu .mi-tab-more-colors,
+.mi-word-text-effects-menu button,[class*="submenu"] button:not(.mi-tab-color-swatch){
+ box-sizing:border-box!important;background:linear-gradient(180deg,#fff 0%,#edf3fa 100%)!important;
+ border:1px solid #b2c3d4!important;border-radius:2px!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 1px 2px rgba(20,45,75,.07)!important;
+ color:#20364d!important;font-family:"Segoe UI",Arial,sans-serif!important;
+ text-shadow:none!important;filter:none!important;transform:none!important;
+}
+.mi-word-submenu-item:hover,.mi-word-submenu-item:focus-visible,
+.mi-tab-color-submenu .mi-tab-no-color:hover,.mi-tab-color-submenu .mi-tab-more-colors:hover,
+.mi-word-text-effects-menu button:hover,[class*="submenu"] button:not(.mi-tab-color-swatch):hover{
+ background:linear-gradient(180deg,#f7fbff 0%,#dceafa 100%)!important;
+ border-color:#7fa4ca!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 2px 4px rgba(20,45,75,.12)!important;
+}
+.mi-word-submenu-item:active,.mi-tab-color-submenu .mi-tab-no-color:active,
+.mi-tab-color-submenu .mi-tab-more-colors:active,.mi-word-text-effects-menu button:active,
+[class*="submenu"] button:not(.mi-tab-color-swatch):active{
+ background:#dce9f7!important;box-shadow:inset 0 1px 2px rgba(35,65,95,.18)!important;
+}
+/* Preserve actual palette colors while sharpening swatch edges. */
+.mi-tab-color-swatch{border:1px solid #8798aa!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),0 1px 2px rgba(20,45,75,.10)!important}
+.mi-word-submenu *,.mi-tab-color-submenu *,.mi-word-text-effects-menu *{
+ text-shadow:none!important;-webkit-font-smoothing:antialiased!important;text-rendering:optimizeLegibility!important;
+}
+</style>
 </head>
 <body>
   <div id="top"></div>
