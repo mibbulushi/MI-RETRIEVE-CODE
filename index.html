@@ -5251,6 +5251,37 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 }
 </style>
 
+<style id="mi-status-version-shared-edge">
+/* Keep both strips in one shared full-width group so their left and right edges align */
+#miStatusGroup{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  width:100%!important;min-width:0!important;margin:0!important;padding:0!important;
+  position:sticky!important;bottom:0!important;z-index:80!important;
+  background:rgba(248,250,253,.98)!important;
+  box-shadow:0 -2px 8px rgba(28,36,46,.10)!important;
+}
+#miStatusGroup #miProjectWorkStatus{
+  position:relative!important;bottom:auto!important;z-index:auto!important;
+  width:100%!important;align-self:stretch!important;margin:0!important;
+  box-shadow:none!important;
+}
+#miStatusGroup #miVersionRow{
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  box-sizing:border-box!important;width:100%!important;min-width:0!important;
+  min-height:0!important;height:auto!important;margin:0!important;
+  padding:0 7px 2px!important;border:0!important;
+  background:transparent!important;line-height:1.2!important;
+}
+#miStatusGroup #miVersionLabel{
+  display:inline-block!important;visibility:visible!important;opacity:1!important;
+  margin:0!important;padding:0!important;border:0!important;
+  color:#68788e!important;font:10px/1.2 Arial,sans-serif!important;white-space:nowrap!important;
+}
+@media(max-width:760px){
+  #miStatusGroup #miVersionRow{padding:0 7px 2px!important}
+  #miStatusGroup #miVersionLabel{font-size:9px!important}
+}
+</style>
 </head>
 <body>
   <div id="top"></div>
@@ -5435,8 +5466,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           <div class="mi-main-textbox-frame">
             <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
           </div>
-          <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
-          <div id="miVersionRow"><span id="miVersionLabel">MI-RETRIEVE-CODE · Early development version</span></div>
+          <div id="miStatusGroup"><div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
+          <div id="miVersionRow"><span id="miVersionLabel">MI-RETRIEVE-CODE · Early development version</span></div></div>
         </section>
         <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
         <input type="hidden" id="content" value="">
