@@ -5609,6 +5609,11 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
   height:auto!important;min-height:0!important;line-height:1.3!important;
   border:0!important;background:transparent!important;
 }
+/* Move the two lower information rows down together, keeping their size and mutual spacing unchanged. */
+#miStatusGroup .mi-document-info-row,
+#miStatusGroup #miSiteFooter{
+  position:relative!important;top:8px!important;
+}
 </style>
 
   <script>
