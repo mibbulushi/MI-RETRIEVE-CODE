@@ -5468,6 +5468,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
               </div>
               <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
             </div>
+            <footer id="miSiteFooter">MI-RETRIEVE-CODE · Early development version</footer>
           </div>
         </section>
         <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
@@ -5546,7 +5547,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 
     </section>
 
-    <footer id="miSiteFooter">MI-RETRIEVE-CODE · Early development version</footer>
+
   </main>
 
   <style id="mi-site-footer-style">
@@ -5593,6 +5594,16 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
   background:transparent!important;border:0!important;
 }
 #miStatusGroup #miDocumentStats{display:none!important}
+
+/* Keep the version label attached directly to the frozen draft/zoom/privacy rows. */
+#miStatusGroup{gap:0!important;margin:0!important;padding:0!important;}
+#miStatusGroup #miSiteFooter{
+  display:block!important;flex:0 0 auto!important;width:100%!important;
+  box-sizing:border-box!important;height:auto!important;min-height:0!important;
+  margin:0!important;padding:0 4px!important;border:0!important;
+  background:transparent!important;color:#68788e!important;
+  text-align:center!important;font:10px/1.2 Arial,sans-serif!important;
+}
 </style>
 
   <script>
