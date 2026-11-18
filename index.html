@@ -5466,8 +5466,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           <div class="mi-main-textbox-frame">
             <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
           </div>
-          <div id="miStatusGroup"><div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
-          <div id="miVersionRow"><span id="miVersionLabel">MI-RETRIEVE-CODE · Early development version</span></div></div>
+          <div id="miStatusGroup"><div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div></div>
         </section>
         <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
         <input type="hidden" id="content" value="">
@@ -5545,7 +5544,18 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 
     </section>
 
+    <footer id="miSiteFooter">MI-RETRIEVE-CODE · Early development version</footer>
   </main>
+
+  <style id="mi-site-footer-style">
+    #miSiteFooter{
+      display:block!important;width:100%!important;box-sizing:border-box!important;
+      flex:0 0 auto!important;margin:12px 0 0!important;padding:5px 8px!important;
+      border-top:1px solid #dbe2ea!important;background:#f7f9fc!important;
+      color:#68788e!important;text-align:center!important;
+      font:10px/1.3 Arial,sans-serif!important;
+    }
+  </style>
 
   <script>
     // Temporary diagnostics: surface JavaScript failures instead of leaving controls silently inactive.
