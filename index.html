@@ -5460,7 +5460,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           <div class="mi-main-textbox-frame">
             <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
           </div>
-          <div id="miStatusGroup"><div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div></div>
+          <div id="miStatusGroup"><div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
+</div>
           <div class="mi-document-info-row">
             <div class="notice mi-sharing-privacy-notice">
               <strong>Sharing &amp; Privacy:</strong> Your saved content is private. Anyone with a share code can view shared content. Never add Supabase secret keys here.
@@ -5571,6 +5572,26 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 #saveArea .mi-document-info-row .mi-sharing-privacy-notice{
   text-align:center!important;
 }
+
+/* Freeze the draft/zoom and privacy-information rows together, like Excel frozen rows. */
+#miStatusGroup{
+  position:sticky!important;bottom:0!important;z-index:100!important;
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  width:100%!important;margin:0!important;padding:0!important;gap:0!important;
+  background:#f8fafc!important;box-shadow:0 -1px 4px rgba(28,36,46,.08)!important;
+}
+#miStatusGroup .mi-document-info-row{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;min-width:0!important;gap:0!important;
+  margin:0!important;padding:0!important;border:0!important;
+  background:#f8fafc!important;box-sizing:border-box!important;
+}
+#miStatusGroup .mi-sharing-privacy-notice{
+  width:100%!important;margin:0!important;padding:2px 6px!important;
+  text-align:center!important;line-height:1.2!important;
+  background:transparent!important;border:0!important;
+}
+#miStatusGroup #miDocumentStats{display:none!important}
 </style>
 
   <script>
