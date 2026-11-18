@@ -5202,6 +5202,22 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 }
 </style>
 
+
+<style id="mi-status-row-flush-bottom">
+/* Attach the compact automatic-save/zoom strip directly to the bottom edge of its panel */
+#saveArea{
+  padding-bottom:0!important;
+}
+#saveArea #miProjectWorkStatus{
+  margin-bottom:0!important;
+  border-bottom-left-radius:0!important;
+  border-bottom-right-radius:0!important;
+}
+#saveArea .project-save-notes:empty{
+  display:none!important;
+}
+</style>
+
 </head>
 <body>
   <div id="top"></div>
