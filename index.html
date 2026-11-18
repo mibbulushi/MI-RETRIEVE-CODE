@@ -5249,6 +5249,31 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 }
 </style>
 
+
+<style id="mi-force-single-status-version-row">
+/* Force save message, version label and zoom controls to remain on one line */
+#miProjectWorkStatus{
+  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+  align-items:center!important;justify-content:flex-start!important;
+  gap:6px!important;white-space:nowrap!important;overflow-x:auto!important;
+  overflow-y:hidden!important;
+}
+#miProjectWorkStatusText{
+  flex:1 1 90px!important;min-width:45px!important;
+  white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+}
+#miVersionLabel{
+  display:inline-block!important;flex:0 0 auto!important;
+  min-width:max-content!important;white-space:nowrap!important;
+}
+#miProjectWorkStatus .mi-document-viewbar,
+#miProjectWorkStatus .mi-document-zoom{flex:0 0 auto!important;white-space:nowrap!important}
+@media(max-width:650px){
+  #miProjectWorkStatus{flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important}
+  #miVersionLabel{font-size:9px!important}
+}
+</style>
+
 </head>
 <body>
   <div id="top"></div>
