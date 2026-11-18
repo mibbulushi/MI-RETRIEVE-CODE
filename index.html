@@ -5457,16 +5457,16 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             <div class="mi-ribbon-caption">Picture Format · Select a picture in the document to edit it</div>
             </div>
           </div>
+          <div class="mi-main-textbox-frame">
+            <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
+          </div>
+          <div id="miStatusGroup"><div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div></div>
           <div class="mi-document-info-row">
             <div class="notice mi-sharing-privacy-notice">
               <strong>Sharing &amp; Privacy:</strong> Your saved content is private. Anyone with a share code can view shared content. Never add Supabase secret keys here.
             </div>
             <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
           </div>
-          <div class="mi-main-textbox-frame">
-            <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
-          </div>
-          <div id="miStatusGroup"><div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div></div>
         </section>
         <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
         <input type="hidden" id="content" value="">
@@ -5557,6 +5557,17 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
     }
   
 /* Center the Sharing & Privacy notice text. */
+#saveArea .mi-document-info-row .mi-sharing-privacy-notice{
+  text-align:center!important;
+}
+
+/* Place the privacy notice directly below the draft/zoom status strip. */
+#saveArea .mi-document-info-row{
+  margin:2px 0 8px!important;
+  padding:0!important;
+  justify-content:center!important;
+  text-align:center!important;
+}
 #saveArea .mi-document-info-row .mi-sharing-privacy-notice{
   text-align:center!important;
 }
