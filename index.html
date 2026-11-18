@@ -5468,6 +5468,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
               </div>
               <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
             </div>
+            <footer id="miSiteFooter">MI-RETRIEVE-CODE · Early development version</footer>
           </div>
         </section>
         <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
@@ -5549,8 +5550,6 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 
   </main>
 
-  <footer id="miSiteFooter">MI-RETRIEVE-CODE · Early development version</footer>
-
   <style id="mi-site-footer-style">
     #miSiteFooter{
       display:block!important;width:100%!important;box-sizing:border-box!important;
@@ -5567,7 +5566,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 
 /* Place the privacy notice directly below the draft/zoom status strip. */
 #saveArea .mi-document-info-row{
-  margin:2px 0 8px!important;
+  margin:0!important;
   padding:0!important;
   justify-content:center!important;
   text-align:center!important;
@@ -5596,6 +5595,11 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 }
 #miStatusGroup #miDocumentStats{display:none!important}
 
+
+/* Join the privacy/statistics strip and the version strip with no gap. */
+#miStatusGroup{display:flex!important;flex-direction:column!important;gap:0!important;margin:0!important;padding:0!important;}
+#miStatusGroup .mi-document-info-row{margin:0!important;padding:0!important;}
+#miStatusGroup #miSiteFooter{margin:0!important;padding:0 4px!important;}
 </style>
 
   <script>
