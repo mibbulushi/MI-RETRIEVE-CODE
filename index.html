@@ -5231,45 +5231,22 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 </style>
 
 
-<style id="mi-merge-version-into-status-row">
-/* Keep the version label compact inside the automatic-save/zoom strip */
-#miProjectWorkStatus{gap:7px!important}
+<style id="mi-version-own-row-no-gap">
+/* Version is its own compact row directly below the automatic-save/zoom row */
+#miVersionRow{
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  width:100%!important;min-height:0!important;height:auto!important;
+  margin:0!important;padding:0 7px 2px!important;
+  background:rgba(248,250,253,.98)!important;border:0!important;line-height:1.2!important;
+}
 #miVersionLabel{
   display:inline-block!important;visibility:visible!important;opacity:1!important;
-  flex:0 0 auto!important;min-width:max-content!important;width:auto!important;
-  margin-left:4px!important;padding-left:8px!important;
-  border-left:1px solid #d5dee9!important;
-  color:#68788e!important;font:10px/1.2 Arial,sans-serif!important;
-  white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;
-  position:relative!important;z-index:2!important;
+  margin:0!important;padding:0!important;border:0!important;
+  color:#68788e!important;font:10px/1.2 Arial,sans-serif!important;white-space:nowrap!important;
 }
-#miProjectWorkStatusText{flex:1 1 110px!important;min-width:70px!important}
+#miProjectWorkStatus{margin-bottom:0!important}
 @media(max-width:760px){
-  #miVersionLabel{font-size:9px!important;margin-left:1px!important;padding-left:5px!important}
-}
-</style>
-
-
-<style id="mi-force-single-status-version-row">
-/* Force save message, version label and zoom controls to remain on one line */
-#miProjectWorkStatus{
-  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
-  align-items:center!important;justify-content:flex-start!important;
-  gap:6px!important;white-space:nowrap!important;overflow-x:auto!important;
-  overflow-y:hidden!important;
-}
-#miProjectWorkStatusText{
-  flex:1 1 90px!important;min-width:45px!important;
-  white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
-}
-#miVersionLabel{
-  display:inline-block!important;flex:0 0 auto!important;
-  min-width:max-content!important;white-space:nowrap!important;
-}
-#miProjectWorkStatus .mi-document-viewbar,
-#miProjectWorkStatus .mi-document-zoom{flex:0 0 auto!important;white-space:nowrap!important}
-@media(max-width:650px){
-  #miProjectWorkStatus{flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important}
+  #miVersionRow{padding:0 7px 2px!important}
   #miVersionLabel{font-size:9px!important}
 }
 </style>
@@ -5458,7 +5435,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           <div class="mi-main-textbox-frame">
             <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
           </div>
-          <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span><span id="miVersionLabel">MI-RETRIEVE-CODE · Early development version</span></div>
+          <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
+          <div id="miVersionRow"><span id="miVersionLabel">MI-RETRIEVE-CODE · Early development version</span></div>
         </section>
         <button id="addProjectSectionBtn" type="button" hidden></button><div id="projectSections" hidden></div>
         <input type="hidden" id="content" value="">
