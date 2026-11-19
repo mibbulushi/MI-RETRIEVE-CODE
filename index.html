@@ -7388,7 +7388,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         card.style.cssText = "display:flex;align-items:center;gap:10px;max-width:100%;margin:12px 0;padding:12px 14px;border:1px solid #cbd8e8;border-radius:9px;background:#f4f8fd;color:#26364a;font:inherit;cursor:grab;user-select:none;";
         const icon = document.createElement("span");
         const extension = file.name.split(".").pop().toLowerCase();
-        const icons = {pdf:"📕",doc:"📘",docx:"📘",odt:"📘",txt:"📄",rtf:"📄",xls:"📗",xlsx:"📗",csv:"📊",ppt:"📙",pptx:"📙",odp:"📙",zip:"🗜️",rar:"🗜️",7z:"🗜️",jpg:"🖼️",jpeg:"🖼️",png:"🖼️",gif:"🖼️",svg:"🖼️",mp3:"🎵",wav:"🎵",mp4:"🎬",mov:"🎬",webm:"🎬"};
+        const icons = {pdf:"📕",doc:"📘",docx:"📘",odt:"📘",txt:"📄",rtf:"📄",xls:"📗",xlsx:"📗",csv:"📊",ppt:"📙",pptx:"📙",odp:"📙",zip:"🗜️",rar:"🗜️","7z":"🗜️",jpg:"🖼️",jpeg:"🖼️",png:"🖼️",gif:"🖼️",svg:"🖼️",mp3:"🎵",wav:"🎵",mp4:"🎬",mov:"🎬",webm:"🎬"};
         icon.textContent = icons[extension] || "📎";
         icon.style.cssText = "font-size:25px;flex:0 0 auto;";
         const name = document.createElement("strong");
