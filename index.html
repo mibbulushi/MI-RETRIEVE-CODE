@@ -7869,7 +7869,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         heading.textContent = transfer.files.length + " file(s) attached:";
         preview.append(heading);
         const list = document.createElement("ul");
-        transfer.files.forEach(file => {
+        Array.from(transfer.files).forEach(file => {
           const item = document.createElement("li");
           item.textContent = file.name;
           list.append(item);
