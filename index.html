@@ -7867,14 +7867,15 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         try { transfer.items.add(file); } catch (error) { console.warn("Could not restore an attachment:", error); }
       });
       $("projectFiles").files = transfer.files;
+      const restoredFiles = Array.from(transfer.files || []);
       const preview = $("projectFilesPreview");
       preview.replaceChildren();
-      if (transfer.files.length) {
+      if (restoredFiles.length) {
         const heading = document.createElement("strong");
-        heading.textContent = transfer.files.length + " file(s) attached:";
+        heading.textContent = restoredFiles.length + " file(s) attached:";
         preview.append(heading);
         const list = document.createElement("ul");
-        Array.from(transfer.files).forEach(file => {
+        restoredFiles.forEach(file => {
           const item = document.createElement("li");
           item.textContent = file.name;
           list.append(item);
