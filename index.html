@@ -5282,6 +5282,22 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
   #miStatusGroup #miVersionLabel{font-size:9px!important}
 }
 </style>
+
+<style id="mi-version-label-in-blue-status-row">
+/* Keep the version label inside the final blue status panel, at its far right. */
+#miProjectWorkStatus #miProjectWorkStatusText{order:1!important}
+#miProjectWorkStatus .mi-document-viewbar{order:2!important}
+#miProjectWorkStatus #miVersionLabel{
+  display:inline-block!important;order:3!important;flex:0 0 auto!important;
+  margin:0 2px 0 8px!important;padding:0!important;
+  color:#31577f!important;font:10px/1.2 Arial,sans-serif!important;
+  white-space:nowrap!important;visibility:visible!important;opacity:1!important;
+}
+@media(max-width:760px){
+  #miProjectWorkStatus #miVersionLabel{font-size:9px!important;margin-left:4px!important}
+}
+</style>
+
 </head>
 <body>
   <div id="top"></div>
@@ -5460,14 +5476,13 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           <div class="mi-main-textbox-frame">
             <div id="miDocumentEditor" class="mi-document-editor" contenteditable="true" spellcheck="true" autocorrect="on" autocapitalize="sentences" role="textbox" aria-label="Project document" aria-multiline="true"></div>
             <div id="miStatusGroup">
-              <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span></div>
+              <div id="miProjectWorkStatus" class="mi-work-status" role="status" aria-live="polite"><span class="mi-work-dot"></span><span id="miProjectWorkStatusText">Ready — your project is not saved yet.</span><span id="miVersionLabel">MI-RETRIEVE-CODE · Early development version</span></div>
               <div class="mi-document-info-row">
                 <div class="notice mi-sharing-privacy-notice">
                   <strong>Sharing &amp; Privacy:</strong> Your saved content is private. Anyone with a share code can view shared content. Never add Supabase secret keys here.
                 </div>
                 <div id="miDocumentStats" class="mi-document-stats" aria-live="polite">Words: 0 · Characters: 0 · Paragraphs: 0</div>
               </div>
-              <div id="miVersionRow"><span id="miVersionLabel">MI-RETRIEVE-CODE · Early development version</span></div>
             </div>
           </div>
         </section>
