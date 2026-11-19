@@ -5615,16 +5615,21 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
   position:relative!important;top:0!important;
 }
 
-/* Remove only the vertical space between Sharing & Privacy and the version row.
-   Keep both rows separate and leave the automatic-save row unchanged. */
-#miStatusGroup .mi-sharing-privacy-notice{
-  padding-top:0!important;
-  padding-bottom:0!important;
+/* Close the visible gap between the actual Sharing & Privacy row and footer row.
+   Keep the two rows separate; do not move the automatic-save row. */
+#miStatusGroup .mi-document-info-row{
   margin-bottom:0!important;
+  padding-bottom:0!important;
 }
-#miStatusGroup #miVersionRow{
-  margin-top:0!important;
+#miStatusGroup .mi-sharing-privacy-notice{
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+#miStatusGroup #miSiteFooter{
+  margin-top:-12px!important;
   padding-top:0!important;
+  position:relative!important;
+  top:0!important;
 }
 
 </style>
