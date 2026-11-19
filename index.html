@@ -7371,26 +7371,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
     $("projectFiles").addEventListener("change", () => {
       const files = Array.from($("projectFiles").files || []);
       const visibleFiles = files.filter(file => !(file.type || "").startsWith("video/") && !/\.(mp4|m4v|mov|webm|avi|mkv|mpeg|mpg|3gp)$/i.test(file.name));
-      const preview = $("projectFilesPreview");
-      preview.replaceChildren();
-      if (!visibleFiles.length) { preview.textContent = ""; }
-      else {
-      const heading = document.createElement("strong");
-      heading.textContent = visibleFiles.length + " file(s) selected:";
-      preview.append(heading);
-      const list = document.createElement("ul");
-      list.style.margin = "6px 0 0";
-      list.style.paddingLeft = "22px";
-      for (const file of visibleFiles) {
-        const item = document.createElement("li");
-        const size = file.size < 1024 * 1024
-          ? (file.size / 1024).toFixed(1) + " KB"
-          : (file.size / (1024 * 1024)).toFixed(2) + " MB";
-        item.textContent = file.name + " (" + size + ")";
-        list.append(item);
-      }
-      preview.append(list);
-      }
+      // Keep the attachment preview free of extra headings, counts, and descriptions.
+      $("projectFilesPreview").replaceChildren();
 
       // Video uploads are retained for saving, but appear only as video elements in the document.
       const editor = $("miDocumentEditor");
@@ -7405,18 +7387,14 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         card.title = "Press and hold the left mouse button, then move this file to reposition it";
         card.style.cssText = "display:flex;align-items:center;gap:10px;max-width:100%;margin:12px 0;padding:12px 14px;border:1px solid #cbd8e8;border-radius:9px;background:#f4f8fd;color:#26364a;font:inherit;cursor:grab;user-select:none;";
         const icon = document.createElement("span");
-        icon.textContent = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf") ? "📄" : "📎";
+        const extension = file.name.split(".").pop().toLowerCase();
+        const icons = {pdf:"📕",doc:"📘",docx:"📘",odt:"📘",txt:"📄",rtf:"📄",xls:"📗",xlsx:"📗",csv:"📊",ppt:"📙",pptx:"📙",odp:"📙",zip:"🗜️",rar:"🗜️",7z:"🗜️",jpg:"🖼️",jpeg:"🖼️",png:"🖼️",gif:"🖼️",svg:"🖼️",mp3:"🎵",wav:"🎵",mp4:"🎬",mov:"🎬",webm:"🎬"};
+        icon.textContent = icons[extension] || "📎";
         icon.style.cssText = "font-size:25px;flex:0 0 auto;";
-        const details = document.createElement("span");
-        details.style.cssText = "display:flex;flex-direction:column;min-width:0;overflow-wrap:anywhere;";
         const name = document.createElement("strong");
         name.textContent = file.name;
-        name.style.cssText = "font-size:.9rem;font-weight:600;";
-        const note = document.createElement("small");
-        note.textContent = "Attached project file";
-        note.style.cssText = "font-size:.75rem;color:#627895;";
-        details.append(name, note);
-        card.append(icon, details);
+        name.style.cssText = "font-size:.9rem;font-weight:600;min-width:0;overflow-wrap:anywhere;";
+        card.append(icon, name);
         const spacer = document.createElement("p");
         spacer.append(document.createElement("br"));
         editor.append(card, spacer);
@@ -7818,18 +7796,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       const restoredFiles = Array.from(transfer.files || []);
       const preview = $("projectFilesPreview");
       preview.replaceChildren();
-      if (restoredFiles.length) {
-        const heading = document.createElement("strong");
-        heading.textContent = restoredFiles.length + " file(s) attached:";
-        preview.append(heading);
-        const list = document.createElement("ul");
-        restoredFiles.forEach(file => {
-          const item = document.createElement("li");
-          item.textContent = file.name;
-          list.append(item);
-        });
-        preview.append(list);
-      }
+      // Restored attachments are represented by their file icons and names in the document only.
+      preview.replaceChildren();
       $("saveResult").textContent = "";
       $("titleValidation").textContent = "";
       miRenderProjectTabs();
