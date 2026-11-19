@@ -8127,7 +8127,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
               const sw=document.createElement("button");
               sw.type="button";
               sw.className="mi-tab-color-swatch";
-              sw.style.setProperty("background-color",color,"important");
+              sw.style.setProperty("background-image","none","important");sw.style.setProperty("background-color",color,"important");
               sw.title=column.name+" — shade "+(shadeIndex+1)+": "+color;
               sw.setAttribute("aria-label",sw.title);
               sw.addEventListener("click",e=>{e.stopPropagation();applyTabColor(color);});
@@ -8141,7 +8141,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           ["#c00000","#ff0000","#ffc000","#ffff00","#92d050","#00b050","#00b0f0","#0070c0","#002060","#7030a0"].forEach(color=>{
             const sw=document.createElement("button");
             sw.type="button";sw.className="mi-tab-color-swatch";
-            sw.style.setProperty("background-color",color,"important");sw.title="Standard color: "+color;
+            sw.style.setProperty("background-image","none","important");sw.style.setProperty("background-color",color,"important");sw.title="Standard color: "+color;
             sw.setAttribute("aria-label",sw.title);
             sw.addEventListener("click",e=>{e.stopPropagation();applyTabColor(color);});
             standard.append(sw);
