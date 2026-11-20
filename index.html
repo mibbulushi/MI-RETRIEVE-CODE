@@ -8187,7 +8187,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const oldLabel=document.createElement("div"),newLabel=document.createElement("div");oldLabel.textContent="Current";newLabel.textContent="New";
             oldLabel.style.cssText=newLabel.style.cssText="font-size:12px;margin-bottom:4px;color:#222;";
             oldWrap.append(oldLabel,oldBox);newWrap.append(newLabel,newBox);previewRow.append(oldWrap,newWrap);
-            const customPanel=document.createElement("div");customPanel.style.cssText="display:none;box-sizing:border-box;height:205px;min-height:205px;max-height:205px;overflow-y:auto;overflow-x:hidden;";
+            const customPanel=document.createElement("div");customPanel.style.cssText="display:none;box-sizing:border-box;height:205px;min-height:205px;max-height:205px;overflow:visible;";
             const customLabel=document.createElement("div");customLabel.textContent="Custom color";customLabel.style.cssText="font-weight:600;margin:2px 0 10px;";
             const customLayout=document.createElement("div");customLayout.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 126px;gap:12px;align-items:start;";
             const pickerArea=document.createElement("div");pickerArea.style.cssText="display:grid;grid-template-columns:1fr;gap:8px;";
