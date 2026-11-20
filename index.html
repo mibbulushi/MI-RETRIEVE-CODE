@@ -8170,7 +8170,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const makeTab=label=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.style.cssText="appearance:none;-webkit-appearance:none;height:27px;min-width:76px;margin:0;padding:4px 12px;border:1px solid #b7b7b7;border-bottom:0;border-radius:0;background:#f0f0f0;color:#222;box-shadow:none;text-shadow:none;filter:none;transform:none;font:12px 'Segoe UI',Arial,sans-serif;font-weight:400;cursor:pointer;";b.addEventListener("mouseenter",()=>{if(b.dataset.active!=="true")b.style.setProperty("background-color","#e5e5e5","important");});b.addEventListener("mouseleave",()=>{if(b.dataset.active!=="true")b.style.setProperty("background-color","#f0f0f0","important");});return b;};
             const standardTab=makeTab("Standard"),customTab=makeTab("Custom");tabs.append(standardTab,customTab);
             let selected="#4472c4",oldColor="#4472c4";
-            const standardPanel=document.createElement("div");
+            const standardPanel=document.createElement("div");standardPanel.style.cssText="box-sizing:border-box;height:205px;min-height:205px;max-height:205px;overflow-y:auto;overflow-x:hidden;";
             const standardLabel=document.createElement("div");standardLabel.textContent="Colors";standardLabel.style.cssText="font-weight:600;margin:2px 0 9px;";
             const swatches=document.createElement("div");swatches.style.cssText="display:flex;flex-direction:column;align-items:center;gap:0;padding:5px 2px 9px;";
             const standardColors=["#C00000","#FF0000","#FFC000","#FFFF00","#92D050","#00B050","#00B0F0","#0070C0","#002060","#7030A0","#F4CCCC","#FCE5CD","#FFF2CC","#D9EAD3","#D0E0E3","#CFE2F3","#D9D2E9","#EAD1DC","#E6B8AF","#F9CB9C","#EA9999","#F6B26B","#FFD966","#B6D7A8","#A2C4C9","#9FC5E8","#B4A7D6","#D5A6BD","#DD7E6B","#F6B26B","#E06666","#E69138","#F1C232","#6AA84F","#45818E","#3D85C6","#674EA7","#A64D79","#CC4125","#B45F06","#CC0000","#E69138","#F1C232","#6AA84F","#45818E","#3D85C6","#674EA7","#A64D79","#990000","#783F04","#7F6000","#274E13","#0C343D","#073763","#20124D","#4C1130","#FFFFFF","#D9D9D9","#B7B7B7","#7F7F7F","#595959","#262626","#000000"];
@@ -8183,7 +8183,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const oldLabel=document.createElement("div"),newLabel=document.createElement("div");oldLabel.textContent="Current";newLabel.textContent="New";
             oldLabel.style.cssText=newLabel.style.cssText="font-size:12px;margin-bottom:4px;color:#222;";
             oldWrap.append(oldLabel,oldBox);newWrap.append(newLabel,newBox);previewRow.append(oldWrap,newWrap);
-            const customPanel=document.createElement("div");customPanel.style.cssText="display:none;min-height:205px;";
+            const customPanel=document.createElement("div");customPanel.style.cssText="display:none;box-sizing:border-box;height:205px;min-height:205px;max-height:205px;overflow-y:auto;overflow-x:hidden;";
             const customLabel=document.createElement("div");customLabel.textContent="Custom color";customLabel.style.cssText="font-weight:600;margin:2px 0 10px;";
             const customLayout=document.createElement("div");customLayout.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 126px;gap:12px;align-items:start;";
             const pickerArea=document.createElement("div");pickerArea.style.cssText="display:grid;grid-template-columns:1fr;gap:8px;";
