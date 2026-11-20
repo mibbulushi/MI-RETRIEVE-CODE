@@ -8100,6 +8100,12 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           palette.style.setProperty("max-height","none","important");
           palette.style.setProperty("height","auto","important");
           palette.style.setProperty("overflow","visible","important");
+          palette.style.setProperty("box-sizing","border-box","important");
+          palette.style.setProperty("padding","6px","important");
+          palette.style.setProperty("max-width","230px","important");
+          palette.style.setProperty("overflow-x","hidden","important");
+          palette.style.setProperty("overflow-y","visible","important");
+
           palette.style.setProperty("background","#ffffff","important");
           palette.style.setProperty("border","1px solid #777777","important");
           palette.style.setProperty("box-shadow","1px 2px 5px rgba(0,0,0,.28)","important");
@@ -8186,11 +8192,20 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             standard.append(sw);
           });
           palette.append(standard);
+
+          /* Compact all Standard/Theme palette contents; keep the popup content-fit with no scrollbar. */
+          palette.querySelectorAll(".mi-tab-color-heading").forEach(el=>{el.style.setProperty("height","16px","important");el.style.setProperty("font","600 9px/12px 'Segoe UI',Arial,sans-serif","important");el.style.setProperty("margin","0 0 2px","important");});
+          palette.querySelectorAll(".mi-tab-color-row").forEach(el=>{el.style.setProperty("grid-template-columns","repeat(10,16px)","important");el.style.setProperty("grid-auto-rows","16px","important");el.style.setProperty("gap","2px","important");el.style.setProperty("margin","0 0 2px","important");});
+          palette.querySelectorAll(".mi-tab-color-swatch").forEach(el=>{["width","height","min-width","min-height"].forEach(p=>el.style.setProperty(p,"16px","important"));el.style.setProperty("padding","0","important");});
+
           const noColor=document.createElement("button");
           noColor.type="button";noColor.className="mi-tab-no-color";
           noColor.textContent="No Color";
           noColor.addEventListener("click",e=>{e.stopPropagation();applyTabColor("");});
           palette.append(noColor);
+
+          [noColor,more].forEach(el=>{el.style.setProperty("height",el===noColor?"18px":"20px","important");el.style.setProperty("min-height",el===noColor?"18px":"20px","important");el.style.setProperty("font","9px/12px 'Segoe UI',Arial,sans-serif","important");el.style.setProperty("padding","1px 4px","important");el.style.setProperty("margin",el===noColor?"2px 0 0":"3px 0 0","important");});
+
           /* Professional Excel-inspired More Colors dialog. */
           const more=document.createElement("button");
           more.type="button";more.className="mi-tab-more-colors";more.textContent="More Colors...";
