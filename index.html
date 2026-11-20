@@ -4150,7 +4150,7 @@ img{max-width:100%}
 }
 
 .mi-tab-color-trigger{position:relative!important;overflow:visible!important;cursor:default!important}
-.mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:0!important;z-index:100010!important;width:250px!important;min-width:250px!important;padding:8px!important;grid-template-columns:1fr!important;gap:0!important;overflow:visible!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
+.mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:0!important;z-index:100010!important;width:230px!important;min-width:230px!important;padding:8px!important;grid-template-columns:1fr!important;gap:0!important;overflow:visible!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
 .mi-tab-color-trigger.mi-tab-color-open .mi-tab-color-submenu,.mi-tab-color-trigger:hover .mi-tab-color-submenu{display:grid!important}
 .mi-tab-color-heading{display:block!important;height:18px!important;padding:1px 1px 2px!important;border-bottom:1px solid #d4d4d4!important;margin:0 0 4px!important;color:#333!important;font:600 10px/14px "Segoe UI",Arial,sans-serif!important}
 .mi-tab-color-row{display:grid!important;grid-template-columns:repeat(10,18px)!important;grid-auto-rows:18px!important;gap:3px!important;margin:0 0 4px!important;padding:0!important}
@@ -8080,8 +8080,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           palette.style.setProperty("position","fixed","important");
           palette.style.setProperty("display","none","important");
           palette.style.setProperty("z-index","2147483000","important");
-          palette.style.setProperty("width","250px","important");
-          palette.style.setProperty("min-width","250px","important");
+          palette.style.setProperty("width","230px","important");
+          palette.style.setProperty("min-width","230px","important");
           /* Keep the complete Excel-style color chooser visible without an inner scrollbar. */
           palette.style.setProperty("max-height","none","important");
           palette.style.setProperty("height","auto","important");
@@ -8165,7 +8165,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const dialog=document.createElement("div");
             dialog.setAttribute("role","dialog");dialog.setAttribute("aria-modal","true");dialog.setAttribute("aria-label","More Colors");
             dialog.style.setProperty("overflow","hidden","important");dialog.style.setProperty("scrollbar-width","none","important");
-            dialog.style.cssText="box-sizing:border-box;width:min(250px,calc(100vw - 16px));height:min(230px,calc(100vh - 16px));min-height:0;max-height:calc(100vh - 16px);max-width:calc(100vw - 16px);padding:5px 7px 4px;background:#f0f0f0;border:1px solid #777;border-radius:2px;box-shadow:0 3px 10px rgba(0,0,0,.24);font:9px 'Segoe UI',Arial,sans-serif;color:#111;line-height:1.1;text-rendering:auto;-webkit-font-smoothing:auto;font-smooth:never;overflow:hidden;overscroll-behavior:none;scrollbar-width:none;flex:0 0 auto;";
+            dialog.style.cssText="box-sizing:border-box;width:min(230px,calc(100vw - 16px));height:min(230px,calc(100vh - 16px));min-height:0;max-height:calc(100vh - 16px);max-width:calc(100vw - 16px);padding:5px 7px 4px;background:#f0f0f0;border:1px solid #777;border-radius:2px;box-shadow:0 3px 10px rgba(0,0,0,.24);font:9px 'Segoe UI',Arial,sans-serif;color:#111;line-height:1.1;text-rendering:auto;-webkit-font-smoothing:auto;font-smooth:never;overflow:hidden;overscroll-behavior:none;scrollbar-width:none;flex:0 0 auto;";
             const heading=document.createElement("div");heading.textContent="Colors";heading.style.cssText="height:13px;box-sizing:border-box;font-size:9px;font-weight:600;margin:0 0 2px;letter-spacing:0;cursor:move;user-select:none;touch-action:none;";
             let dragStartX=0,dragStartY=0,dialogOffsetX=0,dialogOffsetY=0,draggingDialog=false;
             heading.addEventListener("pointerdown",ev=>{if(ev.button!==0)return;draggingDialog=true;dragStartX=ev.clientX;dragStartY=ev.clientY;heading.setPointerCapture?.(ev.pointerId);});
@@ -8241,7 +8241,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             }
             palette.style.setProperty("display","grid","important");
             item.classList.add("mi-tab-color-open");
-            const panelWidth=250;
+            const panelWidth=230;
             const panelHeight=Math.min(palette.scrollHeight||430,window.innerHeight-16);
             let left=rect.right+3;
             if(left+panelWidth>window.innerWidth-8)left=rect.left-panelWidth-3;
