@@ -4153,6 +4153,7 @@ img{max-width:100%}
 .mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:0!important;z-index:100010!important;width:230px!important;min-width:230px!important;padding:8px!important;grid-template-columns:1fr!important;gap:0!important;overflow:visible!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
 .mi-tab-color-trigger.mi-tab-color-open .mi-tab-color-submenu,.mi-tab-color-trigger:hover .mi-tab-color-submenu{display:grid!important}
 .mi-tab-color-heading{display:block!important;height:18px!important;padding:1px 1px 2px!important;border-bottom:1px solid #d4d4d4!important;margin:0 0 4px!important;color:#333!important;font:600 10px/14px "Segoe UI",Arial,sans-serif!important}
+.mi-tab-color-heading.mi-tab-color-drag-handle{cursor:move!important;touch-action:none!important;user-select:none!important}
 .mi-tab-color-row{display:grid!important;grid-template-columns:repeat(10,18px)!important;grid-auto-rows:18px!important;gap:3px!important;margin:0 0 4px!important;padding:0!important}
 .mi-tab-color-swatch{appearance:none!important;-webkit-appearance:none!important;display:block!important;box-sizing:border-box!important;width:18px!important;height:18px!important;min-width:18px!important;min-height:18px!important;padding:0!important;margin:0!important;background-image:none!important;border:1px solid #777!important;border-radius:0!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)!important;cursor:pointer!important;opacity:1!important;filter:none!important;transform:none!important}
 .mi-tab-color-swatch:hover,.mi-tab-color-swatch:focus-visible{outline:2px solid #111!important;outline-offset:1px!important;z-index:1!important}
@@ -8108,8 +8109,33 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             heading.className="mi-tab-color-heading";
             heading.textContent=label;
             palette.append(heading);
+            return heading;
           };
-          addHeading("Theme Colors");
+          const themeHeading=addHeading("Theme Colors");
+          /* Drag the palette by its Theme Colors title without interfering with color selection. */
+          themeHeading.classList.add("mi-tab-color-drag-handle");
+          let paletteDragging=false,palettePointerId=null,paletteStartX=0,paletteStartY=0,paletteLeft=0,paletteTop=0;
+          themeHeading.addEventListener("pointerdown",ev=>{
+            if(ev.button!==0)return;
+            paletteDragging=true;palettePointerId=ev.pointerId;
+            paletteStartX=ev.clientX;paletteStartY=ev.clientY;
+            paletteLeft=parseFloat(palette.style.left)||palette.getBoundingClientRect().left;
+            paletteTop=parseFloat(palette.style.top)||palette.getBoundingClientRect().top;
+            themeHeading.setPointerCapture?.(ev.pointerId);
+            ev.preventDefault();
+          });
+          themeHeading.addEventListener("pointermove",ev=>{
+            if(!paletteDragging||ev.pointerId!==palettePointerId)return;
+            const maxLeft=Math.max(8,window.innerWidth-palette.offsetWidth-8);
+            const maxTop=Math.max(8,window.innerHeight-palette.offsetHeight-8);
+            const nextLeft=Math.max(8,Math.min(maxLeft,paletteLeft+ev.clientX-paletteStartX));
+            const nextTop=Math.max(8,Math.min(maxTop,paletteTop+ev.clientY-paletteStartY));
+            palette.style.setProperty("left",nextLeft+"px","important");
+            palette.style.setProperty("top",nextTop+"px","important");
+          });
+          const stopPaletteDrag=ev=>{if(ev.pointerId===palettePointerId){paletteDragging=false;palettePointerId=null;}};
+          themeHeading.addEventListener("pointerup",stopPaletteDrag);
+          themeHeading.addEventListener("pointercancel",stopPaletteDrag);
           /* Excel Office theme palette: four text/background colors followed by six accents. */
           const themeColumns=[
             {name:"White — Background 1",shades:["#ffffff","#f2f2f2","#d9d9d9","#bfbfbf","#a6a6a6","#7f7f7f"]},
