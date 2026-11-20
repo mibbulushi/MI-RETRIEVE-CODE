@@ -8271,6 +8271,11 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             buttons.append(cancel,ok);dialog.append(heading,tabs,standardPanel,customPanel,previewTitle,previewRow,buttons);overlay.append(dialog);document.body.append(overlay);setTab("standard");updateColor(selected);
           });
           palette.append(more);
+          /* Apply compact dimensions directly to palette elements so global button CSS cannot override them. */
+          palette.querySelectorAll(".mi-tab-color-heading").forEach(el=>{el.style.setProperty("height","16px","important");el.style.setProperty("font","600 9px/12px 'Segoe UI',Arial,sans-serif","important");el.style.setProperty("margin-bottom","3px","important");});
+          palette.querySelectorAll(".mi-tab-color-row").forEach(el=>{el.style.setProperty("grid-template-columns","repeat(10,16px)","important");el.style.setProperty("grid-auto-rows","16px","important");el.style.setProperty("gap","2px","important");el.style.setProperty("margin-bottom","3px","important");});
+          palette.querySelectorAll(".mi-tab-color-swatch").forEach(el=>{["width","height","min-width","min-height"].forEach(p=>el.style.setProperty(p,"16px","important"));el.style.setProperty("padding","0","important");});
+          [noColor,more].forEach(el=>{el.style.setProperty("height",el===noColor?"18px":"20px","important");el.style.setProperty("min-height",el===noColor?"18px":"20px","important");el.style.setProperty("font","9px/12px 'Segoe UI',Arial,sans-serif","important");el.style.setProperty("padding","2px 4px","important");el.style.setProperty("margin-top",el===noColor?"2px":"4px","important");});
           document.body.append(palette);
           item.addEventListener("click",e=>{
             e.stopPropagation();
