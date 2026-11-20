@@ -4150,16 +4150,16 @@ img{max-width:100%}
 }
 
 .mi-tab-color-trigger{position:relative!important;overflow:visible!important;cursor:default!important}
-.mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:0!important;z-index:100010!important;width:292px!important;min-width:292px!important;padding:10px!important;grid-template-columns:1fr!important;gap:0!important;overflow:visible!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
+.mi-tab-color-submenu{display:none!important;position:absolute!important;left:calc(100% - 1px)!important;top:0!important;z-index:100010!important;width:250px!important;min-width:250px!important;padding:8px!important;grid-template-columns:1fr!important;gap:0!important;overflow:visible!important;background:#fff!important;border:1px solid #777!important;border-radius:0!important;box-shadow:1px 2px 4px rgba(0,0,0,.22)!important}
 .mi-tab-color-trigger.mi-tab-color-open .mi-tab-color-submenu,.mi-tab-color-trigger:hover .mi-tab-color-submenu{display:grid!important}
-.mi-tab-color-heading{display:block!important;height:21px!important;padding:2px 1px 3px!important;border-bottom:1px solid #d4d4d4!important;margin:0 0 5px!important;color:#333!important;font:600 11px/15px "Segoe UI",Arial,sans-serif!important}
-.mi-tab-color-row{display:grid!important;grid-template-columns:repeat(10,22px)!important;grid-auto-rows:22px!important;gap:4px!important;margin:0 0 6px!important;padding:0!important}
-.mi-tab-color-swatch{appearance:none!important;-webkit-appearance:none!important;display:block!important;box-sizing:border-box!important;width:22px!important;height:22px!important;min-width:22px!important;min-height:22px!important;padding:0!important;margin:0!important;background-image:none!important;border:1px solid #777!important;border-radius:0!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)!important;cursor:pointer!important;opacity:1!important;filter:none!important;transform:none!important}
+.mi-tab-color-heading{display:block!important;height:18px!important;padding:1px 1px 2px!important;border-bottom:1px solid #d4d4d4!important;margin:0 0 4px!important;color:#333!important;font:600 10px/14px "Segoe UI",Arial,sans-serif!important}
+.mi-tab-color-row{display:grid!important;grid-template-columns:repeat(10,18px)!important;grid-auto-rows:18px!important;gap:3px!important;margin:0 0 4px!important;padding:0!important}
+.mi-tab-color-swatch{appearance:none!important;-webkit-appearance:none!important;display:block!important;box-sizing:border-box!important;width:18px!important;height:18px!important;min-width:18px!important;min-height:18px!important;padding:0!important;margin:0!important;background-image:none!important;border:1px solid #777!important;border-radius:0!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)!important;cursor:pointer!important;opacity:1!important;filter:none!important;transform:none!important}
 .mi-tab-color-swatch:hover,.mi-tab-color-swatch:focus-visible{outline:2px solid #111!important;outline-offset:1px!important;z-index:1!important}
 .mi-tab-color-standard-heading{margin-top:3px!important}
 .mi-tab-standard-row{grid-template-columns:repeat(10,21px)!important;gap:3px!important}
-.mi-tab-no-color{display:block!important;width:100%!important;height:24px!important;min-height:24px!important;margin:4px 0 0!important;padding:3px 5px!important;background:#fff!important;border:1px solid #bbb!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
-.mi-tab-more-colors{display:block!important;box-sizing:border-box!important;width:100%!important;height:29px!important;min-height:29px!important;margin:9px 0 0!important;padding:6px 5px!important;background:#fff!important;border:0!important;border-top:1px solid #c8c8c8!important;border-radius:0!important;text-align:left!important;color:#222!important;font:11px/16px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
+.mi-tab-no-color{display:block!important;width:100%!important;height:21px!important;min-height:21px!important;margin:3px 0 0!important;padding:2px 5px!important;background:#fff!important;border:1px solid #bbb!important;border-radius:0!important;text-align:left!important;color:#222!important;font:10px/14px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
+.mi-tab-more-colors{display:block!important;box-sizing:border-box!important;width:100%!important;height:24px!important;min-height:24px!important;margin:6px 0 0!important;padding:4px 5px!important;background:#fff!important;border:0!important;border-top:1px solid #c8c8c8!important;border-radius:0!important;text-align:left!important;color:#222!important;font:10px/14px "Segoe UI",Arial,sans-serif!important;cursor:pointer!important}
 .mi-tab-no-color:hover,.mi-tab-more-colors:hover{background:#e5f1fb!important;border-color:#8ab6d8!important}
 @media(max-width:520px){.mi-tab-color-submenu{left:auto!important;right:100%!important}}
 
@@ -8080,8 +8080,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           palette.style.setProperty("position","fixed","important");
           palette.style.setProperty("display","none","important");
           palette.style.setProperty("z-index","2147483000","important");
-          palette.style.setProperty("width","292px","important");
-          palette.style.setProperty("min-width","292px","important");
+          palette.style.setProperty("width","250px","important");
+          palette.style.setProperty("min-width","250px","important");
           /* Keep the complete Excel-style color chooser visible without an inner scrollbar. */
           palette.style.setProperty("max-height","none","important");
           palette.style.setProperty("height","auto","important");
@@ -8165,7 +8165,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const dialog=document.createElement("div");
             dialog.setAttribute("role","dialog");dialog.setAttribute("aria-modal","true");dialog.setAttribute("aria-label","More Colors");
             dialog.style.setProperty("overflow","hidden","important");dialog.style.setProperty("scrollbar-width","none","important");
-            dialog.style.cssText="box-sizing:border-box;width:min(300px,calc(100vw - 16px));height:min(260px,calc(100vh - 16px));min-height:0;max-height:calc(100vh - 16px);max-width:calc(100vw - 16px);padding:5px 7px 4px;background:#f0f0f0;border:1px solid #777;border-radius:2px;box-shadow:0 3px 10px rgba(0,0,0,.24);font:9px 'Segoe UI',Arial,sans-serif;color:#111;line-height:1.1;text-rendering:auto;-webkit-font-smoothing:auto;font-smooth:never;overflow:hidden;overscroll-behavior:none;scrollbar-width:none;flex:0 0 auto;";
+            dialog.style.cssText="box-sizing:border-box;width:min(250px,calc(100vw - 16px));height:min(230px,calc(100vh - 16px));min-height:0;max-height:calc(100vh - 16px);max-width:calc(100vw - 16px);padding:5px 7px 4px;background:#f0f0f0;border:1px solid #777;border-radius:2px;box-shadow:0 3px 10px rgba(0,0,0,.24);font:9px 'Segoe UI',Arial,sans-serif;color:#111;line-height:1.1;text-rendering:auto;-webkit-font-smoothing:auto;font-smooth:never;overflow:hidden;overscroll-behavior:none;scrollbar-width:none;flex:0 0 auto;";
             const heading=document.createElement("div");heading.textContent="Colors";heading.style.cssText="height:13px;box-sizing:border-box;font-size:9px;font-weight:600;margin:0 0 2px;letter-spacing:0;cursor:move;user-select:none;touch-action:none;";
             let dragStartX=0,dragStartY=0,dialogOffsetX=0,dialogOffsetY=0,draggingDialog=false;
             heading.addEventListener("pointerdown",ev=>{if(ev.button!==0)return;draggingDialog=true;dragStartX=ev.clientX;dragStartY=ev.clientY;heading.setPointerCapture?.(ev.pointerId);});
@@ -8175,7 +8175,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const makeTab=label=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.style.cssText="appearance:none;-webkit-appearance:none;height:16px;min-width:48px;margin:0;padding:1px 4px;border:1px solid #b7b7b7;border-bottom:0;border-radius:0;background:#f0f0f0;color:#222;box-shadow:none;text-shadow:none;filter:none;transform:none;font:10px 'Segoe UI',Arial,sans-serif;font-weight:400;cursor:pointer;";b.addEventListener("mouseenter",()=>{if(b.dataset.active!=="true")b.style.setProperty("background-color","#e5e5e5","important");});b.addEventListener("mouseleave",()=>{if(b.dataset.active!=="true")b.style.setProperty("background-color","#f0f0f0","important");});return b;};
             const standardTab=makeTab("Standard"),customTab=makeTab("Custom");tabs.append(standardTab,customTab);
             let selected="#4472c4",oldColor="#4472c4";
-            const standardPanel=document.createElement("div");standardPanel.style.cssText="box-sizing:border-box;height:104px;min-height:104px;max-height:104px;overflow:hidden;";
+            const standardPanel=document.createElement("div");standardPanel.style.cssText="box-sizing:border-box;height:94px;min-height:94px;max-height:94px;overflow:hidden;";
             const standardLabel=document.createElement("div");standardLabel.textContent="Colors";standardLabel.style.cssText="font-size:9px;font-weight:600;margin:0 0 2px;";
             const swatches=document.createElement("div");swatches.style.cssText="display:flex;flex-direction:column;align-items:center;gap:0;padding:0 2px 1px;";
             const standardColors=["#C00000","#FF0000","#FFC000","#FFFF00","#92D050","#00B050","#00B0F0","#0070C0","#002060","#7030A0","#F4CCCC","#FCE5CD","#FFF2CC","#D9EAD3","#D0E0E3","#CFE2F3","#D9D2E9","#EAD1DC","#E6B8AF","#F9CB9C","#EA9999","#F6B26B","#FFD966","#B6D7A8","#A2C4C9","#9FC5E8","#B4A7D6","#D5A6BD","#DD7E6B","#F6B26B","#E06666","#E69138","#F1C232","#6AA84F","#45818E","#3D85C6","#674EA7","#A64D79","#CC4125","#B45F06","#CC0000","#E69138","#F1C232","#6AA84F","#45818E","#3D85C6","#674EA7","#A64D79","#990000","#783F04","#7F6000","#274E13","#0C343D","#073763","#20124D","#4C1130","#FFFFFF","#D9D9D9","#B7B7B7","#7F7F7F","#595959","#262626","#000000"];
@@ -8188,11 +8188,11 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const oldLabel=document.createElement("div"),newLabel=document.createElement("div");oldLabel.textContent="Current";newLabel.textContent="New";
             oldLabel.style.cssText=newLabel.style.cssText="font-size:8px;margin-bottom:1px;color:#222;";
             oldWrap.append(oldLabel,oldBox);newWrap.append(newLabel,newBox);previewRow.append(oldWrap,newWrap);
-            const customPanel=document.createElement("div");customPanel.style.cssText="display:none;box-sizing:border-box;height:104px;min-height:104px;max-height:104px;overflow:hidden;scrollbar-width:none;";
+            const customPanel=document.createElement("div");customPanel.style.cssText="display:none;box-sizing:border-box;height:94px;min-height:94px;max-height:94px;overflow:hidden;scrollbar-width:none;";
             const customLabel=document.createElement("div");customLabel.textContent="Custom color";customLabel.style.cssText="font-size:9px;font-weight:600;margin:0 0 2px;";
-            const customLayout=document.createElement("div");customLayout.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 76px;gap:4px;align-items:start;";
+            const customLayout=document.createElement("div");customLayout.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 68px;gap:4px;align-items:start;";
             const pickerArea=document.createElement("div");pickerArea.style.cssText="display:grid;grid-template-columns:1fr;gap:3px;";
-            const spectrum=document.createElement("div");spectrum.setAttribute("role","application");spectrum.setAttribute("aria-label","Color spectrum");spectrum.tabIndex=0;spectrum.style.cssText="height:58px;position:relative;border:1px solid #777;box-sizing:border-box;cursor:crosshair;background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),hsl(215,100%,50%);";
+            const spectrum=document.createElement("div");spectrum.setAttribute("role","application");spectrum.setAttribute("aria-label","Color spectrum");spectrum.tabIndex=0;spectrum.style.cssText="height:52px;position:relative;border:1px solid #777;box-sizing:border-box;cursor:crosshair;background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),hsl(215,100%,50%);";
             const marker=document.createElement("div");marker.style.cssText="position:absolute;left:65%;top:35%;width:6px;height:6px;border:1px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #111;transform:translate(-50%,-50%);pointer-events:none;";
             spectrum.append(marker);
             const hue=document.createElement("input");hue.type="range";hue.min="0";hue.max="360";hue.value="215";hue.setAttribute("aria-label","Hue");hue.style.cssText="appearance:auto;-webkit-appearance:slider-horizontal;width:100%;height:10px;min-height:10px;max-height:10px;margin:0;accent-color:#666;cursor:pointer;";hue.style.setProperty("height","12px","important");hue.style.setProperty("min-height","12px","important");hue.style.setProperty("max-height","12px","important");hue.style.setProperty("padding","0","important");
@@ -8221,9 +8221,9 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             hue.addEventListener("input",()=>{activeHue=Number(hue.value);spectrum.style.background="linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),hsl("+activeHue+",100%,50%)";const hsl=rgbToHsl(toRgb(selected));updateColor(hslToHex(activeHue,hsl.s,hsl.l));});
             hexInput.addEventListener("input",()=>{const v=hexInput.value.startsWith("#")?hexInput.value:"#"+hexInput.value;if(/^#[0-9a-f]{6}$/i.test(v))updateColor(v);else ok.disabled=true;});
             [redInput,greenInput,blueInput].forEach(input=>input.addEventListener("input",()=>{if([redInput,greenInput,blueInput].every(x=>/^\d{1,3}$/.test(x.value)&&Number(x.value)<=255))updateColor(fromRgb(redInput.value,greenInput.value,blueInput.value));else ok.disabled=true;}));
-            const buttons=document.createElement("div");buttons.style.cssText="height:20px;box-sizing:border-box;display:flex;align-items:flex-end;justify-content:flex-end;gap:4px;margin-top:3px;padding-top:3px;border-top:1px solid #ccc;";
+            const buttons=document.createElement("div");buttons.style.cssText="height:18px;box-sizing:border-box;display:flex;align-items:flex-end;justify-content:flex-end;gap:4px;margin-top:3px;padding-top:3px;border-top:1px solid #ccc;";
             const cancel=document.createElement("button"),ok=document.createElement("button");cancel.type=ok.type="button";cancel.textContent="Cancel";ok.textContent="OK";
-            [cancel,ok].forEach(b=>{b.style.cssText="min-width:44px;height:16px;padding:1px 5px;border:1px solid #888;border-radius:0;color:#222;font:10px 'Segoe UI',Arial,sans-serif;cursor:pointer;";b.style.setProperty("background-image","none","important");b.style.setProperty("background-color","#f7f7f7","important");b.style.setProperty("box-shadow","none","important");b.style.setProperty("text-shadow","none","important");b.style.setProperty("transform","none","important");});
+            [cancel,ok].forEach(b=>{b.style.cssText="min-width:40px;height:15px;padding:1px 4px;border:1px solid #888;border-radius:0;color:#222;font:10px 'Segoe UI',Arial,sans-serif;cursor:pointer;";b.style.setProperty("background-image","none","important");b.style.setProperty("background-color","#f7f7f7","important");b.style.setProperty("box-shadow","none","important");b.style.setProperty("text-shadow","none","important");b.style.setProperty("transform","none","important");});
             const close=()=>overlay.remove();cancel.addEventListener("click",close);ok.addEventListener("click",()=>{if(/^#[0-9a-f]{6}$/i.test(selected)){close();applyTabColor(selected);}});
             overlay.addEventListener("click",ev=>{if(ev.target===overlay)close();});dialog.addEventListener("click",ev=>ev.stopPropagation());
             buttons.append(cancel,ok);dialog.append(heading,tabs,standardPanel,customPanel,previewTitle,previewRow,buttons);overlay.append(dialog);document.body.append(overlay);setTab("standard");updateColor(selected);
@@ -8241,7 +8241,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             }
             palette.style.setProperty("display","grid","important");
             item.classList.add("mi-tab-color-open");
-            const panelWidth=292;
+            const panelWidth=250;
             const panelHeight=Math.min(palette.scrollHeight||430,window.innerHeight-16);
             let left=rect.right+3;
             if(left+panelWidth>window.innerWidth-8)left=rect.left-panelWidth-3;
