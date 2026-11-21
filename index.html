@@ -8204,11 +8204,10 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           noColor.addEventListener("click",e=>{e.stopPropagation();applyTabColor("");});
           palette.append(noColor);
 
-          [noColor,more].forEach(el=>{el.style.setProperty("height",el===noColor?"18px":"20px","important");el.style.setProperty("min-height",el===noColor?"18px":"20px","important");el.style.setProperty("font","9px/12px 'Segoe UI',Arial,sans-serif","important");el.style.setProperty("padding","1px 4px","important");el.style.setProperty("margin",el===noColor?"2px 0 0":"3px 0 0","important");});
-
           /* Professional Excel-inspired More Colors dialog. */
           const more=document.createElement("button");
           more.type="button";more.className="mi-tab-more-colors";more.textContent="More Colors...";
+          [noColor,more].forEach(el=>{el.style.setProperty("height",el===noColor?"18px":"20px","important");el.style.setProperty("min-height",el===noColor?"18px":"20px","important");el.style.setProperty("font","9px/12px 'Segoe UI',Arial,sans-serif","important");el.style.setProperty("padding","1px 4px","important");el.style.setProperty("margin",el===noColor?"2px 0 0":"3px 0 0","important");});
           more.style.setProperty("background-image","none","important");more.style.setProperty("background-color","#fff","important");more.style.setProperty("box-shadow","none","important");more.style.setProperty("transform","none","important");more.style.setProperty("border-radius","0","important");
           more.addEventListener("click",e=>{
             e.stopPropagation();
