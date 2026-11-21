@@ -5309,14 +5309,14 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       <h2>Your account</h2>
       <div id="signedOut">
         <p class="small">Create an account or sign in to save and manage your information. You can create a separate student share code for content you choose to share.</p>
-        <label for="email">Email address</label>
-        <input id="email" type="email" autocomplete="email" placeholder="Enter your email address">
-        <label for="password">Password</label>
-        <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password">
-        <div class="row">
-          <button id="signInBtn" type="button">Sign in</button>
-          <button id="signUpBtn" class="secondary" type="button">Create account</button>
-        </div>
+        <form id="signInForm" novalidate>
+          <label for="email">Email address</label>
+          <input id="email" type="email" autocomplete="username" placeholder="Enter your email address">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password">
+          <button id="signInBtn" type="submit">Sign in</button>
+        </form>
+        <p><button id="signUpBtn" class="secondary" type="button">Create account</button></p>
         <p><button id="forgotPasswordBtn" type="button" class="text-button">Forgot password?</button></p>
       </div>
       <div id="passwordRecoveryPanel" class="hidden">
@@ -5705,25 +5705,32 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       }
     });
 
-    // Allow Enter in either login field to submit the sign-in action.
-    ["email", "password"].forEach((fieldId) => {
-      $(fieldId).addEventListener("keydown", (event) => {
-        if (event.key !== "Enter") return;
-        event.preventDefault();
-        const signInButton = $("signInBtn");
-        if (signInButton && !signInButton.disabled) signInButton.click();
-      });
-    });
-
-    $("signInBtn").addEventListener("click", async () => {
+    async function submitSignIn() {
       const email = $("email").value.trim();
       const password = $("password").value;
-      if (!email || !password) return showStatus("authStatus", "Enter your email address and password.", "error");
+      if (!email || !password) {
+        showStatus("authStatus", "Enter your email address and password.", "error");
+        return;
+      }
       $("signInBtn").disabled = true;
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-      $("signInBtn").disabled = false;
-      if (error) return showStatus("authStatus", friendlyError(error), "error");
-      renderSession(data.session);
+      try {
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+        if (error) {
+          showStatus("authStatus", friendlyError(error), "error");
+          return;
+        }
+        renderSession(data.session);
+      } catch (error) {
+        showStatus("authStatus", friendlyError(error), "error");
+      } finally {
+        $("signInBtn").disabled = false;
+      }
+    }
+
+    // Native form submission handles Enter consistently on desktop and mobile.
+    $("signInForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitSignIn();
     });
 
     $("forgotPasswordBtn").addEventListener("click", async () => {
