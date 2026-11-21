@@ -4283,6 +4283,19 @@ img{max-width:100%}
   }
 }
 
+
+/* Account actions: aligned in one clean horizontal row */
+#signedOut .auth-action-row{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;align-items:stretch;margin-top:14px;
+}
+#signedOut .auth-action-row button{
+  width:100%;min-width:0;min-height:48px;height:auto;margin:0;
+  padding:11px 10px;white-space:normal;line-height:1.25;
+}
+@media(max-width:560px){
+  #signedOut .auth-action-row{grid-template-columns:1fr;gap:8px}
+}
 </style>
 
 <style id="mi-all-popup-standard-sharpness">
@@ -5314,10 +5327,12 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           <input id="email" type="email" autocomplete="username" placeholder="Enter your email address">
           <label for="password">Password</label>
           <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password">
-          <button id="signInBtn" type="submit">Sign in</button>
         </form>
-        <p><button id="signUpBtn" class="secondary" type="button">Create account</button></p>
-        <p><button id="forgotPasswordBtn" type="button" class="text-button">Forgot password?</button></p>
+        <div class="auth-action-row" role="group" aria-label="Account actions">
+          <button id="signInBtn" type="submit" form="signInForm">Sign in</button>
+          <button id="signUpBtn" class="secondary" type="button">Create account</button>
+          <button id="forgotPasswordBtn" type="button" class="text-button">Forgot password?</button>
+        </div>
       </div>
       <div id="passwordRecoveryPanel" class="hidden">
         <label for="newAccountPassword">New password</label>
