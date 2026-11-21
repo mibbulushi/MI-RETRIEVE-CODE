@@ -9626,5 +9626,55 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
   else initMiFontSizeAutoWidth();
 })();
 </script>
+
+<script id="mi-new-project-navigation-fallback">
+/* Independent navigation fallback: keeps the New Project menu and dashboard shortcut
+   working even if an earlier workspace script fails during initialization. */
+(function () {
+  if (window.__miNewProjectNavigationFallback) return;
+  window.__miNewProjectNavigationFallback = true;
+
+  function openNewProject() {
+    const appArea = document.getElementById("appArea");
+    const accountArea = document.getElementById("accountArea");
+    const projectArea = document.getElementById("saveArea");
+    const hasSessionUI = appArea && !appArea.classList.contains("hidden");
+    const targetPage = hasSessionUI && projectArea ? "new-project" : "account";
+
+    document.querySelectorAll("[data-panel]").forEach(function (panel) {
+      const names = (panel.dataset.panel || "").split(/\\s+/);
+      panel.classList.toggle("page-hidden", !names.includes(targetPage));
+    });
+
+    document.body.classList.toggle("project-workspace-mode", targetPage === "new-project");
+    document.body.classList.remove("student-chat-mode", "feedback-chat-mode");
+
+    document.querySelectorAll(".side-nav a[data-page]").forEach(function (link) {
+      const active = link.dataset.page === targetPage;
+      link.classList.toggle("active", active);
+      if (active) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    });
+
+    if (targetPage === "account" && accountArea) {
+      const status = document.getElementById("authStatus");
+      if (status && !hasSessionUI) {
+        status.textContent = "Please sign in to open your New Project workspace.";
+      }
+    }
+  }
+
+  document.addEventListener("click", function (event) {
+    const trigger = event.target && event.target.closest
+      ? event.target.closest('.side-nav a[data-page="new-project"], [data-open-page="new-project"]')
+      : null;
+    if (!trigger) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    openNewProject();
+  }, true);
+})();
+</script>
+
 </body>
 </html>
