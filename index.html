@@ -9737,8 +9737,10 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 </style>
 <script id="mi-password-visibility-controls">
 (function(){
+  var eyeIcon='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.2 12s3.6-7 9.8-7 9.8 7 9.8 7-3.6 7-9.8 7-9.8-7-9.8-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var eyeOffIcon='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.2 0 9.8 7 9.8 7a16 16 0 0 1-3.1 3.8"/><path d="M6.2 6.2C3.6 8 2.2 12 2.2 12s3.6 7 9.8 7c1 0 1.9-.2 2.8-.5"/></svg>';
   function ensureControl(input){
-    if(!input || input.tagName!=="INPUT") return;
+    if(!input||input.tagName!=="INPUT")return;
     var wrapper=input.closest(".mi-password-visibility-wrap");
     if(!wrapper){
       wrapper=document.createElement("span");
@@ -9751,49 +9753,44 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       toggle=document.createElement("button");
       toggle.type="button";
       toggle.className="mi-password-visibility-toggle";
-      toggle.textContent="👁";
       wrapper.appendChild(toggle);
     }
-    toggle.setAttribute("aria-label",input.type==="password"?"Show password":"Hide password");
-    toggle.title=input.type==="password"?"Show password":"Hide password";
-    toggle.setAttribute("aria-pressed",input.type==="text"?"true":"false");
+    function paint(){
+      var visible=input.type==="text";
+      toggle.innerHTML=visible?eyeOffIcon:eyeIcon;
+      toggle.setAttribute("aria-label",visible?"Hide password":"Show password");
+      toggle.title=visible?"Hide password":"Show password";
+      toggle.setAttribute("aria-pressed",visible?"true":"false");
+    }
+    paint();
     if(toggle.dataset.miBound!=="1"){
       toggle.dataset.miBound="1";
       toggle.addEventListener("click",function(event){
         event.preventDefault();
         event.stopPropagation();
-        var field=wrapper.querySelector("input");
-        if(!field) return;
-        var show=field.type==="password";
-        field.type=show?"text":"password";
-        toggle.setAttribute("aria-label",show?"Hide password":"Show password");
-        toggle.title=show?"Hide password":"Show password";
-        toggle.setAttribute("aria-pressed",show?"true":"false");
-        field.focus();
+        input.type=input.type==="password"?"text":"password";
+        paint();
+        input.focus();
       });
     }
   }
   function scan(root){
     (root||document).querySelectorAll('input[type="password"], .mi-password-visibility-wrap input').forEach(ensureControl);
-    (root||document).querySelectorAll(".mi-password-visibility-wrap").forEach(function(wrapper){
-      var input=wrapper.querySelector("input");
-      if(input) ensureControl(input);
+    (root||document).querySelectorAll(".mi-password-visibility-wrap").forEach(function(w){
+      var input=w.querySelector("input");if(input)ensureControl(input);
     });
   }
   function start(){
     scan(document);
     if(window.MutationObserver){
-      var observer=new MutationObserver(function(records){
+      new MutationObserver(function(records){
         records.forEach(function(record){
-          record.addedNodes.forEach(function(node){
-            if(node.nodeType===1) scan(node);
-          });
+          record.addedNodes.forEach(function(node){if(node.nodeType===1)scan(node);});
         });
-      });
-      observer.observe(document.body,{childList:true,subtree:true});
+      }).observe(document.body,{childList:true,subtree:true});
     }
   }
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start,{once:true});
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
   else start();
 })();
 </script>
