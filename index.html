@@ -8333,9 +8333,9 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const oldLabel=document.createElement("div"),newLabel=document.createElement("div");oldLabel.textContent="Current";newLabel.textContent="New";
             oldLabel.style.cssText=newLabel.style.cssText="font:10px/14px 'Segoe UI',Arial,sans-serif;margin-bottom:2px;color:#222;";
             oldWrap.append(oldLabel,oldBox);newWrap.append(newLabel,newBox);previewRow.append(oldWrap,newWrap);
-            const customPanel=document.createElement("div");customPanel.style.cssText="display:none;box-sizing:border-box;width:100%;max-width:100%;height:112px;min-height:112px;max-height:112px;overflow:visible;scrollbar-width:none;background:transparent;padding:1px 3px;";
+            const customPanel=document.createElement("div");customPanel.style.cssText="display:none;box-sizing:border-box;width:100%;max-width:100%;height:150px;min-height:150px;max-height:150px;overflow:visible;scrollbar-width:none;background:transparent;padding:1px 3px;";
             const customLabel=document.createElement("div");customLabel.textContent="Custom color";customLabel.style.cssText="height:15px;min-height:15px;box-sizing:border-box;font:600 9px/13px 'Segoe UI',Arial,sans-serif;margin:0 0 2px;padding:0 2px;color:#244968;";
-            const customLayout=document.createElement("div");customLayout.style.cssText="display:grid;box-sizing:border-box;width:100%;grid-template-columns:minmax(0,1fr) 72px;gap:5px;align-items:start;";
+            const customLayout=document.createElement("div");customLayout.style.cssText="display:grid;box-sizing:border-box;width:100%;grid-template-columns:minmax(0,1fr) 108px;gap:8px;align-items:start;";
             const pickerArea=document.createElement("div");pickerArea.style.cssText="display:grid;grid-template-columns:1fr;gap:2px;";
             const spectrum=document.createElement("div");spectrum.setAttribute("role","application");spectrum.setAttribute("aria-label","Color spectrum");spectrum.tabIndex=0;spectrum.style.cssText="height:64px;position:relative;border:1px solid #b8c9dc;border-radius:9px;box-sizing:border-box;cursor:crosshair;background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),hsl(215,100%,50%);";
             const marker=document.createElement("div");marker.style.cssText="position:absolute;left:65%;top:35%;width:5px;height:5px;border:1px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #111;transform:translate(-50%,-50%);pointer-events:none;";
@@ -8377,8 +8377,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
              buttons.append(cancel,ok);
              dialog.classList.add("mi-more-colors-dialog");
              /* Compact More Colors to match the small Theme Colors palette. */
-             dialog.style.setProperty("width","210px","important");
-              dialog.style.setProperty("flex-basis","210px","important");
+             dialog.style.setProperty("width","270px","important");
+              dialog.style.setProperty("flex-basis","270px","important");
              dialog.style.setProperty("min-width","0","important");
              dialog.style.setProperty("max-width","calc(100vw - 20px)","important");
               dialog.style.setProperty("box-sizing","border-box","important");
@@ -8446,11 +8446,11 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
              greyLabel.style.cssText="font:600 9px/12px 'Segoe UI',Arial,sans-serif;margin:0;padding:0;color:#526b88;";
              greyRow.style.cssText="display:flex;gap:0;flex-wrap:nowrap;margin:0;padding:0;width:100%;";
              greyRow.querySelectorAll("button").forEach(sw=>{sw.style.setProperty("flex","1 1 0","important");sw.style.setProperty("min-width","0","important");sw.style.setProperty("width","auto","important");sw.style.setProperty("height","13px","important");sw.style.setProperty("min-height","13px","important");sw.style.setProperty("margin","0","important");sw.style.setProperty("padding","0","important");sw.style.setProperty("border-radius","0","important");});
-             customLayout.style.cssText="display:grid;box-sizing:border-box;width:100%;max-width:100%;grid-template-columns:minmax(0,1fr) 86px;gap:6px;align-items:center;";
-             spectrum.style.setProperty("height","76px","important");spectrum.style.setProperty("min-height","76px","important");spectrum.style.setProperty("width","100%","important");spectrum.style.setProperty("min-width","0","important");spectrum.style.setProperty("touch-action","none","important");spectrum.style.setProperty("pointer-events","auto","important");spectrum.style.setProperty("border-radius","3px","important");
-             fields.style.setProperty("gap","5px 5px","important");
+             customLayout.style.cssText="display:grid;box-sizing:border-box;width:100%;max-width:100%;grid-template-columns:minmax(0,1fr) 108px;gap:8px;align-items:center;";
+             spectrum.style.setProperty("height","94px","important");spectrum.style.setProperty("min-height","94px","important");spectrum.style.setProperty("width","100%","important");spectrum.style.setProperty("min-width","0","important");spectrum.style.setProperty("touch-action","none","important");spectrum.style.setProperty("pointer-events","auto","important");spectrum.style.setProperty("border-radius","3px","important");
+             fields.style.setProperty("gap","7px 7px","important");
              fields.querySelectorAll("label").forEach(label=>label.style.cssText="display:block;margin:0;padding:0;font:600 9px/12px 'Segoe UI',Arial,sans-serif;color:#526b88;");
-             fields.querySelectorAll("input").forEach(input=>{input.style.setProperty("width","100%","important");input.style.setProperty("height","20px","important");input.style.setProperty("min-height","20px","important");input.style.setProperty("padding","1px 3px","important");input.style.setProperty("font-size","10px","important");});
+             fields.querySelectorAll("input").forEach(input=>{input.style.setProperty("width","100%","important");input.style.setProperty("height","23px","important");input.style.setProperty("min-height","23px","important");input.style.setProperty("padding","2px 5px","important");input.style.setProperty("font-size","11px","important");});
              previewTitle.style.cssText="font:600 10px/14px 'Segoe UI',Arial,sans-serif;margin:5px 0 2px;color:#294765;";
              previewRow.style.cssText="display:flex;align-items:center;gap:8px;";
              [oldLabel,newLabel].forEach(label=>label.style.cssText="font:9px/12px 'Segoe UI',Arial,sans-serif;margin-bottom:2px;color:#526b88;");
