@@ -9628,26 +9628,29 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 </script>
 
 <script id="mi-new-project-navigation-fallback">
-/* Independent navigation fallback: keeps the New Project menu and dashboard shortcut
-   working even if an earlier workspace script fails during initialization. */
+/* Independent navigation fallback. Handles every page link/shortcut even if
+   the main navigation initializer has not attached its listeners. */
 (function () {
-  if (window.__miNewProjectNavigationFallback) return;
-  window.__miNewProjectNavigationFallback = true;
+  if (window.__miNavigationFallbackV2) return;
+  window.__miNavigationFallbackV2 = true;
 
-  function openNewProject() {
+  function openMiPage(requestedPage) {
     const appArea = document.getElementById("appArea");
-    const accountArea = document.getElementById("accountArea");
-    const projectArea = document.getElementById("saveArea");
+    const protectedPages = ["new-project","my-projects","retrieve","shared-projects","received-projects","student-access"];
     const hasSessionUI = appArea && !appArea.classList.contains("hidden");
-    const targetPage = hasSessionUI && projectArea ? "new-project" : "account";
+    const targetPage = protectedPages.includes(requestedPage) && !hasSessionUI
+      ? "account" : requestedPage;
 
     document.querySelectorAll("[data-panel]").forEach(function (panel) {
-      const names = (panel.dataset.panel || "").split(/\\s+/);
+      const names = (panel.dataset.panel || "").trim().split(/\s+/);
       panel.classList.toggle("page-hidden", !names.includes(targetPage));
     });
 
-    document.body.classList.toggle("project-workspace-mode", targetPage === "new-project");
-    document.body.classList.remove("student-chat-mode", "feedback-chat-mode");
+    document.body.classList.toggle("student-chat-mode",
+      ["student-access","feedback","received-projects"].includes(targetPage));
+    document.body.classList.toggle("feedback-chat-mode", targetPage === "feedback");
+    document.body.classList.toggle("project-workspace-mode",
+      ["new-project","my-projects","retrieve","shared-projects","received-projects","student-access","feedback"].includes(targetPage));
 
     document.querySelectorAll(".side-nav a[data-page]").forEach(function (link) {
       const active = link.dataset.page === targetPage;
@@ -9656,22 +9659,22 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       else link.removeAttribute("aria-current");
     });
 
-    if (targetPage === "account" && accountArea) {
+    if (targetPage === "account" && !hasSessionUI) {
       const status = document.getElementById("authStatus");
-      if (status && !hasSessionUI) {
-        status.textContent = "Please sign in to open your New Project workspace.";
-      }
+      if (status) status.textContent = "Please sign in to open your workspace.";
     }
   }
 
   document.addEventListener("click", function (event) {
     const trigger = event.target && event.target.closest
-      ? event.target.closest('.side-nav a[data-page="new-project"], [data-open-page="new-project"]')
+      ? event.target.closest(".side-nav a[data-page], [data-open-page]")
       : null;
     if (!trigger) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    openNewProject();
+    const page = trigger.dataset.page || trigger.dataset.openPage;
+    if (!page) return;
+    if (trigger.matches("a")) event.preventDefault();
+    openMiPage(page);
+    /* Do not stop propagation: allow the main application handler to run too. */
   }, true);
 })();
 </script>
