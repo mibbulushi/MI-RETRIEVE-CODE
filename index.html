@@ -9737,46 +9737,63 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 </style>
 <script id="mi-password-visibility-controls">
 (function(){
-  function addPasswordVisibilityControls(root){
-    (root||document).querySelectorAll('input[type="password"]').forEach(function(input){
-      if(input.dataset.miVisibilityReady==="1")return;
-      input.dataset.miVisibilityReady="1";
-      var wrapper=document.createElement("span");
+  function ensureControl(input){
+    if(!input || input.tagName!=="INPUT") return;
+    var wrapper=input.closest(".mi-password-visibility-wrap");
+    if(!wrapper){
+      wrapper=document.createElement("span");
       wrapper.className="mi-password-visibility-wrap";
       input.parentNode.insertBefore(wrapper,input);
       wrapper.appendChild(input);
-      var toggle=document.createElement("button");
+    }
+    var toggle=wrapper.querySelector(".mi-password-visibility-toggle");
+    if(!toggle){
+      toggle=document.createElement("button");
       toggle.type="button";
       toggle.className="mi-password-visibility-toggle";
       toggle.textContent="👁";
-      toggle.setAttribute("aria-label","Show password");
-      toggle.title="Show password";
-      toggle.setAttribute("aria-pressed","false");
-      toggle.addEventListener("click",function(){
-        var show=input.type==="password";
-        input.type=show?"text":"password";
+      wrapper.appendChild(toggle);
+    }
+    toggle.setAttribute("aria-label",input.type==="password"?"Show password":"Hide password");
+    toggle.title=input.type==="password"?"Show password":"Hide password";
+    toggle.setAttribute("aria-pressed",input.type==="text"?"true":"false");
+    if(toggle.dataset.miBound!=="1"){
+      toggle.dataset.miBound="1";
+      toggle.addEventListener("click",function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        var field=wrapper.querySelector("input");
+        if(!field) return;
+        var show=field.type==="password";
+        field.type=show?"text":"password";
         toggle.setAttribute("aria-label",show?"Hide password":"Show password");
         toggle.title=show?"Hide password":"Show password";
         toggle.setAttribute("aria-pressed",show?"true":"false");
-        input.focus({preventScroll:true});
+        field.focus();
       });
-      wrapper.appendChild(toggle);
+    }
+  }
+  function scan(root){
+    (root||document).querySelectorAll('input[type="password"], .mi-password-visibility-wrap input').forEach(ensureControl);
+    (root||document).querySelectorAll(".mi-password-visibility-wrap").forEach(function(wrapper){
+      var input=wrapper.querySelector("input");
+      if(input) ensureControl(input);
     });
   }
   function start(){
-    addPasswordVisibilityControls(document);
+    scan(document);
     if(window.MutationObserver){
       var observer=new MutationObserver(function(records){
         records.forEach(function(record){
           record.addedNodes.forEach(function(node){
-            if(node.nodeType===1)addPasswordVisibilityControls(node);
+            if(node.nodeType===1) scan(node);
           });
         });
       });
       observer.observe(document.body,{childList:true,subtree:true});
     }
   }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start,{once:true});
   else start();
 })();
 </script>
