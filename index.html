@@ -5317,6 +5317,12 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           <button id="signInBtn" type="button">Sign in</button>
           <button id="signUpBtn" class="secondary" type="button">Create account</button>
         </div>
+        <p><button id="forgotPasswordBtn" type="button" class="text-button">Forgot password?</button></p>
+      </div>
+      <div id="passwordRecoveryPanel" class="hidden">
+        <label for="newAccountPassword">New password</label>
+        <input id="newAccountPassword" type="password" autocomplete="new-password" placeholder="Enter a new password (at least 8 characters)">
+        <button id="saveNewPasswordBtn" type="button">Save new password</button>
       </div>
       <div id="signedIn" class="hidden">
         <div class="account-line">
@@ -5708,6 +5714,42 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       $("signInBtn").disabled = false;
       if (error) return showStatus("authStatus", friendlyError(error), "error");
       renderSession(data.session);
+    });
+
+    $("forgotPasswordBtn").addEventListener("click", async () => {
+      const email = $("email").value.trim();
+      if (!email) {
+        showStatus("authStatus", "Enter your registered email address first.", "error");
+        $("email").focus();
+        return;
+      }
+      $("forgotPasswordBtn").disabled = true;
+      const redirectTo = window.location.origin + window.location.pathname;
+      const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo });
+      $("forgotPasswordBtn").disabled = false;
+      if (error) {
+        showStatus("authStatus", "Password reset could not be started: " + friendlyError(error), "error");
+        return;
+      }
+      showStatus("authStatus", "If an account exists for this email, a password-reset link has been sent. Check your inbox and spam folder.", "success");
+    });
+
+    $("saveNewPasswordBtn").addEventListener("click", async () => {
+      const password = $("newAccountPassword").value;
+      if (password.length < 8) {
+        showStatus("authStatus", "Your new password must contain at least 8 characters.", "error");
+        return;
+      }
+      $("saveNewPasswordBtn").disabled = true;
+      const { error } = await client.auth.updateUser({ password });
+      $("saveNewPasswordBtn").disabled = false;
+      if (error) {
+        showStatus("authStatus", "Could not update your password: " + friendlyError(error), "error");
+        return;
+      }
+      $("newAccountPassword").value = "";
+      $("passwordRecoveryPanel").classList.add("hidden");
+      showStatus("authStatus", "Your password has been updated. You can now sign in with your new password.", "success");
     });
 
     $("signOutBtn").addEventListener("click", async () => {
@@ -9232,7 +9274,14 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
     });
     openPage("dashboard");
 
-    client.auth.onAuthStateChange((_event, session) => renderSession(session));
+    client.auth.onAuthStateChange((event, session) => {
+      renderSession(session);
+      if (event === "PASSWORD_RECOVERY") {
+        $("passwordRecoveryPanel").classList.remove("hidden");
+        showStatus("authStatus", "Enter and save your new password below.", "info");
+        $("newAccountPassword").focus();
+      }
+    });
     refreshSession();
   
     const sidebarToggle = document.getElementById("sidebarToggle");
