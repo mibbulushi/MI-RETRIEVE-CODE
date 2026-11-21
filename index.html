@@ -9200,6 +9200,12 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 
     // Switch visible panels in place instead of scrolling to page anchors.
     function openPage(page) {
+      // Protected workspace panels are inside #appArea. If the account session
+      // is unavailable, opening one would hide every visible panel and look blank.
+      const protectedPages = ["new-project","my-projects","retrieve","shared-projects","received-projects","student-access"];
+      if (protectedPages.includes(page) && $("appArea").classList.contains("hidden")) {
+        page = "account";
+      }
       document.body.classList.toggle("student-chat-mode", ["student-access","feedback","received-projects"].includes(page));
       document.body.classList.toggle("feedback-chat-mode", page === "feedback");
       document.body.classList.toggle("project-workspace-mode",
