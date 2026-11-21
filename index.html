@@ -5727,7 +5727,19 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       }
     }
 
-    // Native form submission handles Enter consistently on desktop and mobile.
+    // Handle Enter at document capture level as a fallback for browsers/keyboards
+    // that do not submit a form when focus is inside a wrapped password input.
+    document.addEventListener("keydown", (event) => {
+      const target = event.target;
+      const isLoginField = target && (target.id === "email" || target.id === "password");
+      const isEnter = event.key === "Enter" || event.code === "Enter" || event.keyCode === 13;
+      if (!isLoginField || !isEnter) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      submitSignIn();
+    }, true);
+
+    // Keep ordinary form submission and the Sign in button working as well.
     $("signInForm").addEventListener("submit", (event) => {
       event.preventDefault();
       submitSignIn();
