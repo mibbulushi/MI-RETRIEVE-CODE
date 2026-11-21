@@ -5705,6 +5705,16 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       }
     });
 
+    // Allow Enter in either login field to submit the sign-in action.
+    ["email", "password"].forEach((fieldId) => {
+      $(fieldId).addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        const signInButton = $("signInBtn");
+        if (signInButton && !signInButton.disabled) signInButton.click();
+      });
+    });
+
     $("signInBtn").addEventListener("click", async () => {
       const email = $("email").value.trim();
       const password = $("password").value;
