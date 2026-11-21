@@ -9411,7 +9411,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       if(!inEditor||event.altKey)return;
       const mod=event.ctrlKey||event.metaKey;
       if(!mod)return;
-      const key=event.key.toLowerCase();
+      const key=typeof event.key==="string"?event.key.toLowerCase():"";
       const hasObjectSelection=typeof getMiSelectedObjects==="function"&&getMiSelectedObjects().length>0;
       if(key==="a"&&!hasObjectSelection){
         event.preventDefault();
@@ -9469,7 +9469,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       if(event.key==="Escape"){closeMiPictureContextMenu();return;}
       if(event.altKey)return;
       const mod=event.ctrlKey||event.metaKey;
-      const key=event.key.toLowerCase();
+      const key=typeof event.key==="string"?event.key.toLowerCase():"";
       const selected=getMiSelectedObjects();
       if(!selected.length)return;
       if(mod&&["c","x","v"].includes(key)){
