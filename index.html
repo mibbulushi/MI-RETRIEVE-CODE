@@ -8303,8 +8303,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const paletteRect=palette.getBoundingClientRect();
             palette.style.setProperty("display","none","important");
             item.classList.remove("mi-tab-color-open");
-            const overlay=document.createElement("div");
-            overlay.style.cssText="position:fixed;inset:0;z-index:2147483646;display:block;pointer-events:none;background:transparent!important;padding:0;box-sizing:border-box;overflow:visible;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important;";
+            /* Mount directly on the page: no full-screen overlay layer. */
             const dialog=document.createElement("div");
             dialog.setAttribute("role","dialog");dialog.setAttribute("aria-modal","true");dialog.setAttribute("aria-label","More Colors");
             dialog.style.setProperty("overflow","hidden","important");dialog.style.setProperty("scrollbar-width","none","important");
@@ -8380,8 +8379,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             const buttons=document.createElement("div");buttons.style.cssText="height:42px;box-sizing:border-box;display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #e1e8f0;";
             const cancel=document.createElement("button"),ok=document.createElement("button");cancel.type=ok.type="button";cancel.textContent="Cancel";ok.textContent="OK";
             [cancel,ok].forEach(b=>{b.style.cssText="box-sizing:border-box;min-width:56px;width:56px;height:21px;min-height:21px;max-height:21px;padding:2px 5px;border:1px solid #a0a0a0;border-radius:0;color:#222;font:10px/14px 'Segoe UI',Arial,sans-serif;cursor:pointer;";b.style.setProperty("background-image","none","important");b.style.setProperty("background-color","#f7f7f7","important");b.style.setProperty("box-shadow","none","important");b.style.setProperty("text-shadow","none","important");b.style.setProperty("transform","none","important");});
-            const close=()=>overlay.remove();cancel.addEventListener("click",close);ok.addEventListener("click",()=>{if(/^#[0-9a-f]{6}$/i.test(selected)){close();applyTabColor(selected);}});
-            overlay.addEventListener("click",ev=>{if(ev.target===overlay)close();});dialog.addEventListener("click",ev=>ev.stopPropagation());
+            const close=()=>dialog.remove();cancel.addEventListener("click",close);ok.addEventListener("click",()=>{if(/^#[0-9a-f]{6}$/i.test(selected)){close();applyTabColor(selected);}});
+            dialog.addEventListener("click",ev=>ev.stopPropagation());
              buttons.append(cancel,ok);
              dialog.classList.add("mi-more-colors-dialog");
              /* Compact More Colors to match the small Theme Colors palette. */
@@ -8474,7 +8473,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
              dialog.style.setProperty("margin","0","important");
              dialog.style.setProperty("transform","none","important");
              dialog.style.setProperty("pointer-events","auto","important");
-             dialog.append(heading,tabs,standardPanel,customPanel,previewTitle,previewRow,buttons);overlay.append(dialog);document.body.append(overlay);
+             dialog.append(heading,tabs,standardPanel,customPanel,previewTitle,previewRow,buttons);document.body.append(dialog);
              const dialogRect=dialog.getBoundingClientRect();
              const viewportGap=8;
              let dialogLeft=paletteRect.right+viewportGap;
@@ -8482,7 +8481,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
              dialogLeft=Math.max(viewportGap,Math.min(dialogLeft,window.innerWidth-dialogRect.width-viewportGap));
              let dialogTop=Math.max(viewportGap,Math.min(paletteRect.top,window.innerHeight-dialogRect.height-viewportGap));
              if(dialogRect.height>window.innerHeight-viewportGap*2)dialogTop=viewportGap;
-             dialog.style.left=dialogLeft+"px";dialog.style.top=dialogTop+"px";
+             dialog.style.setProperty("left",dialogLeft+"px","important");dialog.style.setProperty("top",dialogTop+"px","important");
              setTab("standard");updateColor(selected);
           });
           palette.append(more);
