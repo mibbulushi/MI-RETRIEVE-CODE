@@ -8300,10 +8300,11 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
           more.style.setProperty("background-image","none","important");more.style.setProperty("background-color","#fff","important");more.style.setProperty("box-shadow","none","important");more.style.setProperty("transform","none","important");more.style.setProperty("border-radius","0","important");
           more.addEventListener("click",e=>{
             e.stopPropagation();
+            const paletteRect=palette.getBoundingClientRect();
             palette.style.setProperty("display","none","important");
             item.classList.remove("mi-tab-color-open");
             const overlay=document.createElement("div");
-            overlay.style.cssText="position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;background:transparent!important;padding:8px;box-sizing:border-box;overflow:hidden;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important;";
+            overlay.style.cssText="position:fixed;inset:0;z-index:2147483646;display:block;pointer-events:none;background:transparent!important;padding:0;box-sizing:border-box;overflow:visible;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important;";
             const dialog=document.createElement("div");
             dialog.setAttribute("role","dialog");dialog.setAttribute("aria-modal","true");dialog.setAttribute("aria-label","More Colors");
             dialog.style.setProperty("overflow","hidden","important");dialog.style.setProperty("scrollbar-width","none","important");
@@ -8313,8 +8314,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             [["background","linear-gradient(180deg,#ffffff 0%,#f5f8fc 100%)"],["border","1px solid #9aafc4"],["border-radius","4px"],["box-shadow","0 8px 24px rgba(20,45,75,.18),0 1px 3px rgba(0,0,0,.14)"]].forEach(([p,v])=>dialog.style.setProperty(p,v,"important"));
             const heading=document.createElement("div");heading.textContent="Colors";heading.style.cssText="height:18px;box-sizing:border-box;padding:1px 1px 2px;font:600 10px/14px 'Segoe UI',Arial,sans-serif;margin:0 0 4px;letter-spacing:0;cursor:move;user-select:none;touch-action:none;background:#f0f0f0;border-bottom:1px solid #d4d4d4;color:#333;";
             let dragStartX=0,dragStartY=0,dialogOffsetX=0,dialogOffsetY=0,draggingDialog=false;
-            heading.addEventListener("pointerdown",ev=>{if(ev.button!==0)return;draggingDialog=true;dragStartX=ev.clientX;dragStartY=ev.clientY;heading.setPointerCapture?.(ev.pointerId);});
-            heading.addEventListener("pointermove",ev=>{if(!draggingDialog)return;dialogOffsetX+=ev.clientX-dragStartX;dialogOffsetY+=ev.clientY-dragStartY;dragStartX=ev.clientX;dragStartY=ev.clientY;const maxX=Math.max(0,(window.innerWidth-dialog.getBoundingClientRect().width)/2),maxY=Math.max(0,(window.innerHeight-dialog.getBoundingClientRect().height)/2);dialog.style.transform="translate("+Math.max(-maxX,Math.min(maxX,dialogOffsetX))+"px,"+Math.max(-maxY,Math.min(maxY,dialogOffsetY))+"px)";});
+            heading.addEventListener("pointerdown",ev=>{if(ev.button!==undefined&&ev.button!==0)return;draggingDialog=true;dragStartX=ev.clientX;dragStartY=ev.clientY;heading.setPointerCapture?.(ev.pointerId);});
+            heading.addEventListener("pointermove",ev=>{if(!draggingDialog)return;const rect=dialog.getBoundingClientRect();const nextLeft=Math.max(6,Math.min(window.innerWidth-rect.width-6,rect.left+ev.clientX-dragStartX));const nextTop=Math.max(6,Math.min(window.innerHeight-rect.height-6,rect.top+ev.clientY-dragStartY));dialog.style.left=nextLeft+"px";dialog.style.top=nextTop+"px";dialogOffsetX=nextLeft;dialogOffsetY=nextTop;dragStartX=ev.clientX;dragStartY=ev.clientY;});
             const stopDialogDrag=()=>{draggingDialog=false;};heading.addEventListener("pointerup",stopDialogDrag);heading.addEventListener("pointercancel",stopDialogDrag);
             const tabs=document.createElement("div");tabs.style.cssText="box-sizing:border-box;width:100%;max-width:100%;height:18px;display:flex;gap:3px;border-bottom:1px solid #d4d4d4;margin-bottom:4px;";
             const makeTab=label=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.style.cssText="appearance:none;-webkit-appearance:none;box-sizing:border-box;height:18px;min-height:18px;max-height:18px;min-width:54px;margin:0;padding:1px 5px;border:1px solid #a0a0a0;border-radius:0;background:#f5f5f5;color:#222;box-shadow:none;text-shadow:none;filter:none;transform:none;font:10px 'Segoe UI',Arial,sans-serif;font-weight:400;line-height:14px;cursor:pointer;";b.addEventListener("mouseenter",()=>{if(b.dataset.active!=="true")b.style.setProperty("background-color","#e5e5e5","important");});b.addEventListener("mouseleave",()=>{if(b.dataset.active!=="true")b.style.setProperty("background-color","#f0f0f0","important");});return b;};
@@ -8467,7 +8468,22 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
              [oldBox,newBox].forEach(box=>box.style.cssText="width:34px;height:15px;border:1px solid #aebed0;border-radius:2px;box-sizing:border-box;");
              buttons.style.cssText="height:28px;box-sizing:border-box;display:flex;align-items:center;justify-content:flex-end;gap:5px;margin-top:5px;padding-top:4px;border-top:1px solid #d4dce6;";
              [cancel,ok].forEach(b=>{b.style.cssText="box-sizing:border-box;min-width:48px;width:48px;height:19px;min-height:19px;max-height:19px;padding:1px 4px;border:1px solid #a0a0a0;border-radius:0;color:#222;font:10px/14px 'Segoe UI',Arial,sans-serif;cursor:pointer;";b.style.setProperty("background-image","none","important");b.style.setProperty("background-color","#f7f7f7","important");b.style.setProperty("box-shadow","none","important");});
-             dialog.append(heading,tabs,standardPanel,customPanel,previewTitle,previewRow,buttons);overlay.append(dialog);document.body.append(overlay);setTab("standard");updateColor(selected);
+             dialog.style.setProperty("position","fixed","important");
+             dialog.style.setProperty("left","0px","important");
+             dialog.style.setProperty("top","0px","important");
+             dialog.style.setProperty("margin","0","important");
+             dialog.style.setProperty("transform","none","important");
+             dialog.style.setProperty("pointer-events","auto","important");
+             dialog.append(heading,tabs,standardPanel,customPanel,previewTitle,previewRow,buttons);overlay.append(dialog);document.body.append(overlay);
+             const dialogRect=dialog.getBoundingClientRect();
+             const viewportGap=8;
+             let dialogLeft=paletteRect.right+viewportGap;
+             if(dialogLeft+dialogRect.width>window.innerWidth-viewportGap)dialogLeft=paletteRect.left-dialogRect.width-viewportGap;
+             dialogLeft=Math.max(viewportGap,Math.min(dialogLeft,window.innerWidth-dialogRect.width-viewportGap));
+             let dialogTop=Math.max(viewportGap,Math.min(paletteRect.top,window.innerHeight-dialogRect.height-viewportGap));
+             if(dialogRect.height>window.innerHeight-viewportGap*2)dialogTop=viewportGap;
+             dialog.style.left=dialogLeft+"px";dialog.style.top=dialogTop+"px";
+             setTab("standard");updateColor(selected);
           });
           palette.append(more);
           /* Apply compact dimensions directly to palette elements so global button CSS cannot override them. */
