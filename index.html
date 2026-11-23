@@ -8743,8 +8743,26 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         transaction.onerror = () => reject(transaction.error || new Error("Could not save the local draft."));
         transaction.onabort = () => reject(transaction.error || new Error("Local draft saving was interrupted."));
       });
+
+      // Sync the editable project workspace to the cloud so the same account
+      // can continue on another computer. Browser File objects stay in local
+      // recovery for now; uploaded project attachments are handled separately.
+      const cloudDraft = {
+        ...draft,
+        files: [],
+        workspaces: (draft.workspaces || []).map(workspace => ({ ...workspace, files: [] }))
+      };
+      const { error: cloudSaveError } = await client
+        .from("mi_project_drafts")
+        .upsert({ user_id: user.id, draft: cloudDraft, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+      if (cloudSaveError) {
+        if (typeof setMiWorkStatus === "function") {
+          setMiWorkStatus("Saved on this computer, but cloud sync needs setup: " + friendlyError(cloudSaveError), "error");
+        }
+        return;
+      }
       if (typeof setMiWorkStatus === "function") {
-        setMiWorkStatus("Automatic draft saved on this device. You can safely refresh or return later.", "saved");
+        setMiWorkStatus("Automatically saved to your account cloud. Open this account on another device to continue.", "saved");
       }
     }
 
@@ -8758,7 +8776,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             setMiWorkStatus("Automatic draft could not be saved: " + (error.message || "storage unavailable"), "error");
           }
         });
-      }, 450);
+      }, 900);
     }
 
     async function restoreMiLocalDraft(userId) {
@@ -8766,12 +8784,35 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
       miDraftRestoreStartedFor = userId;
       try {
         const db = await openMiDraftDatabase();
-        const draft = await new Promise((resolve, reject) => {
+        const localDraft = await new Promise((resolve, reject) => {
           const request = db.transaction(MI_DRAFT_STORE_NAME, "readonly")
             .objectStore(MI_DRAFT_STORE_NAME).get(userId);
           request.onsuccess = () => resolve(request.result || null);
           request.onerror = () => reject(request.error || new Error("Could not read the local draft."));
         });
+        let cloudDraft = null;
+        const { data: cloudRow, error: cloudLoadError } = await client
+          .from("mi_project_drafts")
+          .select("draft,updated_at")
+          .eq("user_id", userId)
+          .maybeSingle();
+        if (!cloudLoadError && cloudRow?.draft) {
+          cloudDraft = { ...cloudRow.draft, updatedAt: new Date(cloudRow.updated_at || 0).getTime() };
+        } else if (cloudLoadError) {
+          console.warn("MI cloud draft sync is not ready:", cloudLoadError);
+        }
+        // Prefer the newest copy. Keep local-only attachments if the local
+        // recovery copy is newer or has files that cloud JSON cannot store.
+        let draft = localDraft;
+        if (cloudDraft && (!localDraft || Number(cloudDraft.updatedAt || 0) >= Number(localDraft.updatedAt || 0))) {
+          draft = cloudDraft;
+          if (localDraft?.workspaces?.length && draft.workspaces?.length) {
+            draft.workspaces = draft.workspaces.map(workspace => {
+              const localWorkspace = localDraft.workspaces.find(item => item.id === workspace.id);
+              return localWorkspace?.files?.length ? { ...workspace, files: localWorkspace.files } : workspace;
+            });
+          }
+        }
         if (!draft) {
           const firstWorkspace = { id: "mi-project-" + Date.now(), name: "Project 1", tabName: "Project 1", title: "", editorHtml: "", projectStructure: "", files: [] };
           miProjectWorkspaces = [firstWorkspace];
