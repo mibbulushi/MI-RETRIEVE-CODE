@@ -8313,9 +8313,30 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             [["background","linear-gradient(180deg,#ffffff 0%,#f5f8fc 100%)"],["border","1px solid #9aafc4"],["border-radius","4px"],["box-shadow","0 8px 24px rgba(20,45,75,.18),0 1px 3px rgba(0,0,0,.14)"]].forEach(([p,v])=>dialog.style.setProperty(p,v,"important"));
             const heading=document.createElement("div");heading.textContent="Colors";heading.style.cssText="height:18px;box-sizing:border-box;padding:1px 1px 2px;font:600 10px/14px 'Segoe UI',Arial,sans-serif;margin:0 0 4px;letter-spacing:0;cursor:move;user-select:none;touch-action:none;background:#f0f0f0;border-bottom:1px solid #d4d4d4;color:#333;";
             let dragStartX=0,dragStartY=0,dialogOffsetX=0,dialogOffsetY=0,draggingDialog=false;
-            heading.addEventListener("pointerdown",ev=>{if(ev.button!==0)return;draggingDialog=true;dragStartX=ev.clientX;dragStartY=ev.clientY;heading.setPointerCapture?.(ev.pointerId);});
-            heading.addEventListener("pointermove",ev=>{if(!draggingDialog)return;dialogOffsetX+=ev.clientX-dragStartX;dialogOffsetY+=ev.clientY-dragStartY;dragStartX=ev.clientX;dragStartY=ev.clientY;const maxX=Math.max(0,(window.innerWidth-dialog.getBoundingClientRect().width)/2),maxY=Math.max(0,(window.innerHeight-dialog.getBoundingClientRect().height)/2);dialog.style.transform="translate("+Math.max(-maxX,Math.min(maxX,dialogOffsetX))+"px,"+Math.max(-maxY,Math.min(maxY,dialogOffsetY))+"px)";});
-            const stopDialogDrag=()=>{draggingDialog=false;};heading.addEventListener("pointerup",stopDialogDrag);heading.addEventListener("pointercancel",stopDialogDrag);
+            heading.style.setProperty("cursor","move","important");
+            heading.style.setProperty("touch-action","none","important");
+            heading.addEventListener("pointerdown",ev=>{
+              if(ev.pointerType==="mouse"&&ev.button!==0)return;
+              ev.preventDefault();ev.stopPropagation();
+              draggingDialog=true;dragStartX=ev.clientX;dragStartY=ev.clientY;
+              try{heading.setPointerCapture(ev.pointerId);}catch(_){}
+            });
+            heading.addEventListener("pointermove",ev=>{
+              if(!draggingDialog)return;
+              ev.preventDefault();ev.stopPropagation();
+              dialogOffsetX+=ev.clientX-dragStartX;dialogOffsetY+=ev.clientY-dragStartY;
+              dragStartX=ev.clientX;dragStartY=ev.clientY;
+              const rect=dialog.getBoundingClientRect();
+              const maxX=Math.max(0,(window.innerWidth-rect.width)/2);
+              const maxY=Math.max(0,(window.innerHeight-rect.height)/2);
+              const x=Math.max(-maxX,Math.min(maxX,dialogOffsetX));
+              const y=Math.max(-maxY,Math.min(maxY,dialogOffsetY));
+              dialog.style.transform="translate3d("+x+"px,"+y+"px,0)";
+            });
+            const stopDialogDrag=()=>{draggingDialog=false;};
+            heading.addEventListener("pointerup",stopDialogDrag);
+            heading.addEventListener("pointercancel",stopDialogDrag);
+            heading.addEventListener("lostpointercapture",stopDialogDrag);
             const tabs=document.createElement("div");tabs.style.cssText="box-sizing:border-box;width:100%;max-width:100%;height:18px;display:flex;gap:3px;border-bottom:1px solid #d4d4d4;margin-bottom:4px;";
             const makeTab=label=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.style.cssText="appearance:none;-webkit-appearance:none;box-sizing:border-box;height:18px;min-height:18px;max-height:18px;min-width:54px;margin:0;padding:1px 5px;border:1px solid #a0a0a0;border-radius:0;background:#f5f5f5;color:#222;box-shadow:none;text-shadow:none;filter:none;transform:none;font:10px 'Segoe UI',Arial,sans-serif;font-weight:400;line-height:14px;cursor:pointer;";b.addEventListener("mouseenter",()=>{if(b.dataset.active!=="true")b.style.setProperty("background-color","#e5e5e5","important");});b.addEventListener("mouseleave",()=>{if(b.dataset.active!=="true")b.style.setProperty("background-color","#f0f0f0","important");});return b;};
             const standardTab=makeTab("Standard"),customTab=makeTab("Custom");tabs.append(standardTab,customTab);
