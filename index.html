@@ -8312,28 +8312,31 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
             /* Match the Theme Colors popup: crisp Office-style light-blue finish. */
             [["background","linear-gradient(180deg,#ffffff 0%,#f5f8fc 100%)"],["border","1px solid #9aafc4"],["border-radius","4px"],["box-shadow","0 8px 24px rgba(20,45,75,.18),0 1px 3px rgba(0,0,0,.14)"]].forEach(([p,v])=>dialog.style.setProperty(p,v,"important"));
             const heading=document.createElement("div");heading.textContent="Colors";heading.style.cssText="height:18px;box-sizing:border-box;padding:1px 1px 2px;font:600 10px/14px 'Segoe UI',Arial,sans-serif;margin:0 0 4px;letter-spacing:0;cursor:move;user-select:none;touch-action:none;background:#f0f0f0;border-bottom:1px solid #d4d4d4;color:#333;";
-            let dragStartX=0,dragStartY=0,dialogOffsetX=0,dialogOffsetY=0,draggingDialog=false;
+            let draggingDialog=false,dragPointerId=null,dragOffsetX=0,dragOffsetY=0;
             heading.style.setProperty("cursor","move","important");
             heading.style.setProperty("touch-action","none","important");
+            heading.title="Drag to move this color window";
             heading.addEventListener("pointerdown",ev=>{
               if(ev.pointerType==="mouse"&&ev.button!==0)return;
               ev.preventDefault();ev.stopPropagation();
-              draggingDialog=true;dragStartX=ev.clientX;dragStartY=ev.clientY;
+              const rect=dialog.getBoundingClientRect();
+              dragOffsetX=ev.clientX-rect.left;dragOffsetY=ev.clientY-rect.top;
+              draggingDialog=true;dragPointerId=ev.pointerId;
+              dialog.style.position="fixed";
+              dialog.style.left=rect.left+"px";dialog.style.top=rect.top+"px";
+              dialog.style.right="auto";dialog.style.bottom="auto";
+              dialog.style.margin="0";dialog.style.transform="none";
               try{heading.setPointerCapture(ev.pointerId);}catch(_){}
             });
             heading.addEventListener("pointermove",ev=>{
-              if(!draggingDialog)return;
+              if(!draggingDialog||ev.pointerId!==dragPointerId)return;
               ev.preventDefault();ev.stopPropagation();
-              dialogOffsetX+=ev.clientX-dragStartX;dialogOffsetY+=ev.clientY-dragStartY;
-              dragStartX=ev.clientX;dragStartY=ev.clientY;
               const rect=dialog.getBoundingClientRect();
-              const maxX=Math.max(0,(window.innerWidth-rect.width)/2);
-              const maxY=Math.max(0,(window.innerHeight-rect.height)/2);
-              const x=Math.max(-maxX,Math.min(maxX,dialogOffsetX));
-              const y=Math.max(-maxY,Math.min(maxY,dialogOffsetY));
-              dialog.style.transform="translate3d("+x+"px,"+y+"px,0)";
+              const left=Math.max(0,Math.min(window.innerWidth-rect.width,ev.clientX-dragOffsetX));
+              const top=Math.max(0,Math.min(window.innerHeight-rect.height,ev.clientY-dragOffsetY));
+              dialog.style.left=left+"px";dialog.style.top=top+"px";
             });
-            const stopDialogDrag=()=>{draggingDialog=false;};
+            const stopDialogDrag=()=>{draggingDialog=false;dragPointerId=null;};
             heading.addEventListener("pointerup",stopDialogDrag);
             heading.addEventListener("pointercancel",stopDialogDrag);
             heading.addEventListener("lostpointercapture",stopDialogDrag);
