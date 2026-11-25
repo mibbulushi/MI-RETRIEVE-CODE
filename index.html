@@ -8485,7 +8485,34 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
              fields.style.setProperty("grid-template-columns","repeat(4,max-content)","important");fields.style.setProperty("column-gap","2px","important");fields.style.setProperty("row-gap","5px","important");fields.style.setProperty("width","max-content","important");fields.style.setProperty("max-width","100%","important");
              hexInput.maxLength=7;hexInput.spellcheck=false;hexInput.style.setProperty("width","9ch","important");hexInput.style.setProperty("min-width","9ch","important");hexInput.style.setProperty("max-width","9ch","important");hexInput.style.setProperty("box-sizing","border-box","important");hexInput.style.setProperty("padding","1px 3px","important");hexInput.style.setProperty("font-family","Consolas,monospace","important");hexInput.style.setProperty("font-weight","600","important");hexInput.style.setProperty("text-align","center","important");
              [redInput,greenInput,blueInput].forEach(input=>{input.maxLength=3;input.inputMode="numeric";input.style.setProperty("width","4ch","important");input.style.setProperty("min-width","4ch","important");input.style.setProperty("max-width","4ch","important");input.style.setProperty("box-sizing","border-box","important");input.style.setProperty("padding","1px 2px","important");input.style.setProperty("text-align","center","important");});
-             previewTitle.style.cssText="display:inline-flex;align-items:center;vertical-align:middle;font:600 10px/14px 'Segoe UI',Arial,sans-serif;margin:0 8px 0 0;color:#294765;";
+             /* Movable website color picker: the original trigger remains in its existing position. */
+              const floatingPicker=document.createElement("div");
+              floatingPicker.setAttribute("role","dialog");floatingPicker.setAttribute("aria-label","Choose Custom Color");
+              floatingPicker.style.cssText="display:none;position:fixed;z-index:2147483647;box-sizing:border-box;width:190px;padding:7px;background:linear-gradient(180deg,#ffffff 0%,#f3f8ff 52%,#eaf3fd 100%);border:1px solid #8faac6;border-radius:5px;box-shadow:0 10px 26px rgba(20,55,92,.24),0 2px 7px rgba(12,35,62,.16);font:10px 'Segoe UI',Arial,sans-serif;color:#183653;";
+              const floatingHeading=document.createElement("div");floatingHeading.textContent="Choose Custom Color";
+              floatingHeading.style.cssText="height:20px;display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 6px;padding:0 2px 4px;border-bottom:1px solid #c2d5e8;font:600 10px 'Segoe UI',Arial,sans-serif;color:#173f66;cursor:move;user-select:none;touch-action:none;";
+              const floatingClose=document.createElement("button");floatingClose.type="button";floatingClose.textContent="×";floatingClose.setAttribute("aria-label","Close color picker");
+              floatingClose.style.cssText="appearance:none;border:1px solid #9fb7d0;border-radius:3px;background:#f4f8fd;color:#244968;width:18px;height:17px;line-height:13px;padding:0;font:14px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
+              floatingHeading.append(floatingClose);
+              const floatingBody=document.createElement("div");floatingBody.style.cssText="display:grid;grid-template-columns:155px 18px;grid-template-rows:94px;column-gap:3px;align-items:center;justify-content:start;margin:0 0 7px;";
+              const restorePickerControls=()=>{pickerArea.insertBefore(spectrum,nativeColor);pickerArea.insertBefore(hue,nativeColor);customLayout.append(fields);floatingPicker.style.display="none";};
+              const openFloatingPicker=()=>{
+                floatingBody.append(spectrum,hue);floatingPicker.append(floatingHeading,floatingBody,fields);overlay.append(floatingPicker);
+                const rect=dialog.getBoundingClientRect(),w=190,h=Math.min(240,window.innerHeight-16);
+                let left=rect.right+6;if(left+w>window.innerWidth-8)left=rect.left-w-6;
+                left=Math.max(8,Math.min(window.innerWidth-w-8,left));
+                const top=Math.max(8,Math.min(rect.top+18,window.innerHeight-h-8));
+                floatingPicker.style.left=left+"px";floatingPicker.style.top=top+"px";floatingPicker.style.display="block";
+              };
+              nativeColor.addEventListener("click",ev=>{ev.preventDefault();ev.stopPropagation();openFloatingPicker();});
+              floatingClose.addEventListener("click",ev=>{ev.preventDefault();ev.stopPropagation();restorePickerControls();});
+              floatingPicker.addEventListener("click",ev=>ev.stopPropagation());
+              let draggingFloating=false,floatingPointerId=null,floatingOffsetX=0,floatingOffsetY=0;
+              floatingHeading.addEventListener("pointerdown",ev=>{if(ev.target===floatingClose||(ev.pointerType==="mouse"&&ev.button!==0))return;ev.preventDefault();const r=floatingPicker.getBoundingClientRect();floatingOffsetX=ev.clientX-r.left;floatingOffsetY=ev.clientY-r.top;draggingFloating=true;floatingPointerId=ev.pointerId;try{floatingHeading.setPointerCapture(ev.pointerId);}catch(_){}});
+              floatingHeading.addEventListener("pointermove",ev=>{if(!draggingFloating||ev.pointerId!==floatingPointerId)return;ev.preventDefault();const r=floatingPicker.getBoundingClientRect();const x=Math.max(0,Math.min(window.innerWidth-r.width,ev.clientX-floatingOffsetX));const y=Math.max(0,Math.min(window.innerHeight-r.height,ev.clientY-floatingOffsetY));floatingPicker.style.left=x+"px";floatingPicker.style.top=y+"px";});
+              const stopFloatingDrag=()=>{draggingFloating=false;floatingPointerId=null;};
+              floatingHeading.addEventListener("pointerup",stopFloatingDrag);floatingHeading.addEventListener("pointercancel",stopFloatingDrag);floatingHeading.addEventListener("lostpointercapture",stopFloatingDrag);
+              previewTitle.style.cssText="display:inline-flex;align-items:center;vertical-align:middle;font:600 10px/14px 'Segoe UI',Arial,sans-serif;margin:0 8px 0 0;color:#294765;";
              previewRow.style.cssText="display:inline-flex;vertical-align:middle;align-items:center;gap:8px;margin:0;";
              [oldLabel,newLabel].forEach(label=>label.style.cssText="font:9px/12px 'Segoe UI',Arial,sans-serif;margin-bottom:2px;color:#526b88;");
              [oldBox,newBox].forEach(box=>box.style.cssText="width:34px;height:15px;border:1px solid #aebed0;border-radius:2px;box-sizing:border-box;");
