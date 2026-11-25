@@ -8488,17 +8488,17 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
               /* Movable website color picker: the original trigger remains in its existing position. */
               const floatingPicker=document.createElement("div");
               floatingPicker.setAttribute("role","dialog");floatingPicker.setAttribute("aria-label","Choose Custom Color");
-              floatingPicker.style.cssText="display:none;position:fixed;z-index:2147483647;box-sizing:border-box;width:220px;padding:7px;background:linear-gradient(180deg,#ffffff 0%,#f3f8ff 52%,#eaf3fd 100%);border:1px solid #8faac6;border-radius:5px;box-shadow:0 10px 26px rgba(20,55,92,.24),0 2px 7px rgba(12,35,62,.16);font:10px 'Segoe UI',Arial,sans-serif;color:#183653;";
+              floatingPicker.style.cssText="display:none;position:fixed;z-index:2147483647;box-sizing:border-box;width:200px;padding:7px;background:linear-gradient(180deg,#ffffff 0%,#f3f8ff 52%,#eaf3fd 100%);border:1px solid #8faac6;border-radius:5px;box-shadow:0 10px 26px rgba(20,55,92,.24),0 2px 7px rgba(12,35,62,.16);font:10px 'Segoe UI',Arial,sans-serif;color:#183653;";
               const floatingHeading=document.createElement("div");floatingHeading.textContent="Choose Custom Color";
               floatingHeading.style.cssText="height:20px;display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 6px;padding:0 2px 4px;border-bottom:1px solid #c2d5e8;font:600 10px 'Segoe UI',Arial,sans-serif;color:#173f66;cursor:move;user-select:none;touch-action:none;";
               const floatingClose=document.createElement("button");floatingClose.type="button";floatingClose.textContent="×";floatingClose.setAttribute("aria-label","Close color picker");
               floatingClose.style.cssText="appearance:none;border:1px solid #9fb7d0;border-radius:3px;background:#f4f8fd;color:#244968;width:18px;height:17px;line-height:13px;padding:0;font:14px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
               floatingHeading.append(floatingClose);
-              const floatingBody=document.createElement("div");floatingBody.style.cssText="display:grid;grid-template-columns:240px 18px;grid-template-rows:110px;column-gap:3px;align-items:center;justify-content:start;margin:0 0 7px;";
+              const floatingBody=document.createElement("div");floatingBody.style.cssText="display:grid;grid-template-columns:180px 18px;grid-template-rows:110px;column-gap:3px;align-items:center;justify-content:start;margin:0 0 7px;";
               const restorePickerControls=()=>{pickerArea.insertBefore(spectrum,nativeColor);pickerArea.insertBefore(hue,nativeColor);customLayout.append(fields);floatingPicker.style.display="none";};
               const openFloatingPicker=()=>{
                 floatingBody.append(spectrum,hue);floatingPicker.append(floatingHeading,floatingBody,fields);overlay.append(floatingPicker);
-                const w=220,h=Math.min(240,window.innerHeight-16),rect=dialog.getBoundingClientRect();
+                const w=200,h=Math.min(240,window.innerHeight-16),rect=dialog.getBoundingClientRect();
                 let left=rect.right+6;if(left+w>window.innerWidth-8)left=rect.left-w-6;
                 left=Math.max(8,Math.min(window.innerWidth-w-8,left));
                 const top=Math.max(8,Math.min(rect.top+18,window.innerHeight-h-8));
