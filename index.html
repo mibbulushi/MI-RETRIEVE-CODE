@@ -5178,6 +5178,24 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 #miExcelDeleteSheetDialog .mi-excel-delete-dialog>footer button:active{
   background:#dce9f7!important;box-shadow:inset 0 1px 2px rgba(35,65,95,.18)!important;
 }
+
+<style id="mi-status-sticky-zoom-fix">
+/* Allow the bottom status/zoom strip to stick to the viewport while the document is zoomed. */
+.mi-main-textbox-frame{
+  overflow:visible!important;
+}
+#miStatusGroup{
+  position:sticky!important;
+  bottom:0!important;
+  z-index:120!important;
+  align-self:stretch!important;
+}
+#miProjectWorkStatus{
+  position:relative!important;
+  bottom:auto!important;
+}
+</style>
+
 </style>
 
 
