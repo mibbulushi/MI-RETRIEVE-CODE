@@ -9863,7 +9863,16 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         zoomBar.append(zoomOut,zoomSlider,zoomIn,zoomValue);
         viewbar.append(zoomBar);
         setDocumentZoom(100);
-        const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);statusRow.style.display="flex";statusRow.style.alignItems="center";statusRow.style.justifyContent="space-between";statusRow.style.flexWrap="nowrap";statusRow.style.gap="8px";}else stage.insertBefore(viewbar,editor);
+        const statusGroup=document.getElementById("miStatusGroup");
+        if(statusGroup){
+          const bottomControls=document.createElement("div");
+          bottomControls.className="mi-bottom-document-controls";
+          bottomControls.setAttribute("aria-label","Document view and zoom controls");
+          bottomControls.append(viewbar);
+          statusGroup.append(bottomControls);
+        }else{
+          stage.insertBefore(viewbar,editor);
+        }
         viewButtons.print.click();
       }
       function updatePictureTab(){
@@ -10082,3 +10091,11 @@ body.sidebar-collapsed .sidebar-toggle{
 </script>
 </body>
 </html>
+
+<style id="mi-document-controls-bottom-green-row">
+/* Place view and zoom controls on the final bottom row of the editor panel. */
+#miStatusGroup .mi-bottom-document-controls{display:flex!important;align-items:center!important;justify-content:flex-end!important;width:100%!important;min-width:0!important;min-height:25px!important;box-sizing:border-box!important;margin:0!important;padding:0 10px 0 6px!important;border:0!important;background:transparent!important;}
+#miStatusGroup .mi-bottom-document-controls .mi-document-viewbar{display:flex!important;align-items:center!important;justify-content:flex-end!important;flex-wrap:nowrap!important;margin:0!important;gap:3px!important;}
+#miStatusGroup .mi-bottom-document-controls .mi-document-zoom{position:static!important;inset:auto!important;margin-left:4px!important;}
+@media(max-width:650px){#miStatusGroup .mi-bottom-document-controls{justify-content:flex-end!important;overflow-x:auto!important;padding-right:5px!important;}}
+</style>
