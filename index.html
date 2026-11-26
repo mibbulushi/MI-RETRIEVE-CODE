@@ -8494,11 +8494,11 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
               const floatingClose=document.createElement("button");floatingClose.type="button";floatingClose.textContent="×";floatingClose.setAttribute("aria-label","Close color picker");
               floatingClose.style.cssText="appearance:none;border:1px solid #9fb7d0;border-radius:3px;background:#f4f8fd;color:#244968;width:18px;height:17px;line-height:13px;padding:0;font:14px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
               floatingHeading.append(floatingClose);
-              const floatingBody=document.createElement("div");floatingBody.style.cssText="display:grid;grid-template-columns:180px 18px;grid-template-rows:110px;column-gap:3px;align-items:center;justify-content:start;margin:0 0 7px;";
+              const floatingBody=document.createElement("div");floatingBody.style.cssText="display:grid;grid-template-columns:155px 18px 74px;grid-template-rows:130px;column-gap:4px;align-items:center;justify-content:start;width:100%;margin:0 0 7px;";
               const restorePickerControls=()=>{pickerArea.insertBefore(spectrum,nativeColor);pickerArea.insertBefore(hue,nativeColor);customLayout.append(fields);floatingPicker.style.display="none";};
               const openFloatingPicker=()=>{
-                floatingBody.append(spectrum,hue);floatingPicker.append(floatingHeading,fields,floatingBody);overlay.append(floatingPicker);
-                const w=200,h=Math.min(240,window.innerHeight-16),rect=dialog.getBoundingClientRect();
+                fields.style.gridColumn="3";fields.style.gridRow="1";fields.style.alignSelf="center";floatingBody.append(spectrum,hue,fields);floatingPicker.append(floatingHeading,floatingBody);overlay.append(floatingPicker);
+                const w=270,h=Math.min(240,window.innerHeight-16),rect=dialog.getBoundingClientRect();
                 let left=rect.right+6;if(left+w>window.innerWidth-8)left=rect.left-w-6;
                 left=Math.max(8,Math.min(window.innerWidth-w-8,left));
                 const top=Math.max(8,Math.min(rect.top+18,window.innerHeight-h-8));
