@@ -9863,7 +9863,16 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         zoomBar.append(zoomOut,zoomSlider,zoomIn,zoomValue);
         viewbar.append(zoomBar);
         setDocumentZoom(100);
-        const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);}else stage.insertBefore(viewbar,editor);
+        const lowerExistingRow=document.querySelector("#miStatusGroup .mi-document-info-row");
+        if(lowerExistingRow){
+          lowerExistingRow.append(viewbar);
+          lowerExistingRow.style.display="flex";
+          lowerExistingRow.style.alignItems="center";
+          lowerExistingRow.style.justifyContent="space-between";
+          lowerExistingRow.style.flexWrap="nowrap";
+        }else{
+          stage.insertBefore(viewbar,editor);
+        }
         viewButtons.print.click();
       }
       function updatePictureTab(){
