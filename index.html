@@ -10000,6 +10000,13 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
     justify-content:center!important;
   }
 
+
+
+/* Keep the collapsed-sidebar toggle clear of the sidebar's vertical scrollbar at every page zoom. */
+body.sidebar-collapsed .sidebar-toggle{
+  left:10px!important;
+  right:auto!important;
+}
 </style>
 <script id="mi-password-visibility-controls">
 (function(){
