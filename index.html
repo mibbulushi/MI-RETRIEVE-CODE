@@ -9863,16 +9863,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         zoomBar.append(zoomOut,zoomSlider,zoomIn,zoomValue);
         viewbar.append(zoomBar);
         setDocumentZoom(100);
-        const existingLastRow=document.querySelector("#miStatusGroup .mi-document-info-row");
-        if(existingLastRow){
-          existingLastRow.append(viewbar);
-          existingLastRow.style.display="flex";
-          existingLastRow.style.alignItems="center";
-          existingLastRow.style.justifyContent="space-between";
-          existingLastRow.style.flexWrap="nowrap";
-        }else{
-          stage.insertBefore(viewbar,editor);
-        }
+        const statusRow=document.getElementById("miProjectWorkStatus");if(statusRow){statusRow.append(viewbar);}else stage.insertBefore(viewbar,editor);
         viewButtons.print.click();
       }
       function updatePictureTab(){
