@@ -8490,7 +8490,7 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
               floatingPicker.setAttribute("role","dialog");floatingPicker.setAttribute("aria-label","Choose Custom Color");
               floatingPicker.style.cssText="display:none;position:fixed;z-index:2147483647;box-sizing:border-box;width:200px;padding:7px;background:linear-gradient(180deg,#ffffff 0%,#f3f8ff 52%,#eaf3fd 100%);border:1px solid #8faac6;border-radius:5px;box-shadow:0 10px 26px rgba(20,55,92,.24),0 2px 7px rgba(12,35,62,.16);font:10px 'Segoe UI',Arial,sans-serif;color:#183653;";
               const floatingHeading=document.createElement("div");floatingHeading.textContent="Choose Custom Color";
-              floatingHeading.style.cssText="height:20px;display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 6px;padding:0 2px 4px;border-bottom:1px solid #c2d5e8;font:600 10px 'Segoe UI',Arial,sans-serif;color:#173f66;cursor:move;user-select:none;touch-action:none;";
+              floatingHeading.style.cssText="height:16px;min-height:16px;display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0;padding:0 2px;border-bottom:1px solid #c2d5e8;font:600 10px 'Segoe UI',Arial,sans-serif;color:#173f66;cursor:move;user-select:none;touch-action:none;";
               const floatingClose=document.createElement("button");floatingClose.type="button";floatingClose.textContent="×";floatingClose.setAttribute("aria-label","Close color picker");
               floatingClose.style.cssText="appearance:none;border:1px solid #9fb7d0;border-radius:3px;background:#f4f8fd;color:#244968;width:18px;height:17px;line-height:13px;padding:0;font:14px 'Segoe UI',Arial,sans-serif;cursor:pointer;";
               floatingHeading.append(floatingClose);
