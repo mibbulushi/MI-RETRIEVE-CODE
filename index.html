@@ -5181,24 +5181,23 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
 
 
 <style id="mi-fixed-zoom-control">
-/* Keep only the zoom controls anchored to the viewport so document zoom cannot push them off-screen. */
+/* Keep zoom controls in the same bottom status row as Read, Print and Web Layout. */
 #miProjectWorkStatus .mi-document-zoom{
-  position:fixed!important;
-  right:24px!important;
-  bottom:12px!important;
-  z-index:2147482000!important;
-  margin:0!important;
-  padding:5px 8px!important;
-  border:1px solid #cbd6e4!important;
-  border-radius:4px!important;
-  background:rgba(248,250,253,.98)!important;
-  box-shadow:0 2px 8px rgba(28,36,46,.16)!important;
+  position:static!important;
+  inset:auto!important;
+  z-index:auto!important;
+  margin:0 0 0 4px!important;
+  padding:0 0 0 6px!important;
+  border:0!important;
+  border-left:1px solid #d7dde5!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
 }
 @media(max-width:650px){
   #miProjectWorkStatus .mi-document-zoom{
-    right:8px!important;
-    bottom:8px!important;
-    padding:3px 5px!important;
+    margin:0 0 0 2px!important;
+    padding:0 0 0 4px!important;
   }
 }
 </style>
