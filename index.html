@@ -9851,39 +9851,42 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         zoomOut.type="button";zoomOut.className="mi-zoom-step";zoomOut.textContent="−";
         zoomOut.setAttribute("aria-label","Zoom out");zoomOut.title="Zoom out";
         function setDocumentZoom(value){
-          const previous=Number(zoomSlider.value)||100;
           const next=Math.max(50,Math.min(200,Math.round(Number(value)/10)*10));
-          const ratio=next/previous;
-          const before=editor.getBoundingClientRect();
-          const anchorX=before.left+before.width/2;
-          const anchorY=before.top+before.height/2;
+          const oldZoom=(Number(editor.style.zoom)||100/100);
+          const oldRect=editor.getBoundingClientRect();
+          const anchorX=oldRect.left+Math.min(oldRect.width-2,Math.max(2,oldRect.width/2));
+          const anchorY=oldRect.top+Math.min(oldRect.height-2,Math.max(2,oldRect.height/2));
+          let anchor=document.elementFromPoint(anchorX,anchorY);
+          if(!anchor||!editor.contains(anchor))anchor=null;
+          while(anchor&&anchor.parentElement!==editor&&anchor.parentElement&&editor.contains(anchor.parentElement)){
+            anchor=anchor.parentElement;
+          }
+          const anchorRect=anchor?anchor.getBoundingClientRect():null;
+          const oldAnchorTop=anchorRect?anchorRect.top-oldRect.top:null;
+          const oldAnchorLeft=anchorRect?anchorRect.left-oldRect.left:null;
           const oldScrollTop=editor.scrollTop;
           const oldScrollLeft=editor.scrollLeft;
+          const oldScrollHeight=editor.scrollHeight;
           const oldClientHeight=editor.clientHeight;
+          const oldScrollWidth=editor.scrollWidth;
           const oldClientWidth=editor.clientWidth;
-          zoomSlider.value=String(next);zoomValue.textContent=next+"%";
+          zoomSlider.value=String(next);
+          zoomValue.textContent=next+"%";
           editor.style.zoom=String(next/100);
-          ["height","min-height","max-height"].forEach(property=>editor.style.removeProperty(property));
-          editor.scrollTop=Math.max(0,(oldScrollTop+oldClientHeight/2)*ratio-editor.clientHeight/2);
-          editor.scrollLeft=Math.max(0,(oldScrollLeft+oldClientWidth/2)*ratio-editor.clientWidth/2);
-          const after=editor.getBoundingClientRect();
-          const deltaX=after.left+after.width/2-anchorX;
-          const deltaY=after.top+after.height/2-anchorY;
-          let scrollParent=editor.parentElement;
-          while(scrollParent&&scrollParent!==document.body){
-            const style=getComputedStyle(scrollParent);
-            const canScrollY=/(auto|scroll)/.test(style.overflowY)&&scrollParent.scrollHeight>scrollParent.clientHeight;
-            const canScrollX=/(auto|scroll)/.test(style.overflowX)&&scrollParent.scrollWidth>scrollParent.clientWidth;
-            if(canScrollX||canScrollY)break;
-            scrollParent=scrollParent.parentElement;
-          }
-          if(scrollParent&&scrollParent!==document.body){
-            if(scrollParent.scrollWidth>scrollParent.clientWidth)scrollParent.scrollLeft+=deltaX;
-            if(scrollParent.scrollHeight>scrollParent.clientHeight)scrollParent.scrollTop+=deltaY;
+          const newRect=editor.getBoundingClientRect();
+          if(anchor&&anchor.isConnected&&oldAnchorTop!==null){
+            const newAnchorRect=anchor.getBoundingClientRect();
+            const scale=next/100;
+            editor.scrollTop=Math.max(0,oldScrollTop+(newAnchorRect.top-newRect.top-oldAnchorTop)/scale);
+            editor.scrollLeft=Math.max(0,oldScrollLeft+(newAnchorRect.left-newRect.left-oldAnchorLeft)/scale);
           }else{
-            window.scrollBy(deltaX,deltaY);
+            const verticalRatio=oldScrollHeight>oldClientHeight?oldScrollTop/(oldScrollHeight-oldClientHeight):0;
+            const horizontalRatio=oldScrollWidth>oldClientWidth?oldScrollLeft/(oldScrollWidth-oldClientWidth):0;
+            editor.scrollTop=verticalRatio*Math.max(0,editor.scrollHeight-editor.clientHeight);
+            editor.scrollLeft=horizontalRatio*Math.max(0,editor.scrollWidth-editor.clientWidth);
           }
-          zoomOut.disabled=next===50;zoomIn.disabled=next===200;
+          zoomOut.disabled=next===50;
+          zoomIn.disabled=next===200;
         }
         zoomOut.addEventListener("click",()=>setDocumentZoom(Number(zoomSlider.value)-10));
         zoomIn.addEventListener("click",()=>setDocumentZoom(Number(zoomSlider.value)+10));
