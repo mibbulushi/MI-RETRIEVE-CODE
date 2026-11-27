@@ -10133,20 +10133,44 @@ body.sidebar-collapsed .sidebar-toggle{left:75px!important}
 </script>
 
 <style id="mi-fixed-bottom-ready-zoom-row">
-/* Keep the Ready row and all zoom controls fixed above the document while page zoom changes. */
+/* Keep the Ready row anchored to the requested left/right edges while its contents adapt to page zoom. */
 #miProjectWorkStatus{
   position:fixed!important;
   left:266px!important;
   right:24px!important;
   bottom:0!important;
   width:auto!important;
+  min-width:0!important;
+  max-width:calc(100vw - 290px)!important;
+  display:flex!important;
+  align-items:center!important;
   box-sizing:border-box!important;
+  border:1px solid #d5e4f5!important;
+  border-radius:11px!important;
   z-index:9999!important;
   margin:0!important;
+  gap:9px!important;
 }
-#miProjectWorkStatus .mi-document-viewbar,
+#miProjectWorkStatus #miProjectWorkStatusText{
+  flex:1 1 180px!important;
+  min-width:0!important;
+  overflow-wrap:anywhere!important;
+}
+#miProjectWorkStatus .mi-document-viewbar{
+  flex:0 1 auto!important;
+  min-width:0!important;
+  max-width:100%!important;
+  flex-wrap:wrap!important;
+  justify-content:flex-end!important;
+}
 #miProjectWorkStatus .mi-document-zoom{
-  flex:0 0 auto!important;
+  flex:0 1 auto!important;
+  min-width:0!important;
+  flex-wrap:wrap!important;
+}
+@media(max-width:900px){
+  #miProjectWorkStatus{gap:6px!important;padding:8px 9px!important;}
+  #miProjectWorkStatus #miProjectWorkStatusText{flex-basis:120px!important;}
 }
 </style>
 </body>
