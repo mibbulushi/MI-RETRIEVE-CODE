@@ -10454,6 +10454,7 @@ body.sidebar-collapsed .sidebar .brand:before{
       row.style.setProperty("left",left+"px","important");
       row.style.setProperty("right",right+"px","important");
       row.style.setProperty("width","auto","important");
+      row.classList.add("mi-status-position-ready");
     }
     function schedule(){
       if(pending)return;
@@ -10583,6 +10584,16 @@ body.sidebar-collapsed .sidebar .brand:before{
 /* Make both ends of the status bar square. */
 #miProjectWorkStatus{
   border-radius:0!important;
+}
+</style>
+
+<style id="mi-status-row-hide-until-positioned">
+/* Prevent a first-paint flash at the fallback left edge during hard refresh. */
+#miProjectWorkStatus:not(.mi-status-position-ready){
+  visibility:hidden!important;
+}
+#miProjectWorkStatus.mi-status-position-ready{
+  visibility:visible!important;
 }
 </style>
 </body>
