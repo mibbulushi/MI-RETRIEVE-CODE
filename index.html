@@ -10385,8 +10385,9 @@ body.sidebar-collapsed .sidebar .brand:before{
   position:fixed!important;
   top:auto!important;
   bottom:24px!important;
-  left:0!important;
-  right:auto!important;
+  /* Safe first-paint fallback: reserve the full row width before JS measures the editor frame. */
+  left:97px!important;
+  right:24px!important;
   width:auto!important;
   max-width:none!important;
   min-width:0!important;
