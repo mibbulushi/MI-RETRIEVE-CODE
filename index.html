@@ -10430,7 +10430,10 @@ body.sidebar-collapsed .sidebar .brand:before{
       pending=false;
       const rect=frame.getBoundingClientRect();
       if(!rect.width)return;
-      const left=Math.max(0,rect.left);
+      const collapsed=document.body.classList.contains("sidebar-collapsed");
+      /* Collapsed: align exactly with the blue guide at the rail edge.
+         Expanded: align with the editor frame's own left border. */
+      const left=collapsed?97:Math.max(0,rect.left);
       const right=Math.max(0,window.innerWidth-rect.right);
       row.style.setProperty("left",left+"px","important");
       row.style.setProperty("right",right+"px","important");
