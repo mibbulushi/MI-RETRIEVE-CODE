@@ -10473,10 +10473,15 @@ body.sidebar-collapsed .sidebar .brand:before{
     }
     schedule();
     window.addEventListener("resize",schedule,{passive:true});
-    document.body.addEventListener("transitionend",schedule,true);
-    document.body.addEventListener("transitionrun",trackTransition,true);
-    new MutationObserver(function(){schedule();trackTransition();})
-      .observe(document.body,{attributes:true,attributeFilter:["class"]});
+    /* Reposition synchronously at the moment the sidebar starts changing.
+       Waiting for requestAnimationFrame here lets the fixed row briefly remain
+       at its old/default left edge, which looks like a jump or overflow. */
+    document.body.addEventListener("transitionend",function(){align();schedule();},true);
+    document.body.addEventListener("transitionrun",function(){align();trackTransition();},true);
+    new MutationObserver(function(){
+      align();
+      trackTransition();
+    }).observe(document.body,{attributes:true,attributeFilter:["class"]});
     if(window.ResizeObserver)new ResizeObserver(function(){schedule();}).observe(frame);
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
