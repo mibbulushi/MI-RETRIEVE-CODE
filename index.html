@@ -10298,6 +10298,33 @@ body.sidebar-collapsed .sidebar .brand:before{
   transform:translateY(11px)!important;
 }
 </style>
+
+<style id="mi-toggle-hover-icon-visibility">
+/* Keep the toggle symbol visible and unchanged while the pointer is over the button. */
+#sidebarToggle:hover,
+#sidebarToggle:focus,
+#sidebarToggle:focus-visible{
+  color:#ffffff!important;
+  opacity:1!important;
+}
+#sidebarToggle:hover .sidebar-toggle-icon,
+#sidebarToggle:focus .sidebar-toggle-icon,
+#sidebarToggle:focus-visible .sidebar-toggle-icon{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  stroke:#ffffff!important;
+  fill:none!important;
+}
+#sidebarToggle:hover .sidebar-toggle-icon *,
+#sidebarToggle:focus .sidebar-toggle-icon *,
+#sidebarToggle:focus-visible .sidebar-toggle-icon *{
+  visibility:visible!important;
+  opacity:1!important;
+  stroke:#ffffff!important;
+  fill:none!important;
+}
+</style>
 </body>
 </html>
 
