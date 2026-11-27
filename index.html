@@ -10227,6 +10227,31 @@ body.sidebar-collapsed > #sidebarToggle{
   }
 }
 </style>
+
+<style id="mi-collapsed-toggle-final-position">
+/* Final override: keep the toggle on the same header row as the MI mark. */
+body.sidebar-collapsed #sidebarToggle{
+  position:fixed!important;
+  top:20px!important;
+  left:48px!important;
+  right:auto!important;
+  bottom:auto!important;
+  transform:none!important;
+  z-index:10000!important;
+  width:26px!important;
+  height:26px!important;
+  min-width:26px!important;
+  min-height:26px!important;
+  margin:0!important;
+  padding:0!important;
+}
+@media(max-width:760px){
+  body.sidebar-collapsed #sidebarToggle{
+    top:20px!important;
+    left:48px!important;
+  }
+}
+</style>
 </body>
 </html>
 
