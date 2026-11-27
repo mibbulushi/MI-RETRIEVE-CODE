@@ -10252,6 +10252,41 @@ body.sidebar-collapsed #sidebarToggle{
   }
 }
 </style>
+
+<style id="mi-collapsed-sidebar-64px">
+/* Narrow only the collapsed icon rail; preserve its icons and controls. */
+body.sidebar-collapsed .sidebar{
+  width:64px!important;
+  min-width:64px!important;
+  padding-left:6px!important;
+  padding-right:6px!important;
+}
+body.sidebar-collapsed .sidebar .brand{
+  width:52px!important;
+  min-width:52px!important;
+  padding-left:0!important;
+  justify-content:center!important;
+}
+body.sidebar-collapsed .sidebar .side-nav{
+  width:52px!important;
+}
+body.sidebar-collapsed .sidebar .side-nav a{
+  width:48px!important;
+}
+body.sidebar-collapsed{
+  padding-left:96px!important;
+}
+@media(max-width:760px){
+  body.sidebar-collapsed .sidebar{
+    width:64px!important;
+    min-width:64px!important;
+  }
+  body.sidebar-collapsed{
+    padding:54px 12px 10px 96px!important;
+  }
+}
+</style>
+
 </body>
 </html>
 
