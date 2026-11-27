@@ -10380,7 +10380,7 @@ body.sidebar-collapsed .sidebar .brand:before{
 </style>
 
 <style id="mi-status-row-orange-position">
-/* The status strip follows the document frame width as the sidebar opens or closes. */
+/* Compact status strip: align its left edge to the blue guide and keep its lower edge on the marked baseline. */
 #miProjectWorkStatus{
   position:fixed!important;
   top:auto!important;
@@ -10390,10 +10390,10 @@ body.sidebar-collapsed .sidebar .brand:before{
   width:auto!important;
   max-width:none!important;
   min-width:0!important;
-  height:auto!important;
-  min-height:28px!important;
-  max-height:none!important;
-  padding:3px 7px!important;
+  height:26px!important;
+  min-height:26px!important;
+  max-height:26px!important;
+  padding:0 6px!important;
   margin:0!important;
   box-sizing:border-box!important;
   display:flex!important;
@@ -10408,15 +10408,29 @@ body.sidebar-collapsed .sidebar .brand:before{
   overflow:hidden!important;
   white-space:nowrap!important;
   text-overflow:ellipsis!important;
+  line-height:20px!important;
 }
+#miProjectWorkStatus .mi-work-dot{flex:0 0 7px!important;width:7px!important;height:7px!important;}
 #miProjectWorkStatus .mi-document-viewbar,
 #miProjectWorkStatus .mi-document-zoom{
   flex:0 1 auto!important;
   min-width:0!important;
+  max-height:24px!important;
+  align-items:center!important;
   flex-wrap:nowrap!important;
+  gap:3px!important;
 }
+#miProjectWorkStatus .mi-document-viewbar button,
+#miProjectWorkStatus .mi-document-zoom button{
+  height:22px!important;
+  min-height:22px!important;
+  max-height:22px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+#miProjectWorkStatus .mi-document-zoom .mi-zoom-slider{height:16px!important;}
 @media(max-width:760px){
-  #miProjectWorkStatus{bottom:10px!important;padding:3px 6px!important;}
+  #miProjectWorkStatus{bottom:10px!important;height:26px!important;min-height:26px!important;max-height:26px!important;padding:0 5px!important;}
 }
 </style>
 <script id="mi-status-row-follow-document-frame">
