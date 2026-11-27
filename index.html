@@ -10598,6 +10598,13 @@ body.sidebar-collapsed .sidebar .brand:before{
   visibility:visible!important;
 }
 </style>
+
+<style id="mi-sidebar-toggle-layout-stability">
+/* Keep the workspace from stretching during the sidebar open/close transition.
+   The sidebar animation remains unchanged; do not alter the status bar. */
+body{transition:padding-left 0s!important}
+</style>
+
 </body>
 </html>
 
