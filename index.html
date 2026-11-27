@@ -10441,14 +10441,11 @@ body.sidebar-collapsed .sidebar .brand:before{
     const frame=document.querySelector(".mi-main-textbox-frame");
     if(!row||!frame)return;
     let pending=false;
-    let tracking=false;
     function align(){
       pending=false;
       const rect=frame.getBoundingClientRect();
       if(!rect.width)return;
       const collapsed=document.body.classList.contains("sidebar-collapsed");
-      /* Keep the entire status/control group attached to the editor frame
-         throughout the sidebar animation, not only after it has finished. */
       const left=collapsed?97:Math.max(0,rect.left);
       const right=Math.max(0,window.innerWidth-rect.right);
       row.style.setProperty("left",left+"px","important");
@@ -10461,30 +10458,15 @@ body.sidebar-collapsed .sidebar .brand:before{
       pending=true;
       requestAnimationFrame(align);
     }
-    function trackTransition(){
-      if(tracking)return;
-      tracking=true;
-      let frames=0;
-      function follow(){
-        align();
-        frames++;
-        if(frames<36)requestAnimationFrame(follow);
-        else tracking=false;
-      }
-      requestAnimationFrame(follow);
-    }
     schedule();
     window.addEventListener("resize",schedule,{passive:true});
-    /* Reposition synchronously at the moment the sidebar starts changing.
-       Waiting for requestAnimationFrame here lets the fixed row briefly remain
-       at its old/default left edge, which looks like a jump or overflow. */
-    document.body.addEventListener("transitionend",function(){align();schedule();},true);
-    document.body.addEventListener("transitionrun",function(){align();trackTransition();},true);
-    new MutationObserver(function(){
-      align();
-      trackTransition();
-    }).observe(document.body,{attributes:true,attributeFilter:["class"]});
-    if(window.ResizeObserver)new ResizeObserver(function(){schedule();}).observe(frame);
+    /* Hold the current status-row width during the sidebar animation.
+       Recalculate once the sidebar's padding/width transition has finished. */
+    document.body.addEventListener("transitionend",function(event){
+      if(event.target===document.body || event.propertyName==="padding-left"){
+        align();
+      }
+    },true);
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
   else init();
