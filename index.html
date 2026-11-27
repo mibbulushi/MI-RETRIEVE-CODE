@@ -10145,12 +10145,30 @@ body.sidebar-collapsed .sidebar-toggle{left:75px!important}
   display:flex!important;
   align-items:center!important;
   box-sizing:border-box!important;
-  border:1px solid #d5e4f5!important;
+  color:#ffffff!important;
+  background:#26374a!important;
+  border:1px solid #40566e!important;
   border-radius:11px!important;
+  box-shadow:0 -2px 10px rgba(15,23,42,.16)!important;
   z-index:9999!important;
   margin:0!important;
   gap:9px!important;
 }
+#miProjectWorkStatus .mi-work-dot{
+  background:#8fc7ff!important;
+  box-shadow:0 0 0 3px rgba(143,199,255,.18)!important;
+}
+#miProjectWorkStatus.is-working,
+#miProjectWorkStatus.is-saved,
+#miProjectWorkStatus.is-error{
+  color:#ffffff!important;
+  background:#26374a!important;
+  border-color:#40566e!important;
+}
+#miProjectWorkStatus.is-working .mi-work-dot{background:#f2c66d!important;}
+#miProjectWorkStatus.is-saved .mi-work-dot{background:#72d6a0!important;}
+#miProjectWorkStatus.is-error .mi-work-dot{background:#ff918b!important;}
+#miProjectWorkStatus #miProjectWorkStatusText{color:#ffffff!important;}
 #miProjectWorkStatus #miProjectWorkStatusText{
   flex:1 1 180px!important;
   min-width:0!important;
