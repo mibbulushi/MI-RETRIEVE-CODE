@@ -9514,6 +9514,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
     const sidebarToggle = document.getElementById("sidebarToggle");
     function setSidebarCollapsed(collapsed) {
       document.body.classList.toggle("sidebar-collapsed", collapsed);
+      /* Re-measure the workspace after the toggle state has been applied. */
+      requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
       if (sidebarToggle) {
         sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
         sidebarToggle.setAttribute("aria-label", collapsed ? "Open sidebar" : "Close sidebar");
