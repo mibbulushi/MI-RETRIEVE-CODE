@@ -10201,10 +10201,11 @@ body.sidebar-collapsed .sidebar .brand:before{
   border-radius:9px!important;
   font-size:12px!important;
 }
-body.sidebar-collapsed .sidebar .sidebar-toggle{
+/* The toggle is a direct child of BODY, not inside the sidebar. */
+body.sidebar-collapsed > #sidebarToggle{
   position:fixed!important;
-  top:21px!important;
-  left:46px!important;
+  top:20px!important;
+  left:48px!important;
   right:auto!important;
   width:26px!important;
   height:26px!important;
@@ -10216,9 +10217,9 @@ body.sidebar-collapsed .sidebar .sidebar-toggle{
   border-radius:7px!important;
 }
 @media(max-width:760px){
-  body.sidebar-collapsed .sidebar .sidebar-toggle{
-    top:21px!important;
-    left:46px!important;
+  body.sidebar-collapsed > #sidebarToggle{
+    top:20px!important;
+    left:48px!important;
     width:26px!important;
     height:26px!important;
     min-width:26px!important;
