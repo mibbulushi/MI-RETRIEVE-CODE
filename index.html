@@ -9897,6 +9897,8 @@ body #appArea #saveArea button.secondary:active:not(:disabled){
         const fixedStatusRow=document.getElementById("miProjectWorkStatus");
         if(fixedStatusRow){
           fixedStatusRow.append(viewbar);
+          /* Move the complete Ready/status row out of the editor's transformed/scrolling ancestors. */
+          if(fixedStatusRow.parentElement!==document.body)document.body.append(fixedStatusRow);
           fixedStatusRow.style.display="flex";
           fixedStatusRow.style.alignItems="center";
           fixedStatusRow.style.flexWrap="nowrap";
