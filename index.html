@@ -10191,6 +10191,41 @@ body.sidebar-collapsed .sidebar-toggle{left:75px!important}
   #miProjectWorkStatus #miProjectWorkStatusText{flex-basis:120px!important;}
 }
 </style>
+
+<style id="mi-collapsed-toggle-next-to-logo">
+/* Put the collapsed sidebar toggle directly beside the MI mark, on the same row. */
+body.sidebar-collapsed .sidebar .brand:before{
+  width:28px!important;
+  height:28px!important;
+  min-width:28px!important;
+  border-radius:9px!important;
+  font-size:12px!important;
+}
+body.sidebar-collapsed .sidebar .sidebar-toggle{
+  position:fixed!important;
+  top:21px!important;
+  left:46px!important;
+  right:auto!important;
+  width:26px!important;
+  height:26px!important;
+  min-width:26px!important;
+  min-height:26px!important;
+  padding:0!important;
+  margin:0!important;
+  z-index:230!important;
+  border-radius:7px!important;
+}
+@media(max-width:760px){
+  body.sidebar-collapsed .sidebar .sidebar-toggle{
+    top:21px!important;
+    left:46px!important;
+    width:26px!important;
+    height:26px!important;
+    min-width:26px!important;
+    min-height:26px!important;
+  }
+}
+</style>
 </body>
 </html>
 
