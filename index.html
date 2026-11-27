@@ -10380,13 +10380,13 @@ body.sidebar-collapsed .sidebar .brand:before{
 </style>
 
 <style id="mi-status-row-orange-position">
-/* Keep the original compact row height and place the complete strip at the orange-marked left edge. */
+/* The status strip follows the document frame width as the sidebar opens or closes. */
 #miProjectWorkStatus{
   position:fixed!important;
-  left:92px!important;
-  right:24px!important;
-  bottom:18px!important;
   top:auto!important;
+  bottom:18px!important;
+  left:0!important;
+  right:auto!important;
   width:auto!important;
   max-width:none!important;
   min-width:0!important;
@@ -10416,17 +10416,43 @@ body.sidebar-collapsed .sidebar .brand:before{
   flex-wrap:nowrap!important;
 }
 @media(max-width:760px){
-  #miProjectWorkStatus{
-    left:76px!important;
-    right:10px!important;
-    bottom:10px!important;
-    height:auto!important;
-    min-height:28px!important;
-    max-height:none!important;
-    padding:3px 6px!important;
-  }
+  #miProjectWorkStatus{bottom:10px!important;padding:3px 6px!important;}
 }
 </style>
+<script id="mi-status-row-follow-document-frame">
+(function(){
+  function init(){
+    const row=document.getElementById("miProjectWorkStatus");
+    const frame=document.querySelector(".mi-main-textbox-frame");
+    if(!row||!frame)return;
+    let pending=false;
+    function align(){
+      pending=false;
+      const rect=frame.getBoundingClientRect();
+      if(!rect.width)return;
+      const left=Math.max(0,rect.left);
+      const right=Math.max(0,window.innerWidth-rect.right);
+      row.style.setProperty("left",left+"px","important");
+      row.style.setProperty("right",right+"px","important");
+      row.style.setProperty("width","auto","important");
+    }
+    function schedule(){
+      if(pending)return;
+      pending=true;
+      requestAnimationFrame(align);
+    }
+    schedule();
+    window.addEventListener("resize",schedule,{passive:true});
+    document.body.addEventListener("transitionend",schedule,true);
+    new MutationObserver(schedule).observe(document.body,{attributes:true,attributeFilter:["class"]});
+    if(window.ResizeObserver)new ResizeObserver(schedule).observe(frame);
+    setTimeout(schedule,260);
+    setTimeout(schedule,520);
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
+  else init();
+})();
+</script>
 </body>
 </html>
 
