@@ -10440,13 +10440,14 @@ body.sidebar-collapsed .sidebar .brand:before{
     const frame=document.querySelector(".mi-main-textbox-frame");
     if(!row||!frame)return;
     let pending=false;
+    let tracking=false;
     function align(){
       pending=false;
       const rect=frame.getBoundingClientRect();
       if(!rect.width)return;
       const collapsed=document.body.classList.contains("sidebar-collapsed");
-      /* Collapsed: align exactly with the blue guide at the rail edge.
-         Expanded: align with the editor frame's own left border. */
+      /* Keep the entire status/control group attached to the editor frame
+         throughout the sidebar animation, not only after it has finished. */
       const left=collapsed?97:Math.max(0,rect.left);
       const right=Math.max(0,window.innerWidth-rect.right);
       row.style.setProperty("left",left+"px","important");
@@ -10458,18 +10459,82 @@ body.sidebar-collapsed .sidebar .brand:before{
       pending=true;
       requestAnimationFrame(align);
     }
+    function trackTransition(){
+      if(tracking)return;
+      tracking=true;
+      let frames=0;
+      function follow(){
+        align();
+        frames++;
+        if(frames<36)requestAnimationFrame(follow);
+        else tracking=false;
+      }
+      requestAnimationFrame(follow);
+    }
     schedule();
     window.addEventListener("resize",schedule,{passive:true});
     document.body.addEventListener("transitionend",schedule,true);
-    new MutationObserver(schedule).observe(document.body,{attributes:true,attributeFilter:["class"]});
-    if(window.ResizeObserver)new ResizeObserver(schedule).observe(frame);
-    setTimeout(schedule,260);
-    setTimeout(schedule,520);
+    document.body.addEventListener("transitionrun",trackTransition,true);
+    new MutationObserver(function(){schedule();trackTransition();})
+      .observe(document.body,{attributes:true,attributeFilter:["class"]});
+    if(window.ResizeObserver)new ResizeObserver(function(){schedule();}).observe(frame);
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
   else init();
 })();
 </script>
+
+<style id="mi-status-row-single-group">
+/* Treat the message, view buttons, and zoom controls as one compact status-bar group. */
+#miProjectWorkStatus{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  gap:7px!important;
+  overflow:hidden!important;
+  contain:layout paint!important;
+}
+#miProjectWorkStatus #miProjectWorkStatusText{
+  flex:1 1 0!important;
+  min-width:0!important;
+  max-width:100%!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+#miProjectWorkStatus .mi-document-viewbar{
+  display:flex!important;
+  flex:0 1 auto!important;
+  min-width:0!important;
+  max-width:58%!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:2px!important;
+  margin-left:auto!important;
+  overflow:hidden!important;
+}
+#miProjectWorkStatus .mi-document-zoom{
+  display:flex!important;
+  flex:0 1 auto!important;
+  min-width:0!important;
+  max-width:100%!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  gap:3px!important;
+  padding-left:5px!important;
+  margin-left:2px!important;
+}
+#miProjectWorkStatus .mi-document-zoom .mi-zoom-slider{
+  flex:1 1 42px!important;
+  width:clamp(24px,6vw,104px)!important;
+  min-width:24px!important;
+}
+#miProjectWorkStatus .mi-document-zoom .mi-zoom-value{
+  flex:0 0 32px!important;
+  min-width:32px!important;
+}
+</style>
 </body>
 </html>
 
