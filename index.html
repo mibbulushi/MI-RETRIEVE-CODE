@@ -10325,6 +10325,38 @@ body.sidebar-collapsed .sidebar .brand:before{
   fill:none!important;
 }
 </style>
+
+<style id="mi-status-row-edge-alignment">
+/* Keep the automatic-draft status row aligned with the full workspace frame when the sidebar collapses. */
+.mi-main-textbox-frame{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+#miStatusGroup{
+  display:flex!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  align-self:stretch!important;
+  box-sizing:border-box!important;
+}
+#miProjectWorkStatus{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  align-self:stretch!important;
+  box-sizing:border-box!important;
+}
+#miStatusGroup .mi-document-info-row{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+</style>
 </body>
 </html>
 
