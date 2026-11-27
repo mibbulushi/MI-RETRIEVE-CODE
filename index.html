@@ -10451,7 +10451,7 @@ body.sidebar-collapsed .sidebar .brand:before{
       const collapsed=document.body.classList.contains("sidebar-collapsed");
       /* Keep the entire status/control group attached to the editor frame
          throughout the sidebar animation, not only after it has finished. */
-      const left=Math.max(0,rect.left);
+      const left=Math.max(0,rect.left+(collapsed?0:8));
       const right=Math.max(0,window.innerWidth-rect.right);
       row.style.setProperty("left",left+"px","important");
       row.style.setProperty("right",right+"px","important");
