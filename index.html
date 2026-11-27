@@ -10378,6 +10378,61 @@ body.sidebar-collapsed .sidebar .brand:before{
   min-width:34px!important;
 }
 </style>
+
+<style id="mi-status-row-orange-position">
+/* Move the complete saved-status and zoom strip into the orange-marked position.
+   Keep the strip compact and inside the viewport without changing its contents. */
+#miProjectWorkStatus{
+  position:fixed!important;
+  left:92px!important;
+  right:24px!important;
+  bottom:18px!important;
+  top:auto!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  height:36px!important;
+  min-height:36px!important;
+  max-height:36px!important;
+  padding:4px 8px!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  overflow:hidden!important;
+  border-radius:5px!important;
+  z-index:9999!important;
+}
+#miProjectWorkStatusText{
+  flex:1 1 0!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-overflow:ellipsis!important;
+}
+#miProjectWorkStatus .mi-document-viewbar{
+  flex:0 1 auto!important;
+  min-width:0!important;
+  flex-wrap:nowrap!important;
+}
+#miProjectWorkStatus .mi-document-zoom{
+  flex:0 1 auto!important;
+  min-width:0!important;
+  flex-wrap:nowrap!important;
+}
+@media(max-width:760px){
+  #miProjectWorkStatus{
+    left:76px!important;
+    right:10px!important;
+    bottom:10px!important;
+    height:34px!important;
+    min-height:34px!important;
+    max-height:34px!important;
+    padding:3px 6px!important;
+  }
+}
+</style>
 </body>
 </html>
 
